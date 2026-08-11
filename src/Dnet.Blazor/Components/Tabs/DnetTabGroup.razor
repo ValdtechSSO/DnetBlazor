@@ -14,12 +14,20 @@
         </button>
         <div @ref="_tabLabelContainer" class="mat-tab-label-container">
             <div @ref="_tabList" class="mat-tab-list" style="transform: translateX(@_transformX)">
-                <div class="mat-tab-labels">
+                <div class="mat-tab-labels" role="tablist">
                     @foreach (var tab in _tabs.OrderBy(p => p.Order))
                     {
                         <div @ref="@tab.TabElementReference" 
                              class="mat-tab-label mat-focus-indicator @(_selectedId == tab.Id ? "mat-tab-label-active" : null) @(tab.Disabled ? "mat-tab-disabled" : null)"
-                             @onclick="(() => TabClicked(tab))" style="visibility:@(tab.IsHidden ? "hidden" : "visible")">
+                             role="tab"
+                             id="dnet-tab-@tab.Id"
+                             aria-selected="@(_selectedId == tab.Id)"
+                             aria-controls="dnet-tab-panel-@tab.Id"
+                             aria-disabled="@tab.Disabled"
+                             tabindex="@(_selectedId == tab.Id && !tab.Disabled ? 0 : -1)"
+                             @onclick="(() => TabClicked(tab))"
+                             @onkeydown="(args => HandleTabKeyDown(tab, args))"
+                             style="display:@(tab.IsHidden ? "none" : "block")">
                             <div class="mat-tab-label-content">
 
                                 @if (tab.HeaderTemplate != null && typeof(ComponentBase).IsAssignableFrom(tab.HeaderTemplate))
@@ -43,7 +51,7 @@
             <div class="mat-tab-header-pagination-chevron"></div>
         </button>
     </div>
-    <div class="mat-tab-body-wrapper">
+    <div class="mat-tab-body-wrapper" role="tabpanel" id="dnet-tab-panel-@_selectedId" aria-labelledby="dnet-tab-@_selectedId" tabindex="0">
         <DnetTabBody>
             @_activeTabContent
         </DnetTabBody>
@@ -69,7 +77,7 @@
     public EventCallback<TabClikedEventData> OnTabClicked { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object> AllOtherAttributes { get; set; }
+    public Dictionary<string, object>? AllOtherAttributes { get; set; }
 
 
     private int _selectedId;
@@ -110,6 +118,18 @@
         _borderBottom = TabHeaderBorder ? "1px solid rgba(0,0,0,.12)" : "none";
     }
 
+    protected override void OnParametersSet()
+    {
+        if (SelectedTabId > 0 && _tabs.Any(tab => tab.Id == SelectedTabId) && _selectedId != SelectedTabId)
+        {
+            _selectedId = SelectedTabId;
+            _selectedTab = _tabs.First(tab => tab.Id == _selectedId);
+            _activeTabContent = _selectedTab.ChildContent;
+        }
+
+        _borderBottom = TabHeaderBorder ? "1px solid rgba(0,0,0,.12)" : "none";
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -142,6 +162,22 @@
         StateHasChanged();
     }
 
+    internal void RemoveTab(DnetTab tab)
+    {
+        _tabs.Remove(tab);
+        tabIds.Remove(tab.Id);
+
+        if (_selectedId == tab.Id)
+        {
+            var replacement = _tabs.OrderBy(candidate => candidate.Order).FirstOrDefault(candidate => !candidate.Disabled);
+            _selectedId = replacement?.Id ?? 0;
+            _selectedTab = replacement;
+            _activeTabContent = replacement?.ChildContent;
+        }
+
+        StateHasChanged();
+    }
+
     private RenderFragment CreateHeaderTemplateComponent(Type componeType) => builder =>
     {
         builder.OpenComponent(0, componeType);
@@ -161,6 +197,34 @@
         await ScrollToLabel();
 
         await OnTabClicked.InvokeAsync(new TabClikedEventData { TabId = tab.Id });
+    }
+
+    private async Task HandleTabKeyDown(DnetTab tab, KeyboardEventArgs args)
+    {
+        var tabs = _tabs.Where(candidate => !candidate.Disabled && !candidate.IsHidden).OrderBy(candidate => candidate.Order).ToList();
+        var index = tabs.IndexOf(tab);
+        if (index < 0 || tabs.Count == 0)
+        {
+            return;
+        }
+
+        DnetTab? next = args.Key switch
+        {
+            "ArrowRight" or "ArrowDown" => tabs[(index + 1) % tabs.Count],
+            "ArrowLeft" or "ArrowUp" => tabs[(index - 1 + tabs.Count) % tabs.Count],
+            "Home" => tabs[0],
+            "End" => tabs[^1],
+            "Enter" or " " => tab,
+            _ => null
+        };
+
+        if (next is null)
+        {
+            return;
+        }
+
+        await TabClicked(next);
+        await next.TabElementReference.FocusAsync();
     }
 
     private async Task HandlePaginatorClick(ScrollDirection direction)

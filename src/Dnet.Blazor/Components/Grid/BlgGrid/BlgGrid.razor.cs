@@ -48,7 +48,7 @@ public partial class BlgGrid<TItem> : ComponentBase, IVirtualizeJsCallbacks, IAs
     public IEnumerable<TItem> GridData { get; set; } = new List<TItem>();
 
     [Parameter, EditorRequired]
-    public List<GridColumn<TItem>> GridColumns { get; set; }
+    public List<GridColumn<TItem>> GridColumns { get; set; } = new();
 
     [Parameter]
     public GridColumn<TItem> GroupGridColumn { get; set; } = new();
@@ -150,6 +150,11 @@ public partial class BlgGrid<TItem> : ComponentBase, IVirtualizeJsCallbacks, IAs
     public IEnumerable<TItem> _gridData { get; set; } = new List<TItem>();
 
     private bool _isExpanded = false;
+    private DotNetObjectReference<BlgGrid<TItem>>? _windowEventReference;
+    private DotNetObjectReference<BlgGrid<TItem>>? _touchEventReference;
+    private IEnumerable<TItem>? _gridDataSource;
+    private List<GridColumn<TItem>>? _gridColumnsSource;
+    private GridOptions<TItem>? _gridOptionsSource;
 
     #endregion
 
@@ -203,22 +208,26 @@ public partial class BlgGrid<TItem> : ComponentBase, IVirtualizeJsCallbacks, IAs
 
     protected override async Task OnParametersSetAsync()
     {
+        var dataChanged = !ReferenceEquals(_gridDataSource, GridData);
+        var columnsChanged = !ReferenceEquals(_gridColumnsSource, GridColumns);
+        var optionsChanged = !ReferenceEquals(_gridOptionsSource, GridOptions);
+
         if (GridOptions.UseVirtualization)
         {
             _itemSize = GridOptions.RowHeight;
         }
 
-        if (GridData != null && GridColumns != null)
+        if (dataChanged || columnsChanged || optionsChanged || _isDataNoInitialized || _isColumnsNoInitialized)
         {
-            if (_isDataNoInitialized && GridData.Any())
+            if (dataChanged || _isDataNoInitialized)
             {
                 _gridData = GridData;
                 InitializeGridWorkingData();
-                await InitializeGrid();
                 _isDataNoInitialized = false;
+                _gridDataSource = GridData;
             }
 
-            if (_isColumnsNoInitialized & GridColumns.Any())
+            if (columnsChanged || optionsChanged || _isColumnsNoInitialized)
             {
                 _gridColumns = AdvancedFilteringService.InitAdvancedFilterModels(GridColumns, GridOptions.DefaultAdvancedFilterOperator);
 
@@ -227,9 +236,12 @@ public partial class BlgGrid<TItem> : ComponentBase, IVirtualizeJsCallbacks, IAs
 
                 if (_blgHeader != null) _blgHeader.ActiveRender();
 
-                await InitializeGrid();
                 _isColumnsNoInitialized = false;
+                _gridColumnsSource = GridColumns;
+                _gridOptionsSource = GridOptions;
             }
+
+            await InitializeGrid();
         }
     }
 
@@ -239,8 +251,10 @@ public partial class BlgGrid<TItem> : ComponentBase, IVirtualizeJsCallbacks, IAs
         {
             _firstRender = true;
 
-            var result = await BlGridInterop.AddWindowEventListeners(_eGridContainer, DotNetObjectReference.Create(this));
-            var result1 = await BlGridInterop.AddTouchListeners(_eCenterContainer, _eBodyHorizontalScrollViewport, DotNetObjectReference.Create(this));
+            _windowEventReference = DotNetObjectReference.Create(this);
+            _touchEventReference = DotNetObjectReference.Create(this);
+            await BlGridInterop.AddWindowEventListeners(_eGridContainer, _windowEventReference);
+            await BlGridInterop.AddTouchListeners(_eCenterContainer, _eBodyHorizontalScrollViewport, _touchEventReference);
 
             if (GridOptions.UseVirtualization)
             {

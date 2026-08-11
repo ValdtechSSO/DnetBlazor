@@ -478,11 +478,13 @@
     {
         GetMonthDaysWithFullWeeks(_workingYear, _workingMonth);
 
-        var selectedDay = _days.FirstOrDefault(p => p.IsToday);
+        var selectedDay = _days?.FirstOrDefault(p => p.IsToday);
 
-        if (_days != null && _days.Any()) SelectWeekDays(selectedDay);
-
-        var selectedDays = GetWeekDays(selectedDay, _days);
+        if (selectedDay is not null && _days is not null)
+        {
+            SelectWeekDays(selectedDay);
+            _selectedDays = GetWeekDays(selectedDay, _days);
+        }
 
         StateHasChanged();
     }

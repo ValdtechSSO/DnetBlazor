@@ -1,5 +1,15 @@
 # Changelog for Blazor Library
 
+## Unreleased — stabilization
+
+- Corrected overlay identity, viewport listener ownership and flexible positioning offsets.
+- Reworked toast and spinner timing around cancelable tasks, and made paginator bounds/debounce deterministic.
+- Fixed selection and dynamic-parameter behavior across Grid, List, Chips, Tree, Tabs and steppers.
+- Added deterministic cleanup for form, Grid and ImageEditor interop resources.
+- Added `AddDnetBlazorMaterial()` and Material form-event registration.
+- Improved keyboard and ARIA semantics for buttons, chips, tabs, tree, expansion panels, paginator, toast and tooltip.
+- Added baseline unit tests and a CI build/test workflow.
+
 ## Version 5.0.0 (November 2025)
 
 ### Tooltip Component Improvements

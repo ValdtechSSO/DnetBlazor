@@ -42,6 +42,16 @@
 		StateHasChanged();
 	}
 
+	internal void RemoveExpansionPanelItem(DnetExpansionPanelItem expansionPanelItem)
+	{
+		expansionPanelItems.Remove(expansionPanelItem);
+		expansionPanelItemIds.Remove(expansionPanelItem.Id);
+		if (ReferenceEquals(lastOpenedPanel, expansionPanelItem))
+		{
+			lastOpenedPanel = new DnetExpansionPanelItem();
+		}
+	}
+
 	private int GetId()
 	{
 		_nextId++;
@@ -74,13 +84,13 @@
 		StateHasChanged();
 	}
 
-	public void CloseLastOpenedPanel(DnetExpansionPanelItem expansionPanelItem)
+	public async Task CloseLastOpenedPanel(DnetExpansionPanelItem expansionPanelItem)
 	{
 		if (!Multi && expansionPanelItem.IsExpanded() && lastOpenedPanel.Id > 0) lastOpenedPanel.Expand(false);
 
 		if (expansionPanelItem.IsExpanded()) lastOpenedPanel = expansionPanelItem;
 
-		OnExpandedChanged.InvokeAsync(expansionPanelItem);
+		await OnExpandedChanged.InvokeAsync(expansionPanelItem);
 
 		StateHasChanged();
 	}	

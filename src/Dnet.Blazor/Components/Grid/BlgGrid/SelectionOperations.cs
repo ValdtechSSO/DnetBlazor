@@ -4,7 +4,7 @@ namespace Dnet.Blazor.Components.Grid.BlgGrid;
 
 public partial class BlgGrid<TItem>
 {
-    private async void CellClicked(CellClikedEventData cellClikedEventData)
+    private async Task CellClicked(CellClikedEventData cellClikedEventData)
     {
         _blgCenter?.ActiveRender();
 
@@ -25,7 +25,7 @@ public partial class BlgGrid<TItem>
         await OnCellClicked.InvokeAsync(cellClikedData);
     }
 
-    private async void RowClicked(long rowNodeId)
+    private async Task RowClicked(long rowNodeId)
     {
         var rowNode = _rowNodes.Find(e => e.RowNodeId == rowNodeId);
 
@@ -36,13 +36,13 @@ public partial class BlgGrid<TItem>
         await OnRowClicked.InvokeAsync(rowNode);
     }
 
-    private async void RowDoubleClicked(long rowNodeId)
+    private async Task RowDoubleClicked(long rowNodeId)
     {
         var rowNode = _rowNodes.Find(e => e.RowNodeId == rowNodeId);
         await OnRowDoubleClicked.InvokeAsync(rowNode);
     }
 
-    private async void SelectionChanged(List<long> rowNodeIds)
+    private async Task SelectionChanged(List<long> rowNodeIds)
     {
         _blgCenter?.ActiveRender();
         if (_pinnedLeft) _blgPinnedLeft?.ActiveRender();
@@ -53,7 +53,7 @@ public partial class BlgGrid<TItem>
         await OnSelectionChanged.InvokeAsync(rowNodes);
     }
 
-    private async void ChangeSelectAllNodes(bool value)
+    private async Task ChangeSelectAllNodes(bool value)
     {
         if (!_rowNodes.Any() || _treeRn == null) return;
 
@@ -72,7 +72,7 @@ public partial class BlgGrid<TItem>
         }
 
         _blgCenter?.ActiveRender();
-        if (_pinnedRight) _blgPinnedRight?.ActiveRender();
+        if (_pinnedLeft) _blgPinnedLeft?.ActiveRender();
         if (_pinnedRight) _blgPinnedRight?.ActiveRender();
 
         var rowNodes = selectedRowNodes.Where(p => p.RowData is not null).ToList();

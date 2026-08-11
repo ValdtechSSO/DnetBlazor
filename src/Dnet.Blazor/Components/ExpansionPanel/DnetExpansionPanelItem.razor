@@ -1,8 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Components.Web
 @using Dnet.Blazor.Infrastructure.Services.CssBuilder
 
+@implements IDisposable
+
 <div class="@_expansionPanelClass">
-	<div class="dnet-expansion-panel-header" @onclick="(() => Toggle())" aria-disabled="@Disabled">
+	<button type="button" class="dnet-expansion-panel-header" @onclick="Toggle" disabled="@Disabled" aria-expanded="@_expanded" aria-controls="@_contentId">
 		@if (ItemHeaderTemplate != null)
 		{
 			@ItemHeaderTemplate
@@ -35,8 +37,8 @@
 				</span>
 			}
 		}
-	</div>
-	<div class="dnet-expansion-panel-content" role="region" style="visibility:@(_expanded ? "visible" : "hidden");height:@(_expanded ? "auto" : "0px")">
+	</button>
+	<div id="@_contentId" class="dnet-expansion-panel-content" role="region" hidden="@(!_expanded)">
 		<div class="dnet-expansion-panel-body">
 			@ChildContent
 		</div>
@@ -82,6 +84,8 @@
 
 	private bool _expanded { get; set; } = false;
 
+	private readonly string _contentId = $"dnet-expansion-{Guid.NewGuid():N}";
+
 	private string _expansionPanelClass =>
         new CssBuilder("dnet-expansion-panel")
             .AddClass("dnet-expanded dnet-expansion-panel-spacing", Parent.ExpansionPanelDisplayMode == ExpansionPanelDisplayMode.Spacing && _expanded)
@@ -91,13 +95,14 @@
 
 	protected override void OnInitialized()
 	{
-		Parent.AddExpansionPanelItem(this);
+		Parent?.AddExpansionPanelItem(this);
 	}
 
-	private void Toggle()
+	private async Task Toggle()
 	{
+		if (Disabled || Parent is null) return;
 		Expand(!IsExpanded());
-		Parent.CloseLastOpenedPanel(this);
+		await Parent.CloseLastOpenedPanel(this);
 	}
 
 	public bool IsExpanded()
@@ -117,4 +122,6 @@
 
 		return true;
 	}
+
+	public void Dispose() => Parent?.RemoveExpansionPanelItem(this);
 }

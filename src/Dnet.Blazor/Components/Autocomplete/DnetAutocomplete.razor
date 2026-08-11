@@ -13,6 +13,7 @@
 @using Dnet.Blazor.Infrastructure.Services.CssBuilder
 @using Dnet.Blazor.Infrastructure.Enums
 @using System.Linq.Expressions;
+@using System.Globalization
 
 @implements IDisposable
 
@@ -29,7 +30,7 @@
     @oninput="@((ChangeEventArgs __e) => UpdateCurrentValue(__e.Value ?? string.Empty))" @onfocusin=@(() => OpenMenu())
     @onkeyup=@((KeyboardEventArgs __e) => HandleKeyUp(__e)) @onkeydown=@((KeyboardEventArgs __e) => HandleKeydown(__e))
     @onclick:stopPropagation="true" @onclick:preventDefault="true" placeholder="@PlaceHolder" disabled="@Disabled"
-    autocomplete="none" />
+    autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="@_isOpen" aria-disabled="@Disabled" />
 
 @code {
 
@@ -170,6 +171,9 @@
     private List<TItem> _items { get; set; } = new();
 
     private bool _previousDisabled;
+    private Action? _clearContentHandler;
+    private Action<TItem>? _itemSelectedHandler;
+    private Action<string>? _updateCurrentValueHandler;
 
     private string _inputTextClass =>
     new CssBuilder("mat-input-element")
@@ -179,7 +183,7 @@
 
     protected override void OnInitialized()
     {
-        _formEventService = _formFieldCascadingValues!.FormEventService;
+        _formEventService = _formFieldCascadingValues?.FormEventService;
 
         _debounceCts = new CancellationTokenSource();
 
@@ -190,15 +194,17 @@
             if (_formEventService is not null) _formEventService.RaiseFocus(_hasFocus);
         }
 
-        EditContext.OnFieldChanged += HandleOnValidationStateChanged;
-
-        _hasErrors = EditContext.GetValidationMessages(FieldIdentifier).Any();
-
-        if (_formEventService is not null) _formEventService.RaiseError(_hasErrors && EditContext.IsModified(FieldIdentifier));
+        if (EditContext is not null)
+        {
+            EditContext.OnFieldChanged += HandleOnValidationStateChanged;
+            _hasErrors = EditContext.GetValidationMessages(FieldIdentifier).Any();
+            if (_formEventService is not null) _formEventService.RaiseError(_hasErrors && EditContext.IsModified(FieldIdentifier));
+        }
 
         if (_formEventService is not null) _formEventService.RaiseCurrentValue(CurrentValueAsString);
 
-        if (_formEventService is not null) _formEventService.OnClearContent += () => _ = ClearInputAsync();
+        _clearContentHandler = () => _ = InvokeAsync(ClearInputAsync);
+        if (_formEventService is not null) _formEventService.OnClearContent += _clearContentHandler;
 
         if (_formEventService is not null) _formEventService.RaiseDisabledEvent(Disabled);
 
@@ -245,6 +251,8 @@
         if (dataSourceHasChanged)
         {
             _items = Items ?? new List<TItem>();
+            _lastFilterValue = null;
+            _cachedFilteredItems = null;
         }
 
         return base.OnParametersSetAsync();
@@ -256,9 +264,10 @@
 
         _autoCompleteListService = new AutoCompleteListService<TItem>();
 
-        _autoCompleteListService.OnItemSelected += (item) => _ = ItemSelectedAsync(item);
-
-        _autoCompleteListService.OnUpdateCurrentValueFrontDialog += (value) => _ = UpdateCurrentValueFrontDialogAsync(value);
+        _itemSelectedHandler = item => _ = InvokeAsync(() => ItemSelectedAsync(item));
+        _updateCurrentValueHandler = value => _ = InvokeAsync(() => UpdateCurrentValueFrontDialogAsync(value));
+        _autoCompleteListService.OnItemSelected += _itemSelectedHandler;
+        _autoCompleteListService.OnUpdateCurrentValueFrontDialog += _updateCurrentValueHandler;
     }
 
     private async Task UpdateCurrentValueFrontDialogAsync(string currentValue)
@@ -311,15 +320,9 @@
 
     private void UpdateCurrentValue(object value)
     {
-        if (value is string stringValue)
+        if (BindConverter.TryConvertTo<TValue>(Convert.ToString(value, CultureInfo.InvariantCulture), CultureInfo.InvariantCulture, out var convertedValue))
         {
-            CurrentValue = (TValue)(object)stringValue;
-
-            if (_formEventService is not null) _formEventService.RaiseCurrentValue(CurrentValueAsString);
-        }
-        else if (typeof(TValue) == typeof(int) && int.TryParse(value.ToString(), out var parsedValue))
-        {
-            CurrentValue = (TValue)(object)parsedValue;
+            CurrentValue = convertedValue;
 
             if (_formEventService is not null) _formEventService.RaiseCurrentValue(CurrentValueAsString);
         }
@@ -328,20 +331,10 @@
     protected override bool TryParseValueFromString(string? value, out TValue result, [NotNullWhen(false)] out string?
     validationErrorMessage)
     {
-        if (typeof(TValue) == typeof(string))
+        if (BindConverter.TryConvertTo<TValue>(value, CultureInfo.InvariantCulture, out result))
         {
-            result = (TValue)(object)(value ?? string.Empty);
             validationErrorMessage = null;
             return true;
-        }
-        else if (typeof(TValue) == typeof(int))
-        {
-            if (int.TryParse(value, out var parsedValue))
-            {
-                result = (TValue)(object)parsedValue;
-                validationErrorMessage = null;
-                return true;
-            }
         }
 
         result = default!;
@@ -529,8 +522,6 @@
 
             if (_formEventService is not null) _formEventService.RaiseCurrentValue(CurrentValueAsString);
 
-            await ValueChanged.InvokeAsync(Value);
-
             await OnClearInput.InvokeAsync(true);
 
             EditContext?.NotifyFieldChanged(FieldIdentifier);
@@ -582,7 +573,7 @@
         var flexibleConnectedPositionStrategyBuilder = new FlexibleConnectedPositionStrategyBuilder()
         .WithLockedPosition()
         .WithViewportMargin(8)
-        .SetOrigin(_formFieldCascadingValues!.FormField)
+        .SetOrigin(__inputReference)
         .WithFlexibleDimensions(false)
         .WithPositions(positions);
 
@@ -797,8 +788,15 @@
     {
         if (_menuReference != null) _menuReference.Close -= CloseFilter;
 
-        // AutoCompleteListService event handlers are using lambdas, 
-        // they will be garbage collected with this component instance
+        if (_autoCompleteListService is not null && _itemSelectedHandler is not null)
+        {
+            _autoCompleteListService.OnItemSelected -= _itemSelectedHandler;
+        }
+
+        if (_autoCompleteListService is not null && _updateCurrentValueHandler is not null)
+        {
+            _autoCompleteListService.OnUpdateCurrentValueFrontDialog -= _updateCurrentValueHandler;
+        }
 
         _debounceCts?.Cancel();
         _debounceCts?.Dispose();
@@ -808,7 +806,11 @@
             EditContext.OnFieldChanged -= HandleOnValidationStateChanged;
         }
 
-        // FormEventService.OnClearContent uses lambda, 
-        // it will be garbage collected with this component instance
+        if (_formEventService is not null && _clearContentHandler is not null)
+        {
+            _formEventService.OnClearContent -= _clearContentHandler;
+        }
+
+        DisposeInputBase();
     }
 }

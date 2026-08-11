@@ -3,14 +3,12 @@
 @using Microsoft.AspNetCore.Components.Web
 @inject ITooltipService TooltipPanelService
 
-<div>
-    <div class="@_cssClasses" style="@_styles">
+<div role="tooltip" class="@_cssClasses" style="@_styles">
         @Text
         @if (ComponentType != null)
         {
             <DynamicComponent Type="@ComponentType" Parameters="@Parameters" />
         }
-    </div>
 </div>
 
 @code {
@@ -50,10 +48,17 @@
 
     protected override void OnInitialized()
     {
-        if (!string.IsNullOrEmpty(TooltipColor))
-        {
-            _backgroundColor = TooltipColor;
-        }
+        UpdateStyles();
+    }
+
+    protected override void OnParametersSet()
+    {
+        UpdateStyles();
+    }
+
+    private void UpdateStyles()
+    {
+        _backgroundColor = TooltipColor;
 
         _cssClasses = GetCssClasses();
 

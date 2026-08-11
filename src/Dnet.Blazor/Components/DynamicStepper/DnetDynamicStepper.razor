@@ -4,7 +4,7 @@
 
 @inject DnetOverlayInterop DnetOverlayInterop
 
-<div id="stepperContainer" class="dnet-dstepper-horizontal" style="width: calc(100% - 0px)">
+<div id="@_containerId" class="dnet-dstepper-horizontal" style="width: calc(100% - 0px)">
     <div class="dnet-horizontal-dstepper-header-container"
          style="grid-template-columns: repeat(@_visibleSteps, minmax(@($"{_stepWidth}px"), 1fr));">
         @foreach (var step in Steps.OrderBy(p => p.Order))
@@ -46,8 +46,8 @@
     @if(ShowButtons)
     {
         <div class="dnet-horizontal-dstepper-controls">
-            <DnetButton OnClick="() => PreviousStep()" disabled="@(_startIndex == 0)">Previous</DnetButton>
-            <DnetButton OnClick="() => NextStep()" disabled="@(_startIndex + _visibleSteps >= Steps.Count)">Next</DnetButton>
+            <DnetButton OnClick="PreviousStep" disabled="@(GetSelectedStepIndex() <= 0)">Previous</DnetButton>
+            <DnetButton OnClick="NextStep" disabled="@(GetSelectedStepIndex() >= Steps.Count - 1)">Next</DnetButton>
         </div>
     }
 </div>
@@ -97,6 +97,7 @@
     private int _startIndex = 0;
 
     private int _windowWidth { get; set; }
+    private readonly string _containerId = $"dnet-stepper-{Guid.NewGuid():N}";
 
 
 
@@ -119,7 +120,7 @@
     {
         if (firstRender)
         {
-            var containerWidth = await DnetOverlayInterop.GetContainerWidth("stepperContainer");
+            var containerWidth = await DnetOverlayInterop.GetContainerWidth(_containerId);
 
             _windowWidth = await DnetOverlayInterop.GetWindowWidth();
 
@@ -148,8 +149,13 @@
         return tt;
     }
 
-    private void StepClicked(DnetDynamicStep step)
+    private async Task StepClicked(DnetDynamicStep step)
     {
+        if (!CanNavigateToStep(step))
+        {
+            return;
+        }
+
         var stepIndex = Steps.IndexOf(step);
 
         var lastVisibleIndex = _startIndex + _visibleSteps - 1;
@@ -169,16 +175,24 @@
 
         _activeStepContent = Steps.FirstOrDefault(p => p.Id == _selectedId)?.ChildContent!;
 
-        OnSelectionChange.InvokeAsync(new Tuple<int, int>(_selectedId, previousId));
+        await OnSelectionChange.InvokeAsync(new Tuple<int, int>(_selectedId, previousId));
 
         StateHasChanged();
     }
 
-    public void NextStep()
+    public async Task NextStep()
     {
-        var selectedStep = Steps.Where(s => s.Id == _selectedId).Select(p => p).FirstOrDefault();
+        var stepIndex = GetSelectedStepIndex() + 1;
+        if (stepIndex < 0 || stepIndex >= Steps.Count)
+        {
+            return;
+        }
 
-        var stepIndex = Steps.IndexOf(selectedStep) + 1;
+        var step = Steps[stepIndex];
+        if (!CanNavigateToStep(step))
+        {
+            return;
+        }
 
         var lastVisibleIndex = _startIndex + _visibleSteps - 1;
 
@@ -187,24 +201,30 @@
             _startIndex++;
         }
 
-        var step = Steps[stepIndex];
-
         var previousId = _selectedId;
 
         _selectedId = step.Id;
 
         _activeStepContent = Steps.FirstOrDefault(p => p.Id == _selectedId)?.ChildContent!;
 
-        OnSelectionChange.InvokeAsync(new Tuple<int, int>(_selectedId, previousId));
+        await OnSelectionChange.InvokeAsync(new Tuple<int, int>(_selectedId, previousId));
 
         StateHasChanged();
     }
 
-    public void PreviousStep()
+    public async Task PreviousStep()
     {
-        var selectedStep = Steps.Where(s => s.Id == _selectedId).Select(p => p).FirstOrDefault();
+        var stepIndex = GetSelectedStepIndex() - 1;
+        if (stepIndex < 0 || stepIndex >= Steps.Count)
+        {
+            return;
+        }
 
-        var stepIndex = Steps.IndexOf(selectedStep) - 1;
+        var step = Steps[stepIndex];
+        if (!CanNavigateToStep(step))
+        {
+            return;
+        }
 
         if (_startIndex > 0 && _startIndex == stepIndex)
         {
@@ -215,21 +235,24 @@
             _startIndex--;
         }
 
-        var step = Steps[stepIndex];
-
         var previousId = _selectedId;
 
         _selectedId = step.Id;
 
         _activeStepContent = Steps.FirstOrDefault(p => p.Id == _selectedId)?.ChildContent!;
 
-        OnSelectionChange.InvokeAsync(new Tuple<int, int>(_selectedId, previousId));
+        await OnSelectionChange.InvokeAsync(new Tuple<int, int>(_selectedId, previousId));
 
         StateHasChanged();
     }
 
     private bool CanNavigateToStep(DnetDynamicStep step)
     {
+        if (!Editable && step.Id != _selectedId)
+        {
+            return false;
+        }
+
         var previousStep = Steps.FirstOrDefault(p => p.Id == _selectedId);
 
         if (Linear && step.Id > _selectedId)
@@ -267,5 +290,7 @@
     {
         return ++_nextId;
     }
+
+    private int GetSelectedStepIndex() => Steps.FindIndex(step => step.Id == _selectedId);
 
 }

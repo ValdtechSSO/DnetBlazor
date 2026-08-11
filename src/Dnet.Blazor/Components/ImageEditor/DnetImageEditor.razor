@@ -56,13 +56,13 @@
     public long MaxFileSizes { get; set; }
 
     [Parameter]
-    public List<string> AllowedFormats { get; set; }
+    public List<string> AllowedFormats { get; set; } = new();
 
     [Parameter]
-    public List<ImageEditorControlType> ImageEditingControls { get; set; }
+    public List<ImageEditorControlType> ImageEditingControls { get; set; } = new();
 
     [Parameter]
-    public IBrowserFile ImageFile { get; set; }
+    public IBrowserFile? ImageFile { get; set; }
 
     private long _maxFileSizes { get; set; } = 1024 * 1024 * 15;
 
@@ -73,6 +73,20 @@
 
     public async Task ShowDialog(MemoryStream fullSizeImageStream)
     {
+        ArgumentNullException.ThrowIfNull(fullSizeImageStream);
+
+        if (MaxFileSizes > 0 && fullSizeImageStream.Length > MaxFileSizes)
+        {
+            throw new InvalidOperationException($"The image exceeds the configured maximum size of {MaxFileSizes} bytes.");
+        }
+
+        if (ImageFile is not null && AllowedFormats.Count > 0 &&
+            !AllowedFormats.Any(format => string.Equals(format.TrimStart('.'), ImageFile.ContentType, StringComparison.OrdinalIgnoreCase) ||
+                                          string.Equals(format, Path.GetExtension(ImageFile.Name), StringComparison.OrdinalIgnoreCase)))
+        {
+            throw new InvalidOperationException($"The image format '{ImageFile.ContentType}' is not allowed.");
+        }
+
         await OnStarLoadingImage.InvokeAsync();
 
         var dialogConfig = new DialogConfig()
@@ -99,6 +113,8 @@
                 ImagePreviewWidth = ImagePreviewWidth,
                 ModalDialogHeight = ModalDialogHeight,
                 ModalDialogWidth = ModalDialogWidth,
+                MaxFileSizes = MaxFileSizes,
+                AllowedFormats = AllowedFormats,
                 ImageEditingControls = ImageEditingControls,
                 WorkingImageStream = workingImageStream,
                 ImageUrl = imageUrl
@@ -134,4 +150,3 @@
         if (_dialogReference != null) _dialogReference.Close -= CloseDialog;
     }
 }
-

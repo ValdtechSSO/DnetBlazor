@@ -115,7 +115,7 @@
 
     protected override void OnInitialized()
     {
-        _formEventService = _formFieldCascadingValues.FormEventService;
+        _formEventService = _formFieldCascadingValues?.FormEventService;
 
         _datePickerService = new DatePickerWeekService();
 
@@ -129,9 +129,16 @@
 
         var days = GetMonthDaysWithFullWeeks(selectedDay.Year, selectedDay.Month);
 
-        _selectedDays = GetWeekDays(days.FirstOrDefault(p => p.IsToday), days);
+        var today = days.FirstOrDefault(p => p.IsToday);
+        if (today is not null)
+        {
+            _selectedDays = GetWeekDays(today, days);
 
-        CurrentValue = GetWeekInterval(_selectedDays);
+            if (string.IsNullOrEmpty(CurrentValue))
+            {
+                CurrentValue = GetWeekInterval(_selectedDays);
+            }
+        }
 
         if (_formEventService is not null) _formEventService.RaiseDisabledEvent(Disabled);
 
@@ -269,7 +276,9 @@
         _isOpen = false;
     }
 
-    private async void DaySelected(List<CalendarDay> days)
+    private void DaySelected(List<CalendarDay> days) => _ = InvokeAsync(() => DaySelectedAsync(days));
+
+    private async Task DaySelectedAsync(List<CalendarDay> days)
     {
         _selectedDays = days;
 

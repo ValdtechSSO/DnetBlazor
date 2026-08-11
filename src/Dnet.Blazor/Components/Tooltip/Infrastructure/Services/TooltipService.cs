@@ -5,6 +5,7 @@ using Dnet.Blazor.Components.Overlay.Infrastructure.Services;
 using Dnet.Blazor.Components.Tooltip.Infrastructure.Interfaces;
 using Dnet.Blazor.Components.Tooltip.Infrastructure.Models;
 using Microsoft.AspNetCore.Components;
+using System.Threading;
 
 namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
 {
@@ -17,6 +18,7 @@ namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
         private readonly Dictionary<int, TooltipConfig> _tooltipConfigs = new();
         private readonly Dictionary<int, int> _placeholderToRealIdMap = new(); // Mapeo de placeholder ID a overlay real ID
         private readonly object _lock = new object();
+        private int _nextId;
 
         public TooltipService(IOverlayService overlayService)
         {
@@ -110,8 +112,9 @@ namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
 
         private int GenerateUniqueId()
         {
-            // Usar timestamp + random para generar IDs únicos
-            return Math.Abs(DateTime.UtcNow.Ticks.GetHashCode() ^ new Random().Next());
+            // Keep IDs unique for the lifetime of the scoped service. Overflow is harmless because
+            // the dictionary still protects against the only possible collision.
+            return Interlocked.Increment(ref _nextId);
         }
 
         private OverlayReference Open(Type? componentType, IDictionary<string, object>? parameters, TooltipConfig tooltipConfig, ElementReference elementReference)

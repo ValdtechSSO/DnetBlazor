@@ -16,22 +16,32 @@
 @inject IImageEditorService ImageEditorService
 
 @implements IDragAndDropJsCallbacks
+@implements IAsyncDisposable
 
 <div class="dnet-image-editor-wrapper" style="height: 100%">
     <div>
         <div class="dnet-image-editor-controls">
-            <span @onclick="OnCropImage" class="dnet-icon-wrapper">
+            @if (ShowControl(ImageEditorControlType.Crop))
+            {
+            <button type="button" @onclick="OnCropImage" class="dnet-icon-wrapper">
                 <span class="dnet-icon dnet-icon-crop" unselectable="on"></span>
                 <span class="dnet-icon-text" unselectable="on">Crop</span>
-            </span>
-            <span @onclick="OnFlipHorizontal" class="dnet-icon-wrapper">
+            </button>
+            }
+            @if (ShowControl(ImageEditorControlType.FlipHorizontal))
+            {
+            <button type="button" @onclick="OnFlipHorizontal" class="dnet-icon-wrapper">
                 <span class="dnet-icon dnet-icon-flip-h" unselectable="on">⇄</span>
                 <span class="dnet-icon-text" unselectable="on">Flip H</span>
-            </span>
-            <span @onclick="OnFlipVertical" class="dnet-icon-wrapper">
+            </button>
+            }
+            @if (ShowControl(ImageEditorControlType.FlipVertical))
+            {
+            <button type="button" @onclick="OnFlipVertical" class="dnet-icon-wrapper">
                 <span class="dnet-icon dnet-icon-flip-v" unselectable="on">⇅</span>
                 <span class="dnet-icon-text" unselectable="on">Flip V</span>
-            </span>
+            </button>
+            }
         </div>
         <div class="dnet-editor-container">
             <div class="dnet-image-container">
@@ -86,7 +96,7 @@
     private int OverlayReferenceId { get; set; }
 
     [Parameter]
-    public DialogData DialogData { get; set; }
+    public DialogData DialogData { get; set; } = default!;
 
     private ElementReference _cropbox;
 
@@ -153,8 +163,8 @@
         _imgPreviewHeight = dialogData.ImagePreviewHeight;
         _imgPreviewWidth = dialogData.ImagePreviewWidth;
         _maxFileSizes = dialogData.MaxFileSizes;
-        _allowedFormats = dialogData.AllowedFormats;
-        _imageEditingControls = dialogData.ImageEditingControls;
+        _allowedFormats = dialogData.AllowedFormats ?? new();
+        _imageEditingControls = dialogData.ImageEditingControls ?? new();
         _workingImageStream = dialogData.WorkingImageStream;
         _imageUrl = dialogData.ImageUrl;
     }
@@ -215,9 +225,9 @@
                 Width = _cropBoxWidth
             };
 
-        _jsInterop.InitializeDragAndDrop(_cropbox, _dragAndDropArea, cropBoxLeft, cropBoxTop);
+        await _jsInterop.InitializeDragAndDrop(_cropbox, _dragAndDropArea, cropBoxLeft, cropBoxTop);
 
-        _jsInterop.InitializeResize(_resizerData, cropBoxLeft, cropBoxTop, _cropBoxHeight, _cropBoxWidth, _imgWidth, _imgHeight, "TopCenter", 50, 50);
+        await _jsInterop.InitializeResize(_resizerData, cropBoxLeft, cropBoxTop, _cropBoxHeight, _cropBoxWidth, _imgWidth, _imgHeight, "TopCenter", 50, 50);
     }
 
     private async Task OnCropImage()
@@ -339,10 +349,16 @@
 
     void CloseOverlay()
     {
+        var result = _resulImageStream ?? _workingImageStream ?? _fullSizeImageStream;
+        if (result is not null)
+        {
+            result.Position = 0;
+        }
+
         var dataResult = new OverlayResult()
             {
                 CloseReason = CloseReason.Ok,
-                ComponentData = _resulImageStream,
+                ComponentData = result,
                 OverlayReferenceId = OverlayReferenceId
 
             };
@@ -362,5 +378,15 @@
 
         DialogService.Close(dataResult);
     }
-}
 
+    private bool ShowControl(ImageEditorControlType control)
+        => _imageEditingControls is null || _imageEditingControls.Count == 0 || _imageEditingControls.Contains(control);
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_jsInterop is not null)
+        {
+            await _jsInterop.DisposeAsync();
+        }
+    }
+}

@@ -18,6 +18,8 @@ public interface IBlGridInterop<TItem>
     ValueTask<bool> AddWindowEventListeners(ElementReference element, DotNetObjectReference<BlgGrid<TItem>> dotNetClass);
 
     ValueTask<bool> AddTouchListeners(ElementReference element, ElementReference scrollElement, DotNetObjectReference<BlgGrid<TItem>> dotNetClass);
+
+    ValueTask RemoveEventListeners(ElementReference element);
 }
 
 public class BlGridInterop<TItem> : IBlGridInterop<TItem>
@@ -57,6 +59,11 @@ public class BlGridInterop<TItem> : IBlGridInterop<TItem>
     public ValueTask<bool> AddTouchListeners(ElementReference element, ElementReference scrollElement, DotNetObjectReference<BlgGrid<TItem>> dotNetClass)
     {
         return this.jsRuntime.InvokeAsync<bool>("blginterop.addTouchListeners", element, scrollElement, dotNetClass);
+    }
+
+    public ValueTask RemoveEventListeners(ElementReference element)
+    {
+        return this.jsRuntime.InvokeVoidAsync("blginterop.removeEventListeners", element);
     }
 }
 

@@ -6,14 +6,14 @@ namespace Dnet.Blazor.Components.Grid.BlgGrid;
 
 public partial class BlgGrid<TItem>
 {
-    private async void AddGroup(string columnName)
+    private async Task AddGroup(string columnName)
     {
         if (!_rowNodes.Any() || _treeRn == null) return;
 
         _activeGroups++;
         _searchModel.PaginationModel.CurrentPage = 1;
 
-        AuxAddGroup(columnName);
+        await AuxAddGroup(columnName);
 
         if (GridOptions.GroupDefaultExpanded && _treeRn != null) 
             _treeRn = ExpandCollapseTreeRowNode(_treeRn, true);
@@ -24,7 +24,7 @@ public partial class BlgGrid<TItem>
         await Update();
     }
 
-    private void AuxAddGroup(string dataField)
+    private async Task AuxAddGroup(string dataField)
     {
         if (_groupByColumns.Contains(dataField)) return;
 
@@ -32,7 +32,7 @@ public partial class BlgGrid<TItem>
 
         if (GridOptions.EnableServerSideGrouping)
         {
-            OnGroupingChanged.InvokeAsync(new GroupModel()
+            await OnGroupingChanged.InvokeAsync(new GroupModel()
             {
                 ColumnName = dataField,
                 Operation = GroupOperation.Add
@@ -53,14 +53,14 @@ public partial class BlgGrid<TItem>
         }
     }
 
-    private async void DeleteGroup(string columnName)
+    private async Task DeleteGroup(string columnName)
     {
         if (!_rowNodes.Any() || _treeRn == null) return;
 
         _activeGroups--;
         _searchModel.PaginationModel.CurrentPage = 1;
 
-        AuxDeleteGroup(columnName);
+        await AuxDeleteGroup(columnName);
 
         FilterBy();
         AdvancedFilterBy();
@@ -68,13 +68,13 @@ public partial class BlgGrid<TItem>
         await Update();
     }
 
-    private void AuxDeleteGroup(string dataField)
+    private async Task AuxDeleteGroup(string dataField)
     {
         _groupByColumns.Remove(dataField);
 
         if (GridOptions.EnableServerSideGrouping)
         {
-            OnGroupingChanged.InvokeAsync(new GroupModel()
+            await OnGroupingChanged.InvokeAsync(new GroupModel()
             {
                 ColumnName = dataField,
                 Operation = GroupOperation.Delete
@@ -131,9 +131,10 @@ public partial class BlgGrid<TItem>
         await Update();
     }
 
-    private async void ChangeExpanded(long id)
+    private async Task ChangeExpanded(long id)
     {
         var index = _rowNodes.FindIndex(rowNode => rowNode.RowNodeId == id);
+        if (index < 0) return;
         _rowNodes[index].Expanded = !_rowNodes[index].Expanded;
         await Update();
     }

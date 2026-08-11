@@ -1,7 +1,7 @@
 ﻿@using Dnet.Blazor.Infrastructure.Services.CssBuilder
 @using Microsoft.AspNetCore.Components.Web
 
-<button @ref="_focusElement" @onclick="Click" class="@_cssClasses" @attributes=@AdditionalAttributes.Where(p => !p.Key.Equals("class"))>
+<button @ref="_focusElement" type="@ButtonType" @onclick="ClickAsync" class="@_cssClasses" @attributes="FilteredAdditionalAttributes">
 	<span class="dnet-button-wrapper">@ChildContent</span>
 	<span class="dnet-button-focus-overlay"></span>
 </button>
@@ -14,8 +14,11 @@
 	[Parameter(CaptureUnmatchedValues = true)]
 	public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
 
-	[Parameter]
-	public EventCallback OnClick { get; set; }
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    [Parameter]
+    public string ButtonType { get; set; } = "button";
 
 	[Parameter]
 	public RenderFragment? ChildContent { get; set; }
@@ -24,10 +27,13 @@
 
 	private string? _cssClasses { get; set; }
 
-	private IReadOnlyDictionary<string, object>? _additionalAttributes { get; set; }
+    private static readonly IReadOnlyDictionary<string, object> EmptyAttributes = new Dictionary<string, object>();
+
+    private IEnumerable<KeyValuePair<string, object>> FilteredAdditionalAttributes
+        => (AdditionalAttributes ?? EmptyAttributes).Where(attribute => !attribute.Key.Equals("class", StringComparison.OrdinalIgnoreCase) && !attribute.Key.Equals("type", StringComparison.OrdinalIgnoreCase));
 
 
-	protected override void OnInitialized()
+    protected override void OnParametersSet()
 	{
 		_cssClasses = GetCssClasses();
 	}
@@ -37,7 +43,7 @@
 		var classes = new CssBuilder("dnet-button")
 		.AddClass("dnet-button-initial-focus", when: InitialFocus);
 
-		foreach (var item in AdditionalAttributes.Where(p => p.Key == "class"))
+        foreach (var item in (AdditionalAttributes ?? EmptyAttributes).Where(p => p.Key.Equals("class", StringComparison.OrdinalIgnoreCase)))
 		{
 			classes.AddClass(item.Value.ToString() ?? string.Empty);
 		}
@@ -47,8 +53,8 @@
 		return result;
 	}
 
-	private void Click()
-	{
-		OnClick.InvokeAsync();
+    private Task ClickAsync()
+    {
+        return OnClick.InvokeAsync();
 	}
 }

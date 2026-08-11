@@ -10,7 +10,13 @@ Net 10.0
 Server-side Blazor and Blazor WASM
 
 ### Documentation
-No documentation available yet, but many examples in the source code.
+The runnable examples are under `samples/`. The stabilization work and its acceptance criteria are tracked in [the implementation plan](docs/implementation-plans/dnet-blazor-stabilization-plan.md).
+
+Component requirements:
+
+- Call `AddDnetBlazor()` before rendering components and include `DnetOverlay` once in the layout when using floating components.
+- For the Material form-field components, call `AddDnetBlazorMaterial()` after `AddDnetBlazor()`.
+- Interactive components expose native buttons or ARIA roles and support standard keyboard interaction; consumers should still provide meaningful labels for icon-only content.
 
 ## Recent Updates (v5.0.0)
 
@@ -93,6 +99,14 @@ using Dnet.Blazor.Infrastructure.Services;
 ```
 ```CSharp
 builder.Services.AddDnetBlazor();
+```
+
+For Material form-field components:
+
+```CSharp
+using Dnet.Blazor.Material.Infrastructure.Services;
+
+builder.Services.AddDnetBlazorMaterial();
 ```
 
 

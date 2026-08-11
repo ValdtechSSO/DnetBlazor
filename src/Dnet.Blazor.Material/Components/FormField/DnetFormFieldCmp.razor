@@ -5,6 +5,8 @@
 
 @inject IFormEventService FormEventService
 
+@implements IDisposable
+
 <div class="@_formFieldClass">
     <div class="mat-form-field-wrapper">
         <div class="mat-form-field-flex" @ref="OverlayOrigin">
@@ -38,9 +40,9 @@
             }
             @if (UseClearButton == true)
             {
-                <div class="dnet-component-icon-wrapper" @onclick="ClearInput">
+                <button type="button" class="dnet-component-icon-wrapper" @onclick="ClearInput" aria-label="Clear input">
                     <span class="dnet-component-icon dnet-component-clear-button"></span>
-                </div>
+                </button>
             }
         </div>
         <div class="mat-form-field-underline">
@@ -68,28 +70,28 @@
 @code {
 
     [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    public RenderFragment? ChildContent { get; set; }
 
     [Parameter]
-    public RenderFragment PrefixContent { get; set; }
+    public RenderFragment? PrefixContent { get; set; }
 
     [Parameter]
-    public RenderFragment SufixContent { get; set; }
+    public RenderFragment? SufixContent { get; set; }
 
     [Parameter]
-    public RenderFragment HintContent { get; set; }
+    public RenderFragment? HintContent { get; set; }
 
     [Parameter]
-    public RenderFragment ErrorContent { get; set; }
+    public RenderFragment? ErrorContent { get; set; }
 
     [Parameter]
     public bool UseClearButton { get; set; }
 
     [Parameter]
-    public string Label { get; set; }
+    public string? Label { get; set; }
 
     [Parameter]
-    public string PlaceHolder { get; set; }
+    public string? PlaceHolder { get; set; }
 
     [Parameter]
     public bool Disabled { get; set; }
@@ -213,9 +215,10 @@
         StateHasChanged();
     }
 
-    private async void ClearInput()
+    private Task ClearInput()
     {
         FormEventService.RaiseClearContent();
+        return Task.CompletedTask;
     }
 
     public void Dispose()

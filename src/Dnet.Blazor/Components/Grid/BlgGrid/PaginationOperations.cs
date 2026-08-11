@@ -2,7 +2,7 @@ namespace Dnet.Blazor.Components.Grid.BlgGrid;
 
 public partial class BlgGrid<TItem>
 {
-    private async void PaginationChanged(int currentPage)
+    private async Task PaginationChanged(int currentPage)
     {
         _searchModel.PaginationModel.CurrentPage = currentPage;
 
@@ -18,29 +18,29 @@ public partial class BlgGrid<TItem>
         if (_pinnedRight) _blgPinnedRight?.ActiveRender();
     }
 
-    private void GoToFirstPage(int currentPage)
+    private Task GoToFirstPage(int currentPage)
     {
-        PaginationChanged(currentPage);
+        return PaginationChanged(currentPage);
     }
 
-    private void GoToPreviousPage(int currentPage)
+    private Task GoToPreviousPage(int currentPage)
     {
-        PaginationChanged(currentPage);
+        return PaginationChanged(currentPage);
     }
 
-    private void GoToNextPage(int currentPage)
+    private Task GoToNextPage(int currentPage)
     {
-        PaginationChanged(currentPage);
+        return PaginationChanged(currentPage);
     }
 
-    private void GoToLastPage(int currentPage)
+    private Task GoToLastPage(int currentPage)
     {
-        PaginationChanged(currentPage);
+        return PaginationChanged(currentPage);
     }
 
-    private void GoToSpecificPage(int specificPage)
+    private Task GoToSpecificPage(int specificPage)
     {
-        PaginationChanged(specificPage);
+        return PaginationChanged(specificPage);
     }
 
     private async Task AssignRangeRenderedRows()

@@ -51,25 +51,51 @@
 
 		chipItems.Remove(chip);
 
+		_selectedChips.Remove(chip);
+		if (_selectedId == chip.Id)
+		{
+			_selectedId = 0;
+		}
+
 		StateHasChanged();
 	}
 
-	public void ChipClicked(DnetChip chip)
+	public async Task ChipClicked(DnetChip chip)
 	{
-		var previousSelectedChip = chipItems.FirstOrDefault(p => p.Id == _selectedId);
-
-		if (!Multi && chip.IsSelected() && _selectedChips.Count > 0 && previousSelectedChip != null)
+		if (!chipItems.Contains(chip))
 		{
-			_selectedChips.Remove(previousSelectedChip);
-
-			previousSelectedChip.SelectThisChip(false);
+			return;
 		}
 
-		_selectedChips.Add(chip);
+		if (!chip.IsSelected())
+		{
+			_selectedChips.Remove(chip);
+			if (_selectedId == chip.Id)
+			{
+				_selectedId = 0;
+			}
+		}
+		else
+		{
+			if (!Multi)
+			{
+				foreach (var selectedChip in _selectedChips.Where(selected => !ReferenceEquals(selected, chip)).ToList())
+				{
+					selectedChip.SelectThisChip(false);
+				}
 
-		OnSelectionChange.InvokeAsync(_selectedChips);
+				_selectedChips.Clear();
+			}
 
-		_selectedId = chip.Id;
+			if (!_selectedChips.Contains(chip))
+			{
+				_selectedChips.Add(chip);
+			}
+
+			_selectedId = chip.Id;
+		}
+
+		await OnSelectionChange.InvokeAsync(_selectedChips.ToList());
 	}
 
 	private int GetId()

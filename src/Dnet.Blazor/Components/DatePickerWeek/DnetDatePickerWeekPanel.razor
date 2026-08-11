@@ -222,7 +222,10 @@
 
         if (_days != null && _days.Any())
         {
-            SelectWeekDays(_days.FirstOrDefault(p => p.IsToday));
+            foreach (var day in _days)
+            {
+                day.IsSelected = false;
+            }
 
             SelectWeekDays(selectedDay);
 
@@ -285,11 +288,19 @@
 
         while (selectedDate.DayOfWeek != DayOfWeek.Sunday)
         {
-            result.Add(allDays.Find(d => d.Date.Date == selectedDate.Date));
+            var day = allDays.Find(d => d.Date.Date == selectedDate.Date);
+            if (day is not null)
+            {
+                result.Add(day);
+            }
             selectedDate = selectedDate.AddDays(1);
         }
 
-        result.Add(allDays.Find(d => d.Date.Date == selectedDate.Date));
+        var lastDay = allDays.Find(d => d.Date.Date == selectedDate.Date);
+        if (lastDay is not null)
+        {
+            result.Add(lastDay);
+        }
 
         return result;
     }
@@ -307,11 +318,19 @@
 
         while (selectedDate.DayOfWeek != DayOfWeek.Sunday)
         {
-            _days.Find(d => d.Date.Date == selectedDate.Date).IsSelected = true;
+            var day = _days.Find(d => d.Date.Date == selectedDate.Date);
+            if (day is not null)
+            {
+                day.IsSelected = true;
+            }
             selectedDate = selectedDate.AddDays(1);
         }
 
-        _days.Find(d => d.Date.Date == selectedDate.Date).IsSelected = true;
+        var lastDay = _days.Find(d => d.Date.Date == selectedDate.Date);
+        if (lastDay is not null)
+        {
+            lastDay.IsSelected = true;
+        }
     }
 
     public string GetWeekInterval(CalendarDay selectedDay, List<CalendarDay> allDays)
@@ -531,13 +550,13 @@
     {
         GetMonthDaysWithFullWeeks(_workingYear, _workingMonth);
 
-        var selectedDay = _days.FirstOrDefault(p => p.IsToday);
-
-        if (_days != null && _days.Any()) SelectWeekDays(selectedDay);
-
-        var selectedDays = GetWeekDays(selectedDay, _days);
-
-        DatePickerService.UpdateSelectedDay(selectedDays);
+        var selectedDay = _days?.FirstOrDefault(p => p.IsToday);
+        if (selectedDay is not null && _days is not null)
+        {
+            SelectWeekDays(selectedDay);
+            var selectedDays = GetWeekDays(selectedDay, _days);
+            DatePickerService.UpdateSelectedDay(selectedDays);
+        }
 
         StateHasChanged();
     }

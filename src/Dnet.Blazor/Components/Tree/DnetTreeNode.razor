@@ -4,13 +4,13 @@
 
 @typeparam TNode
 
-<li>
+<li role="treeitem" aria-expanded="@(Node?.Children?.Count > 0 ? Node.IsExpanded() : null)" aria-selected="@Node?.IsSelected()">
 	<div class="dnet-tree-parent-node">
 		@if (Node.Children != null && Node.Children.Count > 0)
 		{
-			<div class="dnet-tree-icon-wrapper" @onclick="@Toggle">
+			<button type="button" class="dnet-tree-icon-wrapper" @onclick="Toggle" aria-label="@(Node.IsExpanded() ? "Collapse node" : "Expand node")">
 				<span class="dnet-tree-icon @(Node.IsExpanded() ? "dnet-icon-node-open" : "dnet-icon-node-close")"></span>
-			</div>
+			</button>
 		}
 		else
 		{
@@ -22,7 +22,7 @@
 			var isSelected = Node.IsSelected();
 			<DnetInputCheckbox Value ="@isSelected" ValueChanged ="CheckboxClicked" ValueExpression="() => isSelected" class="dnet-m-r-5"></DnetInputCheckbox>
 		}
-		<div class="dnet-tree-content @(Node.IsActive() ? "active" : null)" @onclick="TreeNodeClicked">
+		<div class="dnet-tree-content @(Node.IsActive() ? "active" : null)" tabindex="0" @onclick="TreeNodeClicked" @onkeydown="OnKeyDown">
 			@if (NodeContent != null)
 			{
 				@NodeContent(Node.TreeNodeData)
@@ -36,7 +36,7 @@
 	@if (Node.Children != null && Node.Children.Count > 0 && Node.IsExpanded())
 	{
 		<div class="dnet-tree-node-outlet @OpenCssClass">
-			<ul>
+			<ul role="group">
 				@foreach (var treeNodeModel in Node.Children)
 				{
 					<DnetTreeNode Node="@treeNodeModel"
@@ -57,7 +57,7 @@
 @code {
 
 	[CascadingParameter]
-	public DnetTree<TNode> DnetTreeComponent { get; set; }
+	public DnetTree<TNode> DnetTreeComponent { get; set; } = default!;
 
 	[Parameter]
 	public RenderFragment<TNode>? NodeContent { get; set; }
@@ -75,16 +75,16 @@
 	public EventCallback<List<TNode>> OnSelectionChange { get; set; }
 
 	[Parameter]
-	public TreeNodeModel<TNode>? Node { get; set; }
+	public TreeNodeModel<TNode> Node { get; set; } = default!;
 
 	[Parameter]
-	public Func<TNode, List<TNode>>? ChildNodes { get; set; }
+	public Func<TNode, List<TNode>?>? ChildNodes { get; set; }
 
 	[Parameter]
 	public IDictionary<string, object>? Parameters { get; set; }
 
 	[Parameter]
-	public Func<TNode, string> DisplayValueConverter { get; set; }
+	public Func<TNode, string> DisplayValueConverter { get; set; } = value => value?.ToString() ?? string.Empty;
 
 	[Parameter]
 	public bool CheckboxSelection { get; set; }
@@ -98,13 +98,13 @@
 	{
 	}
 
-	private async void Toggle()
+	private async Task Toggle()
 	{
 		Node.ExpandNode(!Node.IsExpanded());
 		await OnTreeNodeParentToggle.InvokeAsync(Node.IsExpanded());
 	}
 
-	private async void TreeNodeClicked()
+	private async Task TreeNodeClicked()
 	{
 		Node.ActiveThisNode(!Node.IsActive());
 
@@ -115,7 +115,7 @@
 		await OnTreeNodeClicked.InvokeAsync(Node.TreeNodeData);
 	}
 
-	private async void CheckboxClicked()
+	private async Task CheckboxClicked()
 	{
 		//Order matter
 
@@ -133,6 +133,14 @@
 
 		await OnSelectionChange.InvokeAsync(rowData);
 	}
+
+	private Task OnKeyDown(KeyboardEventArgs eventArgs) => eventArgs.Key switch
+	{
+		"Enter" or " " => TreeNodeClicked(),
+		"ArrowRight" when Node.Children is { Count: > 0 } && !Node.IsExpanded() => Toggle(),
+		"ArrowLeft" when Node.Children is { Count: > 0 } && Node.IsExpanded() => Toggle(),
+		_ => Task.CompletedTask
+	};
 
 	private void ManageSelection(List<TreeNodeModel<TNode>> nodes)
 	{

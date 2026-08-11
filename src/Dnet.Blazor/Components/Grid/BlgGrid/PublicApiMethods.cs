@@ -1,5 +1,6 @@
 using Dnet.Blazor.Components.Grid.Infrastructure.Entities;
 using Dnet.Blazor.Components.Grid.Infrastructure.Enums;
+using Microsoft.JSInterop;
 
 namespace Dnet.Blazor.Components.Grid.BlgGrid;
 
@@ -31,7 +32,9 @@ public partial class BlgGrid<TItem>
 
     public async Task SetColumnDefsAsync(List<GridColumn<TItem>> gridColumns)
     {
-        if (GridColumns != null && GridColumns.Any()) 
+        ArgumentNullException.ThrowIfNull(gridColumns);
+
+        if (gridColumns.Any())
             _gridColumns = AdvancedFilteringService.InitAdvancedFilterModels(gridColumns, GridOptions.DefaultAdvancedFilterOperator);
 
         _pinnedRight = _gridColumns.Where(e => e.Pinned == Pinned.Right && !e.Hide).Any();
@@ -138,7 +141,7 @@ public partial class BlgGrid<TItem>
         }
     }
 
-    private async void OnScroll()
+    private async Task OnScroll()
     {
         var result = await BlGridInterop.GetElementScrollLeft(_eBodyHorizontalScrollViewport);
 
@@ -171,6 +174,18 @@ public partial class BlgGrid<TItem>
     public async ValueTask DisposeAsync()
     {
         _refreshCts?.Cancel();
+
+        try
+        {
+            await BlGridInterop.RemoveEventListeners(_eGridContainer);
+            await BlGridInterop.RemoveEventListeners(_eCenterContainer);
+        }
+        catch (JSDisconnectedException)
+        {
+        }
+
+        _windowEventReference?.Dispose();
+        _touchEventReference?.Dispose();
 
         if (_jsInterop != null)
         {

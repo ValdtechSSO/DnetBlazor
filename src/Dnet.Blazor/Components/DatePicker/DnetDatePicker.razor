@@ -213,9 +213,20 @@
         }
     }
 
-    private async void DaySelectedAsync(CalendarDay day)
+    private void DaySelectedAsync(CalendarDay day) => _ = InvokeAsync(() => HandleDaySelectedAsync(day));
+
+    private async Task CloseDialogAsync(OverlayResult overlayDataResult)
     {
-        await HandleDaySelectedAsync(day);
+        if (TryCreateCalendarDay(CurrentValue, out var day))
+        {
+            await ApplySelectionAsync(day);
+        }
+        else
+        {
+            await NotifyInvalidInputAsync();
+        }
+
+        _isOpen = false;
     }
 
     protected override bool TryParseValueFromString(string value, out string result, out string validationErrorMessage)
@@ -361,19 +372,7 @@
         }
     }
 
-    private async void CloseDialog(OverlayResult overlayDataResult)
-    {
-        if (TryCreateCalendarDay(CurrentValue, out var day))
-        {
-            await ApplySelectionAsync(day);
-        }
-        else
-        {
-            await NotifyInvalidInputAsync();
-        }
-
-        _isOpen = false;
-    }
+    private void CloseDialog(OverlayResult overlayDataResult) => _ = InvokeAsync(() => CloseDialogAsync(overlayDataResult));
 
     private async Task HandleDaySelectedAsync(CalendarDay day)
     {
@@ -557,10 +556,9 @@
         UpdateErrorState();
     }
 
-    private async void ClearInput()
-    {
-        await HandleDaySelectedAsync(new CalendarDay());
-    }
+    private void ClearInput() => _ = InvokeAsync(() => ClearInputAsync());
+
+    private Task ClearInputAsync() => HandleDaySelectedAsync(new CalendarDay());
 
     private void SufixContentClicked()
     {

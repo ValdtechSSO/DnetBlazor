@@ -4,11 +4,13 @@ using Microsoft.JSInterop;
 
 namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
 {
-    public class ViewportRuler : IViewportRuler, IDisposable
+    public class ViewportRuler : IViewportRuler, IDisposable, IAsyncDisposable
     {
         private readonly DnetOverlayInterop _dnetOverlayInterop;
         private readonly IJSRuntime _jsRuntime;
-        private EventHandler<Models.Size> _onResized;
+        private EventHandler<Models.Size>? _onResized;
+        private DotNetObjectReference<ViewportRuler>? _selfReference;
+        private bool _listenersAttached;
 
         private bool _disposed;
 
@@ -18,7 +20,7 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
             remove => Unsubscribe(value);
         }
 
-        private Models.Size _viewportSize;
+        private Models.Size? _viewportSize;
 
         public ViewportRuler(DnetOverlayInterop dnetOverlayInterop, IJSRuntime jsRuntime)
         {
@@ -29,12 +31,8 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
         public async Task<Models.Size> GetViewportSize()
         {
 
-            if (_viewportSize != null)
-            {
-                await UpdateViewportSize();
-            }
-
-            return _viewportSize;
+            await UpdateViewportSize();
+            return _viewportSize!;
         }
 
         public async Task<ClientRect> GetViewportRect()
@@ -117,7 +115,11 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
         }
 
         [JSInvokable]
-        public void OnWindowResized(Models.Size size) => _onResized?.Invoke(this, size);
+        public void OnWindowResized(Models.Size size)
+        {
+            _viewportSize = size;
+            _onResized?.Invoke(this, size);
+        }
 
         private void Unsubscribe(EventHandler<Models.Size> value)
         {
@@ -125,43 +127,77 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
 
             if (_onResized == null)
             {
-                RemoveWindowEventListeners().ConfigureAwait(false);
+                _ = RemoveWindowEventListeners();
             }
         }
 
         private void Subscribe(EventHandler<Models.Size> value)
         {
-            if (_onResized == null)
-            {
-                Task.Run(async () => await AddWindowEventListeners());
-            }
-
             _onResized += value;
+
+            if (!_listenersAttached)
+            {
+                _ = AddWindowEventListeners();
+            }
         }
 
         public async ValueTask<bool> AddWindowEventListeners()
         {
-            return await _jsRuntime.InvokeAsync<bool>("dnetoverlay.addWindowEventListeners", DotNetObjectReference.Create(this));
-        } 
-
-        public async ValueTask RemoveWindowEventListeners() => await _jsRuntime.InvokeVoidAsync("dnetoverlay.removeWindowEventListeners");
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposed)
+            if (_disposed || _listenersAttached)
             {
-                if (disposing)
-                {
-                    _onResized = null;
-                }
+                return !_disposed;
+            }
 
-                _disposed = true;
+            _selfReference ??= DotNetObjectReference.Create(this);
+            _listenersAttached = await _jsRuntime.InvokeAsync<bool>("dnetoverlay.addWindowEventListeners", _selfReference);
+            return _listenersAttached;
+        }
+
+        public async ValueTask RemoveWindowEventListeners()
+        {
+            if (_selfReference is null)
+            {
+                return;
+            }
+
+            try
+            {
+                if (_listenersAttached)
+                {
+                    await _jsRuntime.InvokeVoidAsync("dnetoverlay.removeWindowEventListeners", _selfReference);
+                }
+            }
+            finally
+            {
+                _listenersAttached = false;
+                _selfReference.Dispose();
+                _selfReference = null;
             }
         }
 
         public void Dispose()
         {
-            Dispose(true);
+            if (_disposed)
+            {
+                return;
+            }
+
+            _disposed = true;
+            _onResized = null;
+            _ = RemoveWindowEventListeners();
+            GC.SuppressFinalize(this);
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            if (_disposed && _selfReference is null)
+            {
+                return;
+            }
+
+            _onResized = null;
+            _disposed = true;
+            await RemoveWindowEventListeners();
             GC.SuppressFinalize(this);
         }
     }

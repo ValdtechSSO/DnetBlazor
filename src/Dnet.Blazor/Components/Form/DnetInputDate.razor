@@ -26,7 +26,7 @@
            @onblur=@(() => Blur())
            placeholder="@PlaceHolder"
            disabled="@Disabled"
-           type="datetime" />
+           type="@_typeAttributeValue" />
 }
 else
 {
@@ -42,7 +42,7 @@ else
            @onblur=@(() => Blur())
            placeholder="@PlaceHolder"
            disabled="@Disabled"
-           type="datetime" />
+           type="@_typeAttributeValue" />
 }
 
 
@@ -121,7 +121,7 @@ else
 
     protected override void OnInitialized()
     {
-        _formEventService = _formFieldCascadingValues.FormEventService;
+        _formEventService = _formFieldCascadingValues?.FormEventService;
 
         if (ImmediateResponse)
         {
@@ -274,7 +274,9 @@ else
         }
     }
 
-    private async void HandleClearContent()
+    private void HandleClearContent() => _ = InvokeAsync(HandleClearContentAsync);
+
+    private async Task HandleClearContentAsync()
     {
         CurrentValue = default;
 
@@ -286,8 +288,6 @@ else
 
             if (_formEventService is not null) _formEventService.RaiseError(_hasErrors && EditContext.IsModified(FieldIdentifier));
         }
-
-        await ValueChanged.InvokeAsync(Value);
 
         await OnClearInput.InvokeAsync(true);
 
@@ -303,10 +303,16 @@ else
 
     public void Dispose()
     {
-        if (ImmediateResponse) _debounceTimer.Elapsed -= HandleChangeDebouncedDiscard;
+        if (ImmediateResponse && _debounceTimer is not null)
+        {
+            _debounceTimer.Elapsed -= HandleChangeDebouncedDiscard;
+            _debounceTimer.Dispose();
+        }
 
         if (_formEventService is not null) _formEventService.OnClearContent -= HandleClearContent;
 
         if (EditContext is not null) EditContext.OnFieldChanged -= HandleOnValidationStateChanged;
+
+        DisposeInputBase();
     }
 }

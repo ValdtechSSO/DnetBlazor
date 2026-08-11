@@ -313,7 +313,11 @@ namespace Dnet.Blazor.Infrastructure.Forms
         {
         }
 
-        void IDisposable.Dispose()
+        /// <summary>
+        /// Releases validation resources owned by the base input. Components that declare their own
+        /// <see cref="IDisposable"/> implementation must call this method from their disposal path.
+        /// </summary>
+        protected void DisposeInputBase()
         {
             // When initialization in the SetParametersAsync method fails, the EditContext property can remain equal to null
             if (EditContext is not null)
@@ -330,5 +334,7 @@ namespace Dnet.Blazor.Infrastructure.Forms
 
             Dispose(disposing: true);
         }
+
+        void IDisposable.Dispose() => DisposeInputBase();
     }
 }

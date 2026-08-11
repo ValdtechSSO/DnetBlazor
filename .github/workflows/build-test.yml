@@ -1,0 +1,30 @@
+name: Build and test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - Feature_*
+
+env:
+  DOTNET_VERSION: 10.0.x
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Restore
+        run: dotnet restore DnetBlazorComponents.sln
+      - name: Build
+        run: dotnet build DnetBlazorComponents.sln --configuration Release --no-restore
+      - name: Test
+        run: dotnet test DnetBlazorComponents.sln --configuration Release --no-build --verbosity normal
+      - name: Build frontend assets
+        run: |
+          npm ci --ignore-scripts
+          npm run buildDnetBlazor

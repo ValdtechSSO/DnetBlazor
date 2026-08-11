@@ -233,7 +233,9 @@
     }
 
 
-    private async void ApplyFlexibleStyles(object _, Size size)
+    private void ApplyFlexibleStyles(object _, Size size) => _ = InvokeAsync(() => ApplyFlexibleStylesAsync(size));
+
+    private async Task ApplyFlexibleStylesAsync(Size size)
     {
         if (OverlayConfig.PositionStrategy != PositionStrategy.FlexibleConnectedTo) return;
 
@@ -343,20 +345,17 @@
         }
         else
         {
-            styles.AddStyle("position", $"static").Build();
+            styles.AddStyle("position", "static");
         }
 
         var offsetX = builder.GetOffsetX();
         var offsetY = builder.GetOffsetY();
 
-        if (offsetX > 0)
+        if (offsetX != 0 || offsetY != 0)
         {
-            styles.AddStyle("transform", $"translateX({offsetX}px)");
-        }
-
-        if (offsetY > 0)
-        {
-            styles.AddStyle("transform", $"translateY({offsetY}px)");
+            styles.AddStyle(
+                "transform",
+                $"translate({Convert.ToString(offsetX, CultureInfo.InvariantCulture)}px, {Convert.ToString(offsetY, CultureInfo.InvariantCulture)}px)");
         }
 
         var minWidth = !string.IsNullOrEmpty(OverlayConfig.MinWidth) ? OverlayConfig.MinWidth : $"{Convert.ToString(originRect.Width, CultureInfo.InvariantCulture)}px";
@@ -402,7 +401,7 @@
                                        .AddStyle("max-width", OverlayConfig.MaxWidth, when: !string.IsNullOrEmpty(maxWidth))
                                        .AddStyle("max-height", OverlayConfig.MaxHeight, when: !string.IsNullOrEmpty(maxHeight))
                                        .AddStyle("margin-top", OverlayConfig.MarginTop, when: !string.IsNullOrEmpty(OverlayConfig.MarginTop))
-                                       .AddStyle("margin-bottom", OverlayConfig.MarginTop, when: !string.IsNullOrEmpty(OverlayConfig.MarginTop))
+                                       .AddStyle("margin-bottom", OverlayConfig.MarginBottom, when: !string.IsNullOrEmpty(OverlayConfig.MarginBottom))
                                        .AddStyle("z-index", $"{OverlayConfig.PanelZindex}", when: OverlayConfig.PanelZindex != null)
                                        .Build();
 
@@ -657,8 +656,7 @@
         // viewport and allow for the trailing end of the overlay to go out of bounds.
         if (overlay.Width <= viewport.Width)
         {
-            // Estaba esto pushX = overflowLeft || -overflowRight;
-            pushX = overflowLeft >= 0 ? overflowLeft : -overflowRight;
+            pushX = overflowLeft > 0 ? overflowLeft : -overflowRight;
         }
         else
         {
@@ -667,8 +665,7 @@
 
         if (overlay.Height <= viewport.Height)
         {
-            // Estaba esto pushY = overflowTop || -overflowBottom;
-            pushY = overflowTop >= 0 ? overflowTop : -overflowBottom;
+            pushY = overflowTop > 0 ? overflowTop : -overflowBottom;
         }
         else
         {
@@ -699,4 +696,3 @@
         public string? Width { get; set; }
     }
 }
-
