@@ -8,10 +8,14 @@ public partial class BlgGrid<TItem>
 {
     public async Task SetRowDataAsync(List<TItem> gridData, int? totalItems = null, int? currentPage = null)
     {
-        _nextId = 0;
+        CaptureSelectionKeys();
+        _hasResolvedInitialVirtualWindow = false;
+        _nextId = -1;
         _gridData = gridData;
         _treeRn = BuildRowNodes();
         _rowNodes = FlattenTree(_treeRn, 0).FindAll(e => e.Show);
+        _sourceItemCount = _rowNodes.Count(rowNode => !rowNode.IsGroup && rowNode.RowData is not null);
+        RebuildRowIndexes();
 
         if (GridOptions.EnableServerSidePagination && totalItems != null) 
             _searchModel.PaginationModel.ItemsCount = (int)totalItems;
@@ -39,12 +43,57 @@ public partial class BlgGrid<TItem>
 
         _pinnedRight = _gridColumns.Where(e => e.Pinned == Pinned.Right && !e.Hide).Any();
         _pinnedLeft = _gridColumns.Where(e => e.Pinned == Pinned.Left && !e.Hide).Any();
+        RebuildLayoutSnapshot();
 
         if (_blgHeader != null) _blgHeader.ActiveRender();
 
         await InitializeGrid();
 
         StateHasChanged();
+    }
+
+    /// <summary>
+    /// Rebuilds the row tree after an in-place mutation of <see cref="GridData"/>.
+    /// Prefer supplying a new collection reference when practical.
+    /// </summary>
+    public async Task RefreshDataAsync()
+    {
+        CaptureSelectionKeys();
+        _hasResolvedInitialVirtualWindow = false;
+        _nextId = -1;
+        _gridData = GridData;
+        InitializeGridWorkingData();
+        await InitializeGrid();
+    }
+
+    /// <summary>
+    /// Reprocesses column definitions after an in-place change.
+    /// </summary>
+    public Task RefreshColumnsAsync() => SetColumnDefsAsync(GridColumns);
+
+    /// <summary>
+    /// Applies a changed layout, including pinned state and row height.
+    /// </summary>
+    public async Task RefreshLayoutAsync()
+    {
+        _itemSize = GridOptions.RowHeight;
+        _pinnedRight = _gridColumns.Any(e => e.Pinned == Pinned.Right && !e.Hide);
+        _pinnedLeft = _gridColumns.Any(e => e.Pinned == Pinned.Left && !e.Hide);
+        RebuildLayoutSnapshot();
+        await Update();
+    }
+
+    private async Task RetryAsync()
+    {
+        _refreshException = null;
+
+        if (GridOptions.UseVirtualization)
+        {
+            await UpdateItemDistributionAsync(_itemsBefore, _visibleItemCapacity, true);
+            return;
+        }
+
+        await RefreshDataAsync();
     }
 
     private void ManageGridCellSpanning()
@@ -103,6 +152,7 @@ public partial class BlgGrid<TItem>
             _treeRn.Data.Show = false;
 
             _rowNodes = FlattenTree(_treeRn, 0).FindAll(e => e.AdvShow && e.Show);
+            RebuildRowIndexes();
 
             var numberOfRows = !GridOptions.EnableServerSidePagination ? _rowNodes.Count : _searchModel.PaginationModel.ItemsCount;
 
@@ -124,6 +174,7 @@ public partial class BlgGrid<TItem>
 
                 if (GridOptions.UseVirtualization)
                 {
+                    SeedInitialVirtualWindow();
                     if (!_firstRender) await DefaultVirtualization();
                 }
                 else

@@ -1,30 +1,63 @@
 using Dnet.Blazor.Components.Grid.Infrastructure.Entities;
 using Dnet.Blazor.Components.Grid.Virtualize;
 using Microsoft.JSInterop;
+using System.Diagnostics;
 
 namespace Dnet.Blazor.Components.Grid.BlgGrid;
 
 public partial class BlgGrid<TItem>
 {
+    private void SeedInitialVirtualWindow()
+    {
+        _itemCount = _renderedRowNodes.Count;
+        _itemsBefore = 0;
+
+        var fallbackCapacity = Math.Max(1, (Math.Max(0, GridOptions.OverscanCount) * 2) + 1);
+        _visibleItemCapacity = Math.Max(1, _visibleItemCapacity > 0 ? _visibleItemCapacity : fallbackCapacity);
+
+        _loadedItems = _renderedRowNodes;
+        _loadedItemsStartIndex = 0;
+        _itemsToShow = _renderedRowNodes.Take(_visibleItemCapacity).ToList();
+
+        foreach (var rowNode in _itemsToShow)
+        {
+            rowNode.First = false;
+        }
+
+        if (_itemsToShow.Count > 0)
+        {
+            _itemsToShow[0].First = true;
+        }
+
+        _hasResolvedInitialVirtualWindow = true;
+    }
+
     private async Task DefaultVirtualization()
     {
         _lastRenderedItemCount = 0;
 
         CalculateItemDistribution(0, 0, _containerSize, out var itemsBefore, out var visibleItemCapacity);
 
-        UpdateItemDistribution(itemsBefore, visibleItemCapacity, true);
+        // Before the observer reports the viewport size, request at least one
+        // row so an overscan value of zero cannot leave the initial grid blank.
+        visibleItemCapacity = Math.Max(1, visibleItemCapacity);
 
-        await UpdateGridData();
+        await UpdateItemDistributionAsync(itemsBefore, visibleItemCapacity, true);
     }
 
     private async Task UpdateGridData()
     {
+        if (_renderedRefreshVersion != Volatile.Read(ref _refreshVersion))
+        {
+            return;
+        }
+
         var lastItemIndex = Math.Min(_itemsBefore + _visibleItemCapacity, _itemCount);
         // Si la ventana que queremos mostrar aún no está completamente cargada
         // en _loadedItems, mantenemos la vista anterior para evitar zonas en blanco
         if (_loadedItems == null ||
             _itemsBefore < _loadedItemsStartIndex ||
-            lastItemIndex > _loadedItemsStartIndex + _loadedItems.Count())
+            lastItemIndex > _loadedItemsStartIndex + _loadedItems.Count)
         {
             _updatingGridData = false;
             return;
@@ -40,6 +73,8 @@ public partial class BlgGrid<TItem>
 
         if (_itemsToShow.Count > 0)
             _itemsToShow[0].First = true;
+
+        _hasResolvedInitialVirtualWindow = true;
 
         _blgCenter?.ActiveRender();
 
@@ -73,9 +108,7 @@ public partial class BlgGrid<TItem>
             itemsBefore--;
         }
 
-        UpdateItemDistribution(itemsBefore, visibleItemCapacity);
-
-        await UpdateGridData();
+        await UpdateItemDistributionAsync(itemsBefore, visibleItemCapacity);
     }
 
     async Task IVirtualizeJsCallbacks.OnAfterSpacerVisible(float spacerSize, float spacerSeparation, float containerSize)
@@ -99,9 +132,7 @@ public partial class BlgGrid<TItem>
             itemsBefore++;
         }
 
-        UpdateItemDistribution(itemsBefore, visibleItemCapacity);
-
-        await UpdateGridData();
+        await UpdateItemDistributionAsync(itemsBefore, visibleItemCapacity);
     }
 
     private void CalculateItemDistribution(
@@ -124,39 +155,47 @@ public partial class BlgGrid<TItem>
         }
 
         // Align with Virtualize<TItem> in .NET 10: no extra -1
-        itemsInSpacer = Math.Max(0, (int)Math.Floor(spacerSize / _itemSize) - OverscanCount);
+        var overscanCount = Math.Max(0, GridOptions.OverscanCount);
+        itemsInSpacer = Math.Max(0, (int)Math.Floor(spacerSize / _itemSize) - overscanCount);
 
-        visibleItemCapacity = (int)Math.Ceiling(containerSize / _itemSize) + 2 * OverscanCount;
+        visibleItemCapacity = (int)Math.Ceiling(containerSize / _itemSize) + 2 * overscanCount;
     }
 
-    private void UpdateItemDistribution(int itemsBefore, int visibleItemCapacity, bool forceRefresh = false)
+    private async Task UpdateItemDistributionAsync(int itemsBefore, int visibleItemCapacity, bool forceRefresh = false)
     {
         if (itemsBefore + visibleItemCapacity > _itemCount)
         {
             itemsBefore = Math.Max(0, _itemCount - visibleItemCapacity);
         }
 
-        if (itemsBefore == _itemsBefore && visibleItemCapacity == _visibleItemCapacity && forceRefresh == false) return;
+        if (itemsBefore == _itemsBefore && visibleItemCapacity == _visibleItemCapacity && forceRefresh == false)
+        {
+            return;
+        }
 
         _itemsBefore = itemsBefore;
 
         _visibleItemCapacity = visibleItemCapacity;
 
-        var refreshTask = RefreshDataAsync();
-
-        if (!refreshTask.IsCompleted)
-        {
-            StateHasChanged();
-        }
+        await RefreshVirtualDataAsync();
+        await UpdateGridData();
     }
 
-    private async Task RefreshDataAsync()
+    private async Task RefreshVirtualDataAsync()
     {
-        _refreshCts?.Cancel();
+        if (_refreshCts is not null)
+        {
+            Interlocked.Increment(ref _virtualRequestsCancelled);
+        }
 
+        _refreshCts?.Cancel();
+        _refreshCts?.Dispose();
         _refreshCts = new CancellationTokenSource();
 
         var cancellationToken = _refreshCts.Token;
+        var refreshVersion = Interlocked.Increment(ref _refreshVersion);
+        Interlocked.Increment(ref _virtualRequestsStarted);
+        var stopwatch = Stopwatch.StartNew();
 
         var request = new ItemsProviderRequest(_itemsBefore, _visibleItemCapacity, cancellationToken);
 
@@ -165,11 +204,18 @@ public partial class BlgGrid<TItem>
             var result = await _itemsProvider(request);
 
             // Only apply result if the task was not canceled.
-            if (!cancellationToken.IsCancellationRequested)
+            if (!cancellationToken.IsCancellationRequested && refreshVersion == Volatile.Read(ref _refreshVersion))
             {
                 _itemCount = result.TotalItemCount;
-                _loadedItems = result.Items;
+                _loadedItems = result.Items as IReadOnlyList<RowNode<TItem>> ?? result.Items.ToList();
                 _loadedItemsStartIndex = request.StartIndex;
+                _renderedRefreshVersion = refreshVersion;
+                _refreshException = null;
+                Interlocked.Increment(ref _virtualResponsesApplied);
+            }
+            else
+            {
+                Interlocked.Increment(ref _virtualResponsesDiscarded);
             }
         }
         catch (Exception e)
@@ -181,9 +227,17 @@ public partial class BlgGrid<TItem>
             else
             {
                 // Cache this exception so the renderer can throw it.
-                _refreshException = e;
-                StateHasChanged();
+                if (refreshVersion == Volatile.Read(ref _refreshVersion))
+                {
+                    _refreshException = e;
+                    StateHasChanged();
+                }
             }
+        }
+        finally
+        {
+            stopwatch.Stop();
+            Interlocked.Add(ref _virtualRefreshDurationMilliseconds, stopwatch.ElapsedMilliseconds);
         }
     }
 
@@ -195,9 +249,7 @@ public partial class BlgGrid<TItem>
     [JSInvokable]
     public async Task OnTouchMove(ScrollInfo scrollInfo)
     {
-        var result = await BlGridInterop.GetElementScrollLeft(_eBodyHorizontalScrollViewport);
-
-        _transformX = $"-{Math.Floor(result)}px";
+        _transformX = $"-{Math.Floor(scrollInfo.ElementScrollLeft)}px";
 
         StateHasChanged();
     }

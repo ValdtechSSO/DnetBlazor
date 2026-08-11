@@ -47,6 +47,16 @@
         let startX, startY, scrollStartX, touchStart = null;
         let touching = false;
         let moved = false;
+        let pendingScrollInfo = null;
+        let animationFrame = null;
+
+        function notifyTouchScroll() {
+            animationFrame = null;
+            if (pendingScrollInfo === null) return;
+
+            dotNetReference.invokeMethodAsync('OnTouchMove', pendingScrollInfo);
+            pendingScrollInfo = null;
+        }
 
         const touchStartHandler = function (e) {
             if (touching || e.touches.length === 0) return;
@@ -79,16 +89,21 @@
 
             if ((elementScrollLeft === 0 && deltaX < 0) || (elementScrollLeft >= maxScrollLeft && deltaX > 0)) return;
 
-            dotNetReference.invokeMethodAsync('OnTouchMove', {
+            pendingScrollInfo = {
                 maxScrollLeft,
                 deltaX,
                 elementScrollLeft
-            });
+            };
+
+            if (animationFrame === null) {
+                animationFrame = window.requestAnimationFrame(notifyTouchScroll);
+            }
         };
 
         const touchEndHandler = function () {
             touching = false;
             touchStart = null;
+            pendingScrollInfo = null;
         };
 
         elementRef.addEventListener('touchstart', touchStartHandler, { passive: true });
@@ -96,7 +111,14 @@
         elementRef.addEventListener('touchend', touchEndHandler, { passive: true });
 
         const state = listenerStateByElement.get(elementRef) || {};
-        state.touch = { touchStartHandler, touchMoveHandler, touchEndHandler };
+        state.touch = {
+            touchStartHandler,
+            touchMoveHandler,
+            touchEndHandler,
+            cancelAnimationFrame: () => {
+                if (animationFrame !== null) window.cancelAnimationFrame(animationFrame);
+            }
+        };
         listenerStateByElement.set(elementRef, state);
     }
 
@@ -111,9 +133,86 @@
             const mouseLeaveHandler = function () {
                 dotnetClass.invokeMethodAsync('MouseLeave');
             };
+            let hoveredRowId = null;
+
+            const setHoveredRow = function (rowId) {
+                if (hoveredRowId === rowId) return;
+
+                if (hoveredRowId !== null) {
+                    elementRef.querySelectorAll(`[data-blg-row-id="${hoveredRowId}"]`)
+                        .forEach(cell => cell.classList.remove('blg-hover-class'));
+                }
+
+                hoveredRowId = rowId;
+                if (hoveredRowId !== null) {
+                    elementRef.querySelectorAll(`[data-blg-row-id="${hoveredRowId}"]`)
+                        .forEach(cell => cell.classList.add('blg-hover-class'));
+                }
+            };
+
+            const mouseOverHandler = function (event) {
+                const cell = event.target.closest('[data-blg-row-id]');
+                if (cell && elementRef.contains(cell)) {
+                    setHoveredRow(cell.dataset.blgRowId);
+                }
+            };
+
+            const clearHoveredRow = function () {
+                setHoveredRow(null);
+            };
+
+            const keyDownHandler = function (event) {
+                const cell = event.target.closest('[role="gridcell"]');
+                const center = elementRef.querySelector('.blg-center-cols-container');
+                if (!cell || !center || !center.contains(cell)) return;
+
+                const cells = Array.from(center.querySelectorAll('[role="gridcell"]'));
+                const row = Number(cell.getAttribute('aria-rowindex'));
+                const column = Number(cell.getAttribute('aria-colindex'));
+                let target = null;
+
+                const sameRow = candidate => Number(candidate.getAttribute('aria-rowindex')) === row;
+                const candidatesInRow = cells.filter(sameRow);
+                if (event.key === 'ArrowLeft') {
+                    target = candidatesInRow.filter(candidate => Number(candidate.getAttribute('aria-colindex')) < column).pop();
+                } else if (event.key === 'ArrowRight') {
+                    target = candidatesInRow.find(candidate => Number(candidate.getAttribute('aria-colindex')) > column);
+                } else if (event.key === 'ArrowUp') {
+                    target = cells.find(candidate => Number(candidate.getAttribute('aria-rowindex')) === row - 1 && Number(candidate.getAttribute('aria-colindex')) === column);
+                } else if (event.key === 'ArrowDown') {
+                    target = cells.find(candidate => Number(candidate.getAttribute('aria-rowindex')) === row + 1 && Number(candidate.getAttribute('aria-colindex')) === column);
+                } else if (event.key === 'Home') {
+                    target = event.ctrlKey ? cells[0] : candidatesInRow[0];
+                } else if (event.key === 'End') {
+                    target = event.ctrlKey ? cells[cells.length - 1] : candidatesInRow[candidatesInRow.length - 1];
+                } else if (event.key === 'PageUp' || event.key === 'PageDown') {
+                    const visibleRows = [...new Set(cells.map(candidate => candidate.getAttribute('aria-rowindex')))];
+                    const currentRow = visibleRows.indexOf(String(row));
+                    const pageRow = event.key === 'PageUp'
+                        ? visibleRows[Math.max(0, currentRow - Math.max(1, visibleRows.length - 1))]
+                        : visibleRows[Math.min(visibleRows.length - 1, currentRow + Math.max(1, visibleRows.length - 1))];
+                    target = cells.find(candidate => candidate.getAttribute('aria-rowindex') === pageRow && Number(candidate.getAttribute('aria-colindex')) === column);
+                } else {
+                    return;
+                }
+
+                event.preventDefault();
+                if (!target) return;
+
+                cells.forEach(candidate => candidate.setAttribute('tabindex', '-1'));
+                target.setAttribute('tabindex', '0');
+                target.focus();
+            };
+
             elementRef.addEventListener("mouseleave", mouseLeaveHandler);
+            elementRef.addEventListener("mouseover", mouseOverHandler);
+            elementRef.addEventListener("mouseleave", clearHoveredRow);
+            elementRef.addEventListener("keydown", keyDownHandler);
             const state = listenerStateByElement.get(elementRef) || {};
             state.mouseLeaveHandler = mouseLeaveHandler;
+            state.mouseOverHandler = mouseOverHandler;
+            state.clearHoveredRow = clearHoveredRow;
+            state.keyDownHandler = keyDownHandler;
             listenerStateByElement.set(elementRef, state);
 
             return true;
@@ -126,10 +225,20 @@
             if (state.mouseLeaveHandler) {
                 elementRef.removeEventListener("mouseleave", state.mouseLeaveHandler);
             }
+            if (state.mouseOverHandler) {
+                elementRef.removeEventListener("mouseover", state.mouseOverHandler);
+            }
+            if (state.clearHoveredRow) {
+                elementRef.removeEventListener("mouseleave", state.clearHoveredRow);
+            }
+            if (state.keyDownHandler) {
+                elementRef.removeEventListener("keydown", state.keyDownHandler);
+            }
             if (state.touch) {
                 elementRef.removeEventListener('touchstart', state.touch.touchStartHandler);
                 elementRef.removeEventListener('touchmove', state.touch.touchMoveHandler);
                 elementRef.removeEventListener('touchend', state.touch.touchEndHandler);
+                state.touch.cancelAnimationFrame();
             }
             listenerStateByElement.delete(elementRef);
         },

@@ -11,8 +11,9 @@ public partial class BlgGrid<TItem>
         if (_pinnedLeft) _blgPinnedLeft?.ActiveRender();
         if (_pinnedRight) _blgPinnedRight?.ActiveRender();
 
-        var gridColumn = _gridColumns.Find(e => e.ColumnId == cellClikedEventData.CellId);
-        var rownode = _rowNodes.Find(e => e.RowNodeId == cellClikedEventData.RowNodeId);
+        var gridColumn = FindGridColumn(cellClikedEventData.CellId);
+        var rownode = FindRowNode(cellClikedEventData.RowNodeId);
+        if (gridColumn is null || rownode is null) return;
 
         var cellClikedData = new CellClikedData<TItem>();
         cellClikedData.ColumnId = gridColumn.ColumnId;
@@ -27,7 +28,8 @@ public partial class BlgGrid<TItem>
 
     private async Task RowClicked(long rowNodeId)
     {
-        var rowNode = _rowNodes.Find(e => e.RowNodeId == rowNodeId);
+        var rowNode = FindRowNode(rowNodeId);
+        if (rowNode is null) return;
 
         _blgCenter?.ActiveRender();
         if (_pinnedLeft) _blgPinnedLeft?.ActiveRender();
@@ -38,7 +40,8 @@ public partial class BlgGrid<TItem>
 
     private async Task RowDoubleClicked(long rowNodeId)
     {
-        var rowNode = _rowNodes.Find(e => e.RowNodeId == rowNodeId);
+        var rowNode = FindRowNode(rowNodeId);
+        if (rowNode is null) return;
         await OnRowDoubleClicked.InvokeAsync(rowNode);
     }
 
@@ -48,7 +51,8 @@ public partial class BlgGrid<TItem>
         if (_pinnedLeft) _blgPinnedLeft?.ActiveRender();
         if (_pinnedRight) _blgPinnedRight?.ActiveRender();
 
-        var rowNodes = _rowNodes.Where(p => p.RowData is not null && rowNodeIds.Contains(p.RowNodeId)).Select(p => p).ToList();
+        CaptureSelectionKeys();
+        var rowNodes = _rowNodes.Where(p => p.RowData is not null && p.IsSelected()).ToList();
 
         await OnSelectionChanged.InvokeAsync(rowNodes);
     }
@@ -58,6 +62,7 @@ public partial class BlgGrid<TItem>
         if (!_rowNodes.Any() || _treeRn == null) return;
 
         AuxChangeSelectAllNodes(_treeRn, value);
+        CaptureSelectionKeys();
 
         var selectedRowNodes = new List<RowNode<TItem>>();
 
@@ -85,17 +90,30 @@ public partial class BlgGrid<TItem>
     public async Task SelectAll()
     {
         _treeRn = SelectTreeRowNode(_treeRn, true);
+        CaptureSelectionKeys();
         await Update();
     }
 
     public async Task DeselectAll()
     {
         _treeRn = SelectTreeRowNode(_treeRn, false);
+        CaptureSelectionKeys();
         await Update();
     }
 
-    public List<RowNode<TItem>> GetSelectedNodes()
+    /// <summary>
+    /// Gets the selected nodes currently visible in the Grid.
+    /// </summary>
+    public List<RowNode<TItem>> GetSelectedNodes() => GetSelectedNodes(visibleOnly: true);
+
+    /// <summary>
+    /// Gets selected nodes. Set <paramref name="visibleOnly"/> to false to
+    /// include selections retained while a row is filtered or collapsed.
+    /// </summary>
+    public List<RowNode<TItem>> GetSelectedNodes(bool visibleOnly)
     {
-        return _rowNodes.Where(e => e.IsSelected()).ToList();
+        return (visibleOnly ? _rowNodes : GetAllRowNodes())
+            .Where(rowNode => rowNode.IsSelected())
+            .ToList();
     }
 }

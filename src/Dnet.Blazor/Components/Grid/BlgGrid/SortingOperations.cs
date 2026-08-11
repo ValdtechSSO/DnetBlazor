@@ -9,7 +9,8 @@ public partial class BlgGrid<TItem>
     {
         if (!_rowNodes.Any() || _treeRn == null) return;
 
-        var gridColumn = _gridColumns.Find(e => e.DataField == dataField);
+        var gridColumn = FindGridColumn(dataField);
+        if (gridColumn is null) return;
 
         SortingService.UpdateOrder(_gridColumns, gridColumn);
 

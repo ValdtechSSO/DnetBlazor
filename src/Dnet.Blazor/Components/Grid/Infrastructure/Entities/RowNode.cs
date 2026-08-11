@@ -4,6 +4,15 @@
     {
         public long RowNodeId { get; set; }
 
+        /// <summary>
+        /// Stable consumer-facing identity for data rows. It is preserved across
+        /// rebuilds when a unique <see cref="GridOptions{TItem}.RowKeySelector"/>
+        /// is supplied. A null value uses <see cref="RowNodeId"/> for rendering.
+        /// </summary>
+        public object? StableKey { get; set; }
+
+        internal object RenderKey { get; set; } = new object();
+
         private bool _selected { get; set; } = false;
 
         private bool _clicked { get; set; } = false;

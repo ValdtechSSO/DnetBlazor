@@ -11,7 +11,7 @@
 @typeparam TItem
 
 @{
-    var rowId = 0;
+    var rowId = RowIndexOffset;
 
     @for (var i = 0; i < RowNodes.Count; ++i)
     {
@@ -19,7 +19,8 @@
 
         rowId++;
 
-        <BlgRow RowNode="@rowNode"
+        <BlgRow @key="rowNode.RenderKey"
+        RowNode="@rowNode"
         RowId="@rowId"
         GridColumns="@GridColumns"
         GroupGridColumn="@GroupGridColumn"
@@ -28,6 +29,7 @@
         HasGrouping="@HasGrouping"
         Pinned="@Pinned"
         CheckboxSelectionPinned="@CheckboxSelectionPinned"
+        IsInitialFocusCell="@(Pinned == Pinned.None && i == 0)"
         OnChangeExpanded="ChangeExpanded"
         OnCellClicked="CellClicked"
         OnRowClicked="RowClicked"
@@ -88,6 +90,9 @@
 
     [Parameter]
     public bool CheckboxSelectionPinned { get; set; }
+
+    [Parameter]
+    public int RowIndexOffset { get; set; }
 
     public int RowId { get; set; }
 

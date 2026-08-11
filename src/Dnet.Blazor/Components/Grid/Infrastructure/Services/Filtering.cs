@@ -78,7 +78,7 @@ public class Filtering<TItem> : IFiltering<TItem>
                     case CellDataType.Text:
                     case CellDataType.Number:
                     case CellDataType.Boolean:
-                        compiledFilter.ProcessedFilter = filter.Filter.ToUpperInvariant();
+                        compiledFilter.ProcessedFilter = filter.Filter;
                         compiledFilter.FilterType = FilterType.Contains;
                         break;
 
@@ -177,8 +177,8 @@ public class Filtering<TItem> : IFiltering<TItem>
 
     private bool EvaluateContainsFilter(string cellData, string processedFilter)
     {
-        // Usar IndexOf con StringComparison para mejor rendimiento que Contains
-        return cellData.ToUpperInvariant().IndexOf(processedFilter, OrdinalIgnoreCase) >= 0;
+        // Evita crear una cadena normalizada por cada celda evaluada.
+        return cellData.IndexOf(processedFilter, OrdinalIgnoreCase) >= 0;
     }
 
     private bool EvaluateDateFilter(string cellData, CompiledFilter filter)

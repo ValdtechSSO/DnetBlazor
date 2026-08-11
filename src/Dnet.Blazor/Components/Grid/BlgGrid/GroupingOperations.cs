@@ -46,7 +46,8 @@ public partial class BlgGrid<TItem>
             };
 
             var lastId = _nextId;
-            var gridColumn = _gridColumns.Find(e => e.DataField == dataField);
+            var gridColumn = FindGridColumn(dataField);
+            if (gridColumn is null) return;
 
             _treeRn = GroupingService.AddGroupByColumn(_treeRn, gridColumn, _gridColumns, ref lastId, cellParams);
             _nextId = lastId;
@@ -89,7 +90,8 @@ public partial class BlgGrid<TItem>
                 GridApi = _gridApi,
             };
 
-            var gridColumn = _gridColumns.Find(e => e.DataField == dataField);
+            var gridColumn = FindGridColumn(dataField);
+            if (gridColumn is null) return;
 
             _treeRn = GroupingService.RemoveGroupByColumn(_treeRn, gridColumn, _gridColumns, ref lastId, cellParams);
             _nextId = lastId;

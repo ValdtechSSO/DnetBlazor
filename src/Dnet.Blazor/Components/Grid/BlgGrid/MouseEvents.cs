@@ -96,12 +96,14 @@ public partial class BlgGrid<TItem>
 
         _mouseDown = false;
         _lastColumnPosition = 0;
+        RebuildLayoutSnapshot();
+        StateHasChanged();
     }
 
     private void OnMouseDown(Tuple<string, int> redimensionInfo)
     {
         _mouseDown = true;
-        _columnSelected = _gridColumns.FirstOrDefault(p => p.DataField == redimensionInfo.Item1);
+        _columnSelected = FindGridColumn(redimensionInfo.Item1);
         _lastColumnPosition = redimensionInfo.Item2;
     }
 

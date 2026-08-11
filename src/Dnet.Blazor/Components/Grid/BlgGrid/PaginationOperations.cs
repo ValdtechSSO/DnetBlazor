@@ -68,6 +68,7 @@ public partial class BlgGrid<TItem>
 
         if (GridOptions.UseVirtualization)
         {
+            SeedInitialVirtualWindow();
             if (!_firstRender) await DefaultVirtualization();
         }
         else

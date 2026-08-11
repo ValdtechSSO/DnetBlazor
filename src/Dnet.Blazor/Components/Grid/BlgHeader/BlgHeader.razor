@@ -1,4 +1,3 @@
-@using System.Timers
 @using Dnet.Blazor.Components.Form
 @using Dnet.Blazor.Components.Grid.Infrastructure.Services
 @using Dnet.Blazor.Infrastructure.Enums
@@ -29,10 +28,10 @@
 {
     var height = GridOptions.HeaderHeight + "px";
 
-    <div class="blg-header-cell @(Pinned == Pinned.None ? "blg-header-cell-notpinned" : null)" style="flex: 1 0 40px; height: @height; border: none">
+    <div class="blg-header-cell @(Pinned == Pinned.None ? "blg-header-cell-notpinned" : null)" role="columnheader" style="flex: 1 0 40px; height: @height; border: none">
         <div class="blg-header-cell-container">
             <div class="blg-header-cell-label">
-                <input type="checkbox" @onclick="() => ChangeSelectAllNodes()" class="blg-checkbox-no-label">
+                <input type="checkbox" @onclick="() => ChangeSelectAllNodes()" class="blg-checkbox-no-label" aria-label="Seleccionar todas las filas">
             </div>
         </div>
     </div>
@@ -43,13 +42,15 @@
     var width = GroupGridColumn.Width + "px";
     var height = GridOptions.HeaderHeight + "px";
 
-    <div class="blg-header-cell @(Pinned == Pinned.None ? "blg-header-cell-notpinned" : null)" style="flex: @GroupGridColumn.CanGrow @GroupGridColumn.CanShrink auto; height: @height;">
+    <div class="blg-header-cell @(Pinned == Pinned.None ? "blg-header-cell-notpinned" : null)" role="columnheader" style="flex: @GroupGridColumn.CanGrow @GroupGridColumn.CanShrink auto; height: @height;">
         <div class="blg-header-cell-container">
             <div class="blg-header-cell-label">
                 <span class="blg-header-cell-text">Group</span>
                 @if (GridOptions.ShowExpandCollapseButtons)
                 {
-                    <span class="blg-icon @(_isExpanded == true ? "blg-icon-collapse" : "blg-icon-expand")" unselectable="on" @onclick="(() => Expand())"></span>
+                    <button type="button" class="blg-header-icon-button" @onclick="Expand" aria-label="@(_isExpanded ? "Contraer todos los grupos" : "Expandir todos los grupos")">
+                        <span class="blg-icon @(_isExpanded == true ? "blg-icon-collapse" : "blg-icon-expand")" unselectable="on"></span>
+                    </button>
                 }
             </div>
         </div>
@@ -86,13 +87,13 @@
 
     var cellTextStyle = header.WrapHeaderText ? "white-space: normal; line-height: 15px;" : "overflow: hidden;text-overflow: ellipsis;";
 
-    <div class="blg-header-cell @(Pinned == Pinned.None ? "blg-header-cell-notpinned" : null)" style="position: relative;" title="@header.HeaderName">
+    <div class="blg-header-cell @(Pinned == Pinned.None ? "blg-header-cell-notpinned" : null)" role="columnheader" aria-sort="@GetAriaSort(header)" style="position: relative;" title="@header.HeaderName">
         <div class="blg-header-cell-container">
             @if (header.Sortable)
             {
-                <div class="blg-header-cell-label" @onclick="() => Sort(header)">
+                <button type="button" class="blg-header-cell-label blg-header-sort-button" @onclick="() => Sort(header)" aria-label="@($"Ordenar por {header.HeaderName}")">
                     <span class="blg-header-cell-text" style="@cellTextStyle">@header.HeaderName</span>
-                </div>
+                </button>
             }
             else
             {
@@ -103,9 +104,9 @@
             <div style="display: flex; align-items: center;">
                 @if (header.Sortable)
                 {
-                    <div class="" @onclick="() => Sort(header)">
+                    <button type="button" class="blg-header-icon-button" @onclick="() => Sort(header)" aria-label="@($"Cambiar orden de {header.HeaderName}")">
                         <span class="blg-icon @SortIconClass" unselectable="on"></span>
-                    </div>
+                    </button>
                 }
                 @if (header.CellDataType != CellDataType.None && GridOptions.EnableAdvancedFilter && header.EnableAdvancedFilter)
                 {
@@ -120,18 +121,22 @@
                 {
                     @if (GroupByColumns.Contains(header.DataField))
                     {
-                        <span class="blg-icon blg-icon-radio-button-on" unselectable="on" @onclick="(() => DeleteGroup(header.DataField))" style="cursor: pointer;"></span>
+                        <button type="button" class="blg-header-icon-button" @onclick="(() => DeleteGroup(header.DataField))" aria-label="@($"Quitar agrupación por {header.HeaderName}")">
+                            <span class="blg-icon blg-icon-radio-button-on" unselectable="on"></span>
+                        </button>
                     }
                     else
                     {
-                        <span class="blg-icon blg-icon-radio-button-off" unselectable="on" @onclick="(() => AddGroup(header.DataField))" style="cursor: pointer;"></span>
+                        <button type="button" class="blg-header-icon-button" @onclick="(() => AddGroup(header.DataField))" aria-label="@($"Agrupar por {header.HeaderName}")">
+                            <span class="blg-icon blg-icon-radio-button-off" unselectable="on"></span>
+                        </button>
                     }
                 }
             </div>
         </div>
         @if (header.Pinned == Pinned.None && header.CanGrow == 1)
         {
-            <div style="cursor:col-resize; position:absolute; height:@height; user-select:none; width:7px; background-color:transparent; color: transparent; right: 0px; margin-right: -4px"
+            <div role="separator" aria-orientation="vertical" aria-label="@($"Cambiar anchura de {header.HeaderName}")" aria-valuenow="@header.Width" tabindex="0" style="cursor:col-resize; position:absolute; height:@height; user-select:none; width:7px; background-color:transparent; color: transparent; right: 0px; margin-right: -4px"
                  @onmousedown="(e) => MouseDown(header, e.ClientX)">
                 |
             </div>
@@ -278,8 +283,6 @@
     public EventCallback<bool> OnExpandCollapse { get; set; }
 
 
-    private Timer _debounceTimer;
-
     private bool _shouldRender;
 
     private GridColumn<TItem> _formData = new();
@@ -298,12 +301,6 @@
 
     protected override void OnInitialized()
     {
-        _debounceTimer = new Timer(250);
-
-        _debounceTimer.Elapsed += FilterDiscard;
-
-        _debounceTimer.AutoReset = false;
-
         AllNodesSelected = false;
     }
 
@@ -334,8 +331,6 @@
 
     public void Dispose()
     {
-        _debounceTimer.Elapsed -= FilterDiscard;
-        _debounceTimer?.Dispose();
     }
 
     private void AdvancedFilter(bool filter)
@@ -344,37 +339,23 @@
         _shouldRender = true;
     }
 
-    public void FilterDiscard(Object source, ElapsedEventArgs e)
-    {
-        _ = Filter(e);
-    }
-
-    private async Task Filter(ElapsedEventArgs e)
-    {
-        await InvokeAsync(async () =>
-        {
-            await OnFilter.InvokeAsync(e);
-            _shouldRender = true;
-        });
-    }
-
     private async Task StopTyping()
     {
         await OnFilter.InvokeAsync();
         _shouldRender = true;
     }
 
-    private void Filter(KeyboardEventArgs data)
-    {
-        _debounceTimer.Stop();
-
-        _debounceTimer.Start();
-    }
-
     private bool IsFiltered(AdvancedFilterModel filterData)
     {
         return !string.IsNullOrEmpty(filterData.Value);
     }
+
+    private static string GetAriaSort(GridColumn<TItem> header) => header.SortStatus switch
+    {
+        SortOrder.Ascending => "ascending",
+        SortOrder.Descending => "descending",
+        _ => "none"
+    };
 
     private void Sort(GridColumn<TItem> header)
     {

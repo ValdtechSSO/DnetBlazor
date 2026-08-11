@@ -7,8 +7,9 @@ public partial class BlgGrid<TItem>
 {
     private void InitializeGridWorkingData()
     {
-        if (!string.IsNullOrEmpty(GridOptions.GridClass)) 
-            _gridClasses += " " + GridOptions.GridClass;
+        _gridClasses = string.IsNullOrWhiteSpace(GridOptions.GridClass)
+            ? "blg-arcadia-theme"
+            : $"blg-arcadia-theme {GridOptions.GridClass}";
 
         _mouseDown = false;
         _lastColumnPosition = 0;
@@ -24,6 +25,8 @@ public partial class BlgGrid<TItem>
 
         _treeRn = BuildRowNodes();
         _rowNodes = FlattenTree(_treeRn, 0).FindAll(e => e.Show).ToList();
+        _sourceItemCount = _rowNodes.Count(rowNode => !rowNode.IsGroup && rowNode.RowData is not null);
+        RebuildRowIndexes();
         _gridApi.RowNodes = _rowNodes;
         _gridApi.TreeRowNodes = _treeRn;
     }
@@ -46,6 +49,10 @@ public partial class BlgGrid<TItem>
 
     private async Task InitializeGrid()
     {
+        if (_layoutSnapshot is null)
+        {
+            RebuildLayoutSnapshot();
+        }
         var numberOfRows = !GridOptions.EnableServerSidePagination ? _rowNodes.Count : GridOptions.NumberOfRows;
         _searchModel.PaginationModel.ItemsCount = numberOfRows;
 

@@ -1,5 +1,6 @@
 ﻿using Dnet.Blazor.Components.Grid.Infrastructure.Enums;
 using Dnet.Blazor.Infrastructure.Models.SearchModels.FilterModels;
+using Microsoft.AspNetCore.Components;
 
 namespace Dnet.Blazor.Components.Grid.Infrastructure.Entities
 {
@@ -86,11 +87,37 @@ namespace Dnet.Blazor.Components.Grid.Infrastructure.Entities
         public bool UseVirtualization { get; set; } = true;
 
         /// <summary>
+        /// Accessible name exposed by the semantic center grid.
+        /// </summary>
+        public string AriaLabel { get; set; } = "Grid de datos";
+
+        /// <summary>
+        /// Delay used by consumers that schedule local filtering. A zero value
+        /// requests immediate filtering.
+        /// </summary>
+        public int FilterDebounceMilliseconds { get; set; } = 250;
+
+        public RenderFragment? LoadingTemplate { get; set; }
+
+        public RenderFragment? EmptyTemplate { get; set; }
+
+        public RenderFragment? NoResultsTemplate { get; set; }
+
+        public RenderFragment<Exception>? ErrorTemplate { get; set; }
+
+        /// <summary>
         /// Number of extra items to render before and after the viewport
         /// to reduce blank areas when scrolling fast. Similar to the
         /// overscan behavior in Blazor's built-in Virtualize component.
         /// </summary>
         public int OverscanCount { get; set; } = 3;
+
+        /// <summary>
+        /// Provides a unique stable identity for a data row. Configure this when
+        /// data is refreshed, sorted remotely, or selection must survive a rebuild.
+        /// Null or duplicated values fall back to the internal row ID.
+        /// </summary>
+        public Func<TItem, object?>? RowKeySelector { get; set; }
 
         public Func<TItem, bool>? DisableRow { get; set; }
 

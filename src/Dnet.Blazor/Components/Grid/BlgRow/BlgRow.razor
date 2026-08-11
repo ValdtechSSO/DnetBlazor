@@ -21,10 +21,11 @@
                 @(RowNode.IsClicked() && !RowNode.IsSelected() ? "blg-row-clicked" : null)
                 @(RowNode.IsSelected() ? "blg-row-selected" : null)"
          id="@($"Row{RowNode.RowNodeId}Cell0")"
+         data-blg-row-id="@RowNode.RowNodeId"
          style="flex:0 0 auto; width: 40px; height: 40px; grid-column: 1/1">
         @if (GetDisableRow() == false)
         {
-            <input type="checkbox" checked="@RowNode.IsSelected()" @onchange="CheckboxClicked" class="blg-checkbox-no-label">
+            <input type="checkbox" checked="@RowNode.IsSelected()" @onchange="CheckboxClicked" class="blg-checkbox-no-label" aria-label="@($"Seleccionar fila {RowId}")">
         }
     </div>
 }
@@ -40,6 +41,7 @@
                       @_rowCssClasses @(RowNode.IsHovered() ? "blg-hover-class" : null)
                       @(RowNode.IsClicked() && !RowNode.IsSelected() ? "blg-row-clicked" : null)
                       @(RowNode.IsSelected() ? "blg-row-selected" : null)"
+             data-blg-row-id="@RowNode.RowNodeId"
              style="height: @height; width: @width;">
         </div>
     }
@@ -128,13 +130,18 @@
                     @(GetDisableRow() ? "blg-row-disabled" : null)"
              role="gridcell"
              id="@($"Row{RowNode.RowNodeId}Cell{cellId}")"
+             data-blg-row-id="@RowNode.RowNodeId"
+             aria-selected="@RowNode.IsSelected()"
+             aria-disabled="@GetDisableRow()"
+             aria-rowindex="@RowId"
+             aria-colindex="@cellId"
+             tabindex="@(IsInitialFocusCell && cellId == 1 ? "0" : "-1")"
              style="justify-content: @cell.AlingContent; grid-column-end: span @Math.Min(@columnSpanFn(cellParams), gridColumns.Count - i);
                                         grid-row-end: span @spanRowBy; @cellStyle"
              title="@data"
-        @onmouseover="() => MouseOver(RowNode)"
-        @onmouseout="() => MouseOut(RowNode)"
         @onclick="() => CellClicked(RowNode, cell)"
         @ondblclick="() => RowDoubleClicked(RowNode, cell)"
+        @onkeydown="(args) => CellKeyDown(args, RowNode, cell)"
         @onclick:preventDefault="true">
             @if (cell.CellTemplateFn != null && cell.CellTemplate == null)
             {
@@ -174,11 +181,12 @@ else
                                 @_rowCssClasses @(RowNode.IsHovered() ? "blg-hover-class" : null)
                                 @(RowNode.IsClicked() && !RowNode.IsSelected() ? "blg-row-clicked" : null)
                                 @(RowNode.IsSelected() ? "blg-row-selected" : null)"
+             data-blg-row-id="@RowNode.RowNodeId"
              style="height: @height; grid-column: @(1 + checkboxCounter)/@(GridColumns.Count + 2 + checkboxCounter)">
             <span style="padding-left: @paddingLeft; width: 100%; display: flex">
-                <span @onclick="() => ChangeExpanded(RowNode.RowNodeId)" class="blg-icon-wrapper">
+                <button type="button" @onclick="() => ChangeExpanded(RowNode.RowNodeId)" class="blg-icon-wrapper blg-tree-toggle" aria-label="@($"{(RowNode.Expanded ? "Contraer" : "Expandir")} grupo {RowNode.GroupValue}")" aria-expanded="@RowNode.Expanded">
                     <span class="blg-icon @iconClass" unselectable="on"></span>
-                </span>
+                </button>
                 <span>@RowNode.GroupValue</span>
             </span>
         </div>
@@ -192,10 +200,10 @@ else
             <div class="blg-cell blg-cell-value
                         @_rowCssClasses @(RowNode.IsHovered() ? "blg-hover-class" : null)
                         @(RowNode.IsClicked() && !RowNode.IsSelected() ? "blg-row-clicked" : null)
-                        @(RowNode.IsSelected() ? "blg-row-selected" : null)">
+                        @(RowNode.IsSelected() ? "blg-row-selected" : null)"
+                 data-blg-row-id="@RowNode.RowNodeId">
                 <span style="padding-left: @paddingLeft; width: 100%; display: flex">
-                    <span @onclick="() => ChangeExpanded(RowNode.RowNodeId)" class="blg-icon-wrapper">
-                    </span>
+                    <button type="button" @onclick="() => ChangeExpanded(RowNode.RowNodeId)" class="blg-icon-wrapper blg-tree-toggle" aria-label="@($"{(RowNode.Expanded ? "Contraer" : "Expandir")} grupo {RowNode.GroupValue}")" aria-expanded="@RowNode.Expanded"></button>
                 </span>
             </div>
         }
@@ -251,6 +259,9 @@ else
 
     [Parameter]
     public bool CheckboxSelectionPinned { get; set; }
+
+    [Parameter]
+    public bool IsInitialFocusCell { get; set; }
 
     [Parameter]
     public BlGridMessageEmitter ComponentName { get; set; }
@@ -329,6 +340,10 @@ else
             else if (entry.Name.Equals(nameof(CheckboxSelectionPinned), StringComparison.OrdinalIgnoreCase))
             {
                 CheckboxSelectionPinned = (bool)entry.Value;
+            }
+            else if (entry.Name.Equals(nameof(IsInitialFocusCell), StringComparison.OrdinalIgnoreCase))
+            {
+                IsInitialFocusCell = (bool)entry.Value;
             }
             else if (entry.Name.Equals(nameof(ComponentName), StringComparison.OrdinalIgnoreCase))
             {
@@ -443,6 +458,14 @@ else
         if (GetDisableRow()) return;
 
         OnRowDoubleClicked.InvokeAsync(rowNode.RowNodeId);
+    }
+
+    private void CellKeyDown(KeyboardEventArgs args, RowNode<TItem> rowNode, GridColumn<TItem> cell)
+    {
+        if (args.Key is "Enter" or " ")
+        {
+            CellClicked(rowNode, cell);
+        }
     }
 
     private void CheckboxClicked()

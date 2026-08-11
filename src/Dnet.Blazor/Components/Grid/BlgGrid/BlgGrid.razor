@@ -24,55 +24,51 @@
      style="height: calc(100% - 0px);"
      @onmouseup="() => MouseUp()">
     @{
-        var orderedGridColumns = _gridColumns.OrderBy(p => p.ColumnOrder).ToList();
-
-        var notPinnedColumns = orderedGridColumns.Where(e => e.Pinned == Pinned.None && !e.Hide).Select(p => p).ToList();
-
-        var pinnedColumnsLeft = orderedGridColumns.Where(e => e.Pinned == Pinned.Left && !e.Hide).Select(p => p).ToList();
-
-        var pinnedColumnsRight = orderedGridColumns.Where(e => e.Pinned == Pinned.Right && !e.Hide).Select(p => p).ToList();
-
-        var checkWidth = GridOptions.CheckboxSelectionPinned ? 40 : 0;
-
-        var pinnedColumnsLeftWidth = pinnedColumnsLeft.Select(p => p.Width).Sum();
-
-        pinnedColumnsLeftWidth = pinnedColumnsLeftWidth + checkWidth;
-
-        var pinnedColumnsRightWidth = pinnedColumnsRight.Select(p => p.Width).Sum();
-
-        var leftSpacerWith = pinnedColumnsLeftWidth;
-
-        var rightSpacerWith = pinnedColumnsRightWidth + GridOptions.ScrollWidth;
+        var layout = _layoutSnapshot ??= GridLayoutSnapshot<TItem>.Create(_gridColumns, GridOptions);
+        var notPinnedColumns = layout.CenterColumns;
+        var pinnedColumnsLeft = layout.PinnedLeftColumns;
+        var pinnedColumnsRight = layout.PinnedRightColumns;
+        var leftSpacerWith = layout.PinnedLeftWidth;
+        var rightSpacerWith = layout.PinnedRightWidth + GridOptions.ScrollWidth;
+        var semanticColumnCount = notPinnedColumns.Count + (GridOptions.CheckboxSelectionColumn ? 1 : 0) + (_activeGroups > 0 ? 1 : 0);
+        var semanticRowCount = GridOptions.UseVirtualization ? _itemCount : _rowNodes.Count;
 
         var numberOfRows = GridOptions.PaginationPageSize;
 
-        if (_refreshException != null)
-        {
-            var oldRefreshException = _refreshException;
-            _refreshException = null;
-
-            throw oldRefreshException;
-        }
-
-        <div class="blg-root-wrapper" style="height: calc(100% - 0px);">
+        <div class="blg-root-wrapper" style="height: calc(100% - 0px); position: relative;">
+            @if (_refreshException is not null)
+            {
+                <div class="blg-grid-status" role="alert">
+                    @if (GridOptions.ErrorTemplate is not null)
+                    {
+                        @GridOptions.ErrorTemplate(_refreshException)
+                    }
+                    else
+                    {
+                        <span>No se han podido cargar las filas.</span>
+                        <button type="button" @onclick="RetryAsync">Reintentar</button>
+                    }
+                </div>
+            }
+            else if (_itemsToShow.Count == 0 && (!GridOptions.UseVirtualization || _hasResolvedInitialVirtualWindow))
+            {
+                <div class="blg-grid-status" role="status" aria-live="polite">
+                    @if (_sourceItemCount == 0)
+                    {
+                        @(GridOptions.EmptyTemplate ?? (builder => builder.AddContent(0, "No hay datos.")))
+                    }
+                    else
+                    {
+                        @(GridOptions.NoResultsTemplate ?? (builder => builder.AddContent(0, "No hay resultados para los filtros actuales.")))
+                    }
+                </div>
+            }
             <div class="blg-body-wrapper" style="height: calc(100% - @(GridOptions.SuppressPaginationPanel ? $"{GridOptions.ScrollWidth + 10}px" : $"{PaginatorHeight}px"));">
                 <div class="blg-root" style="height: calc(100% - 0px);">
                     <div class="blg-header">
                         @if (pinnedColumnsLeft.Any())
                         {
-                            var gridTemplateColumnsLeft1 = "";
-
-                            if (GridOptions.CheckboxSelectionColumn && GridOptions.CheckboxSelectionPinned)
-                            {
-                                gridTemplateColumnsLeft1 = "40px";
-                            }
-
-                            foreach (var column in pinnedColumnsLeft)
-                            {
-                                var columnStyle = $"{column.Width}px";
-
-                                gridTemplateColumnsLeft1 = gridTemplateColumnsLeft1 + " " + columnStyle;
-                            }
+                            var gridTemplateColumnsLeft1 = layout.PinnedLeftTemplateColumns;
 
                             var gridTemplateRowsLeft1 = $"{GridOptions.HeaderHeight}px";
 
@@ -102,29 +98,14 @@
                         }
                         <div class="blg-header-viewport" role="presentation">
                             @{
-                                var gridTemplateColumns1 = "";
-
-                                if (GridOptions.CheckboxSelectionColumn)
-                                {
-                                    gridTemplateColumns1 = "40px";
-                                }
-
                                 if (_activeGroups > 0)
                                 {
                                     if (GroupGridColumn.Width <= 0)
                                     {
                                         GroupGridColumn.Width = 200;
                                     }
-
-                                    gridTemplateColumns1 = gridTemplateColumns1 + " " + $"{GroupGridColumn.Width}px";
                                 }
-
-                                foreach (var column in notPinnedColumns)
-                                {
-                                    var columnStyle = column.CanGrow == 1 ? $"minmax({column.Width}px, 1fr)" : $"{column.Width}px";
-
-                                    gridTemplateColumns1 = gridTemplateColumns1 + " " + columnStyle;
-                                }
+                                var gridTemplateColumns1 = layout.GetCenterTemplateColumns(GridOptions.CheckboxSelectionColumn, _activeGroups > 0, GroupGridColumn.Width);
 
                                 var gridTemplateRowsLeft2 = $"{GridOptions.HeaderHeight}px";
 
@@ -162,14 +143,7 @@
                         </div>
                         @if (pinnedColumnsRight.Any())
                         {
-                            var gridTemplateColumnsRight1 = "";
-
-                            foreach (var column in pinnedColumnsRight)
-                            {
-                                var columnStyle = $"{column.Width}px";
-
-                                gridTemplateColumnsRight1 = gridTemplateColumnsRight1 + " " + columnStyle;
-                            }
+                            var gridTemplateColumnsRight1 = layout.PinnedRightTemplateColumns;
 
                             var gridTemplateRowsLeft3 = $"{GridOptions.HeaderHeight}px";
 
@@ -207,19 +181,7 @@
                         <div class="blg-viewport-wrapper" style="display: flex; position: relative; min-width: 0; flex: 1 1 auto;">
                             @if (pinnedColumnsLeft.Any())
                             {
-                                var gridTemplateColumnsLeft = "";
-
-                                if (GridOptions.CheckboxSelectionColumn && GridOptions.CheckboxSelectionPinned)
-                                {
-                                    gridTemplateColumnsLeft = "40px";
-                                }
-
-                                foreach (var column in pinnedColumnsLeft)
-                                {
-                                    var columnStyle = $"{column.Width}px";
-
-                                    gridTemplateColumnsLeft = gridTemplateColumnsLeft + " " + columnStyle;
-                                }
+                                var gridTemplateColumnsLeft = layout.PinnedLeftTemplateColumns;
 
                                 if (GridOptions.UseVirtualization)
                                 {
@@ -246,6 +208,7 @@
                                              GridApi="@_gridApi"
                                              Pinned="Pinned.Left"
                                              CheckboxSelectionPinned="@GridOptions.CheckboxSelectionPinned"
+                                             RowIndexOffset="@_itemsBefore"
                                              ComponentName="@BlGridMessageEmitter.BlgBodyLeft">
                                     </BlgBody>
                                 </div>
@@ -253,24 +216,7 @@
                             <div class="blg-center-cols-clipper" role="presentation">
                                 <div class="blg-center-cols-viewport" role="presentation" id="blg-table">
                                     @{
-                                        var gridTemplateColumns = "";
-
-                                        if (GridOptions.CheckboxSelectionColumn)
-                                        {
-                                            gridTemplateColumns = "40px";
-                                        }
-
-                                        if (_activeGroups > 0)
-                                        {
-                                            gridTemplateColumns = gridTemplateColumns + " " + $"{GroupGridColumn.Width}px";
-                                        }
-
-                                        foreach (var column in notPinnedColumns)
-                                        {
-                                            var columnStyle = column.CanGrow == 1 ? $"minmax({column.Width}px, 1fr)" : $"{column.Width}px";
-
-                                            gridTemplateColumns = gridTemplateColumns + " " + columnStyle;
-                                        }
+                                        var gridTemplateColumns = layout.GetCenterTemplateColumns(GridOptions.CheckboxSelectionColumn, _activeGroups > 0, GroupGridColumn.Width);
 
                                         if (GridOptions.UseVirtualization)
                                         {
@@ -282,6 +228,10 @@
                                         <div @ref="_eCenterContainer"
                                              class="blg-center-cols-container"
                                              role="grid"
+                                             aria-label="@GridOptions.AriaLabel"
+                                             aria-rowcount="@semanticRowCount"
+                                             aria-colcount="@semanticColumnCount"
+                                             aria-multiselectable="@(GridOptions.RowSelectionType == RowSelectionType.Multiple)"
                                              style="transform: translateX(@_transformX); display: grid; grid-template-rows:@gridTemplateRows; grid-template-columns: @gridTemplateColumns">
                                             <BlgBody @ref="_blgCenter"
                                                      GridColumns="notPinnedColumns"
@@ -298,6 +248,7 @@
                                                      GridApi="@_gridApi"
                                                      Pinned="Pinned.None"
                                                      CheckboxSelectionPinned="@(!GridOptions.CheckboxSelectionPinned)"
+                                                     RowIndexOffset="@_itemsBefore"
                                                      ComponentName="@BlGridMessageEmitter.BlgBodyCenter">
                                             </BlgBody>
                                         </div>
@@ -306,14 +257,7 @@
                             </div>
                             @if (pinnedColumnsRight.Any())
                             {
-                                var gridTemplateColumnsRight = "";
-
-                                foreach (var column in pinnedColumnsRight)
-                                {
-                                    var columnStyle = $"{column.Width}px";
-
-                                    gridTemplateColumnsRight = gridTemplateColumnsRight + " " + columnStyle;
-                                }
+                                var gridTemplateColumnsRight = layout.PinnedRightTemplateColumns;
 
                                 if (GridOptions.UseVirtualization)
                                 {
@@ -340,6 +284,7 @@
                                              GridApi="@_gridApi"
                                              Pinned="Pinned.Right"
                                              CheckboxSelectionPinned="false"
+                                             RowIndexOffset="@_itemsBefore"
                                              ComponentName="@BlGridMessageEmitter.BlgBodyRight">
                                     </BlgBody>
                                 </div>
