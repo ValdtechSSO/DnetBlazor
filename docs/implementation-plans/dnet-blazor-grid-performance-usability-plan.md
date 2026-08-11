@@ -209,12 +209,23 @@ Añadir tests que congelen el comportamiento público actual de:
 - Validar que el valor sea mayor o igual que cero.
 - Documentar el compromiso entre memoria, primera pintura y scroll rápido.
 
+**Implementado (2026-08-11)**
+
+- `GridOptions.OverscanCount` usa 15 filas por defecto, en línea con `Virtualize<TItem>` de .NET 11.
+- El observador empieza la siguiente redistribución cuando todavía queda la mitad del buffer de overscan, con un mínimo de 50 px.
+- Los conjuntos paginados que caben en dos ventanas virtuales permanecen montados completos. Así se eliminan los huecos al arrastrar la barra entre extremos sin desactivar la virtualización de conjuntos grandes.
+
 ### GRID-VIR-003 — Materializar una sola vez
 
 - Almacenar la página cargada como `IReadOnlyList<RowNode<TItem>>`.
 - Evitar enumeraciones repetidas de `IEnumerable`.
 - No crear una nueva lista si la ventana solicitada y la versión de datos no han cambiado.
 - Añadir rutas optimizadas para `List<T>` e `IReadOnlyList<T>`.
+
+**Implementado (2026-08-11)**
+
+- El proveedor local materializa directamente con `List<T>.GetRange` y la ventana renderizada reutiliza esa lista.
+- La ruta en memoria no crea ni cancela `CancellationTokenSource`; se conserva la ruta cancelable para futuros proveedores asíncronos.
 
 ### GRID-VIR-004 — Evaluar Virtualize oficial
 
@@ -532,7 +543,7 @@ Cada PR debe cumplir:
 
 - [ ] Baseline de rendimiento almacenada.
 - [ ] Pipeline virtual cancelable, esperado y versionado.
-- [ ] Overscan con una única fuente de configuración.
+- [x] Overscan con una única fuente de configuración.
 - [ ] Layout y mapas de columnas cacheados.
 - [ ] Filas y celdas con identidad estable.
 - [ ] Sin renders .NET por hover visual.

@@ -315,7 +315,7 @@ public partial class BlgGrid<TItem> : ComponentBase, IVirtualizeJsCallbacks, IAs
 
             if (GridOptions.UseVirtualization)
             {
-                await _jsInterop.InitializeAsync(_spacerBefore, _spacerAfter, GridOptions.RowHeight);
+                await _jsInterop.InitializeAsync(_spacerBefore, _spacerAfter, GetVirtualizationRootMargin());
                 await DefaultVirtualization();
             }
             else

@@ -2,6 +2,7 @@ using Dnet.Blazor.Components.Grid.Infrastructure.Entities;
 using Dnet.Blazor.Components.Grid.Virtualize;
 using Microsoft.JSInterop;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace Dnet.Blazor.Components.Grid.BlgGrid;
 
@@ -63,10 +64,23 @@ public partial class BlgGrid<TItem>
             return;
         }
 
-        _itemsToShow = _loadedItems
-            .Skip(_itemsBefore - _loadedItemsStartIndex)
-            .Take(Math.Max(0, lastItemIndex - _itemsBefore))
-            .ToList();
+        var loadedItemsOffset = _itemsBefore - _loadedItemsStartIndex;
+        var itemsToRender = Math.Max(0, lastItemIndex - _itemsBefore);
+
+        // The in-memory provider returns an already-materialized List for the
+        // exact requested window. Reuse it to avoid a second allocation and a
+        // second Skip/Take traversal on every scroll update.
+        if (loadedItemsOffset == 0 && itemsToRender == _loadedItems.Count && _loadedItems is List<RowNode<TItem>> loadedList)
+        {
+            _itemsToShow = loadedList;
+        }
+        else
+        {
+            _itemsToShow = _loadedItems
+                .Skip(loadedItemsOffset)
+                .Take(itemsToRender)
+                .ToList();
+        }
 
         foreach (var rowNode in _itemsToShow)
             rowNode.First = false;
@@ -87,7 +101,23 @@ public partial class BlgGrid<TItem>
         _updatingGridData = false;
     }
 
-    private string GetSpacerStyle(int itemsInSpacer) => $"height: {itemsInSpacer * _itemSize}px; width: {eBodyHorizontalScrollContainerWidth}px";
+    private string GetSpacerStyle(int itemsInSpacer) =>
+        $"height: {(itemsInSpacer * _itemSize).ToString(CultureInfo.InvariantCulture)}px; width: {eBodyHorizontalScrollContainerWidth}px";
+
+    private int GetVirtualizationRootMargin()
+    {
+        const int blazorDefaultRootMargin = 50;
+        var rowHeight = Math.Max(1, GridOptions.RowHeight);
+        var overscanCount = Math.Max(0, GridOptions.OverscanCount);
+
+        // Virtualize<TItem> uses a 50 px observer margin. A Grid row is much
+        // heavier than a typical list item, so begin the next render while half
+        // of the overscan buffer is still available. Keeping the margin below
+        // the full buffer prevents a spacer from remaining intersecting after
+        // redistribution and causing a render loop.
+        var halfOverscanBuffer = (long)rowHeight * overscanCount / 2;
+        return (int)Math.Min(int.MaxValue, Math.Max(blazorDefaultRootMargin, halfOverscanBuffer));
+    }
 
     async Task IVirtualizeJsCallbacks.OnBeforeSpacerVisible(float spacerSize, float spacerSeparation, float containerSize)
     {
@@ -163,6 +193,16 @@ public partial class BlgGrid<TItem>
 
     private async Task UpdateItemDistributionAsync(int itemsBefore, int visibleItemCapacity, bool forceRefresh = false)
     {
+        if (FitsInTwoVirtualWindows(_itemCount, visibleItemCapacity))
+        {
+            // For a small, usually paged data set, swapping almost the entire
+            // row tree costs more than keeping it mounted. Rendering the two
+            // adjacent windows together also makes scrollbar-thumb jumps fully
+            // synchronous in the browser, with no spacer exposed for a frame.
+            itemsBefore = 0;
+            visibleItemCapacity = _itemCount;
+        }
+
         if (itemsBefore + visibleItemCapacity > _itemCount)
         {
             itemsBefore = Math.Max(0, _itemCount - visibleItemCapacity);
@@ -181,18 +221,36 @@ public partial class BlgGrid<TItem>
         await UpdateGridData();
     }
 
+    private static bool FitsInTwoVirtualWindows(int itemCount, int visibleItemCapacity) =>
+        itemCount > 0 && visibleItemCapacity > 0 && itemCount <= (long)visibleItemCapacity * 2;
+
     private async Task RefreshVirtualDataAsync()
     {
-        if (_refreshCts is not null)
+        var usesDefaultProvider = _itemsProvider == DefaultItemsProvider;
+        CancellationToken cancellationToken;
+
+        if (usesDefaultProvider)
         {
-            Interlocked.Increment(ref _virtualRequestsCancelled);
+            // All Grid rows are already in memory. Match Blazor's optimized
+            // default-provider path: no CancellationTokenSource allocation and
+            // no cancellation churn for a ValueTask that completes synchronously.
+            _refreshCts?.Dispose();
+            _refreshCts = null;
+            cancellationToken = CancellationToken.None;
+        }
+        else
+        {
+            if (_refreshCts is not null && !_refreshCts.IsCancellationRequested)
+            {
+                Interlocked.Increment(ref _virtualRequestsCancelled);
+            }
+
+            _refreshCts?.Cancel();
+            _refreshCts?.Dispose();
+            _refreshCts = new CancellationTokenSource();
+            cancellationToken = _refreshCts.Token;
         }
 
-        _refreshCts?.Cancel();
-        _refreshCts?.Dispose();
-        _refreshCts = new CancellationTokenSource();
-
-        var cancellationToken = _refreshCts.Token;
         var refreshVersion = Interlocked.Increment(ref _refreshVersion);
         Interlocked.Increment(ref _virtualRequestsStarted);
         var stopwatch = Stopwatch.StartNew();
@@ -243,7 +301,12 @@ public partial class BlgGrid<TItem>
 
     private ValueTask<ItemsProviderResult<RowNode<TItem>>> DefaultItemsProvider(ItemsProviderRequest request)
     {
-        return ValueTask.FromResult(new ItemsProviderResult<RowNode<TItem>>(_renderedRowNodes!.Skip(request.StartIndex).Take(request.Count), _renderedRowNodes!.Count));
+        var totalItemCount = _renderedRowNodes.Count;
+        var startIndex = Math.Clamp(request.StartIndex, 0, totalItemCount);
+        var itemCount = Math.Clamp(request.Count, 0, totalItemCount - startIndex);
+        var items = _renderedRowNodes.GetRange(startIndex, itemCount);
+
+        return ValueTask.FromResult(new ItemsProviderResult<RowNode<TItem>>(items, totalItemCount));
     }
 
     [JSInvokable]

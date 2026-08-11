@@ -276,6 +276,9 @@
             const scrollContainer = findClosestScrollContainer(spacerBefore);
             (scrollContainer || document.documentElement).style.overflowAnchor = 'none';
 
+            // The Grid passes a margin derived from half of its overscan buffer.
+            // This gives its comparatively expensive row tree time to render
+            // before a spacer reaches the visible viewport during fast scrolling.
             const intersectionObserver = new window.IntersectionObserver(intersectionCallback, {
                 root: scrollContainer,
                 rootMargin: `${rootMargin}px`,

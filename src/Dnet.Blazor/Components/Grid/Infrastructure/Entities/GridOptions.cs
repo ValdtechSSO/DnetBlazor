@@ -107,10 +107,11 @@ namespace Dnet.Blazor.Components.Grid.Infrastructure.Entities
 
         /// <summary>
         /// Number of extra items to render before and after the viewport
-        /// to reduce blank areas when scrolling fast. Similar to the
-        /// overscan behavior in Blazor's built-in Virtualize component.
+        /// to reduce blank areas when scrolling fast. The default follows
+        /// Blazor's Virtualize component starting with .NET 11. Lower values
+        /// reduce DOM size but make blank areas more likely during fast scrolls.
         /// </summary>
-        public int OverscanCount { get; set; } = 3;
+        public int OverscanCount { get; set; } = 15;
 
         /// <summary>
         /// Provides a unique stable identity for a data row. Configure this when

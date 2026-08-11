@@ -8,6 +8,54 @@ namespace Dnet.Blazor.UnitTests;
 public sealed class GridVirtualizationTests
 {
     [Fact]
+    public void Default_overscan_matches_current_blazor_virtualize_default()
+    {
+        var options = new GridOptions<GridItem>();
+
+        Assert.Equal(15, options.OverscanCount);
+    }
+
+    [Theory]
+    [InlineData(40, 15, 300)]
+    [InlineData(40, 3, 60)]
+    [InlineData(40, 0, 50)]
+    public void Observer_margin_prefetches_before_the_overscan_buffer_is_exhausted(
+        int rowHeight,
+        int overscanCount,
+        int expectedMargin)
+    {
+        var grid = new BlgGrid<GridItem>();
+        SetPublicProperty(grid, nameof(BlgGrid<GridItem>.GridOptions), new GridOptions<GridItem>
+        {
+            RowHeight = rowHeight,
+            OverscanCount = overscanCount
+        });
+
+        var margin = InvokePrivate<int>(grid, "GetVirtualizationRootMargin");
+
+        Assert.Equal(expectedMargin, margin);
+    }
+
+    [Theory]
+    [InlineData(100, 56, true)]
+    [InlineData(112, 56, true)]
+    [InlineData(113, 56, false)]
+    [InlineData(100_000, 56, false)]
+    public void Small_paged_sets_avoid_unnecessary_window_swaps(
+        int itemCount,
+        int visibleItemCapacity,
+        bool expected)
+    {
+        var result = InvokePrivateStatic<bool>(
+            typeof(BlgGrid<GridItem>),
+            "FitsInTwoVirtualWindows",
+            itemCount,
+            visibleItemCapacity);
+
+        Assert.Equal(expected, result);
+    }
+
+    [Fact]
     public void Initial_virtual_window_is_seeded_before_the_observer_runs()
     {
         var grid = new BlgGrid<GridItem>();
@@ -62,6 +110,9 @@ public sealed class GridVirtualizationTests
 
     private static TResult InvokePrivate<TResult>(object instance, string name) =>
         (TResult)instance.GetType().GetMethod(name, BindingFlags.Instance | BindingFlags.NonPublic)!.Invoke(instance, null)!;
+
+    private static TResult InvokePrivateStatic<TResult>(Type type, string name, params object[] arguments) =>
+        (TResult)type.GetMethod(name, BindingFlags.Static | BindingFlags.NonPublic)!.Invoke(null, arguments)!;
 
     private sealed record GridItem(int Id);
 }
