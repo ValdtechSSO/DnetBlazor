@@ -1,0 +1,39 @@
+.pick-list-demo {
+    max-width: 360px;
+    width: 100%;
+}
+
+.pick-list-demo-item {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    min-width: 0;
+}
+
+.pick-list-demo-icon {
+    flex: 0 0 24px;
+    text-align: center;
+}
+
+.pick-list-demo-copy {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.pick-list-demo-title,
+.pick-list-demo-supporting {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pick-list-demo-title {
+    color: #202124;
+    font-size: .875rem;
+}
+
+.pick-list-demo-supporting {
+    color: #666;
+    font-size: .75rem;
+}

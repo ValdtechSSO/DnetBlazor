@@ -9,52 +9,66 @@
     <div class="dnet-page-content-left-margin dnet-m-t-20">
         <h5>1–2. Basic local collection and local search</h5>
         <p>Starts with preselected keys and exposes the page-scoped selection and clear actions.</p>
-        <PickList TItem="Team"
-                  TKey="int"
-                  Items="@_teams"
-                  ItemKey="team => team.Id"
-                  SearchTextSelector="team => team.Name"
-                  @bind-SelectedKeys="_localSelectedKeys">
-            <ItemTemplate Context="team">
-                <strong>@team.Name</strong>
-                <span class="dnet-m-l-10">@team.City</span>
-            </ItemTemplate>
-        </PickList>
+        <div class="pick-list-demo">
+            <PickList TItem="Team"
+                      TKey="int"
+                      Items="@_teams"
+                      ItemKey="team => team.Id"
+                      SearchTextSelector="team => team.Name"
+                      @bind-SelectedKeys="_localSelectedKeys">
+                <ItemTemplate Context="team">
+                    <span class="pick-list-demo-copy">
+                        <span class="pick-list-demo-title">@team.Name</span>
+                        <span class="pick-list-demo-supporting">@team.City</span>
+                    </span>
+                </ItemTemplate>
+            </PickList>
+        </div>
         <p>4, 6–7. Preselected keys, Select page and Clear: @string.Join(", ", _localSelectedKeys.Order())</p>
     </div>
 
     <div class="dnet-page-content-left-margin dnet-m-t-20">
         <h5>3 and 5. Server-side provider with a selected key that is not loaded</h5>
-        <PickList TItem="Team"
-                  TKey="int"
-                  ItemsProvider="LoadTeamsAsync"
-                  ItemKey="team => team.Id"
-                  @bind-SelectedKeys="_providerSelectedKeys"
-                  PageSize="3">
-            <ItemTemplate Context="team">
-                <strong>@team.Name</strong>
-                <span class="dnet-m-l-10">@team.City</span>
-            </ItemTemplate>
-        </PickList>
+        <div class="pick-list-demo">
+            <PickList TItem="Team"
+                      TKey="int"
+                      ItemsProvider="LoadTeamsAsync"
+                      ItemKey="team => team.Id"
+                      @bind-SelectedKeys="_providerSelectedKeys"
+                      PageSize="3">
+                <ItemTemplate Context="team">
+                    <span class="pick-list-demo-copy">
+                        <span class="pick-list-demo-title">@team.Name</span>
+                        <span class="pick-list-demo-supporting">@team.City</span>
+                    </span>
+                </ItemTemplate>
+            </PickList>
+        </div>
         <p>Selected provider keys (99 is intentionally absent): @string.Join(", ", _providerSelectedKeys.Order())</p>
     </div>
 
     <div class="dnet-page-content-left-margin dnet-m-t-20">
         <h5>8–9. Custom template and localized strings</h5>
-        <PickList TItem="Team"
-                  TKey="int"
-                  Items="@_teams"
-                  ItemKey="team => team.Id"
-                  SearchTextSelector="SearchableText"
-                  @bind-SelectedKeys="_localizedSelectedKeys"
-                  Strings="@SpanishStrings"
-                  PageSize="4">
-            <ItemTemplate Context="team">
-                <span aria-hidden="true">🏀</span>
-                <strong>@team.Name</strong>
-                <small class="dnet-m-l-10">@team.City</small>
-            </ItemTemplate>
-        </PickList>
+        <div class="pick-list-demo">
+            <PickList TItem="Team"
+                      TKey="int"
+                      Items="@_teams"
+                      ItemKey="team => team.Id"
+                      SearchTextSelector="SearchableText"
+                      @bind-SelectedKeys="_localizedSelectedKeys"
+                      Strings="@SpanishStrings"
+                      PageSize="4">
+                <ItemTemplate Context="team">
+                    <span class="pick-list-demo-item">
+                        <span class="pick-list-demo-icon" aria-hidden="true">🏀</span>
+                        <span class="pick-list-demo-copy">
+                            <span class="pick-list-demo-title">@team.Name</span>
+                            <span class="pick-list-demo-supporting">@team.City</span>
+                        </span>
+                    </span>
+                </ItemTemplate>
+            </PickList>
+        </div>
     </div>
 </div>
 

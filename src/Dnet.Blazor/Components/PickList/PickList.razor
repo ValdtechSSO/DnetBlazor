@@ -6,6 +6,7 @@
 <section class="dnet-pick-list" aria-busy="@_isLoading">
     <label class="dnet-pick-list-search">
         <span class="dnet-pick-list-sr-only">@EffectiveStrings.SearchPlaceholder</span>
+        <span class="dnet-pick-list-search-icon" aria-hidden="true"></span>
         <input @key="_searchRenderGeneration"
                type="search"
                value="@EffectiveSearchText"
@@ -31,29 +32,6 @@
             </button>
         </div>
     </div>
-
-    <nav class="dnet-pick-list-pager" aria-label="@EffectiveStrings.PaginationLabel">
-        <button type="button" aria-label="@EffectiveStrings.FirstPageLabel" disabled="@(_isLoading || !HasKnownPages || _pageIndex == 0)" @onclick="GoToFirstPageAsync">«</button>
-        <button type="button" aria-label="@EffectiveStrings.PreviousPageLabel" disabled="@(_isLoading || !HasKnownPages || _pageIndex == 0)" @onclick="GoToPreviousPageAsync">‹</button>
-        @if (HasKnownPages)
-        {
-            @foreach (var page in GetVisiblePageNumbers())
-            {
-                <button type="button"
-                        class="@(page == _pageIndex ? "dnet-pick-list-page-current" : null)"
-                        aria-label="@GetPageLabel(page)"
-                        aria-current="@(page == _pageIndex ? "page" : null)"
-                        disabled="@(_isLoading || page == _pageIndex)"
-                        @onclick="() => GoToPageAsync(page)">@(page + 1)</button>
-            }
-        }
-        else
-        {
-            <span class="dnet-pick-list-page-loading" aria-live="polite">…</span>
-        }
-        <button type="button" aria-label="@EffectiveStrings.NextPageLabel" disabled="@(_isLoading || !HasKnownPages || PageCount == 0 || _pageIndex >= PageCount - 1)" @onclick="GoToNextPageAsync">›</button>
-        <button type="button" aria-label="@EffectiveStrings.LastPageLabel" disabled="@(_isLoading || !HasKnownPages || PageCount == 0 || _pageIndex >= PageCount - 1)" @onclick="GoToLastPageAsync">»</button>
-    </nav>
 
     <div class="dnet-pick-list-items" aria-live="polite">
         @if (_isLoading && _visibleItems.Count == 0)
@@ -82,10 +60,32 @@
                            disabled="@_isLoading"
                            checked="@selected"
                            @onchange="(ChangeEventArgs args) => SetSelectedAsync(key, args.Value is true)" />
-                    <span class="dnet-pick-list-selection-indicator" aria-hidden="true"></span>
                     <span class="dnet-pick-list-item-content">@ItemTemplate(item)</span>
                 </label>
             }
         }
     </div>
+
+    <nav class="dnet-pick-list-pager" aria-label="@EffectiveStrings.PaginationLabel">
+        <button type="button" aria-label="@EffectiveStrings.FirstPageLabel" disabled="@(_isLoading || !HasKnownPages || _pageIndex == 0)" @onclick="GoToFirstPageAsync">«</button>
+        <button type="button" aria-label="@EffectiveStrings.PreviousPageLabel" disabled="@(_isLoading || !HasKnownPages || _pageIndex == 0)" @onclick="GoToPreviousPageAsync">‹</button>
+        @if (HasKnownPages)
+        {
+            @foreach (var page in GetVisiblePageNumbers())
+            {
+                <button type="button"
+                        class="@(page == _pageIndex ? "dnet-pick-list-page-current" : null)"
+                        aria-label="@GetPageLabel(page)"
+                        aria-current="@(page == _pageIndex ? "page" : null)"
+                        disabled="@(_isLoading || page == _pageIndex)"
+                        @onclick="() => GoToPageAsync(page)">@(page + 1)</button>
+            }
+        }
+        else
+        {
+            <span class="dnet-pick-list-page-loading" aria-live="polite">…</span>
+        }
+        <button type="button" aria-label="@EffectiveStrings.NextPageLabel" disabled="@(_isLoading || !HasKnownPages || PageCount == 0 || _pageIndex >= PageCount - 1)" @onclick="GoToNextPageAsync">›</button>
+        <button type="button" aria-label="@EffectiveStrings.LastPageLabel" disabled="@(_isLoading || !HasKnownPages || PageCount == 0 || _pageIndex >= PageCount - 1)" @onclick="GoToLastPageAsync">»</button>
+    </nav>
 </section>

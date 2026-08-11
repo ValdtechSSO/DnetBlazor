@@ -131,9 +131,14 @@ The main CI workflow starts the sample and runs this gate automatically.
 The isolated stylesheet inherits these optional custom properties from any
 ancestor: `--pick-list-background`, `--pick-list-foreground`,
 `--pick-list-primary`, `--pick-list-border`, `--pick-list-item-background`,
-`--pick-list-item-selected`, `--pick-list-muted`, `--pick-list-radius`, and
-`--pick-list-gap`. The component occupies the available width; constrain it in
-the consuming layout when a narrower panel is desired.
+`--pick-list-item-selected`, `--pick-list-item-hover`, `--pick-list-muted`,
+`--pick-list-radius`, `--pick-list-item-height`,
+`--pick-list-items-max-height`, `--pick-list-header-height`,
+`--pick-list-footer-height`, and `--pick-list-scrollbar`. The defaults inherit
+the equivalent `--dnet-list-*` tokens, so List and PickList keep the same visual
+language when an application theme changes them. The component occupies the
+available width; constrain it in the consuming layout when a narrower panel is
+desired.
 
 `ItemTemplate` should contain presentation content only. Avoid nesting links,
 buttons, inputs, or other interactive controls inside its row label.
