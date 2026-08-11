@@ -56,7 +56,7 @@
     margin-right: 0px;
 }
 
-.dnet-expansion-panel-header[aria-disabled] {
+.dnet-expansion-panel-header:disabled {
     color: rgba(0,0,0,.26);
 
     .dnet-expansion-panel-header-title {
@@ -69,7 +69,7 @@
 }
 
 .dnet-expansion-panel-header {
-    &:not([aria-disabled]) {
+    &:not(:disabled) {
         cursor: pointer;
     }
 }
@@ -78,9 +78,23 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    box-sizing: border-box;
+    width: 100%;
     padding: 0 24px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    appearance: none;
+    -webkit-appearance: none;
     border-radius: inherit;
     transition: height 225ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: -2px;
+    }
 }
 
 .dnet-expansion-panel-header {

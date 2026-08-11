@@ -63,9 +63,10 @@
         }
     }
 
-    private async void UpdateWindowsSize (object _, Size size) 
+    private void UpdateWindowsSize(object? _, Size size)
     {
-        _windowWidth = await DnetOverlayInterop.GetWindowWidth();
+        _windowWidth = (int)Math.Round(size.Width);
+        _ = InvokeAsync(StateHasChanged);
     }
 
     private void AttachOverlay(RenderFragment content, OverlayConfig overlayConfig)
@@ -94,7 +95,7 @@
 
         _contenHost = AddHostConent(_overlays);
 
-        StateHasChanged();
+        _ = InvokeAsync(StateHasChanged);
     }
 
     private void DetachOverlay(OverlayResult overlayDataResult)
@@ -109,7 +110,7 @@
 
         _contenHost = AddHostConent(_overlays);
 
-        StateHasChanged();
+        _ = InvokeAsync(StateHasChanged);
     }
 
     private void AttachBackdrop(OverlayConfig overlayConfig, int zIndex)

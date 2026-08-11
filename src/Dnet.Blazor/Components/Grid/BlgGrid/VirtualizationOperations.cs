@@ -32,7 +32,7 @@ public partial class BlgGrid<TItem>
 
         _itemsToShow = _loadedItems
             .Skip(_itemsBefore - _loadedItemsStartIndex)
-            .Take(lastItemIndex - _loadedItemsStartIndex)
+            .Take(Math.Max(0, lastItemIndex - _itemsBefore))
             .ToList();
 
         foreach (var rowNode in _itemsToShow)

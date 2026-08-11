@@ -12,9 +12,8 @@ namespace Dnet.Blazor.Components.Toast.Infrastructure.Services
     {
         private readonly IOverlayService _overlayService;
 
-        private int _toastCounter = 0;
-
-        private Dictionary<int, int> _positionTracker = new Dictionary<int, int>();
+        private readonly object _syncRoot = new();
+        private readonly Dictionary<ToastPostion, Dictionary<int, int>> _positionTracker = new();
 
         public ToastService(IOverlayService overlayService)
         {
@@ -23,92 +22,76 @@ namespace Dnet.Blazor.Components.Toast.Infrastructure.Services
 
         public void Show(ToastConfig toastConfig, Type componentType, IDictionary<string, object> parameters, RenderFragment dialogContent)
         {
-            if (!typeof(ComponentBase).IsAssignableFrom(componentType) && componentType != null)
+            ArgumentNullException.ThrowIfNull(toastConfig);
+
+            if (componentType is not null && !typeof(ComponentBase).IsAssignableFrom(componentType))
             {
                 throw new ArgumentException($"{componentType.FullName} must be a Blazor Component");
             }
 
             var globalPositionStrategy = new GlobalPositionStrategyBuilder();
 
-            var offsetBottom = toastConfig.OffsetBottom > 0 ? toastConfig.OffsetBottom : null;
-
-            var offsetRight = toastConfig.OffsetRight > 0 ? toastConfig.OffsetRight : null;
-
-            var offsetTop = toastConfig.OffsetTop > 0 ? toastConfig.OffsetTop : null;
-
-            var offsetLeft = toastConfig.OffsetLeft > 0 ? toastConfig.OffsetLeft : null;
-
-            var d = 0;
-            var position = 0; //0, 4, 5
-            foreach (var entry in _positionTracker.OrderBy(p => p.Key))
-            {
-                if (entry.Key == d)
-                {
-                    d++;
-                }
-                else
-                {
-                    position = d;
-                    break;
-                }
-
-                position = d;
-            }
+            var offsetBottom = Math.Max(0, toastConfig.OffsetBottom.GetValueOrDefault());
+            var offsetRight = Math.Max(0, toastConfig.OffsetRight.GetValueOrDefault());
+            var offsetTop = Math.Max(0, toastConfig.OffsetTop.GetValueOrDefault());
+            var offsetLeft = Math.Max(0, toastConfig.OffsetLeft.GetValueOrDefault());
+            var position = GetNextPosition(toastConfig.ToastPostion);
+            var stackOffset = (toastConfig.Height + toastConfig.Margin) * position;
 
             switch (toastConfig.ToastPostion)
             {
                 case ToastPostion.BottomCenter:
 
-                    globalPositionStrategy.Bottom($"{offsetBottom + ((toastConfig.Height + toastConfig.Margin) * position)}px");
+                    globalPositionStrategy.Bottom($"{offsetBottom + stackOffset}px");
                     globalPositionStrategy.CenterHorizontally("");
 
                     break;
 
                 case ToastPostion.BottomRight:
 
-                    globalPositionStrategy.Bottom($"{offsetBottom + ((toastConfig.Height + toastConfig.Margin) * position)}px");
+                    globalPositionStrategy.Bottom($"{offsetBottom + stackOffset}px");
                     globalPositionStrategy.Right(offsetRight + "px");
 
                     break;
 
                 case ToastPostion.BottomLeft:
 
-                    globalPositionStrategy.Bottom(offsetBottom + "px");
+                    globalPositionStrategy.Bottom($"{offsetBottom + stackOffset}px");
                     globalPositionStrategy.Left(offsetLeft + "px");
 
                     break;
 
                 case ToastPostion.TopCenter:
 
-                    globalPositionStrategy.Top(offsetTop + "px");
+                    globalPositionStrategy.Top($"{offsetTop + stackOffset}px");
                     globalPositionStrategy.CenterHorizontally("");
 
                     break;
 
                 case ToastPostion.TopRight:
 
-                    globalPositionStrategy.Top($"{offsetTop + ((toastConfig.Height + toastConfig.Margin) * position)}px");
+                    globalPositionStrategy.Top($"{offsetTop + stackOffset}px");
                     globalPositionStrategy.Right(offsetRight + "px");
 
                     break;
 
                 case ToastPostion.TopLeft:
 
-                    globalPositionStrategy.Top($"{offsetTop + ((toastConfig.Height + toastConfig.Margin) * position)}px");
+                    globalPositionStrategy.Top($"{offsetTop + stackOffset}px");
                     globalPositionStrategy.Left(offsetLeft + "px");
 
                     break;
                 case ToastPostion.LeftCenter:
 
                     globalPositionStrategy.Left(offsetLeft + "px");
-                    globalPositionStrategy.CenterVertically("");
+                    globalPositionStrategy.Top($"{offsetTop + stackOffset}px");
 
                     break;
 
                 case ToastPostion.RightCenter:
 
                     globalPositionStrategy.Right(offsetRight + "px");
-                    globalPositionStrategy.CenterVertically("");
+                    globalPositionStrategy.Top($"{offsetTop + stackOffset}px");
 
                     break;
             }
@@ -132,52 +115,75 @@ namespace Dnet.Blazor.Components.Toast.Infrastructure.Services
                 x.AddAttribute(3, "Text", toastConfig.Text);
                 x.AddAttribute(4, "ToastType", toastConfig.ToastType);
                 x.AddAttribute(5, "ToastTypeIconClass", toastConfig.ToastTypeIconClass);
-                x.AddAttribute(6, "TypeIconClass", toastConfig.ToastTypeColor);
+                x.AddAttribute(6, "TypeIconClass", toastConfig.ToastTypeIconClass);
                 x.AddAttribute(7, "ExcutionTime", toastConfig.ExcutionTime);
                 x.AddAttribute(8, "ShowExcutionTime", toastConfig.ShowExcutionTime);
-                if (componentType != null && parameters.Any()) x.AddAttribute(9, "Parameters", parameters);
-                if (componentType != null) x.AddAttribute(10, "ComponentType", componentType);
-                if (dialogContent != null) x.AddAttribute(12, "ContentChild", dialogContent);
+                x.AddAttribute(9, "CloseIconClass", toastConfig.ToastCloseIconClass);
+                x.AddAttribute(10, "ToastTypeColor", toastConfig.ToastTypeColor);
+                if (componentType is not null && parameters?.Any() == true) x.AddAttribute(11, "Parameters", parameters);
+                if (componentType is not null) x.AddAttribute(12, "ComponentType", componentType);
+                if (dialogContent is not null) x.AddAttribute(13, "ContentChild", dialogContent);
                 x.CloseComponent();
             });
 
             var reference = _overlayService.Attach(toast, overlayConfig);
 
-            _toastCounter++;
-
-            var c = 0;
-            var key = 0; // 0, 3, 5
-            foreach (var entry in _positionTracker.OrderBy(p => p.Key))
+            lock (_syncRoot)
             {
-                if (entry.Key == c)
+                if (!_positionTracker.TryGetValue(toastConfig.ToastPostion, out var positions))
                 {
-                    c++;
-                }
-                else
-                {
-                    key = c;
-                    break;
+                    positions = new Dictionary<int, int>();
+                    _positionTracker.Add(toastConfig.ToastPostion, positions);
                 }
 
-                key = c;
+                positions.Add(position, reference.GetOverlayReferenceId());
             }
-
-            _positionTracker.Add(!_positionTracker.Any() ? 0 : key, reference.GetOverlayReferenceId());
         }
 
         public void Close(OverlayResult overlayDataResult)
         {
-            if (_toastCounter > 0)
+            ArgumentNullException.ThrowIfNull(overlayDataResult);
+
+            lock (_syncRoot)
             {
-                var item = _positionTracker.FirstOrDefault(p => p.Value == overlayDataResult.OverlayReferenceId);
-                _positionTracker.Remove(item.Key);
+                foreach (var (toastPosition, positions) in _positionTracker.ToArray())
+                {
+                    var item = positions.FirstOrDefault(p => p.Value == overlayDataResult.OverlayReferenceId);
+                    if (item.Value == 0)
+                    {
+                        continue;
+                    }
+
+                    positions.Remove(item.Key);
+                    if (positions.Count == 0)
+                    {
+                        _positionTracker.Remove(toastPosition);
+                    }
+
+                    break;
+                }
             }
 
-            _toastCounter--;
-
-            if (_toastCounter < 0) { _toastCounter = 0; }
-
             _overlayService.Detach(overlayDataResult);
+        }
+
+        private int GetNextPosition(ToastPostion toastPosition)
+        {
+            lock (_syncRoot)
+            {
+                if (!_positionTracker.TryGetValue(toastPosition, out var positions))
+                {
+                    return 0;
+                }
+
+                var position = 0;
+                while (positions.ContainsKey(position))
+                {
+                    position++;
+                }
+
+                return position;
+            }
         }
     }
 }

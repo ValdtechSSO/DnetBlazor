@@ -50,6 +50,16 @@ li ul {
     cursor: pointer;
     width: var(--dnet-tree-icon-width);
     height: var(--dnet-tree-icon-width);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    appearance: none;
+    -webkit-appearance: none;
+
+    &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 1px;
+    }
 }
 
 .dnet-tree-icon {

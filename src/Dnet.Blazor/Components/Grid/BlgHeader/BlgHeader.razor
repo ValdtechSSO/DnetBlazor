@@ -358,7 +358,7 @@
         });
     }
 
-    private async void StopTyping()
+    private async Task StopTyping()
     {
         await OnFilter.InvokeAsync();
         _shouldRender = true;
@@ -419,7 +419,7 @@
         _shouldRender = true;
     }
 
-    private async void DaySelected(CalendarDay daySelected, GridColumn<TItem> header)
+    private async Task DaySelected(CalendarDay daySelected, GridColumn<TItem> header)
     {
         var value = "";
 

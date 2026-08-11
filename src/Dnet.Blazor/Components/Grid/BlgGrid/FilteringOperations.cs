@@ -81,7 +81,7 @@ public partial class BlgGrid<TItem>
 
         if (GridOptions.EnableServerSideAdvancedFilter)
         {
-            OnAdvancedFilterChanged.InvokeAsync(_searchModel);
+            _ = OnAdvancedFilterChanged.InvokeAsync(_searchModel);
         }
         else
         {
@@ -91,18 +91,18 @@ public partial class BlgGrid<TItem>
             };
 
             _treeRn = AdvancedFilteringService.FilterBy(_treeRn, advancedFilterList, _gridColumns, cellParams);
-            OnAdvancedFilterChanged.InvokeAsync(_searchModel);
+            _ = OnAdvancedFilterChanged.InvokeAsync(_searchModel);
         }
     }
 
-    private async void OnAdvancedFilter()
+    private async Task OnAdvancedFilter()
     {
         _searchModel.PaginationModel.CurrentPage = 1;
         AdvancedFilterBy();
         await Update();
     }
 
-    private async void OnFilter()
+    private async Task OnFilter()
     {
         _searchModel.PaginationModel.CurrentPage = 1;
         FilterBy();
@@ -139,7 +139,7 @@ public partial class BlgGrid<TItem>
         return advancedFilterModels;
     }
 
-    public async void DeselectAllFiltered()
+    public async Task DeselectAllFiltered()
     {
         foreach (var gridcolumn in _gridColumns.Where(gridcolumn => gridcolumn.CellDataType != CellDataType.None))
         {

@@ -1,5 +1,4 @@
-﻿@using System.Timers
-@using Dnet.Blazor.Components.Overlay.Infrastructure.Services
+﻿@using Dnet.Blazor.Components.Overlay.Infrastructure.Services
 @using Dnet.Blazor.Components.Toast.Infrastructure.Enums
 @using Dnet.Blazor.Components.Toast.Infrastructure.Interfaces
 @using Dnet.Blazor.Infrastructure.Services.CssBuilder
@@ -7,9 +6,9 @@
 
 @inject IToastService ToastService
 
-@implements IDisposable
+@implements IAsyncDisposable
 
-<div class="@_toastCssClasses">
+<div class="@_toastCssClasses" style="@_style" role="status" aria-live="polite">
     <div class="dnet-toast-left-column">
         <span class="dnet-toast-icon-wrapper">
             <span class="dnet-toast-icon @_typeIconClass" unselectable="on"></span>
@@ -33,9 +32,9 @@
         }
     </div>
     <div class="dnet-toast-right-column">
-        <span @onclick="CloseToast" class="dnet-toast-icon-wrapper">
+        <button type="button" @onclick="CloseToast" class="dnet-toast-icon-wrapper" aria-label="Close notification">
             <span class="dnet-toast-icon @_closeIconClass" unselectable="on"></span>
-        </span>
+        </button>
         @if (ShowExcutionTime)
         {
             <span class="dnet-toast-counter">
@@ -91,26 +90,20 @@
 
     private string? _toastCssClasses { get; set; }
 
-    private string? _backgroundColor { get; set; }
-
     private string? _typeIconClass { get; set; }
 
     private string? _closeIconClass { get; set; }
 
-    private Timer? _timer;
+    private string? _style;
 
     private int _excutionTime = 0;
+    private CancellationTokenSource? _timerCancellation;
+    private Task? _timerTask;
 
 
     protected override void OnInitialized()
     {
         _excutionTime = ExcutionTime;
-
-        _timer = new Timer { Interval = 1000 };
-
-        _timer.Elapsed += OnOperationFinishDiscard;
-
-        _timer.AutoReset = false;
 
         _toastCssClasses = GetCssClasses();
 
@@ -127,18 +120,20 @@
 
         if (!string.IsNullOrEmpty(TypeIconClass)) _typeIconClass = TypeIconClass;
 
-        if (!string.IsNullOrEmpty(ToastTypeColor))
-        {
-            _backgroundColor = ToastTypeColor;
-        }
+        _style = string.IsNullOrWhiteSpace(ToastTypeColor) ? null : $"background-color: {ToastTypeColor}";
 
-        _timer.Start();
+        if (ExcutionTime > 0)
+        {
+            _timerCancellation = new CancellationTokenSource();
+            _timerTask = RunTimerAsync(_timerCancellation.Token);
+        }
     }
 
     private string GetCssClasses()
     {
 
         var classes = new CssBuilder("dnet-toast-container")
+            .AddClass(ToastClass, when: !string.IsNullOrWhiteSpace(ToastClass))
             .AddClass("success", when: ToastType == ToastType.Success)
             .AddClass("info", when: ToastType == ToastType.Information)
             .AddClass("warning", when: ToastType == ToastType.Warning)
@@ -150,40 +145,37 @@
 
     public void CloseToast()
     {
-        _timer.Stop();
-
+        _timerCancellation?.Cancel();
         ToastService.Close(new OverlayResult { OverlayReferenceId = OverlayReferenceId });
     }
 
-    public void OnOperationFinishDiscard(Object source, ElapsedEventArgs e)
+    private async Task RunTimerAsync(CancellationToken cancellationToken)
     {
-        _ = OnOperationFinish();
-    }
-
-    private async Task OnOperationFinish()
-    {
-        await InvokeAsync(() =>
+        try
         {
-            _excutionTime--;
+            while (_excutionTime > 0)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
+                _excutionTime--;
+                await InvokeAsync(StateHasChanged);
+            }
 
-            _timer.Interval = 1000;
-
-            StateHasChanged();
-
-            if (_excutionTime > 0) return;
-
-            _timer.Stop();
-
-            _timer.Elapsed -= OnOperationFinishDiscard;
-
-            ToastService.Close(new OverlayResult { OverlayReferenceId = OverlayReferenceId });
-        });
-
+            await InvokeAsync(() => ToastService.Close(new OverlayResult { OverlayReferenceId = OverlayReferenceId }));
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+        }
     }
 
-    public void Dispose()
+    public ValueTask DisposeAsync()
     {
-        _timer.Elapsed -= OnOperationFinishDiscard;
-        _timer.Dispose();
+        if (_timerCancellation is null)
+        {
+            return ValueTask.CompletedTask;
+        }
+
+        _timerCancellation.Cancel();
+        _timerCancellation.Dispose();
+        return ValueTask.CompletedTask;
     }
 }

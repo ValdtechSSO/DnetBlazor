@@ -4,7 +4,16 @@
 @using System.Timers
 @using Dnet.Blazor.Infrastructure.Services.CssBuilder
 
-<div class="dnet-chip dnet-standard-chip dnet-chip-with-trailing-icon" style="@_dnetChipStyle" @onclick="(() => Toggle())">
+@implements IDisposable
+
+<div class="dnet-chip dnet-standard-chip dnet-chip-with-trailing-icon"
+     style="@_dnetChipStyle"
+     role="button"
+     tabindex="@(Disabled ? -1 : 0)"
+     aria-pressed="@IsSelected()"
+     aria-disabled="@Disabled"
+     @onclick="Toggle"
+     @onkeydown="HandleKeyDown">
 	@if (ChildContent != null)
 	{
 		@ChildContent
@@ -23,7 +32,7 @@
 	}
 	@if (Removable)
 	{
-		<button @onclick="RemoveChip" @onclick:stopPropagation="true" class="dnet-chip-remove dnet-chip-trailing-icon">
+		<button type="button" disabled="@Disabled" @onclick="RemoveChip" @onclick:stopPropagation="true" class="dnet-chip-remove dnet-chip-trailing-icon" aria-label="Remove chip">
 			<div class="dnet-chips-icon-wrapper">
 				<span style="background-size:@_valuesBySize.BackGroundSize" class="dnet-chips-icon @(string.IsNullOrEmpty(RemoveIcon) ? "dnet-chips-icon-remove" : @RemoveIcon)"></span>
 			</div>
@@ -141,8 +150,17 @@
 
 	private void Toggle()
 	{
-		SelectThisChip(!IsSelected());
-		Parent.ChipClicked(this);
+		if (Disabled || !SelectThisChip(!IsSelected())) return;
+
+		_ = Parent.ChipClicked(this);
+	}
+
+	private void HandleKeyDown(KeyboardEventArgs args)
+	{
+		if (args.Key is "Enter" or " ")
+		{
+			Toggle();
+		}
 	}
 
 	public bool IsSelected()
@@ -152,19 +170,24 @@
 
 	public bool SelectThisChip(bool newValue)
 	{
-		if (!Selectable || _selected == newValue) { return false; }
+		if (Disabled || !Selectable || _selected == newValue) { return false; }
 
 		_selected = newValue;
 
 		return true;
 	}
 
-	public void RemoveChip()
+	public async Task RemoveChip()
 	{
-		if (!Removable) { return; }
+		if (Disabled || !Removable) { return; }
 
 		Parent.RemoveChip(this);
 
-		OnRemoved.InvokeAsync(this);
+		await OnRemoved.InvokeAsync(this);
+	}
+
+	public void Dispose()
+	{
+		Parent?.RemoveChip(this);
 	}
 }

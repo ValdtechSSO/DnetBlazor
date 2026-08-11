@@ -96,7 +96,7 @@ public partial class BlgGrid<TItem>
 
         if (index == -1) return;
 
-        SortBy(_gridColumns[index]);
+        _ = SortBy(_gridColumns[index]);
     }
 
     private void GroupByDefault()
@@ -112,7 +112,7 @@ public partial class BlgGrid<TItem>
             if (index == -1) break;
 
             _activeGroups++;
-            AuxAddGroup(_gridColumns[index].DataField);
+            _ = AuxAddGroup(_gridColumns[index].DataField);
         }
     }
 }

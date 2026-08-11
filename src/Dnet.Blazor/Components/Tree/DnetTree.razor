@@ -4,7 +4,7 @@
 
 <CascadingValue Value="@this" IsFixed="true">
     <div class="dnet-desktop-navigation-menu">
-        <ul>
+        <ul role="tree">
             @foreach (var treeNodeModel in _treeNodeModels)
             {
                 <DnetTreeNode Node="@treeNodeModel"
@@ -24,7 +24,7 @@
 @code {
 
     [Parameter]
-    public RenderFragment<TNode> NodeContent { get; set; }
+    public RenderFragment<TNode>? NodeContent { get; set; }
 
     [Parameter]
     public EventCallback<TNode> OnTreeNodeClicked { get; set; }
@@ -36,13 +36,13 @@
     public EventCallback<List<TNode>> OnSelectionChange { get; set; }
 
     [Parameter]
-    public ICollection<TNode> Nodes { get; set; }
+    public ICollection<TNode>? Nodes { get; set; }
 
     [Parameter]
-    public Func<TNode, string> DisplayValueConverter { get; set; }
+    public Func<TNode, string> DisplayValueConverter { get; set; } = value => value?.ToString() ?? string.Empty;
 
     [Parameter]
-    public Func<TNode, List<TNode>> ChildNodes { get; set; }
+    public Func<TNode, List<TNode>?>? ChildNodes { get; set; }
 
     [Parameter]
     public Type ComponentType { get; set; }
@@ -59,43 +59,37 @@
 
     internal TreeNodeModel<TNode> _selectedNode { get; set; } = new();
 
-    private bool _isDataNoInitialized { get; set; }
+    private ICollection<TNode>? _nodesSource;
 
 
     protected override void OnInitialized()
     {
-        _isDataNoInitialized = true;
-
-        var treeNodeModel = new TreeNodeModel<TNode>
-            {
-                RowNodeId = GetId(),
-                Show = true,
-                Children = new List<TreeNodeModel<TNode>>()
-            };
-
-        _treeNodeModels = TraverseTreeNodes(treeNodeModel, Nodes).Children;
-
-        if (_treeNodeModels.Any()) _isDataNoInitialized = false;
+        RebuildNodes();
     }
 
     protected override void OnParametersSet()
     {
-        if (_isDataNoInitialized && Nodes.Any())
+        if (!ReferenceEquals(_nodesSource, Nodes))
         {
-            var treeNodeModel = new TreeNodeModel<TNode>
-                {
-                    RowNodeId = GetId(),
-                    Show = true,
-                    Children = new List<TreeNodeModel<TNode>>()
-                };
-
-            _treeNodeModels = TraverseTreeNodes(treeNodeModel, Nodes).Children;
-
-            _isDataNoInitialized = false;
+            RebuildNodes();
         }
     }
 
-    private TreeNodeModel<TNode> TraverseTreeNodes(TreeNodeModel<TNode> treeNodeModel, ICollection<TNode> nodes)
+    private void RebuildNodes()
+    {
+        _nextId = -1;
+        _nodesSource = Nodes;
+        _selectedNode = new TreeNodeModel<TNode>();
+        var root = new TreeNodeModel<TNode>
+        {
+            RowNodeId = GetId(),
+            Show = true,
+            Children = new List<TreeNodeModel<TNode>>()
+        };
+        _treeNodeModels = TraverseTreeNodes(root, Nodes ?? Array.Empty<TNode>()).Children;
+    }
+
+    private TreeNodeModel<TNode> TraverseTreeNodes(TreeNodeModel<TNode> treeNodeModel, IEnumerable<TNode> nodes)
     {
         foreach (var node in nodes)
         {
@@ -107,9 +101,10 @@
                     Children = new List<TreeNodeModel<TNode>>()
                 };
 
-            if (ChildNodes(node) != null && ChildNodes(node).Count > 0)
+            var children = ChildNodes?.Invoke(node);
+            if (children is { Count: > 0 })
             {
-                TraverseTreeNodes(nodeModel, ChildNodes(node));
+                TraverseTreeNodes(nodeModel, children);
             }
 
             treeNodeModel.Children.Add(nodeModel);
@@ -145,16 +140,7 @@
     public void UpdateNodes(ICollection<TNode> newNodes)
     {
         Nodes = newNodes;
-
-        var treeNodeModel = new TreeNodeModel<TNode>
-            {
-                RowNodeId = GetId(),
-                Show = true,
-                Children = new List<TreeNodeModel<TNode>>()
-            };
-
-        _treeNodeModels = TraverseTreeNodes(treeNodeModel, Nodes).Children;
-
+        RebuildNodes();
         StateHasChanged();
     }
 }

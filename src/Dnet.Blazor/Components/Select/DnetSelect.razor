@@ -25,7 +25,14 @@
 
 @inject IOverlayService OverlayService
 
-<div class="dnet-plain-select" @onclick=@(() => OpenMenu())>
+<div class="dnet-plain-select"
+     role="combobox"
+     tabindex="@(Disabled ? -1 : 0)"
+     aria-haspopup="listbox"
+     aria-expanded="@_isOpen"
+     aria-disabled="@Disabled"
+     @onclick="OpenMenu"
+     @onkeydown="HandleKeyDown">
     <div @ref="_menuTrigger"
          class="dnet-plain-select-trigger">
         <div class="dnet-plain-select-value">
@@ -108,7 +115,7 @@
 
 @code {
     [CascadingParameter]
-    private FormFieldCascadingValues _formFieldCascadingValues { get; set; } = default!;
+    private FormFieldCascadingValues? _formFieldCascadingValues { get; set; }
 
     [Parameter]
     public EventCallback<TItem> OnItemSelected { get; set; }
@@ -246,11 +253,13 @@
     private TItem? _selectedItem { get; set; }
 
     private bool _previousDisabled;
+    private Action<TItem>? _itemSelectedHandler;
+    private Action<List<RowNode<TItem>>>? _selectionChangeHandler;
 
 
     protected override void OnInitialized()
     {
-        _formEventService = _formFieldCascadingValues.FormEventService;
+        _formEventService = _formFieldCascadingValues?.FormEventService;
 
         SetDisplayValue();
 
@@ -376,9 +385,10 @@
 
         _selectService = new SelectService<TItem>();
 
-        _selectService.OnItemSelected += ItemSelected;
-
-        _selectService.OnSelectionChange += SelectionChanged;
+        _itemSelectedHandler = item => _ = InvokeAsync(() => ItemSelectedAsync(item));
+        _selectionChangeHandler = items => _ = InvokeAsync(() => SelectionChangedAsync(items));
+        _selectService.OnItemSelected += _itemSelectedHandler;
+        _selectService.OnSelectionChange += _selectionChangeHandler;
     }
 
     public static PropertyInfo GetPropertyInfoFromExpression<TItem, TValue>(Expression<Func<TItem, TValue>> expression)
@@ -497,6 +507,18 @@
         _isOpen = true;
     }
 
+    private void HandleKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key is "Enter" or " " or "ArrowDown")
+        {
+            OpenMenu();
+        }
+        else if (args.Key == "Escape")
+        {
+            DetachMenu();
+        }
+    }
+
     private void ClosenMenu(FocusEventArgs data)
     {
         if (_isOpen && _isClosing)
@@ -506,7 +528,7 @@
         }
     }
 
-    private async void ItemSelected(TItem item)
+    private async Task ItemSelectedAsync(TItem item)
     {
         if (DisplayValueConverter is not null) _displayValueAsString = DisplayValueConverter(item);
 
@@ -537,7 +559,7 @@
         StateHasChanged();
     }
 
-    private async void SelectionChanged(List<RowNode<TItem>> items)
+    private async Task SelectionChangedAsync(List<RowNode<TItem>> items)
     {
         _selectedRowNodes = new();
 
@@ -564,7 +586,7 @@
         StateHasChanged();
     }
 
-    private async void ClearInput()
+    private async Task ClearInput()
     {
         CurrentValueAsString = null;
 
@@ -627,7 +649,7 @@
         var flexibleConnectedPositionStrategyBuilder = new FlexibleConnectedPositionStrategyBuilder()
             .WithLockedPosition()
             .WithViewportMargin(8)
-            .SetOrigin(_formFieldCascadingValues.FormField)
+            .SetOrigin(_formFieldCascadingValues?.FormField ?? _menuTrigger)
             .WithFlexibleDimensions(false)
             .WithPositions(positions);
 
@@ -797,9 +819,13 @@
     {
         if (_menuReference != null) _menuReference.Close -= CloseFilter;
 
-        if (_selectService != null) _selectService.OnItemSelected -= ItemSelected;
+        if (_selectService != null && _itemSelectedHandler is not null) _selectService.OnItemSelected -= _itemSelectedHandler;
+
+        if (_selectService != null && _selectionChangeHandler is not null) _selectService.OnSelectionChange -= _selectionChangeHandler;
 
         if (EditContext is not null) EditContext.OnFieldChanged -= HandleOnValidationStateChanged;
+
+        DisposeInputBase();
     }
 }
 

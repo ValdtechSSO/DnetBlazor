@@ -13,21 +13,21 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
 
         public event Action OnBackdropClicked;
 
-        private List<OverlayReference> _overlayReferences { get; set; } = new List<OverlayReference>();
-
-        private int _sequenceNumber { get; set; } = 0;
+        private readonly object _syncRoot = new();
+        private readonly List<OverlayReference> _overlayReferences = new();
+        private int _sequenceNumber;
 
         public OverlayReference Attach(RenderFragment overlayContent, OverlayConfig overlayConfig)
         {
-            //_sequenceNumber = Enumerable.Range(0, int.MaxValue).Except(_overlayReferences.Select(p => p.OverlayReferenceId)).FirstOrDefault();
+            ArgumentNullException.ThrowIfNull(overlayContent);
+            ArgumentNullException.ThrowIfNull(overlayConfig);
 
-            Random rnd = new Random();
+            var overlayReference = new OverlayReference(Interlocked.Increment(ref _sequenceNumber));
 
-            int _sequenceNumber = rnd.Next(1000);
-
-            var overlayReference = new OverlayReference(_sequenceNumber);
-
-            _overlayReferences.Add(overlayReference);
+            lock (_syncRoot)
+            {
+                _overlayReferences.Add(overlayReference);
+            }
 
             overlayConfig.OverlayReferenceId = overlayReference.OverlayReferenceId;
 
@@ -38,13 +38,19 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
 
         public void Detach(OverlayResult overlayDataResult)
         {
-            var item = _overlayReferences.Find(p => p.OverlayReferenceId == overlayDataResult.OverlayReferenceId);
+            ArgumentNullException.ThrowIfNull(overlayDataResult);
 
-            if(item == null) return;
+            OverlayReference? item;
+            lock (_syncRoot)
+            {
+                item = _overlayReferences.Find(p => p.OverlayReferenceId == overlayDataResult.OverlayReferenceId);
+                if (item is null)
+                {
+                    return;
+                }
 
-            _overlayReferences.Remove(item);
-
-            if (!_overlayReferences.Any()) _sequenceNumber = 0;
+                _overlayReferences.Remove(item);
+            }
 
             OnDetach?.Invoke(overlayDataResult);
 

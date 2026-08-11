@@ -65,9 +65,12 @@ else
                 </div>
                 <div class="dnet-vertical-content-container @(step.Id != _nextId ? "dnet-stepper-vertical-line" : null)">
                     <div class="dnet-vertical-stepper-content">
-                        <div class="dnet-vertical-content" style="visibility:@(step.Id == _selectedId ? "inherit" : "hidden")">
-                            @_activeStepContent
-                        </div>
+                        @if (step.Id == _selectedId)
+                        {
+                            <div class="dnet-vertical-content">
+                                @step.ChildContent
+                            </div>
+                        }
                     </div>
                 </div>
             </div>

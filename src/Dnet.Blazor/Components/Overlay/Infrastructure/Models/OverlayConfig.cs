@@ -34,6 +34,8 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Models
 
         public string? MarginTop { get; set; }
 
+        public string? MarginBottom { get; set; }
+
         internal int? LastZindex { get; set; } = 0;
 
         internal ComponentType? ComponentType { get; set; }

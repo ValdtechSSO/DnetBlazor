@@ -12,7 +12,7 @@
 @inject IJSRuntime JSRuntime
 @inject DnetOverlayInterop DnetOverlayInterop
 
-@implements IDisposable;
+@implements IDisposable
 
 <div class="@("dnet-grid-container " +
     (_isResponsiveMenu ? " responsive-menu" : "") +
@@ -94,27 +94,23 @@
 
     protected override void OnInitialized()
     {
+        ApplyParameters();
+        ThemeMessageService.OnMessage += MessageReceived;
+    }
+
+    protected override void OnParametersSet() => ApplyParameters();
+
+    private void ApplyParameters()
+    {
         _isHeaderHidden = IsHeaderHidden;
-
         _isFooterHidden = IsFooterHidden;
-
         _isLeftColumnHidden = IsLeftColumnHidden;
-
         _isRightColumnHidden = IsRightColumnHidden;
-
         _isDesktopMode = IsDesktopMode;
-
         _isHeaderFixed = IsHeaderFixed;
-
         _isLeftColumnFixed = IsLeftColumnFixed;
-
         _showMinifier = ShowMinifier;
-
-        if (_showMinifier == false) _isMinified = IsMinified;
-
-        StateHasChanged();
-
-        ((ThemeMessageService<ThemeConfigData>)ThemeMessageService).OnMessage += MessageReceived;
+        if (!_showMinifier) _isMinified = IsMinified;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -144,7 +140,9 @@
         }
     }
 
-    private async void MessageReceived(ActionMessage<ThemeConfigData> themeConfigData)
+    private void MessageReceived(ActionMessage<ThemeConfigData> themeConfigData) => _ = InvokeAsync(() => MessageReceivedAsync(themeConfigData));
+
+    private async Task MessageReceivedAsync(ActionMessage<ThemeConfigData> themeConfigData)
     {
         if (themeConfigData.Emitter == ThemeMessageEmitter.DesktopMinifyMenu)
         {
@@ -179,7 +177,7 @@
                 _isMinified = localStorageData.IsMinified;
             }
 
-            if (IsLeftColumnHidden)
+            if (_isLeftColumnHidden)
             {
                 _isMinified = false;
             }
@@ -214,6 +212,6 @@
 
     public void Dispose()
     {
-        ((ThemeMessageService<ThemeConfigData>)ThemeMessageService).OnMessage -= MessageReceived;
+        ThemeMessageService.OnMessage -= MessageReceived;
     }
 }

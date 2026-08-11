@@ -208,7 +208,7 @@
     public RenderFragment<TItem>? ItemSufixContent { get; set; }
 
     [Parameter]
-    public ListOptions<TItem>? ListOptions { get; set; }
+    public ListOptions<TItem> ListOptions { get; set; } = new();
 
     [Parameter]
     public string PlaceHolder { get; set; } = "";
@@ -256,6 +256,7 @@
     private bool _isInitialized { get; set; }
 
     private List<TItem> _items { get; set; } = new();
+    private ICollection<TItem>? _itemsSource;
 
     private string style = "cursor: pointer; transition: opacity 0.5s;";
 
@@ -292,38 +293,49 @@
 
     protected override void OnParametersSet()
     {
-        if (Items != null)
-        {
-            if (_isInitialized && Items.Any())
-            {
-                if (!_items.Any())
-                {
-                    _items.AddRange(Items);
-
-                    BuildRowNodes();
-
-                    _searchModel = new SearchModel
-                        {
-                            PaginationModel = new PaginationModel
-                            {
-                                CurrentPage = 1,
-                                PageSize = ListOptions.PageSize,
-                                ItemsCount = _items.Count
-                            }
-                        };
-
-                    if (ListOptions.EnablePagingination && !ListOptions.EnableServerSide) AssignRangeRenderedRows();
-
-                    _isInitialized = false;
-                }
-            }
-        }
-        else
+        if (Items is null)
         {
             throw new InvalidOperationException(
-            $"{GetType()} requires the '{nameof(Items)}'parameters to be specified " +
-            $"and non-null.");
+                $"{GetType()} requires the '{nameof(Items)}' parameters to be specified and non-null.");
         }
+
+        if (!ReferenceEquals(_itemsSource, Items))
+        {
+            _itemsSource = Items;
+            ResetItems(Items);
+        }
+    }
+
+    private void ResetItems(IEnumerable<TItem> items)
+    {
+        _allNodesSelected = false;
+        _nextId = -1;
+        _items = items.ToList();
+        _rowNodes = new();
+        _rowNodesBk = new();
+        _filteredRowNodes = new();
+        _selectedRowNodes = new();
+        _previousSelectedRowNode = null;
+
+        _searchModel = new SearchModel
+        {
+            PaginationModel = new PaginationModel
+            {
+                CurrentPage = 1,
+                PageSize = ListOptions.PageSize,
+                ItemsCount = _items.Count
+            },
+            AdvancedFilterModels = new(),
+            SortModel = new()
+        };
+
+        BuildRowNodes();
+        if (ListOptions.EnablePagingination && !ListOptions.EnableServerSide)
+        {
+            AssignRangeRenderedRows();
+        }
+
+        _isInitialized = false;
     }
 
     private void BuildRowNodes()
@@ -359,7 +371,7 @@
             }
             else
             {
-                _rowNodes = _rowNodesBk.GetRange(startIndex, count);
+                _rowNodes = _rowNodesBk.Skip(startIndex).Take(count).ToList();
             }
 
             StateHasChanged();
@@ -391,8 +403,13 @@
         return classes;
     }
 
-    private async void CheckboxClicked(RowNode<TItem> rowNode)
+    private async Task CheckboxClicked(RowNode<TItem> rowNode)
     {
+        if (IsDisabled(rowNode))
+        {
+            return;
+        }
+
         rowNode.Selected = !rowNode.Selected;
 
         ManageSelections(rowNode);
@@ -410,7 +427,10 @@
         {
             if (rowNode.Selected)
             {
-                _selectedRowNodes.Add(rowNode);
+                if (!_selectedRowNodes.Contains(rowNode))
+                {
+                    _selectedRowNodes.Add(rowNode);
+                }
             }
             else
             {
@@ -419,19 +439,33 @@
         }
         else
         {
-            if (_previousSelectedRowNode != null)
+            if (!rowNode.Selected)
+            {
+                _selectedRowNodes.Remove(rowNode);
+                if (ReferenceEquals(_previousSelectedRowNode, rowNode))
+                {
+                    _previousSelectedRowNode = null;
+                }
+
+                return;
+            }
+
+            if (_previousSelectedRowNode != null && !ReferenceEquals(_previousSelectedRowNode, rowNode))
             {
                 _selectedRowNodes.Remove(_previousSelectedRowNode);
                 _previousSelectedRowNode.Selected = false;
             }
 
-            _selectedRowNodes.Add(rowNode);
+            if (!_selectedRowNodes.Contains(rowNode))
+            {
+                _selectedRowNodes.Add(rowNode);
+            }
 
             _previousSelectedRowNode = rowNode;
         }
     }
 
-    private async void ChangeSelectAllNodes(bool value)
+    private async Task ChangeSelectAllNodes(bool value)
     {
         _allNodesSelected = value;
 
@@ -439,15 +473,18 @@
 
         foreach (var item in _rowNodes)
         {
-            item.Selected = value;
+            item.Selected = value && !IsDisabled(item);
         }
 
-        _selectedRowNodes.AddRange(_rowNodes);
+        if (value)
+        {
+            _selectedRowNodes.AddRange(_rowNodes.Where(item => !IsDisabled(item)));
+        }
 
         await OnSelectionChange.InvokeAsync(_selectedRowNodes.Select(p => p.RowData).ToList());
     }
 
-    private async void Sort()
+    private async Task Sort()
     {
         if (!ListOptions.EnableSorting) return;
 
@@ -540,13 +577,14 @@
 
                     _searchModel.AdvancedFilterModels = new List<AdvancedFilterModel>();
 
-                    for (var i = 0; i < ListOptions.ServerSideSearchColumns.Count; i++)
+                    var searchColumns = ListOptions.ServerSideSearchColumns ?? new List<string>();
+                    for (var i = 0; i < searchColumns.Count; i++)
                     {
                         var advancedFilterModel = new AdvancedFilterModel
                             {
                                 AdditionalOperator = FilterOperator.None,
                                 AdditionalValue = null,
-                                Column = ListOptions.ServerSideSearchColumns[i],
+                                Column = searchColumns[i],
                                 Condition = FilterCondition.None,
                                 FilterLinkCondition = i == 0 ? FilterCondition.None : FilterCondition.Or,
                                 Operator = FilterOperator.Contains,
@@ -583,7 +621,8 @@
                     else
                     {
                         _filteredRowNodes = _rowNodesBk.Where(p =>
-            ListOptions.SearchValueConverter(p.RowData).ToUpper().Contains(_filter.ToUpper())).ToList();
+                            ListOptions.SearchValueConverter(p.RowData)?.Contains(_filter, StringComparison.CurrentCultureIgnoreCase) == true)
+                            .ToList();
 
                         if (_sortStatus != SortOrder.None)
                         {
@@ -625,7 +664,7 @@
         _debounceTimer.Start();
     }
 
-    private async void PaginationChanged(int currentPage)
+    private async Task PaginationChanged(int currentPage)
     {
         _searchModel.PaginationModel.CurrentPage = currentPage;
 
@@ -682,6 +721,9 @@
             _allNodesSelected = false;
         }
     }
+
+    private bool IsDisabled(RowNode<TItem> rowNode)
+        => ListOptions?.DisableItem?.Invoke(rowNode.RowData) == true;
 
     public void SetRowData(List<TItem> items, int? totalItems = null, int? currentPage = null)
     {
@@ -783,13 +825,18 @@
         await OnTransfer.InvokeAsync(item.RowData);
     }
 
-    private async void ClearInput()
+    private Task ClearInput()
     {
-        await FilterData();
+        return FilterData();
     }
 
     public void Dispose()
     {
+        if (_debounceTimer is null)
+        {
+            return;
+        }
+
         _debounceTimer.Elapsed -= FilterDataDiscard;
         _debounceTimer?.Dispose();
     }

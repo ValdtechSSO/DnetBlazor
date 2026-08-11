@@ -246,7 +246,9 @@ else
         return true;
     }
 
-    private async void HandleClearContent()
+    private void HandleClearContent() => _ = InvokeAsync(HandleClearContentAsync);
+
+    private async Task HandleClearContentAsync()
     {
         CurrentValue = null;
 
@@ -260,8 +262,6 @@ else
         }
 
         if (_formEventService is not null) _formEventService.RaiseCurrentValue(CurrentValueAsString);
-
-        await ValueChanged.InvokeAsync(Value);
 
         await OnClearInput.InvokeAsync(true);
 
@@ -283,5 +283,11 @@ else
 
             _debounceTimer.Dispose();
         }
+
+        if (_formEventService is not null) _formEventService.OnClearContent -= HandleClearContent;
+
+        if (EditContext is not null) EditContext.OnFieldChanged -= HandleOnValidationStateChanged;
+
+        DisposeInputBase();
     }
 }

@@ -9,18 +9,21 @@ namespace Dnet.Blazor.Components.Spinner.Infrastructure.Services
 
         public void Show()
         {
-            UdateCounter(1);
+            UpdateCounter(1);
         }
 
         public void Hide()
         {
-            UdateCounter(-1);
+            UpdateCounter(-1);
         }
 
-        public void UdateCounter(int counter)
+        public void UpdateCounter(int counter)
         {
             OnCounterReceived?.Invoke(counter);
         }
+
+        [Obsolete("Use UpdateCounter instead.")]
+        public void UdateCounter(int counter) => UpdateCounter(counter);
 
     }
 }

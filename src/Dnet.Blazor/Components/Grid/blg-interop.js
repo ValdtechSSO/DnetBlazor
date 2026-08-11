@@ -2,13 +2,7 @@
 
     const observersByDotNetId = {};
 
-    let touching = false;
-
-    let moved = false;
-
-    let lastTapTime;
-
-    let touchStart = null;
+    const listenerStateByElement = new WeakMap();
 
     function findClosestScrollContainer(element) {
 
@@ -37,27 +31,7 @@
         return Math.max(diffX, diffY) <= pixelCount;
     }
 
-    function checkForDoubleTap() {
-        const now = new Date().getTime();
-
-        if (lastTapTime && lastTapTime > 0) {
-            // if previous tap, see if duration is short enough to be considered double tap
-            const interval = now - lastTapTime;
-
-            if (interval > 500) {
-                // dispatch double tap event
-
-                // this stops a tripple tap ending up as two double taps
-                lastTapTime = null;
-            } else {
-                lastTapTime = now;
-            }
-        } else {
-            lastTapTime = now;
-        }
-    }
-
-    function getActiveTouch(touchList) {
+    function getActiveTouch(touchList, touchStart) {
         for (let i = 0; i < touchList.length; i++) {
             const matches = touchList[i].identifier === touchStart.identifier;
             if (matches) {
@@ -70,140 +44,61 @@
 
     function addTouchListeners(elementRef, scrollElementRef, dotNetReference) {
 
-        let startX, startY, scrollStartX, scrollStartY;
+        let startX, startY, scrollStartX, touchStart = null;
+        let touching = false;
+        let moved = false;
 
-        elementRef.addEventListener('touchstart', function (e) {
-
-            if (touching) {
-                return;
-            }
+        const touchStartHandler = function (e) {
+            if (touching || e.touches.length === 0) return;
 
             startX = e.touches[0].clientX;
-
             startY = e.touches[0].clientY;
-
             scrollStartX = scrollElementRef.scrollLeft;
-
-            scrollStartY = scrollElementRef.scrollTop;
-
             touching = true;
-
             touchStart = e.touches[0];
-
             moved = false;
+        };
 
-            const touchStartCopy = touchStart;
+        const touchMoveHandler = function (e) {
+            if (!touching || touchStart === null) return;
 
-            window.setTimeout(() => {
+            const activeTouch = getActiveTouch(e.touches, touchStart);
+            if (!activeTouch) return;
 
-                const touchesMatch = touchStart === touchStartCopy;
+            moved = moved || !areEventsNear(activeTouch, touchStart, 4);
+            const deltaX = activeTouch.clientX - startX;
+            const deltaY = activeTouch.clientY - startY;
+            const threshold = 10;
 
-                if (touching && touchesMatch && !moved) {
-                    //long tap
-                    moved = true;
-                }
-            }, 500);
+            if (Math.abs(deltaX) <= Math.abs(deltaY) || Math.abs(deltaX) <= threshold) return;
 
-        }, { passive: true });
+            e.preventDefault();
+            const maxScrollLeft = scrollElementRef.scrollWidth - scrollElementRef.clientWidth;
+            scrollElementRef.scrollLeft = scrollStartX - deltaX;
+            const elementScrollLeft = scrollElementRef.scrollLeft;
 
-        elementRef.addEventListener('touchmove', function (e) {
+            if ((elementScrollLeft === 0 && deltaX < 0) || (elementScrollLeft >= maxScrollLeft && deltaX > 0)) return;
 
-            if (!touching) {
-                return;
-            }
+            dotNetReference.invokeMethodAsync('OnTouchMove', {
+                maxScrollLeft,
+                deltaX,
+                elementScrollLeft
+            });
+        };
 
-            const activetouch = getActiveTouch(e.touches);
-            if (!activetouch) {
-                return;
-            }
-
-            const eventIsFarAway = !areEventsNear(activetouch, touchStart, 4);
-
-            if (eventIsFarAway) {
-                moved = true;
-            }
-
-            const touch = e.touches[0]; // Obtiene la primera posición táctil
-
-            console.log("startX", startX);
-
-            console.log("touch.clientX", touch.clientX);
-
-            // const deltaX = startX - touch.clientX; // Calcula el cambio en la posición X desde el toque inicial
-            const deltaX = touch.clientX - startX;
-
-            const deltaY = touch.clientY - startY; // Calcula el cambio en Y
-
-            const umbral = 10; // Umbral para diferenciar entre movimientos leves y significativos
-
-            if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                if (Math.abs(deltaX) > umbral) {
-
-                    e.preventDefault();
-                    // El movimiento es principalmente horizontal
-
-                    var maxScrollLeft = scrollElementRef.scrollWidth - scrollElementRef.clientWidth;
-
-                    console.log("deltaX",deltaX);
-
-                    scrollElementRef.scrollLeft = scrollStartX - deltaX;
-
-                    // scrollElementRef.scrollBy({left: deltaX }); //deltaX positivo desplaza hacia la derecha
-
-                    var elementScrollLeft = scrollElementRef.scrollLeft; // Obtiene el scrollLeft actual del elemento
-
-                    console.log("elementScrollLeft", elementScrollLeft);
-
-                    // Comprueba si se intenta desplazar más allá del inicio o el final y previene el desplazamiento del contenido
-                    if ((elementScrollLeft === 0 && deltaX < 0) || (elementScrollLeft >= maxScrollLeft && deltaX > 0)) {
-                        return; // Detiene la ejecución adicional para evitar ajustar scrollLeft innecesariamente
-                    }
-                    else {
-                        var scrollInfo = {
-                            maxScrollLeft: maxScrollLeft,
-                            deltaX: deltaX,
-                            elementScrollLeft: elementScrollLeft
-                        };
-
-                        dotNetReference.invokeMethodAsync('OnTouchMove', scrollInfo);
-                    }
-                }
-            } else {
-                if (Math.abs(deltaY) > umbral) {
-                    // Movimiento vertical
-                    if (deltaY < 0) {
-                        // console.log('Movimiento hacia arriba');
-                        return;
-                    } else {
-                        // console.log('Movimiento hacia abajo');
-                        return;
-                    }
-                }
-            }
-
-            // Considera el movimiento como diagonal si no es claramente horizontal o vertical
-            if (Math.abs(deltaX) > umbral && Math.abs(deltaY) > umbral) {
-                return;
-            }
-
-        }, { passive: false });
-
-        elementRef.addEventListener('touchend', function (e) {
-
-            if (!touching) {
-                return;
-            }
-
-            if (!moved) {
-                //Tap event
-                checkForDoubleTap();
-            }
-
+        const touchEndHandler = function () {
             touching = false;
+            touchStart = null;
+        };
 
-        }, { passive: true });
+        elementRef.addEventListener('touchstart', touchStartHandler, { passive: true });
+        elementRef.addEventListener('touchmove', touchMoveHandler, { passive: false });
+        elementRef.addEventListener('touchend', touchEndHandler, { passive: true });
 
-    };
+        const state = listenerStateByElement.get(elementRef) || {};
+        state.touch = { touchStartHandler, touchMoveHandler, touchEndHandler };
+        listenerStateByElement.set(elementRef, state);
+    }
 
     return {
 
@@ -213,12 +108,30 @@
         },
 
         addWindowEventListeners: function (elementRef, dotnetClass) {
-
-            elementRef.addEventListener("mouseleave", function () {
+            const mouseLeaveHandler = function () {
                 dotnetClass.invokeMethodAsync('MouseLeave');
-            });
+            };
+            elementRef.addEventListener("mouseleave", mouseLeaveHandler);
+            const state = listenerStateByElement.get(elementRef) || {};
+            state.mouseLeaveHandler = mouseLeaveHandler;
+            listenerStateByElement.set(elementRef, state);
 
             return true;
+        },
+
+        removeEventListeners: function (elementRef) {
+            const state = listenerStateByElement.get(elementRef);
+            if (!state) return;
+
+            if (state.mouseLeaveHandler) {
+                elementRef.removeEventListener("mouseleave", state.mouseLeaveHandler);
+            }
+            if (state.touch) {
+                elementRef.removeEventListener('touchstart', state.touch.touchStartHandler);
+                elementRef.removeEventListener('touchmove', state.touch.touchMoveHandler);
+                elementRef.removeEventListener('touchend', state.touch.touchEndHandler);
+            }
+            listenerStateByElement.delete(elementRef);
         },
 
         getElementScrollLeft: function (elementRef) {

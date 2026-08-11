@@ -1,8 +1,9 @@
-﻿
+﻿@implements IDisposable
+
 @code {
 
     [CascadingParameter]
-    private DnetTabGroup Parent { get; set; }
+    private DnetTabGroup? Parent { get; set; }
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
@@ -29,7 +30,9 @@
 
     protected override void OnInitialized()
     {
-        Parent.AddTab(this);
+        Parent?.AddTab(this);
     }
+
+    public void Dispose() => Parent?.RemoveTab(this);
 
 }

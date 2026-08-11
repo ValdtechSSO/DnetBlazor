@@ -8,6 +8,9 @@
 
         void Hide();
 
+        void UpdateCounter(int items);
+
+        [Obsolete("Use UpdateCounter instead.")]
         void UdateCounter(int items);
     }
 }

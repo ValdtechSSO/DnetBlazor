@@ -87,6 +87,20 @@
     cursor: pointer;
 }
 
+button.dnet-toast-icon-wrapper {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+
+    &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 2px;
+    }
+}
+
 .dnet-toast-icon {
     display: block;
     background-repeat: no-repeat;

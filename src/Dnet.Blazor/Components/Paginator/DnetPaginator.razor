@@ -1,4 +1,3 @@
-@using System.Timers
 @using Microsoft.AspNetCore.Components.Web
 
 @implements IDisposable
@@ -13,7 +12,7 @@
                    type="text"
                    @bind-value="@_currentPage"
                    @bind-value:event="oninput"
-                   @onkeyup="Filter"
+                   @onkeyup="(KeyboardEventArgs eventArgs) => Filter(eventArgs)"
                    @onkeyup:stopPropagation="true"
                    @onkeyup:preventDefault="true">
             <span>of @_numberOfPages</span>
@@ -21,28 +20,32 @@
         <div class="control-container @($"zone{ControlsZone}")">
             <button type="button"
                     class="dnet-paginator-navigation-first dnet-paginator-icon-button"
-                    @onclick="(e => GoToFirstPage())">
+                    disabled="@(!_showFirstButton)" aria-label="First page"
+                    @onclick="() => GoToFirstPage()">
                 <svg class="bi bi-chevron-bar-left" width="1em" height="1em" viewBox="0 0 16 16" fill="@(_showFirstButton ? "currentColor" : "grey" )" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" d="M11.854 3.646a.5.5 0 010 .708L8.207 8l3.647 3.646a.5.5 0 01-.708.708l-4-4a.5.5 0 010-.708l4-4a.5.5 0 01.708 0zM4.5 1a.5.5 0 00-.5.5v13a.5.5 0 001 0v-13a.5.5 0 00-.5-.5z" clip-rule="evenodd" />
                 </svg>
             </button>
             <button type="button"
                     class="dnet-paginator-navigation-previous dnet-paginator-icon-button"
-                    @onclick="(e => GoToPreviousPage())">
+                    disabled="@(!_hasPreviousPage)" aria-label="Previous page"
+                    @onclick="() => GoToPreviousPage()">
                 <svg class="bi bi-chevron-left" width="1em" height="1em" viewBox="0 0 16 16" fill="@(_hasPreviousPage ? "currentColor" : "grey" )" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 010 .708L5.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd" />
                 </svg>
             </button>
             <button type="button"
                     class="dnet-paginator-navigation-next dnet-paginator-icon-button"
-                    @onclick="(e => GoToNextPage())">
+                    disabled="@(!_hasNextPage)" aria-label="Next page"
+                    @onclick="() => GoToNextPage()">
                 <svg class="bi bi-chevron-right" width="1em" height="1em" viewBox="0 0 16 16" fill="@(_hasNextPage ? "currentColor" : "grey" )" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L10.293 8 4.646 2.354a.5.5 0 010-.708z" clip-rule="evenodd" />
                 </svg>
             </button>
             <button type="button"
                     class="dnet-paginator-navigation-last dnet-paginator-icon-button"
-                    @onclick="(e => GoToLastPage())">
+                    disabled="@(!_showLastButton)" aria-label="Last page"
+                    @onclick="() => GoToLastPage()">
                 <svg class="bi bi-chevron-bar-right" width="1em" height="1em" viewBox="0 0 16 16" fill="@(_showLastButton ? "currentColor" : "grey" )" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" d="M4.146 3.646a.5.5 0 000 .708L7.793 8l-3.647 3.646a.5.5 0 00.708.708l4-4a.5.5 0 000-.708l-4-4a.5.5 0 00-.708 0zM11.5 1a.5.5 0 01.5.5v13a.5.5 0 01-1 0v-13a.5.5 0 01.5-.5z" clip-rule="evenodd" />
                 </svg>
@@ -107,52 +110,46 @@
 
     private int _numberOfPages { get; set; }
 
-    private Timer? _debounceTimer;
+    private CancellationTokenSource? _filterCancellation;
 
     private int _currentPage;
 
-
-    protected override void OnInitialized()
-    {
-        _currentPage = CurrentPage;
-
-        _debounceTimer = new Timer(250);
-
-        _debounceTimer.Elapsed += FilterDiscard;
-
-        _debounceTimer.AutoReset = false;
-    }
 
     protected override void OnParametersSet()
     {
         _numberOfPages = PageSize > 0 ? (int)Math.Ceiling((double)TotalItems / (double)PageSize) : 0;
 
-        _currentPage = CurrentPage;
+        _currentPage = NormalizePage(CurrentPage);
 
-        UpdateButtons(CurrentPage, _numberOfPages);
-    }
-
-    public void FilterDiscard(Object source, ElapsedEventArgs e)
-    {
-        _ = Filter();
+        UpdateButtons(_currentPage, _numberOfPages);
     }
 
     private async Task Filter()
     {
-        await InvokeAsync(async () =>
+        var cancellation = _filterCancellation = new CancellationTokenSource();
+        try
         {
-            GoToSpecificPage();
-        });
+            await Task.Delay(250, cancellation.Token);
+            if (ReferenceEquals(_filterCancellation, cancellation))
+            {
+                await GoToSpecificPage();
+            }
+        }
+        catch (OperationCanceledException) { }
+        finally
+        {
+            if (ReferenceEquals(_filterCancellation, cancellation)) _filterCancellation = null;
+            cancellation.Dispose();
+        }
     }
 
-    private void Filter(KeyboardEventArgs data)
+    private Task Filter(KeyboardEventArgs data)
     {
-        _debounceTimer.Stop();
-
-        _debounceTimer.Start();
+        _filterCancellation?.Cancel();
+        return Filter();
     }
 
-    private void GoToFirstPage()
+    private async Task GoToFirstPage()
     {
         if (_currentPage == 1 || _currentPage == 0) return;
 
@@ -160,10 +157,10 @@
 
         UpdateButtons(1, _numberOfPages);
 
-        OnGoToFirstPage.InvokeAsync(1);
+        await OnGoToFirstPage.InvokeAsync(1);
     }
 
-    private void GoToPreviousPage()
+    private async Task GoToPreviousPage()
     {
         if (_currentPage == 1 || _currentPage == 0) return;
 
@@ -171,10 +168,10 @@
 
         UpdateButtons(_currentPage, _numberOfPages);
 
-        OnGoToPreviousPage.InvokeAsync(_currentPage);
+        await OnGoToPreviousPage.InvokeAsync(_currentPage);
     }
 
-    private void GoToNextPage()
+    private async Task GoToNextPage()
     {
         if (_currentPage == _numberOfPages || _currentPage == 0) return;
 
@@ -182,10 +179,10 @@
 
         UpdateButtons(_currentPage, _numberOfPages);
 
-        OnGoToNextPage.InvokeAsync(_currentPage);
+        await OnGoToNextPage.InvokeAsync(_currentPage);
     }
 
-    private void GoToLastPage()
+    private async Task GoToLastPage()
     {
         _numberOfPages = PageSize > 0 ? (int)Math.Ceiling((double)TotalItems / (double)PageSize) : 0;
 
@@ -195,7 +192,7 @@
 
         UpdateButtons(_numberOfPages, _numberOfPages);
 
-        OnGoToLastPage.InvokeAsync(_numberOfPages);
+        await OnGoToLastPage.InvokeAsync(_numberOfPages);
     }
 
     private void UpdateButtons(int currentPage, int numberOfPages)
@@ -218,9 +215,9 @@
         UpdateButtons(currentPage, _numberOfPages);
     }
 
-    private void GoToSpecificPage()
+    private async Task GoToSpecificPage()
     {
-        if (_currentPage <= 0 || _currentPage > _numberOfPages) _currentPage = 1;
+        _currentPage = NormalizePage(_currentPage);
 
         CurrentPage = _currentPage;
 
@@ -228,14 +225,16 @@
         {
             UpdateButtons(_currentPage, _numberOfPages);
 
-            OnGoToSpecificPage.InvokeAsync(_currentPage);
+            await OnGoToSpecificPage.InvokeAsync(_currentPage);
         }
 
     }
 
     public void Dispose()
     {
-        _debounceTimer.Elapsed -= FilterDiscard;
-        _debounceTimer?.Dispose();
+        _filterCancellation?.Cancel();
+        _filterCancellation?.Dispose();
     }
+
+    private int NormalizePage(int page) => _numberOfPages == 0 ? 0 : Math.Clamp(page, 1, _numberOfPages);
 }

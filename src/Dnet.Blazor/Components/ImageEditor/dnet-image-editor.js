@@ -6,8 +6,22 @@
     var targetTop = 0;
     var targetHeight = 0;
     var targetWidth = 0;
+    const editorStates = new Map();
+
+    function getEditorState(dotNetHelper) {
+        const id = dotNetHelper._id;
+        let state = editorStates.get(id);
+        if (!state) {
+            state = { subscriptions: [], dragCleanup: null };
+            editorStates.set(id, state);
+        }
+        return state;
+    }
 
     function initializeDragAndDrop(dotNetHelper, draggedContainerElement, boardArea, initialleft, initialtop) {
+
+        const state = getEditorState(dotNetHelper);
+        if (state.dragCleanup) state.dragCleanup();
 
         targetLeft = initialleft;
         targetTop = initialtop;
@@ -120,9 +134,20 @@
         applyTransform(targetLeft, targetTop);
 
         draggedContainerElement.addEventListener('mousedown', onMouseDown);
+
+        state.dragCleanup = function () {
+            draggedContainerElement.removeEventListener('mousedown', onMouseDown);
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+            if (pendingFrame !== null) window.cancelAnimationFrame(pendingFrame);
+        };
     }
 
     function initializeResize(dotNetHelper, resizers, initialLeft, initialTop, initialHeight, initialWidth, imgWidth, imgHeight, resizerType, resizerMinWidth, resizerMinHeight) {
+
+        const state = getEditorState(dotNetHelper);
+        state.subscriptions.forEach(subscription => subscription.unsubscribe());
+        state.subscriptions = [];
 
         targetLeft = initialLeft;
         targetTop = initialTop;
@@ -133,16 +158,18 @@
 
             const mousedownResizer$ = Rx.fromEvent(resizer.reference, 'mousedown');
             const mousemove$ = Rx.fromEvent(document.body, 'mousemove');
-            const mouseupResizer$ = Rx.fromEvent(document.body, 'mouseup').pipe(Rx.operators.take(1));
-
             const mousedragResizer$ = mousedownResizer$.pipe(
 
                 Rx.operators.switchMap((mousedownEvent) => {
 
+                    // A mouseup observable can only be consumed once. Create it for each
+                    // drag so successive resize gestures remain functional.
+                    const mouseupResizer$ = Rx.fromEvent(document.body, 'mouseup').pipe(Rx.operators.take(1));
+
                     const startX = mousedownEvent.clientX;
                     const startY = mousedownEvent.clientY;
 
-                    this._resizeEndSub = mouseupResizer$.subscribe((mouseupEvent) => {
+                    const resizeEndSub = mouseupResizer$.subscribe((mouseupEvent) => {
 
                         var resultResizeData = getResizeData(resizer.resizerType, mouseupEvent.clientX, mouseupEvent.clientY, startX, startY, imgWidth, imgHeight, resizerMinWidth, resizerMinHeight);
 
@@ -153,6 +180,7 @@
 
                         dotNetHelper.invokeMethodAsync('OnResizeEnd', { height: targetHeight, width: targetWidth, left: targetLeft, top: targetTop });
                     });
+                    state.subscriptions.push(resizeEndSub);
 
                     mousedownEvent.preventDefault();
 
@@ -180,6 +208,7 @@
                 })).subscribe((pos) => {
                     dotNetHelper.invokeMethodAsync('OnResize', pos);
                 });
+            state.subscriptions.push(resizeSub);
         }
     }
 
@@ -297,10 +326,13 @@
         sourceCtx.drawImage(imageElement, 0, 0);
         
         // Validate crop parameters
-        const x1 = Math.max(0, Math.min(Math.round(cropLeft), sourceCanvas.width - 1));
-        const y1 = Math.max(0, Math.min(Math.round(cropTop), sourceCanvas.height - 1));
-        const w = Math.max(1, Math.min(Math.round(cropWidth), sourceCanvas.width - x1));
-        const h = Math.max(1, Math.min(Math.round(cropHeight), sourceCanvas.height - y1));
+        const displayRect = imageElement.getBoundingClientRect();
+        const scaleX = sourceCanvas.width / Math.max(1, displayRect.width);
+        const scaleY = sourceCanvas.height / Math.max(1, displayRect.height);
+        const x1 = Math.max(0, Math.min(Math.round(cropLeft * scaleX), sourceCanvas.width - 1));
+        const y1 = Math.max(0, Math.min(Math.round(cropTop * scaleY), sourceCanvas.height - 1));
+        const w = Math.max(1, Math.min(Math.round(cropWidth * scaleX), sourceCanvas.width - x1));
+        const h = Math.max(1, Math.min(Math.round(cropHeight * scaleY), sourceCanvas.height - y1));
         
         // Photon crop expects x1, y1, x2, y2 (NOT x, y, width, height!)
         const x2 = x1 + w;
@@ -424,8 +456,8 @@
             return clientRect;
         },
 
-        initializeDragAndDrop: function (dotNetHelper, draggedContainerElement, boardArea, draggedData, left, top) {
-            initializeDragAndDrop(dotNetHelper, draggedContainerElement, boardArea, draggedData, left, top);
+        initializeDragAndDrop: function (dotNetHelper, draggedContainerElement, boardArea, left, top) {
+            initializeDragAndDrop(dotNetHelper, draggedContainerElement, boardArea, left, top);
         },
 
         initializeResize: function (dotNetHelper, resizers, initialLeft, initialTop, initialHeight, initialWidth, imgWidth, imgHeight, resizerType, resizerMinWidth, resizerMinHeight) {
@@ -436,6 +468,14 @@
         
         flipHorizontal: flipHorizontal,
         
-        flipVertical: flipVertical
+        flipVertical: flipVertical,
+        dispose: function (dotNetHelper) {
+            if (!dotNetHelper) return;
+            const state = editorStates.get(dotNetHelper._id);
+            if (!state) return;
+            if (state.dragCleanup) state.dragCleanup();
+            state.subscriptions.forEach(subscription => subscription.unsubscribe());
+            editorStates.delete(dotNetHelper._id);
+        }
     };
 })();

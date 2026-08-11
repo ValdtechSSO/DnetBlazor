@@ -320,7 +320,9 @@
         }
     }
 
-    private async void SelectionChanged(TransferredItems<TItem> transferredItems)
+    private void SelectionChanged(TransferredItems<TItem> transferredItems) => _ = InvokeAsync(() => SelectionChangedAsync(transferredItems));
+
+    private async Task SelectionChangedAsync(TransferredItems<TItem> transferredItems)
     {
         var transfered = SideForSelections == ListToShow.Right ? transferredItems.RighItems : transferredItems.LeftItems;
 
@@ -335,7 +337,9 @@
         StateHasChanged();
     }
 
-    private async void ClearInput()
+    private void ClearInput() => _ = InvokeAsync(ClearInputAsync);
+
+    private async Task ClearInputAsync()
     {
         CurrentValueAsString = null;
 
@@ -461,12 +465,16 @@
         _isOpen = false;
     }
 
-    private async void SearchLeft(SearchModel searchModel)
+    private void SearchLeft(SearchModel searchModel) => _ = InvokeAsync(() => SearchLeftAsync(searchModel));
+
+    private async Task SearchLeftAsync(SearchModel searchModel)
     {
         await OnSearchLeft.InvokeAsync(searchModel);
     }
 
-    private async void SearchRight(SearchModel searchModel)
+    private void SearchRight(SearchModel searchModel) => _ = InvokeAsync(() => SearchRightAsync(searchModel));
+
+    private async Task SearchRightAsync(SearchModel searchModel)
     {
         await OnSearchRight.InvokeAsync(searchModel);
     }
@@ -539,5 +547,7 @@
 
             _floatingDoubleListService.OnClose -= ClosenMenu;
         }
+
+        DisposeInputBase();
     }
 }

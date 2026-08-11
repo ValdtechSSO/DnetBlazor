@@ -27,14 +27,14 @@ namespace Dnet.Blazor.Components.ImageEditor.Infrastructure.Services
             return _jsRuntime.InvokeAsync<FlexibleConnectedPositionStrategyOrigin>($"{JsFunctionsPrefix}.getBoundingClientRect", element);
         }
 
-        public void InitializeDragAndDrop(ElementReference draggedContainerElement, ElementReference boardArea, double left, double top)
+        public ValueTask InitializeDragAndDrop(ElementReference draggedContainerElement, ElementReference boardArea, double left, double top)
         {
-           _jsRuntime.InvokeAsync<FlexibleConnectedPositionStrategyOrigin>($"{JsFunctionsPrefix}.initializeDragAndDrop", _selfReference, draggedContainerElement, boardArea, left, top);
+           return _jsRuntime.InvokeVoidAsync($"{JsFunctionsPrefix}.initializeDragAndDrop", _selfReference, draggedContainerElement, boardArea, left, top);
         }
 
-        public void InitializeResize(List<ResizerData> resizers, double initialLeft, double initialTop, double initialHeight, double initialWidth, double imgWidth, double imgHeight, string resizerType, double resizerMinWidth, double resizerMinHeight)
+        public ValueTask InitializeResize(List<ResizerData> resizers, double initialLeft, double initialTop, double initialHeight, double initialWidth, double imgWidth, double imgHeight, string resizerType, double resizerMinWidth, double resizerMinHeight)
         {
-            _jsRuntime.InvokeAsync<FlexibleConnectedPositionStrategyOrigin>($"{JsFunctionsPrefix}.initializeResize", _selfReference, resizers, initialLeft, initialTop, initialHeight, initialWidth, imgWidth, imgHeight, resizerType, resizerMinWidth, resizerMinHeight);
+            return _jsRuntime.InvokeVoidAsync($"{JsFunctionsPrefix}.initializeResize", _selfReference, resizers, initialLeft, initialTop, initialHeight, initialWidth, imgWidth, imgHeight, resizerType, resizerMinWidth, resizerMinHeight);
         }
 
         [JSInvokable]
@@ -77,7 +77,15 @@ namespace Dnet.Blazor.Components.ImageEditor.Infrastructure.Services
         {
             if (_selfReference != null)
             {
-                await _jsRuntime.InvokeVoidAsync($"{JsFunctionsPrefix}.dispose", _selfReference);
+                try
+                {
+                    await _jsRuntime.InvokeVoidAsync($"{JsFunctionsPrefix}.dispose", _selfReference);
+                }
+                finally
+                {
+                    _selfReference.Dispose();
+                    _selfReference = null;
+                }
             }
         }
     }

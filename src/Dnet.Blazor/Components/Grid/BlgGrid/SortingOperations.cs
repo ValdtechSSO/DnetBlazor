@@ -5,7 +5,7 @@ namespace Dnet.Blazor.Components.Grid.BlgGrid;
 
 public partial class BlgGrid<TItem>
 {
-    private async void OnSortBy(string dataField)
+    private async Task OnSortBy(string dataField)
     {
         if (!_rowNodes.Any() || _treeRn == null) return;
 
@@ -15,12 +15,12 @@ public partial class BlgGrid<TItem>
 
         _searchModel.PaginationModel.CurrentPage = 1;
 
-        SortBy(gridColumn);
+        await SortBy(gridColumn);
 
         await Update();
     }
 
-    private async void SortBy(GridColumn<TItem> gridColumn)
+    private async Task SortBy(GridColumn<TItem> gridColumn)
     {
         var cellParams = new CellParams<TItem>
         {
