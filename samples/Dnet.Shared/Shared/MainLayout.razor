@@ -479,6 +479,19 @@
             },
             new NavigationMenu {
                 MenuId = 11,
+                Link = "/PickList",
+                ParentId = 0,
+                Text = "PickList",
+                MinifiedText = "Pl",
+                IconClass = "",
+                Children = new List<NavigationMenu>(),
+                IsNode = true,
+                Rights = new List<string> {
+                    "CanReadDashboard"
+                },
+            },
+            new NavigationMenu {
+                MenuId = 11,
                 Link = "/DoubleList",
                 ParentId = 0,
                 Text = "Double list",
@@ -584,4 +597,3 @@
         };
     }
 }
-

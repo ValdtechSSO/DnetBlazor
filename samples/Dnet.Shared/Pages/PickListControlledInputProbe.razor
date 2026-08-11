@@ -1,0 +1,58 @@
+@page "/PickList/controlled-rejection"
+@using Dnet.Blazor.Components.PickList
+
+<div id="rejected-controlled-inputs">
+    <PickList TItem="ProbeItem"
+              TKey="int"
+              Items="@_items"
+              ItemKey="item => item.Id"
+              SearchTextSelector="item => item.Name"
+              SelectedKeys="@_selectedKeys"
+              SelectedKeysChanged="RejectSelectionAsync"
+              SearchText="@_searchText"
+              SearchTextChanged="RejectSearchAsync">
+        <ItemTemplate Context="item">@item.Name</ItemTemplate>
+    </PickList>
+</div>
+
+<output id="controlled-probe-state">
+    Selected: @_selectedKeys.Count; Search: @_searchText
+</output>
+
+<div id="accepted-controlled-search">
+    <PickList TItem="ProbeItem"
+              TKey="int"
+              Items="@_items"
+              ItemKey="item => item.Id"
+              SearchTextSelector="item => item.Name"
+              @bind-SelectedKeys="_acceptedSelectedKeys"
+              @bind-SearchText="_acceptedSearchText">
+        <ItemTemplate Context="item">@item.Name</ItemTemplate>
+    </PickList>
+</div>
+
+<div id="uncontrolled-search">
+    <PickList TItem="ProbeItem"
+              TKey="int"
+              Items="@_items"
+              ItemKey="item => item.Id"
+              SearchTextSelector="item => item.Name"
+              @bind-SelectedKeys="_uncontrolledSelectedKeys">
+        <ItemTemplate Context="item">@item.Name</ItemTemplate>
+    </PickList>
+</div>
+
+@code {
+    private readonly IReadOnlyList<ProbeItem> _items = [new(1, "Rejected toggle")];
+    private readonly IReadOnlySet<int> _selectedKeys = new HashSet<int>();
+    private readonly string _searchText = string.Empty;
+    private IReadOnlySet<int> _acceptedSelectedKeys = new HashSet<int>();
+    private IReadOnlySet<int> _uncontrolledSelectedKeys = new HashSet<int>();
+    private string? _acceptedSearchText = string.Empty;
+
+    private Task RejectSelectionAsync(IReadOnlySet<int> _) => Task.CompletedTask;
+
+    private Task RejectSearchAsync(string? _) => Task.CompletedTask;
+
+    private sealed record ProbeItem(int Id, string Name);
+}

@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dnet.Blazor.Material", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dnet.Blazor.UnitTests", "tests\Dnet.Blazor.UnitTests\Dnet.Blazor.UnitTests.csproj", "{1E1E27C4-6101-4DD5-8559-F2DD986AB5ED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dnet.Blazor.BrowserTests", "tests\Dnet.Blazor.BrowserTests\Dnet.Blazor.BrowserTests.csproj", "{4A4A70A4-13DD-4F30-AF9D-EE3D1E94523C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{1E1E27C4-6101-4DD5-8559-F2DD986AB5ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E1E27C4-6101-4DD5-8559-F2DD986AB5ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E1E27C4-6101-4DD5-8559-F2DD986AB5ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A4A70A4-13DD-4F30-AF9D-EE3D1E94523C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A4A70A4-13DD-4F30-AF9D-EE3D1E94523C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A4A70A4-13DD-4F30-AF9D-EE3D1E94523C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A4A70A4-13DD-4F30-AF9D-EE3D1E94523C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

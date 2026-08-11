@@ -1,0 +1,91 @@
+@namespace Dnet.Blazor.Components.PickList
+@using Microsoft.AspNetCore.Components.Web
+@typeparam TItem
+@typeparam TKey where TKey : notnull
+
+<section class="dnet-pick-list" aria-busy="@_isLoading">
+    <label class="dnet-pick-list-search">
+        <span class="dnet-pick-list-sr-only">@EffectiveStrings.SearchPlaceholder</span>
+        <input @key="_searchRenderGeneration"
+               type="search"
+               value="@EffectiveSearchText"
+               placeholder="@EffectiveStrings.SearchPlaceholder"
+               aria-label="@EffectiveStrings.SearchPlaceholder"
+               @oninput="SetSearchTextAsync" />
+    </label>
+
+    <div class="dnet-pick-list-toolbar">
+        <output class="dnet-pick-list-counter">
+            @EffectiveStrings.SelectedLabel: @SelectedKeys.Count / @(_totalCount?.ToString() ?? "—")
+        </output>
+        <div class="dnet-pick-list-actions">
+            <button type="button"
+                    disabled="@(!CanSelectVisible)"
+                    @onclick="SelectVisibleAsync">
+                @EffectiveStrings.SelectVisibleLabel
+            </button>
+            <button type="button"
+                    disabled="@(SelectedKeys.Count == 0)"
+                    @onclick="ClearSelectionAsync">
+                @EffectiveStrings.ClearLabel
+            </button>
+        </div>
+    </div>
+
+    <nav class="dnet-pick-list-pager" aria-label="@EffectiveStrings.PaginationLabel">
+        <button type="button" aria-label="@EffectiveStrings.FirstPageLabel" disabled="@(_isLoading || !HasKnownPages || _pageIndex == 0)" @onclick="GoToFirstPageAsync">«</button>
+        <button type="button" aria-label="@EffectiveStrings.PreviousPageLabel" disabled="@(_isLoading || !HasKnownPages || _pageIndex == 0)" @onclick="GoToPreviousPageAsync">‹</button>
+        @if (HasKnownPages)
+        {
+            @foreach (var page in GetVisiblePageNumbers())
+            {
+                <button type="button"
+                        class="@(page == _pageIndex ? "dnet-pick-list-page-current" : null)"
+                        aria-label="@GetPageLabel(page)"
+                        aria-current="@(page == _pageIndex ? "page" : null)"
+                        disabled="@(_isLoading || page == _pageIndex)"
+                        @onclick="() => GoToPageAsync(page)">@(page + 1)</button>
+            }
+        }
+        else
+        {
+            <span class="dnet-pick-list-page-loading" aria-live="polite">…</span>
+        }
+        <button type="button" aria-label="@EffectiveStrings.NextPageLabel" disabled="@(_isLoading || !HasKnownPages || PageCount == 0 || _pageIndex >= PageCount - 1)" @onclick="GoToNextPageAsync">›</button>
+        <button type="button" aria-label="@EffectiveStrings.LastPageLabel" disabled="@(_isLoading || !HasKnownPages || PageCount == 0 || _pageIndex >= PageCount - 1)" @onclick="GoToLastPageAsync">»</button>
+    </nav>
+
+    <div class="dnet-pick-list-items" aria-live="polite">
+        @if (_isLoading && _visibleItems.Count == 0)
+        {
+            <p class="dnet-pick-list-status" role="status">@EffectiveStrings.LoadingLabel</p>
+        }
+        else if (IsNoResults)
+        {
+            <p class="dnet-pick-list-status">@EffectiveStrings.NoResultsLabel</p>
+        }
+        else if (IsEmpty)
+        {
+            <p class="dnet-pick-list-status">@EffectiveStrings.EmptyLabel</p>
+        }
+        else
+        {
+            @foreach (var item in _visibleItems)
+            {
+                var key = ItemKey(item);
+                var selected = SelectedKeys.Contains(key);
+
+                <label class="dnet-pick-list-item">
+                    <input @key="(key, _selectionRenderGeneration)"
+                           type="checkbox"
+                           class="dnet-pick-list-checkbox"
+                           disabled="@_isLoading"
+                           checked="@selected"
+                           @onchange="(ChangeEventArgs args) => SetSelectedAsync(key, args.Value is true)" />
+                    <span class="dnet-pick-list-selection-indicator" aria-hidden="true"></span>
+                    <span class="dnet-pick-list-item-content">@ItemTemplate(item)</span>
+                </label>
+            }
+        }
+    </div>
+</section>

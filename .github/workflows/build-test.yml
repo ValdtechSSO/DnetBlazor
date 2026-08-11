@@ -30,5 +30,22 @@ jobs:
         run: dotnet restore DnetBlazorComponents.sln
       - name: Build
         run: dotnet build DnetBlazorComponents.sln --configuration Release --no-restore
+      - name: Install Chromium for PickList browser regression
+        run: tests/Dnet.Blazor.BrowserTests/install-playwright.sh --with-deps chromium
       - name: Test
-        run: dotnet test DnetBlazorComponents.sln --configuration Release --no-build --no-restore --verbosity normal
+        run: |
+          dotnet run --project samples/Dnet.ClientSide/Dnet.App.ClientSide.csproj --configuration Release --no-build --no-launch-profile --urls http://127.0.0.1:5101 > /tmp/dnetblazor-sample.log 2>&1 &
+          sample_pid=$!
+          trap 'kill "$sample_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..60}; do
+            if curl --fail --silent http://127.0.0.1:5101/ > /dev/null; then
+              dotnet test DnetBlazorComponents.sln --configuration Release --no-build --no-restore --verbosity normal
+              exit $?
+            fi
+            sleep 1
+          done
+          cat /tmp/dnetblazor-sample.log
+          exit 1
+        env:
+          DNET_BLAZOR_BROWSER_TESTS: "true"
+          DNET_BLAZOR_BASE_URL: http://127.0.0.1:5101

@@ -1,0 +1,111 @@
+@page "/PickList"
+@using Dnet.Blazor.Components.PickList
+
+<div class="container-fluid" style="padding-top: 10px;">
+    <div class="d-flex dnet-page-content-left-margin dnet-m-t-20">
+        <span class="dnet-m-r-10 dnet-app-comp-name">PickList</span>
+    </div>
+
+    <div class="dnet-page-content-left-margin dnet-m-t-20">
+        <h5>1–2. Basic local collection and local search</h5>
+        <p>Starts with preselected keys and exposes the page-scoped selection and clear actions.</p>
+        <PickList TItem="Team"
+                  TKey="int"
+                  Items="@_teams"
+                  ItemKey="team => team.Id"
+                  SearchTextSelector="team => team.Name"
+                  @bind-SelectedKeys="_localSelectedKeys">
+            <ItemTemplate Context="team">
+                <strong>@team.Name</strong>
+                <span class="dnet-m-l-10">@team.City</span>
+            </ItemTemplate>
+        </PickList>
+        <p>4, 6–7. Preselected keys, Select page and Clear: @string.Join(", ", _localSelectedKeys.Order())</p>
+    </div>
+
+    <div class="dnet-page-content-left-margin dnet-m-t-20">
+        <h5>3 and 5. Server-side provider with a selected key that is not loaded</h5>
+        <PickList TItem="Team"
+                  TKey="int"
+                  ItemsProvider="LoadTeamsAsync"
+                  ItemKey="team => team.Id"
+                  @bind-SelectedKeys="_providerSelectedKeys"
+                  PageSize="3">
+            <ItemTemplate Context="team">
+                <strong>@team.Name</strong>
+                <span class="dnet-m-l-10">@team.City</span>
+            </ItemTemplate>
+        </PickList>
+        <p>Selected provider keys (99 is intentionally absent): @string.Join(", ", _providerSelectedKeys.Order())</p>
+    </div>
+
+    <div class="dnet-page-content-left-margin dnet-m-t-20">
+        <h5>8–9. Custom template and localized strings</h5>
+        <PickList TItem="Team"
+                  TKey="int"
+                  Items="@_teams"
+                  ItemKey="team => team.Id"
+                  SearchTextSelector="SearchableText"
+                  @bind-SelectedKeys="_localizedSelectedKeys"
+                  Strings="@SpanishStrings"
+                  PageSize="4">
+            <ItemTemplate Context="team">
+                <span aria-hidden="true">🏀</span>
+                <strong>@team.Name</strong>
+                <small class="dnet-m-l-10">@team.City</small>
+            </ItemTemplate>
+        </PickList>
+    </div>
+</div>
+
+@code {
+    private readonly List<Team> _teams =
+    [
+        new(1, "Alicante Thunder", "Alicante"),
+        new(2, "Bilbao Titans", "Bilbao"),
+        new(3, "Burgos Bears", "Burgos"),
+        new(4, "Cádiz Sharks", "Cádiz"),
+        new(5, "Denia Waves", "Denia"),
+        new(6, "Ebro Wolves", "Zaragoza"),
+        new(7, "Faro Eagles", "Huelva")
+    ];
+
+    private IReadOnlySet<int> _localSelectedKeys = new HashSet<int> { 1, 4 };
+    private IReadOnlySet<int> _providerSelectedKeys = new HashSet<int> { 2, 99 };
+    private IReadOnlySet<int> _localizedSelectedKeys = new HashSet<int>();
+
+    private static PickListStrings SpanishStrings { get; } = new()
+    {
+        SearchPlaceholder = "Buscar equipos",
+        SelectedLabel = "Seleccionados",
+        SelectVisibleLabel = "Seleccionar página",
+        ClearLabel = "Limpiar",
+        EmptyLabel = "No hay equipos",
+        NoResultsLabel = "No se encontraron equipos",
+        PaginationLabel = "Paginación de equipos",
+        FirstPageLabel = "Primera página",
+        PreviousPageLabel = "Página anterior",
+        PageLabelFormat = "Página {0}",
+        NextPageLabel = "Página siguiente",
+        LastPageLabel = "Última página",
+        LoadingLabel = "Cargando…"
+    };
+
+    private static string SearchableText(Team team) => $"{team.Name} {team.City}";
+
+    private async ValueTask<PickListItemsProviderResult<Team>> LoadTeamsAsync(PickListItemsProviderRequest request)
+    {
+        await Task.Delay(180, request.CancellationToken);
+
+        var filtered = string.IsNullOrWhiteSpace(request.SearchText)
+            ? _teams
+            : _teams.Where(team => team.Name.Contains(request.SearchText, StringComparison.OrdinalIgnoreCase)).ToList();
+
+        return new PickListItemsProviderResult<Team>(
+            filtered.Skip(request.PageIndex * request.PageSize).Take(request.PageSize).ToArray(),
+            request.RequestTotalCount ? _teams.Count : null,
+            request.RequestFilteredCount ? filtered.Count : null);
+    }
+
+    private sealed record Team(int Id, string Name, string City);
+}
