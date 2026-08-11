@@ -1,0 +1,255 @@
+﻿@using Dnet.Blazor.Components.Button
+@using Dnet.Blazor.Components.Checkbox
+@using Dnet.Blazor.Components.Form
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using System.Timers
+@using Dnet.Blazor.Components.Select.Infrastructure.Services
+@using Dnet.Blazor.Infrastructure.Services.CssBuilder
+@using Microsoft.JSInterop
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Interfaces
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Models
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Services
+
+@typeparam TItem
+
+@inject IJSRuntime JSRuntime
+
+@inject IOverlayService OverlayService
+
+<div class="dnet-select-list-wrapper">
+    <div class="dnet-select-list-header">
+        <div class="dnet-select-list-header-content">
+            <span class="dnet-select-list-header-text">
+                @Label
+            </span>
+        </div>
+        <div class="dnet-select-list-header-checkall">
+            <span @onclick="CancelOverlay" class="dnet-dialog-icon-wrapper">
+                <span class="dnet-dialog-icon dnet-dialog-close-icon" unselectable="on"></span>
+            </span>
+        </div>
+    </div>
+    <div class="dnet-select-list-items">
+        @if (ItemPrefixContent != null || ItemSufixContent != null || ChildContent != null)
+        {
+            <Virtualize Items="@Items" TItem="RowNode<TItem>" Context="item" ItemSize="@ItemHeight">
+                <ItemContent>
+                    @if (item is not null)
+                    {
+                        <div class="dnet-select-list-item" @onclick="@(() => SelectItem(item))"
+                             @onclick:preventDefault="true" style="margin-bottom: 2px; height:@(ItemHeight)px">
+                            @if (MultiSelect)
+                            {
+                                <div class="dnet-autoc-prefix-content">
+                                    <DnetInputCheckbox Value="item.Selected" ValueChanged="() => CheckboxClicked(item)"
+                                                       ValueExpression="() => item.Selected" class="dnet-m-r-5"></DnetInputCheckbox>
+                                </div>
+                            }
+                            @if (ItemPrefixContent != null && item.RowData is not null)
+                            {
+                                <div class="dnet-select-list-item-prefix">
+                                    @ItemPrefixContent(item.RowData)
+                                </div>
+                            }
+                            <div class="dnet-select-list-item-content">
+                                @if (ChildContent != null && item.RowData is not null)
+                                {
+                                    @ChildContent(item.RowData)
+                                }
+                                else
+                                {
+                                    <span class="dnet-select-list-item-headline">
+                                        @if (DisplayValueConverter is not null && item.RowData is not null)
+                                        {
+                                            @DisplayValueConverter(item.RowData)
+                                        }
+                                    </span>
+                                    @if (SupportTextValueConverter is not null && item.RowData is not null)
+                                    {
+                                        <span class="dnet-list-item-supporting-text">
+                                            @SupportTextValueConverter(item.RowData)
+                                        </span>
+                                    }
+                                }
+                            </div>
+                            @if (ItemSufixContent != null && item is not null && item.RowData is not null)
+                            {
+                                <div class="dnet-select-list-item-sufix">
+                                    @ItemSufixContent(item.RowData)
+                                </div>
+                            }
+                        </div>
+                    }
+                </ItemContent>
+            </Virtualize>
+        }
+        else
+        {
+            <Virtualize Items="@Items" TItem="RowNode<TItem>" Context="item" ItemSize="@ItemHeight">
+                <div class="dnet-select-list-item" @onclick="@(() => SelectItem(item))" @onclick:preventDefault="true"
+                     style="margin-bottom: 2px; height:@(ItemHeight)px">
+                    @if (MultiSelect)
+                    {
+                        <div class="dnet-select-list-item-prefix">
+                            <DnetInputCheckbox Value="item.Selected" ValueChanged="() => CheckboxClicked(item)"
+                                               ValueExpression="() => item.Selected" class="dnet-m-r-5"></DnetInputCheckbox>
+                        </div>
+                    }
+                    <div class="dnet-select-list-item-content">
+                        <span class="dnet-select-list-item-headline">
+                            @if (DisplayValueConverter is not null && item.RowData is not null)
+                            {
+                                @DisplayValueConverter(item.RowData)
+                            }
+                        </span>
+                        @if (SupportTextValueConverter is not null && item.RowData is not null)
+                        {
+                            <span class="dnet-list-item-supporting-text">
+                                @SupportTextValueConverter(item.RowData)
+                            </span>
+                        }
+                    </div>
+                </div>
+            </Virtualize>
+        }
+    </div>
+    <div class="dnet-select-list-footer">
+    </div>
+</div>
+
+@code {
+
+    [CascadingParameter]
+    private int OverlayReferenceId { get; set; }
+
+    [Parameter]
+    public List<RowNode<TItem>>? Items { get; set; }
+
+    [Parameter]
+    public string Width { get; set; } = "200px";
+
+    [Parameter]
+    public string Height { get; set; } = "200px";
+
+    [Parameter]
+    public string? MinWidth { get; set; }
+
+    [Parameter]
+    public string? MinHeight { get; set; }
+
+    [Parameter]
+    public string? MaxWidth { get; set; }
+
+    [Parameter]
+    public string? MaxHeight { get; set; }
+
+    [Parameter]
+    public string BorderRadius { get; set; } = "0px";
+
+    [Parameter]
+    public SelectService<TItem>? SelectService { get; set; }
+
+    [Parameter]
+    public Func<TItem, string>? DisplayValueConverter { get; set; }
+
+    [Parameter]
+    public Func<TItem, string>? SupportTextValueConverter { get; set; }
+
+    [Parameter]
+    public RenderFragment<TItem>? ChildContent { get; set; }
+
+    [Parameter]
+    public RenderFragment<TItem>? ItemPrefixContent { get; set; }
+
+    [Parameter]
+    public RenderFragment<TItem>? ItemSufixContent { get; set; }
+
+    [Parameter]
+    public int ItemHeight { get; set; } = 40;
+
+    [Parameter]
+    public int ContainerHeight { get; set; } = 200;
+
+    [Parameter]
+    public bool MultiSelect { get; set; }
+
+    [Parameter]
+    public bool ConfirmButtons { get; set; }
+
+    [Parameter]
+    public List<RowNode<TItem>>? SelectedRowNodes { get; set; }
+
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+
+
+    private string _styles { get; set; } = string.Empty;
+
+
+    protected override void OnInitialized()
+    {
+        _styles = GetStyles();
+    }
+
+    private string GetStyles()
+    {
+        var styles = new StyleBuilder()
+        .AddStyle("width", Width, when: !string.IsNullOrEmpty(Width))
+        .AddStyle("height", Height, when: !string.IsNullOrEmpty(Height))
+        .AddStyle("min-height", MinHeight, when: !string.IsNullOrEmpty(MinHeight))
+        .AddStyle("min-width", MinWidth, when: !string.IsNullOrEmpty(MinWidth))
+        .AddStyle("max-width", MaxWidth, when: !string.IsNullOrEmpty(MaxWidth))
+        .AddStyle("max-height", MaxHeight, when: !string.IsNullOrEmpty(MaxHeight))
+        .AddStyle("transform", $"transform: translateY(@_transformY)")
+        .Build();
+
+        return styles;
+    }
+
+    private RenderFragment CreateCellTemplateComponent(TItem item, Type componeType) => builder =>
+    {
+        builder.OpenComponent(0, componeType);
+        builder.AddAttribute(1, "Item", item);
+        builder.CloseComponent();
+    };
+
+    private void SelectItem(RowNode<TItem> rowNode)
+    {
+        if (MultiSelect)
+        {
+            CheckboxClicked(rowNode);
+            return;
+        }
+        SelectService.UpdateSelectedItem(rowNode.RowData);
+    }
+
+    private void CheckboxClicked(RowNode<TItem> rowNode)
+    {
+        rowNode.Selected = !rowNode.Selected;
+
+        ManageSelections(rowNode);
+
+        SelectService.UpdateSelectedItems(SelectedRowNodes);
+    }
+
+    private void ManageSelections(RowNode<TItem> rowNode)
+    {
+        if (rowNode == null) return;
+
+        if (rowNode.Selected)
+        {
+            SelectedRowNodes.Add(rowNode);
+        }
+        else
+        {
+            SelectedRowNodes.Remove(rowNode);
+        }
+    }
+
+    void CancelOverlay()
+    {
+        OverlayService.Detach(new OverlayResult { OverlayReferenceId = OverlayReferenceId });
+    }
+}

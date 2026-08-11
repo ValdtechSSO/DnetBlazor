@@ -1,0 +1,59 @@
+﻿@using Dnet.App.Shared.Infrastructure.Entities
+@using Dnet.Blazor.Components.Button
+@using Dnet.Blazor.Components.FloatingPanel.Infrastructure.Interfaces
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Enums
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Services
+
+@inject IFloatingPanelService FloatingPanelService
+
+<div class="dnet-panel in-floating-panel">
+    <div class="dnet-panel-header">
+        <div class="dsec-panel-content">
+            <span class="dsec-panel-content-title">Edit user profile</span>
+        </div>
+    </div>
+    <div class="dnet-panel-content">
+        <FormFieldTest Person="@Person"></FormFieldTest>
+    </div>
+    <div class="dnet-panel-footer">
+        <DnetButton OnClick="CancelOverlay" class="dnet-m-r-10">Close</DnetButton>
+        <DnetButton OnClick="CloseOverlay" InitialFocus="true" class="dnet-m-r-10">Ok</DnetButton>
+    </div>
+</div>
+
+
+@code {
+
+    [CascadingParameter]
+    private int OverlayReferenceId { get; set; }
+
+    [Parameter]
+    public Person Person { get; set; } = new Person();
+
+    private bool _formInvalid = true;
+
+
+    void CloseOverlay()
+    {
+        var dataResult = new OverlayResult()
+            {
+                CloseReason = CloseReason.Ok,
+                ComponentData = $"Overlay ReferenceId => {OverlayReferenceId}",
+                OverlayReferenceId = OverlayReferenceId
+            };
+
+        FloatingPanelService.Close(dataResult);
+    }
+
+    void CancelOverlay()
+    {
+        var dataResult = new OverlayResult()
+            {
+                CloseReason = CloseReason.Cancel,
+                ComponentData = null,
+                OverlayReferenceId = OverlayReferenceId
+            };
+
+        FloatingPanelService.Close(dataResult);
+    }
+}

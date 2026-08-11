@@ -1,0 +1,432 @@
+﻿@page "/Forms"
+
+@using System.Drawing
+@using Dnet.App.Shared.Infrastructure.Entities
+@using Dnet.App.Shared.Infrastructure.Models
+@using Dnet.App.Shared.Infrastructure.Services
+@using Dnet.Blazor.Components.FloatingDoubleList.Infrastructure.Models
+@using Dnet.Blazor.Components.Form
+@using Dnet.Blazor.Components.List
+@using Dnet.Blazor.Components.Select
+@using Dnet.Blazor.Components.Autocomplete
+@using Dnet.Blazor.Components.DatePicker
+@using Dnet.Blazor.Components.FloatingDoubleList
+@using Dnet.Blazor.Infrastructure.Models.SearchModels
+@using Dnet.Blazor.Infrastructure.Services
+@using Microsoft.AspNetCore.Components;
+@using Microsoft.AspNetCore.Components.Web;
+@using System.ComponentModel.DataAnnotations
+
+@inject IApplicationServiceService ApplicationServiceService
+
+<div class="container-fluid" style="padding-top: 10px;">
+    <div class="d-flex dnet-page-content-left-margin dnet-m-t-20">
+        <span class="dnet-m-r-10 dnet-app-comp-name">Forms</span>
+    </div>
+    <EditForm EditContext="@_editContext" style="display: flex;flex-direction:column; width:300px" class="dnet-page-content-left-margin dnet-m-t-20">
+        <DataAnnotationsValidator />
+
+        <DnetFormField Label="LastName" UseClearButton="true" IsRequired="true">
+            <PrefixContent>
+                <div class="dnet-app-icon-wrapper">
+                    <span class="dnet-app-icon dnet-app-formfield-headphones"></span>
+                </div>
+            </PrefixContent>
+            <ChildContent>
+                <DnetInputText @bind-Value="_person.LastName" PlaceHolder="Ex. MyCompany" type="text" >
+                </DnetInputText>
+            </ChildContent>
+            <HintContent>You can add the country prefix</HintContent>
+            <SufixContent>
+                €
+            </SufixContent>
+            <ErrorContent>
+            </ErrorContent>
+        </DnetFormField>
+
+        <DnetFormField Label="Email" UseClearButton="true" IsRequired="true">
+            <ChildContent>
+                <DnetInputText @bind-Value="_person.Email" PlaceHolder="Ex. Email" Disabled="@(string.IsNullOrEmpty(_person.LastName))">
+                </DnetInputText>
+            </ChildContent>
+            <ErrorContent>
+                <ValidationMessage For="@(() => _person.Email)" />
+            </ErrorContent>
+        </DnetFormField>
+
+        <DnetFormField Label="Gender" IsRequired="true">
+            <ChildContent>
+                <DnetSelect TValue="string" @bind-Value="_person.Gender" Items="_genders"
+                                      TItem="Gender" DisplayValueConverter="(value) => (value.Name)"
+                                      ValueConverter="(value) => (value.Name)" OnItemSelected="ApiResource1ItemSelected"
+                                      PlaceHolder=""
+                                      >
+                </DnetSelect>
+            </ChildContent>
+            <ErrorContent>
+                <ValidationMessage For="@(() => _person.Gender)" />
+            </ErrorContent>
+        </DnetFormField>
+
+        <DnetFormField Label="Name" IsRequired="true" UseClearButton="true">
+            <ChildContent>
+                <DnetAutocomplete TValue="string" 
+                                     @bind-Value="@_person.Name" 
+                                     Items="_items" 
+                                     TItem="Person"
+                                     DisplayValueConverter="(value) => value.Name" 
+                                     ValueConverter="(value) => (value.Name)"
+                                     OnItemSelected="OnAutocompleteFilter" 
+                                     InputTextToUpper="true" 
+                                     PlaceHolder="Name"
+                                     SortBy="@sortBy" 
+                                     FilterBy="@filterBy">
+                </DnetAutocomplete>
+            </ChildContent>
+            <ErrorContent>
+                <ValidationMessage For="@(() => _person.Name)" />
+            </ErrorContent>
+        </DnetFormField>
+
+        <DnetFormField Label="Name" IsRequired="true" UseClearButton="true">
+            <ChildContent>
+                <DnetDatePicker @bind-Value="@_person.StartDate"
+                                   Disabled="false"
+                                   OnDaySelected="DaySelected"
+                                   PlaceHolder="Departure day"
+                                   MaxDayValue="DateTime.Now"
+                                   MinDayValue="DateTime.Now.AddDays(-10)"
+                                   FirstDayToShow="DateTime.Now"
+                                   DatepickerFilter="(p) => { return p.DayIndex == 0; }">
+                </DnetDatePicker>
+            </ChildContent>
+            <SufixContent>
+                <div class="dnet-datepicker-icon-wrapper">
+                    <span class="dnet-datepicker-icon dnet-datepicker-icon-default" unselectable="on"></span>
+                </div>
+            </SufixContent>
+            <ErrorContent>
+                <ValidationMessage For="@(() => _person.StartDate)" />
+            </ErrorContent>
+        </DnetFormField>
+
+        <DnetFormField Label="Address" IsRequired="true">
+            <ChildContent>
+                <DnetInputTextArea @bind-Value="_person.Address"
+                                      PlaceHolder="Ex. 4th Street, CP: 11901"
+                                      Label="Address"
+                                      type="text"
+                                      rows="5"
+                                      ImmediateResponse="false"
+                MaxCharacters="500">
+                </DnetInputTextArea>
+            </ChildContent>
+            <ErrorContent>
+                <ValidationMessage For="@(() => _person.Address)" />
+            </ErrorContent>
+        </DnetFormField>
+
+        <DnetFormField Label="Age" IsRequired="true">
+            <ChildContent>
+                <DnetInputNumber @bind-Value="_person.Age" PlaceHolder="Ex. Pizza" Min="0" Step="10">
+                </DnetInputNumber>
+            </ChildContent>
+            <ErrorContent>
+                <ValidationMessage For="@(() => _person.Age)" />
+            </ErrorContent>
+        </DnetFormField>
+
+        <DnetFormField Label="Amount">
+            <ChildContent>
+                <DnetInputNumber TValue="double?" @bind-Value="_person.Amount" PlaceHolder="" ImmediateResponse="true">
+                </DnetInputNumber>
+            </ChildContent>
+            <ErrorContent>
+                <ValidationMessage For="@(() => _person.Amount)" />
+            </ErrorContent>
+        </DnetFormField>
+
+        <DnetFormField Label="Birthday" IsRequired="true">
+            <ChildContent>
+                <DnetInputDate @bind-Value="_person.Birthday" PlaceHolder="Ex. 2021/10/6">
+                </DnetInputDate>
+            </ChildContent>
+            <ErrorContent>
+                <ValidationMessage For="@(() => _person.Birthday)" />
+            </ErrorContent>
+        </DnetFormField>
+
+    </EditForm>
+</div>
+
+@code {
+
+   
+
+    private Person _person { get; set; }
+
+    private EditContext? _editContext;
+
+    private ValidationMessageStore? messageStore;
+
+    private bool _formInvalid = true;
+
+    private EditContext? _editContext2;
+
+    private List<Gender> _genders = new();
+
+    private Gender _gender { get; set; } = new();
+
+    private List<Person> _items = new List<Person>();
+
+    private string _dateSelected { get; set; }
+
+    private List<Person> _leftItems = new();
+
+    private List<Person> _leftSelectedItems = new();
+
+    private List<Person> _leftAddedItems = new();
+
+    private List<Person> _leftRemovedItems = new();
+
+    private List<Person> _rightItems = new();
+
+    private List<Person> _rightSelectedItems = new();
+
+    private List<Person> _rightAddedItems = new();
+
+    private List<Person> _rightRemovedItems = new();
+
+    private DnetList<Person> _leftComponent { get; set; }
+
+    private DnetList<Person> _rightComponent { get; set; }
+
+    private List<KeyValueModel<int>> _features = new();
+
+    private List<KeyValueModel<int>> _selectedFeatures = new();
+
+    private KeyValueModel<int> _formData1 = new();
+
+    private ListOptions<Person> _leftListOptions { get; set; } = new();
+
+    private ListOptions<Person> _rightListOptions { get; set; } = new();
+
+    private string _personNameList { get; set; }
+
+    private DnetFloatingDoubleList<Person> _floatingDoubleListPerson { get; set; }
+
+
+
+    CustomFilter<Person> filterBy = CustomFilter<Person>
+    .FilterBy(x => x.Name, CustomFilterOperator.Contains)
+    .ThenFilterBy(x => x.Company, CustomFilterOperator.Contains);
+
+    CustomSort<Person> sortBy = CustomSort<Person>
+    .ByAscending<string>(x => x.Name)
+    .ThenDescending<string>(x => x.LastName);
+
+
+    protected override void OnInitialized()
+    {
+         var person = new Person()
+        {
+            Name = "John",
+            LastName = "Doe",
+            Email = "john.doe@datalnet.com",
+            Phone = "678 89 90 09",
+            Age = 34,
+            Company = "Datalnet",
+            Balance = "90000",
+            Address = "597 Frost Street, Brogan, Indiana, 8687",
+        };
+        _person = person;
+
+        _leftListOptions = GetListOptions();
+        _leftListOptions.HeaderText = "Left";
+        _leftListOptions.ContainerName = "LeftContainer";
+        _leftListOptions.ConnectedTo = "RghtContainer";
+
+        _rightListOptions = GetListOptions();
+        _rightListOptions.HeaderText = "Right";
+        _rightListOptions.ContainerName = "RghtContainer";
+        _rightListOptions.ConnectedTo = "LeftContainer";
+
+        _genders = new List<Gender>()
+        {
+            new ()
+            {
+                GenderId = 1,
+                Name = "Female"
+            },
+            new ()
+            {
+                GenderId = 2,
+                Name = "Male"
+            }
+        };
+
+        _editContext = new EditContext(_person);
+
+        messageStore = new(_editContext);
+
+        _editContext.OnFieldChanged += (data, eventArgs) =>
+        {
+            _formInvalid = !_editContext.Validate();
+            StateHasChanged();
+        };
+
+        _editContext.OnValidationRequested += (data, eventArgs) =>
+        {
+            messageStore?.Clear();
+
+            StateHasChanged();
+        };
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _items = await GetPersons();
+
+        var itemsToTake = 5;
+
+        var items = await GetPersons();
+
+        _leftItems = items.Take(itemsToTake).ToList();
+
+        _rightItems = items.Skip(itemsToTake).Take(itemsToTake).ToList();
+
+        StateHasChanged();
+    }
+
+    private void ApiResource1ItemSelected(Gender item)
+    {
+        _person.Gender = item.Name;
+    }
+
+    public class Gender
+    {
+        public int GenderId { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+    }
+
+    private async Task<List<Person>> GetPersons()
+    {
+        var dataPersons = await ApplicationServiceService.GetPersons();
+
+        return dataPersons;
+    }
+
+    private void OnAutocompleteFilter(Person item)
+    {
+        var value = item;
+    }
+
+    private void MyValueChangeHandler(string item)
+    {
+        _person.Name = item;
+    }
+
+    private async Task StopTyping(string value)
+    {
+        var items = (await GetPersons()).Where(p => p.Name.ToUpper().Contains(value.ToUpper())).ToList();
+    }
+
+    private void DaySelected(Blazor.Components.DatePicker.Infrastructure.Models.CalendarDay selecteDay)
+    {
+        _dateSelected = selecteDay.FormattedDate;
+    }
+
+    // Double List
+    private void LeftSelectionChanged(List<Person> selectedItems)
+    {
+        _leftSelectedItems = selectedItems;
+    }
+
+    private void RightSelectionChanged(List<Person> selectedItems)
+    {
+        _rightSelectedItems = selectedItems;
+    }
+
+    private void MyValueChangeHandlerDl(string item)
+    {
+        _formData1.Value = item;
+    }
+
+    private ListOptions<Person> GetListOptions()
+    {
+        return new ListOptions<Person>()
+            {
+                DisplayValueConverter = (value) => value.Name,
+                SortedData = (value) => value.Name,
+                SearchValueConverter = (value) => value.Name,
+                DisableItem = (value) => value.IsActive,
+                HeaderText = "",
+                ItemSize = 40f,
+                MultiSelect = true,
+                DebounceTime = 250,
+                EnableServerSide = true,
+                EnableSearching = true,
+                EnableSorting = false,
+                PageSize = 50,
+                EnablePagingination = true,
+                CheckboxSelectionColumn = false,
+                ShowHeader = false,
+                ShowFooter = false,
+                ServerSideSearchColumns = new List<string>() { "Name" },
+                ServerSideSortColumn = "Name"
+            };
+    }
+
+    private void SelectionChanged(TransferredItems<Person> transferredItems)
+    {
+        var tt = transferredItems;
+    }
+
+    private async Task SearchLeft(SearchModel searchModel)
+    {
+        var items = await GetPersons();
+
+        var paginatedItems = items.Where(p => p.Name.ToUpper().Contains(searchModel.AdvancedFilterModels.FirstOrDefault().Value.ToUpper()))
+                                  .Skip((searchModel.PaginationModel.CurrentPage - 1) * searchModel.PaginationModel.PageSize)
+                                  .Take(searchModel.PaginationModel.PageSize).ToList();
+
+        _floatingDoubleListPerson.RefreshDataLeft(paginatedItems);
+    }
+
+    private async Task SearchRight(SearchModel searchModel)
+    {
+        var items = await GetPersons();
+
+        var paginatedItems = items.Where(p => p.Name.ToUpper().Contains(searchModel.AdvancedFilterModels.FirstOrDefault().Value.ToUpper()))
+                                  .Skip((searchModel.PaginationModel.CurrentPage - 1) * searchModel.PaginationModel.PageSize)
+                                  .Take(searchModel.PaginationModel.PageSize).ToList();
+
+        _floatingDoubleListPerson.RefreshDataRight(paginatedItems);
+    }
+
+    public class PersonEqualityComparer : IEqualityComparer<Person>
+    {
+        public bool Equals(Person x, Person y)
+        {
+            if (x == null || y == null)
+                return false;
+
+            if (ReferenceEquals(x, y)) return true;
+
+            x.PersonId = x.PersonId ?? string.Empty;
+
+            y.PersonId = y.PersonId ?? string.Empty;
+
+            return x.PersonId.Equals(y.PersonId);
+        }
+
+        public int GetHashCode(Person obj)
+        {
+            int hashPersonId = obj.PersonId == null ? 0 : obj.PersonId.GetHashCode();
+
+            return hashPersonId;
+        }
+    }
+}

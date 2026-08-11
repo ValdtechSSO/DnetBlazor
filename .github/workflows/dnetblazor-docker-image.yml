@@ -1,0 +1,82 @@
+name: deploy-blazor-components
+run-name: Build and Deploy Version ${{ github.run_number }} by @${{ github.actor }}
+
+on:
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: valdtechsso/dnetblazor
+
+jobs:
+  build-and-push:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Docker buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log into registry ${{ env.REGISTRY }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
+
+      - name: Build and push Docker image
+        id: build-and-push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./
+          file: ./Dockerfile.kestrel
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    name: Deploy to Remote Server
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v'))
+    
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_REMOTE_HOST }}
+          username: ${{ secrets.SSH_REMOTE_USER }}
+          password: ${{ secrets.SSH_REMOTE_PASSWORD }}
+          port: ${{ secrets.SSH_REMOTE_PORT }}
+          script: |
+            cd /home/docker
+            docker login ghcr.io --username ${{ secrets.REGISTRY_USER }} --password ${{ secrets.TOKEN }}
+            docker pull ghcr.io/valdtechsso/dnetblazor:master
+            docker compose -f dnetblazor-docker-compose.yaml stop
+            docker container prune -f
+            docker image prune -f
+            docker compose -f dnetblazor-docker-compose.yaml up -d
+            docker logout ghcr.io

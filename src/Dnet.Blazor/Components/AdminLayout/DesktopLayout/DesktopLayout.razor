@@ -1,0 +1,219 @@
+﻿@using Dnet.Blazor.Components.AdminLayout.Infrastructure.Enums
+@using Dnet.Blazor.Components.AdminLayout.Infrastructure.HelperClasses
+@using Dnet.Blazor.Components.AdminLayout.Infrastructure.Interfaces
+@using Dnet.Blazor.Components.AdminLayout.Infrastructure.Models
+@using Dnet.Blazor.Components.AdminLayout.Infrastructure.Services
+@using Dnet.Blazor.Infrastructure.Services.CssBuilder
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Services
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Enums
+@using Microsoft.JSInterop
+
+@inject IThemeMessageService<ThemeConfigData> ThemeMessageService
+@inject IJSRuntime JSRuntime
+@inject DnetOverlayInterop DnetOverlayInterop
+
+@implements IDisposable;
+
+<div class="@("dnet-grid-container " +
+    (_isResponsiveMenu ? " responsive-menu" : "") +
+    (_isMinified ? " minified" : "") +
+    (_isFooterHidden && !_isHeaderHidden ? " hidden-footer" : "") +
+    (_isHeaderHidden && !_isFooterHidden ? " hidden-header" : "") +
+    (_isHeaderHidden && _isFooterHidden ? " hidden-footer-and-header" : "") +
+    (_isLeftColumnHidden && !_isRightColumnHidden ? " hidden-left-column" : "") +
+    (_isRightColumnHidden && !_isLeftColumnHidden ? " hidden-right-column" : "") +
+    (_isRightColumnHidden && _isLeftColumnHidden ? " hidden-lateral-columns" : "") +
+    (_isDesktopMode ? " desktop-layout" : "") +
+    (_isLeftColumnFixed ? " fixed-left-column" : "") +
+    (_isHeaderFixed ? " fixed-header" : "") +
+    (!_showMinifier ? " hidden-minifier" : ""))">
+    <CascadingValue Value="this" IsFixed="true">
+        @ChildContent
+    </CascadingValue>
+</div>
+
+@code {
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public bool IsHeaderFixed { get; set; }
+
+    [Parameter]
+    public bool IsLeftColumnFixed { get; set; }
+
+    [Parameter]
+    public bool ShowMinifier { get; set; }
+
+    [Parameter]
+    public bool IsMinified { get; set; }
+
+    [Parameter]
+    public bool IsHeaderHidden { get; set; }
+
+    [Parameter]
+    public bool IsFooterHidden { get; set; }
+
+    [Parameter]
+    public bool IsLeftColumnHidden { get; set; }
+
+    [Parameter]
+    public bool IsRightColumnHidden { get; set; }
+
+    [Parameter]
+    public bool IsDesktopMode { get; set; }
+
+
+    private bool _isHeaderFixed { get; set; }
+
+    private bool _isLeftColumnFixed { get; set; }
+
+    private bool _showMinifier { get; set; }
+
+    private bool _isMinified { get; set; }
+
+    private bool _isHeaderHidden { get; set; }
+
+    private bool _isFooterHidden { get; set; }
+
+    private bool _isLeftColumnHidden { get; set; }
+
+    private bool _isRightColumnHidden { get; set; }
+
+    private bool _isDesktopMode { get; set; }
+
+    private bool _isResponsiveMenu { get; set; }
+
+    private string? CssClasses { get; set; }
+
+    private LocalStorageData _localStorageData { get; set; } = new();
+
+    private int _windowWidth { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        _isHeaderHidden = IsHeaderHidden;
+
+        _isFooterHidden = IsFooterHidden;
+
+        _isLeftColumnHidden = IsLeftColumnHidden;
+
+        _isRightColumnHidden = IsRightColumnHidden;
+
+        _isDesktopMode = IsDesktopMode;
+
+        _isHeaderFixed = IsHeaderFixed;
+
+        _isLeftColumnFixed = IsLeftColumnFixed;
+
+        _showMinifier = ShowMinifier;
+
+        if (_showMinifier == false) _isMinified = IsMinified;
+
+        StateHasChanged();
+
+        ((ThemeMessageService<ThemeConfigData>)ThemeMessageService).OnMessage += MessageReceived;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+             _windowWidth = await DnetOverlayInterop.GetWindowWidth();
+
+            var localStorageData = await DnetAdminDashboardInterop.GetAsync<LocalStorageData>(JSRuntime, "DnetBlazor");
+
+            if (localStorageData != null && _showMinifier == true)
+            {
+                _isMinified = localStorageData.IsMinified;
+
+                StateHasChanged();
+            }
+            else
+            {
+                _isMinified = IsMinified;
+
+                _localStorageData.IsMinified = _isMinified;
+
+                await DnetAdminDashboardInterop.SetAsync(JSRuntime, "DnetBlazor", _localStorageData);
+
+                StateHasChanged();
+            }
+        }
+    }
+
+    private async void MessageReceived(ActionMessage<ThemeConfigData> themeConfigData)
+    {
+        if (themeConfigData.Emitter == ThemeMessageEmitter.DesktopMinifyMenu)
+        {
+            _isMinified = themeConfigData.Data.IsMinified;
+
+            _localStorageData.IsMinified = themeConfigData.Data.IsMinified;
+
+            await DnetAdminDashboardInterop.SetAsync(JSRuntime, "DnetBlazor", _localStorageData);
+        }
+        else
+        {
+            _isHeaderHidden = themeConfigData.Data.IsHeaderHidden;
+
+            _isFooterHidden = themeConfigData.Data.IsFooterHidden;
+
+            _isLeftColumnHidden = themeConfigData.Data.IsLeftColumnHidden;
+
+            _isDesktopMode = themeConfigData.Data.IsDesktopMode;
+
+            _isHeaderFixed = themeConfigData.Data.IsHeaderFixed && !themeConfigData.Data.IsHeaderHidden;
+
+            _isLeftColumnFixed = themeConfigData.Data.IsLeftColumnFixed && !themeConfigData.Data.IsLeftColumnHidden;
+
+            _isResponsiveMenu = themeConfigData.Data.IsResponsiveMenu;
+
+            _showMinifier = themeConfigData.Data.ShowMinifier;
+
+            var localStorageData = await DnetAdminDashboardInterop.GetAsync<LocalStorageData>(JSRuntime, "DnetBlazor");
+
+            if (localStorageData != null)
+            {
+                _isMinified = localStorageData.IsMinified;
+            }
+
+            if (IsLeftColumnHidden)
+            {
+                _isMinified = false;
+            }
+        }
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public bool GetIsMinified()
+    {
+        return _isMinified;
+    }
+
+    public DeviceType GetDeviceType()
+    {
+        const int mobileWidth = 768; // Ancho máximo para móviles
+        const int tabletWidth = 1024; // Ancho máximo para tablets
+
+        if (_windowWidth <= mobileWidth)
+        {
+            return DeviceType.Mobile;
+        }
+        else if (_windowWidth <= tabletWidth)
+        {
+            return DeviceType.Tablet;
+        }
+        else
+        {
+            return DeviceType.Desktop;
+        }
+    }
+
+    public void Dispose()
+    {
+        ((ThemeMessageService<ThemeConfigData>)ThemeMessageService).OnMessage -= MessageReceived;
+    }
+}

@@ -1,0 +1,12 @@
+﻿<div class="dnet-property-form-group">
+    <span class="dnet-property-name">@Property</span>
+    <span class="dnet-property-value">@ChildContent</span>
+</div>
+
+@code {
+    [Parameter]
+    public string? Property { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

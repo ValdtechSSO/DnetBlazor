@@ -1,0 +1,223 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Dnet.Blazor.Components.Autocomplete.Infrastructure.Services
+@using Dnet.Blazor.Infrastructure.Services.CssBuilder
+@using Microsoft.JSInterop
+@using Dnet.Blazor.Components.Form
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Interfaces
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Models
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Services
+
+@implements IDisposable
+
+@typeparam TItem
+
+@inject IJSRuntime JSRuntime
+
+@inject IOverlayService OverlayService
+
+<div class="dnet-autocomplete-list-wrapper">
+    <div class="dnet-autocomplete-list-header">
+        <div class="dnet-autocomplete-list-header-content">
+            <span class="dnet-autocomplete-list-header-text">
+                @PanelLabel
+            </span>
+        </div>
+        <div class="dnet-autocomplete-list-header-checkall">
+            <span @onclick="CancelOverlay" class="dnet-dialog-icon-wrapper">
+                <span class="dnet-dialog-icon dnet-dialog-close-icon" unselectable="on"></span>
+            </span>
+        </div>
+    </div>
+    <div class="dnet-autocomplete-list-form">
+        <DnetFormField Label="" UseClearButton="true">
+            <PrefixContent>
+                <span class="dnet-list-search-icon dnet-list-search-icon-default" unselectable="on"></span>
+            </PrefixContent>
+            <ChildContent>
+                <DnetInputText @bind-Value="_tempInputValue" PlaceHolder="" type="text" OnStopTyping="HandleInput" OnClearInput="ClearInput">
+                </DnetInputText>
+            </ChildContent>
+        </DnetFormField>
+    </div>
+    <div class="dnet-autocomplete-list-items">
+        @if (ItemPrefixContent != null || ItemSufixContent != null || ChildContent != null)
+        {
+            <Virtualize Items="@_items" TItem="TItem" Context="item" ItemSize="@ItemHeight" OverscanCount="@OverscanCount">
+                <ItemContent>
+                    <div class="dnet-autocomplete-list-item" @onclick="@(() => SelectItem(item))"
+                         style="margin-bottom: 2px; height:@(ItemHeight)px">
+                        @if (ItemPrefixContent != null)
+                        {
+                            <div class="dnet-autocomplete-list-item-prefix">
+                                @ItemPrefixContent(item)
+                            </div>
+                        }
+                        <div class="dnet-autocomplete-list-item-content">
+                            @if (ChildContent != null)
+                            {
+                                @ChildContent(item)
+                            }
+                            else
+                            {
+                                <span class="dnet-autocomplete-list-item-headline">
+                                    @if (DisplayValueConverter is not null)
+                                    {
+                                        @DisplayValueConverter(item)
+                                    }
+                                </span>
+                                @if (SupportTextValueConverter is not null)
+                                {
+                                    <span class="dnet-list-item-supporting-text">
+                                        @SupportTextValueConverter(item)
+                                    </span>
+                                }
+                            }
+                        </div>
+                        @if (ItemSufixContent != null)
+                        {
+                            <div class="dnet-autocomplete-list-item-sufix">
+                                @ItemSufixContent(item)
+                            </div>
+                        }
+                    </div>
+                </ItemContent>
+            </Virtualize>
+        }
+        else
+        {
+            <Virtualize Items="@_items" TItem="TItem" Context="item" ItemSize="@ItemHeight" OverscanCount="@OverscanCount">
+                <div class="dnet-autocomplete-list-item" @onclick="@(() => SelectItem(item))"
+                     style="margin-bottom: 2px; height:@(ItemHeight)px">
+                    <span class="dnet-autocomplete-list-item-headline">
+                        @if (DisplayValueConverter is not null)
+                        {
+                            @DisplayValueConverter(item)
+                        }
+                    </span>
+                    @if (SupportTextValueConverter is not null)
+                    {
+                        <span class="dnet-list-item-supporting-text">
+                            @SupportTextValueConverter(item)
+                        </span>
+                    }
+                </div>
+            </Virtualize>
+        }
+    </div>
+    <div class="dnet-autocomplete-list-footer">
+        @if(FooterContent is not null) {
+            @FooterContent;
+        }
+    </div>
+</div>
+
+@code {
+
+    [CascadingParameter]
+    private int OverlayReferenceId { get; set; }
+
+    [Parameter]
+    public List<TItem> Items { get; set; } = new();
+
+    [Parameter]
+    public AutoCompleteListService<TItem>? AutoCompleteListService { get; set; }
+
+    [Parameter]
+    public Func<TItem, string>? DisplayValueConverter { get; set; }
+
+    [Parameter]
+    public Func<TItem, string>? SupportTextValueConverter { get; set; }
+
+    [Parameter]
+    public RenderFragment<TItem>? ChildContent { get; set; }
+
+    [Parameter]
+    public RenderFragment<TItem>? ItemPrefixContent { get; set; }
+
+    [Parameter]
+    public RenderFragment<TItem>? ItemSufixContent { get; set; }
+
+    [Parameter]
+    public RenderFragment<TItem>? FooterContent { get; set; }
+
+    [Parameter]
+    public int ItemHeight { get; set; } = 40;
+
+    [Parameter]
+    public int ContainerHeight { get; set; } = 200;
+
+    [Parameter]
+    public int OverscanCount { get; set; } = 3;
+
+    [Parameter]
+    public string PlaceHolder { get; set; } = string.Empty;
+
+    [Parameter]
+    public string PanelLabel { get; set; } = string.Empty;
+
+    [Parameter]
+    public string CurrentValue { get; set; } = string.Empty;
+
+
+    private List<TItem> _items { get; set; } = new List<TItem>();
+
+    private Timer? _inputDelayTimer;
+
+    private string _tempInputValue = string.Empty;
+
+
+    protected override void OnInitialized()
+    {
+        _items = Items;
+
+        if (AutoCompleteListService is not null) AutoCompleteListService.OnUpdateList += ListUpdated;
+
+        _inputDelayTimer = new Timer(_ => { }, null, Timeout.Infinite, Timeout.Infinite);
+
+        _tempInputValue = CurrentValue;
+    }
+
+    private void HandleInput(string value)
+    {
+        if (AutoCompleteListService is not null) AutoCompleteListService.UpdateCurrentValue(_tempInputValue);
+    }
+
+    private async void ClearInput()
+    {
+        if (AutoCompleteListService is not null) AutoCompleteListService.UpdateCurrentValue(string.Empty);
+    }
+
+    private RenderFragment CreateCellTemplateComponent(TItem item, Type componeType) => builder =>
+    {
+        builder.OpenComponent(0, componeType);
+        builder.AddAttribute(1, "Item", item);
+        builder.CloseComponent();
+    };
+
+    private void ListUpdated(List<TItem> items)
+    {
+        _items = items;
+
+        StateHasChanged();
+    }
+
+    private void SelectItem(TItem item)
+    {
+        if (AutoCompleteListService is not null) AutoCompleteListService.UpdateSelectedItem(item);
+    }
+
+    void CancelOverlay()
+    {
+        OverlayService.Detach(new OverlayResult { OverlayReferenceId = OverlayReferenceId });
+    }
+
+    public void Dispose()
+    {
+        if (AutoCompleteListService is not null) AutoCompleteListService.OnUpdateList -= ListUpdated;
+
+        _inputDelayTimer?.Dispose();
+    }
+
+}

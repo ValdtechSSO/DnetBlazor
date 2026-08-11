@@ -1,0 +1,49 @@
+﻿@using Dnet.Blazor.Components.AdminLayout.Infrastructure.Models
+@using Dnet.Blazor.Components.AdminLayout.Infrastructure.Services
+@using Dnet.Blazor.Components.AdminLayout.Infrastructure.Enums
+@using Dnet.Blazor.Components.AdminLayout.Infrastructure.Interfaces
+@using Microsoft.AspNetCore.Components.Web
+
+@inject IThemeMessageService<ThemeConfigData> ThemeMessageService
+
+<aside class="dnet-aside">
+    <div class="company-content dnet-navigation-row">
+        <div class="dnet-aside-menu-button">
+            <button class="dnet-menu-button" @onclick="HideMenuNav">X</button>
+        </div>
+        <div class="dnet-aside-content">
+            @CompanyChildContent
+        </div>
+    </div>
+    <div class="dnet-navigation-row dnet-navigation-flex">
+        @MenuChildContent
+    </div>
+    <div class="minifier-content dnet-navigation-row">
+        @MinifierChildContent
+    </div>
+</aside>
+
+@code {
+
+    [Parameter]
+    public RenderFragment? CompanyChildContent { get; set; }
+
+    [Parameter]
+    public RenderFragment? MenuChildContent { get; set; }
+
+    [Parameter]
+    public RenderFragment? MinifierChildContent { get; set; }
+
+    public void HideMenuNav()
+    {
+        var themeConfigData = new ThemeConfigData { IsResponsiveMenu = false };
+
+        var actionMessage = new ActionMessage<ThemeConfigData>
+            {
+                Emitter = ThemeMessageEmitter.DefaultComponent,
+                Data = themeConfigData
+            };
+
+        ThemeMessageService.SendMessage(actionMessage);
+    }
+}

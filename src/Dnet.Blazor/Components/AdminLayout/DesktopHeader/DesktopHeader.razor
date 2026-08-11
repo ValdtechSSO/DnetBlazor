@@ -1,0 +1,37 @@
+﻿@using Dnet.Blazor.Components.AdminLayout.Infrastructure.Interfaces
+@using Dnet.Blazor.Components.AdminLayout.Infrastructure.Models
+@using Dnet.Blazor.Components.AdminLayout.Infrastructure.Services
+@using Dnet.Blazor.Components.AdminLayout.Infrastructure.Enums
+@using Microsoft.AspNetCore.Components.Web
+
+@inject IThemeMessageService<ThemeConfigData> ThemeMessageService
+
+<header class="dnet-header">
+    <div class="dnet-header-content-wrapper">
+        <div class="dnet-header-menu-button">
+            <button class="dnet-menu-button" @onclick="ShowMenuNav">☰</button>
+        </div>
+        <div class="dnet-header-content">
+            @ChildContent
+        </div>
+    </div>
+</header>
+
+@code {
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    public void ShowMenuNav()
+    {
+        var themeConfigData = new ThemeConfigData { IsResponsiveMenu = true };
+
+        var actionMessage = new ActionMessage<ThemeConfigData>
+            {
+                Emitter = ThemeMessageEmitter.DefaultComponent,
+                Data = themeConfigData
+            };
+
+        ThemeMessageService.SendMessage(actionMessage);
+    }
+}
