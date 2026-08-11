@@ -1,7 +1,6 @@
-version: '3'
 services:
   blazorclient:
-    image: ghcr.io/valdtechsso/dnetblazor:master
+    image: ${DNETBLAZOR_IMAGE:-ghcr.io/valdtechsso/dnetblazor:main}
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
     networks:
