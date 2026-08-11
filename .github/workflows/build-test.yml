@@ -4,7 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - master
+      - main
       - Feature_*
 
 env:
@@ -18,13 +18,17 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: npm
+      - name: Build frontend assets
+        run: |
+          npm ci --ignore-scripts
+          npm run buildDnetBlazor
       - name: Restore
         run: dotnet restore DnetBlazorComponents.sln
       - name: Build
         run: dotnet build DnetBlazorComponents.sln --configuration Release --no-restore
       - name: Test
-        run: dotnet test DnetBlazorComponents.sln --configuration Release --no-build --verbosity normal
-      - name: Build frontend assets
-        run: |
-          npm ci --ignore-scripts
-          npm run buildDnetBlazor
+        run: dotnet test DnetBlazorComponents.sln --configuration Release --no-build --no-restore --verbosity normal

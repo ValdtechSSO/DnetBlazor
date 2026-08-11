@@ -1,76 +1,128 @@
-name: Publish to NuGet
-run-name: Publish Dnet.Blazor v${{ github.ref_name }} to NuGet by @${{ github.actor }}
+name: Publish NuGet package
+run-name: Publish Dnet.Blazor ${{ github.ref_name }} by @${{ github.actor }}
 
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - "v*"
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to publish (e.g., 5.0.0)'
+        description: "Version to publish (for example, 5.0.3 or 5.0.3-rc.1)"
         required: true
         type: string
 
+concurrency:
+  group: nuget-publish
+  cancel-in-progress: false
+
 env:
-  DOTNET_VERSION: '10.0.x'
-  PROJECT_PATH: 'src/Dnet.Blazor/Dnet.Blazor.csproj'
+  DOTNET_VERSION: "10.0.x"
+  NODE_VERSION: "22.x"
+  PROJECT_PATH: "src/Dnet.Blazor/Dnet.Blazor.csproj"
+  PACKAGE_OUTPUT: "artifacts/nuget"
 
 jobs:
   build-and-publish:
-    name: Build and Publish NuGet Package
+    name: Build, test and publish
     runs-on: ubuntu-latest
-    
+    environment: nuget
+    permissions:
+      contents: read
+      id-token: write
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Restore dependencies
-        run: dotnet restore ${{ env.PROJECT_PATH }}
+      - name: Resolve package version
+        id: version
+        env:
+          REQUESTED_VERSION: ${{ inputs.version }}
+        shell: bash
+        run: |
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            VERSION="${GITHUB_REF_NAME#v}"
+          else
+            VERSION="$REQUESTED_VERSION"
+          fi
 
-      - name: Build project
-        run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore
+          if [[ -z "$VERSION" || "$VERSION" == v* || ! "$VERSION" =~ ^[0-9] ]]; then
+            echo "Version must be a NuGet version without the v prefix."
+            exit 1
+          fi
+
+          echo "value=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Install frontend dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Build frontend assets
+        run: npm run buildDnetBlazor
+
+      - name: Restore solution
+        run: dotnet restore DnetBlazorComponents.sln
+
+      - name: Build solution
+        run: dotnet build DnetBlazorComponents.sln --configuration Release --no-restore -p:ContinuousIntegrationBuild=true
+
+      - name: Test solution
+        run: dotnet test DnetBlazorComponents.sln --configuration Release --no-build --no-restore --verbosity normal
 
       - name: Pack NuGet package
-        run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ./nupkg
+        run: >-
+          dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --no-restore
+          --output ${{ env.PACKAGE_OUTPUT }}
+          -p:PackageVersion=${{ steps.version.outputs.value }}
+          -p:ContinuousIntegrationBuild=true
 
-      - name: Publish to NuGet
-        run: dotnet nuget push ./nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
-        
-      - name: Upload NuGet package as artifact
+      - name: Validate package
+        id: package
+        shell: bash
+        run: |
+          PACKAGE_PATH="$(find "${PACKAGE_OUTPUT}" -maxdepth 1 -type f -name "Dnet.Blazor.*.nupkg" ! -name "*.symbols.nupkg" -print -quit)"
+          if [[ -z "$PACKAGE_PATH" ]]; then
+            echo "The expected Dnet.Blazor package was not created."
+            exit 1
+          fi
+
+          if [[ "$PACKAGE_PATH" != *".${{ steps.version.outputs.value }}.nupkg" ]]; then
+            echo "Package version does not match the requested release version."
+            exit 1
+          fi
+
+          unzip -l "$PACKAGE_PATH" | grep -q "staticwebassets/dnet-blazor.js"
+          unzip -l "$PACKAGE_PATH" | grep -q "staticwebassets/dnet-blazor-styles.css"
+
+          echo "path=$PACKAGE_PATH" >> "$GITHUB_OUTPUT"
+
+      - name: Upload package artifact
         uses: actions/upload-artifact@v4
         with:
-          name: nuget-package
-          path: ./nupkg/*.nupkg
+          name: Dnet.Blazor.${{ steps.version.outputs.value }}
+          path: ${{ steps.package.outputs.path }}
           retention-days: 90
 
-  create-release:
-    name: Create GitHub Release
-    needs: build-and-publish
-    runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/v')
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Download NuGet package
-        uses: actions/download-artifact@v4
+      - name: Authenticate with NuGet.org using OIDC
+        id: nuget-login
+        uses: NuGet/login@v1
         with:
-          name: nuget-package
-          path: ./nupkg
+          user: ${{ secrets.NUGET_USER }}
 
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: ./nupkg/*.nupkg
-          generate_release_notes: true
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish package to NuGet.org
+        run: >-
+          dotnet nuget push ${{ steps.package.outputs.path }}
+          --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate
