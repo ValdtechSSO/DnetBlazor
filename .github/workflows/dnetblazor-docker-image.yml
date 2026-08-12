@@ -76,7 +76,7 @@ jobs:
     
     steps:
       - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.2.0
+        uses: appleboy/ssh-action@v1.2.5
         with:
           host: ${{ secrets.SSH_REMOTE_HOST }}
           username: ${{ secrets.SSH_REMOTE_USER }}
@@ -84,6 +84,7 @@ jobs:
           port: ${{ secrets.SSH_REMOTE_PORT }}
           envs: GHCR_USERNAME,GHCR_TOKEN,IMAGE_DIGEST
           script: |
+            set -eu
             cd /home/docker
             export DNETBLAZOR_IMAGE="ghcr.io/valdtechsso/dnetblazor@${IMAGE_DIGEST}"
             printf '%s\n' "$GHCR_TOKEN" | docker login ghcr.io --username "$GHCR_USERNAME" --password-stdin
