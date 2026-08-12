@@ -1,6 +1,7 @@
 using Dnet.Blazor.Components.Grid.Infrastructure.Entities;
 using Dnet.Blazor.Components.Grid.Infrastructure.Enums;
 using Dnet.Blazor.Components.Grid.Infrastructure.Models;
+using Dnet.Blazor.Infrastructure.Models.SearchModels;
 
 namespace Dnet.Blazor.Components.Grid.BlgGrid;
 
@@ -18,8 +19,7 @@ public partial class BlgGrid<TItem>
         if (GridOptions.GroupDefaultExpanded && _treeRn != null) 
             _treeRn = ExpandCollapseTreeRowNode(_treeRn, true);
 
-        FilterBy();
-        AdvancedFilterBy();
+        ReapplyActiveFiltersAfterGrouping();
 
         await Update();
     }
@@ -63,8 +63,7 @@ public partial class BlgGrid<TItem>
 
         await AuxDeleteGroup(columnName);
 
-        FilterBy();
-        AdvancedFilterBy();
+        ReapplyActiveFiltersAfterGrouping();
 
         await Update();
     }
@@ -97,6 +96,33 @@ public partial class BlgGrid<TItem>
             _nextId = lastId;
         }
     }
+
+    private void ReapplyActiveFiltersAfterGrouping()
+    {
+        // Grouping changes the shape of the tree, but it does not change the
+        // visibility of any row when there are no filters. Avoid resetting
+        // Show and AdvShow across the complete tree in that common path.
+        // Server-side modes keep their callbacks because the remote source may
+        // need to rebuild its result after the grouping query changes.
+        if (GridOptions.EnableServerSideFilter || HasActiveSimpleFilters())
+        {
+            FilterBy();
+        }
+
+        if (GridOptions.EnableServerSideAdvancedFilter || HasActiveAdvancedFilters())
+        {
+            AdvancedFilterBy();
+        }
+    }
+
+    private bool HasActiveSimpleFilters() => _gridColumns.Any(column =>
+        column.CellDataType != CellDataType.None &&
+        !string.IsNullOrWhiteSpace(column.Filter));
+
+    private bool HasActiveAdvancedFilters() => _gridColumns.Any(column =>
+        column.CellDataType != CellDataType.None &&
+        (!string.IsNullOrWhiteSpace(column.AdvancedFilterModel?.Value) ||
+         !string.IsNullOrWhiteSpace(column.AdvancedFilterModel?.AdditionalValue)));
 
     public async Task ExpandCollapse(bool isExpanded)
     {
