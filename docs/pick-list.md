@@ -65,7 +65,9 @@ the filtered count but preserves selected keys.
 
 Set `Strings` per instance or register `PickListStrings` in DI to localize the
 component globally. No registration is required: the built-in English strings
-are the fallback.
+are the fallback. Pagination reuses the library's `DnetPaginator`; its visible
+`Page`/`of` text and all navigation labels are supplied by the same
+`PickListStrings` instance.
 
 ## Selection and controlled inputs
 
@@ -138,7 +140,9 @@ ancestor: `--pick-list-background`, `--pick-list-foreground`,
 the equivalent `--dnet-list-*` tokens, so List and PickList keep the same visual
 language when an application theme changes them. The component occupies the
 available width; constrain it in the consuming layout when a narrower panel is
-desired.
+desired. The footer inherits the shared paginator tokens, including
+`--dnet-icon-button-size`, so paginator sizing stays consistent with `List` and
+`DoubleList`.
 
 `ItemTemplate` should contain presentation content only. Avoid nesting links,
 buttons, inputs, or other interactive controls inside its row label.

@@ -139,6 +139,16 @@
     &:hover {
         background-color: rgba(0,0,0,.05);
     }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: .48;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--dnet-primary-color, #4fc3f7) !important;
+        outline-offset: 1px;
+    }
 }
 
 .dnet-paginator-page-container {
@@ -169,6 +179,12 @@
 
     &:focus {
         box-shadow: 0 0 0 0rem rgba(0,123,255,.25);
+    }
+
+    &:focus-visible {
+        border-bottom-color: var(--dnet-primary-color, #4fc3f7) !important;
+        outline: 2px solid var(--dnet-primary-color, #4fc3f7) !important;
+        outline-offset: 2px;
     }
 }
 

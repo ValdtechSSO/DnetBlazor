@@ -76,8 +76,7 @@
 }
 
 .dnet-pick-list-toolbar,
-.dnet-pick-list-actions,
-.dnet-pick-list-pager {
+.dnet-pick-list-actions {
     align-items: center;
     display: flex;
 }
@@ -189,34 +188,15 @@
     overflow: hidden;
 }
 
-.dnet-pick-list-pager {
+.dnet-pick-list-footer {
+    align-items: center;
     box-sizing: border-box;
+    display: flex;
     flex: none;
-    gap: 2px;
-    height: auto;
     justify-content: flex-end;
     min-height: var(--pick-list-footer-height, var(--dnet-list-header-footer-height, 50px));
-    overflow-x: auto;
-    padding: 4px 8px;
-}
-
-.dnet-pick-list-pager button {
-    flex: 0 0 30px;
-    font-size: .8125rem;
-    padding-inline: 4px;
-}
-
-.dnet-pick-list-pager .dnet-pick-list-page-current {
-    border-bottom: 1px solid currentColor;
-    border-radius: 0;
-    color: var(--pick-list-foreground, #202124);
-    opacity: 1;
-}
-
-.dnet-pick-list-page-loading {
-    color: var(--_pick-list-muted);
-    min-width: 30px;
-    text-align: center;
+    overflow: hidden;
+    padding: 4px 5px;
 }
 
 .dnet-pick-list-status {

@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Globalization;
 using Microsoft.AspNetCore.Components;
 
 namespace Dnet.Blazor.Components.PickList;
@@ -13,8 +12,6 @@ namespace Dnet.Blazor.Components.PickList;
 public partial class PickList<TItem, TKey> : ComponentBase, IDisposable
     where TKey : notnull
 {
-    private const int MaxVisiblePages = 5;
-
     private int _pageIndex;
     private int? _filteredCount;
     private int? _totalCount;
@@ -508,29 +505,10 @@ public partial class PickList<TItem, TKey> : ComponentBase, IDisposable
         }
     }
 
-    private Task GoToFirstPageAsync() => GoToPageAsync(0);
+    private Task GoToPaginatorPageAsync(int oneBasedPage) => GoToPageAsync(oneBasedPage - 1);
 
-    private Task GoToPreviousPageAsync() => GoToPageAsync(_pageIndex - 1);
-
-    private Task GoToNextPageAsync() => GoToPageAsync(_pageIndex + 1);
-
-    private Task GoToLastPageAsync() => GoToPageAsync(PageCount - 1);
-
-    private IEnumerable<int> GetVisiblePageNumbers()
-    {
-        if (PageCount == 0)
-        {
-            return Array.Empty<int>();
-        }
-
-        var start = Math.Max(0, _pageIndex - (MaxVisiblePages / 2));
-        var end = Math.Min(PageCount - 1, start + MaxVisiblePages - 1);
-        start = Math.Max(0, end - MaxVisiblePages + 1);
-        return Enumerable.Range(start, end - start + 1);
-    }
-
-    private string GetPageLabel(int zeroBasedPage) =>
-        string.Format(CultureInfo.CurrentCulture, EffectiveStrings.PageLabelFormat, zeroBasedPage + 1);
+    private string GetCurrentPageLabel() =>
+        string.Format(EffectiveStrings.PageLabelFormat, _pageIndex + 1);
 
     private void ClampPageIndex()
     {

@@ -1,5 +1,6 @@
 @namespace Dnet.Blazor.Components.PickList
 @using Microsoft.AspNetCore.Components.Web
+@using Dnet.Blazor.Components.Paginator
 @typeparam TItem
 @typeparam TKey where TKey : notnull
 
@@ -66,26 +67,23 @@
         }
     </div>
 
-    <nav class="dnet-pick-list-pager" aria-label="@EffectiveStrings.PaginationLabel">
-        <button type="button" aria-label="@EffectiveStrings.FirstPageLabel" disabled="@(_isLoading || !HasKnownPages || _pageIndex == 0)" @onclick="GoToFirstPageAsync">«</button>
-        <button type="button" aria-label="@EffectiveStrings.PreviousPageLabel" disabled="@(_isLoading || !HasKnownPages || _pageIndex == 0)" @onclick="GoToPreviousPageAsync">‹</button>
-        @if (HasKnownPages)
-        {
-            @foreach (var page in GetVisiblePageNumbers())
-            {
-                <button type="button"
-                        class="@(page == _pageIndex ? "dnet-pick-list-page-current" : null)"
-                        aria-label="@GetPageLabel(page)"
-                        aria-current="@(page == _pageIndex ? "page" : null)"
-                        disabled="@(_isLoading || page == _pageIndex)"
-                        @onclick="() => GoToPageAsync(page)">@(page + 1)</button>
-            }
-        }
-        else
-        {
-            <span class="dnet-pick-list-page-loading" aria-live="polite">…</span>
-        }
-        <button type="button" aria-label="@EffectiveStrings.NextPageLabel" disabled="@(_isLoading || !HasKnownPages || PageCount == 0 || _pageIndex >= PageCount - 1)" @onclick="GoToNextPageAsync">›</button>
-        <button type="button" aria-label="@EffectiveStrings.LastPageLabel" disabled="@(_isLoading || !HasKnownPages || PageCount == 0 || _pageIndex >= PageCount - 1)" @onclick="GoToLastPageAsync">»</button>
-    </nav>
+    <footer class="dnet-pick-list-footer">
+        <DnetPaginator CurrentPage="@(_pageIndex + 1)"
+                       PageSize="@PageSize"
+                       TotalItems="@(_filteredCount ?? 0)"
+                       Disabled="@(_isLoading || !HasKnownPages || PageCount == 0)"
+                       PaginationLabel="@EffectiveStrings.PaginationLabel"
+                       PageText="@EffectiveStrings.PageText"
+                       OfText="@EffectiveStrings.OfText"
+                       PageInputLabel="@GetCurrentPageLabel()"
+                       FirstPageLabel="@EffectiveStrings.FirstPageLabel"
+                       PreviousPageLabel="@EffectiveStrings.PreviousPageLabel"
+                       NextPageLabel="@EffectiveStrings.NextPageLabel"
+                       LastPageLabel="@EffectiveStrings.LastPageLabel"
+                       OnGoToFirstPage="GoToPaginatorPageAsync"
+                       OnGoToPreviousPage="GoToPaginatorPageAsync"
+                       OnGoToNextPage="GoToPaginatorPageAsync"
+                       OnGoToLastPage="GoToPaginatorPageAsync"
+                       OnGoToSpecificPage="GoToPaginatorPageAsync" />
+    </footer>
 </section>

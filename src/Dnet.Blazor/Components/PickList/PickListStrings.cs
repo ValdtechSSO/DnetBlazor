@@ -30,6 +30,12 @@ public sealed record PickListStrings
     /// <summary>Gets the accessible label for the pager.</summary>
     public string PaginationLabel { get; init; } = "Pagination";
 
+    /// <summary>Gets the text displayed before the current page input.</summary>
+    public string PageText { get; init; } = "Page";
+
+    /// <summary>Gets the text displayed between page or range values and their total.</summary>
+    public string OfText { get; init; } = "of";
+
     /// <summary>Gets the accessible label for the first-page action.</summary>
     public string FirstPageLabel { get; init; } = "First page";
 
