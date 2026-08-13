@@ -12,7 +12,7 @@
 		<PackageTags>Blazor-Components-Datalnet</PackageTags>
 		<PackageVersion>5.0.4</PackageVersion>
 		<PackageProjectUrl>https://datalnet.com/</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/datalnet/DnetBlazor</RepositoryUrl>
+		<RepositoryUrl>https://github.com/ValdtechSSO/DnetBlazor</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
 			- Overlay: Fix bug
