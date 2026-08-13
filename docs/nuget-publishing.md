@@ -35,8 +35,8 @@ conserven los valores anteriores.
 Desde `main`, cuando el contenido y las notas de versión estén listos:
 
 ```bash
-git tag v5.0.3
-git push origin v5.0.3
+git tag v5.0.5
+git push origin v5.0.5
 ```
 
 La etiqueta inicia el flujo y la publicación quedará esperando la aprobación del
@@ -49,4 +49,4 @@ reemplazar una versión ya publicada: `--skip-duplicate` hace segura una repetic
 del workflow, pero no vuelve a publicar el mismo paquete.
 
 Las versiones preliminares se publican igual, por ejemplo con la etiqueta
-`v5.0.3-rc.1`.
+`v5.0.5-rc.1`.
