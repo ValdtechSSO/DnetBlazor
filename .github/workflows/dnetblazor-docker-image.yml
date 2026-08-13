@@ -12,6 +12,8 @@ jobs:
   build-and-push:
     name: Build and Push Docker Image
     runs-on: ubuntu-latest
+    outputs:
+      digest: ${{ steps.build-and-push.outputs.digest }}
     permissions:
       contents: read
       packages: write
@@ -61,7 +63,8 @@ jobs:
     name: Deploy to Remote Server
     needs: build-and-push
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
+    # Selecting a ref in Run workflow is an explicit deployment request.
+    if: github.event_name == 'workflow_dispatch'
     permissions:
       contents: read
       packages: read
@@ -69,25 +72,64 @@ jobs:
     env:
       GHCR_USERNAME: ${{ github.actor }}
       GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      IMAGE_TAG: ${{ github.ref_name }}
+      IMAGE_DIGEST: ${{ needs.build-and-push.outputs.digest }}
+      SOURCE_COMMIT: ${{ github.sha }}
     
     steps:
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.2.0
+      - name: Checkout deployment files
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Copy Docker Compose file to deployment host
+        uses: appleboy/scp-action@v1.0.0
         with:
           host: ${{ secrets.SSH_REMOTE_HOST }}
           username: ${{ secrets.SSH_REMOTE_USER }}
           password: ${{ secrets.SSH_REMOTE_PASSWORD }}
           port: ${{ secrets.SSH_REMOTE_PORT }}
-          envs: GHCR_USERNAME,GHCR_TOKEN,IMAGE_TAG
+          source: dnetblazor-docker-compose.yaml
+          target: /home/docker
+          overwrite: true
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.SSH_REMOTE_HOST }}
+          username: ${{ secrets.SSH_REMOTE_USER }}
+          password: ${{ secrets.SSH_REMOTE_PASSWORD }}
+          port: ${{ secrets.SSH_REMOTE_PORT }}
+          envs: GHCR_USERNAME,GHCR_TOKEN,IMAGE_DIGEST,SOURCE_COMMIT
           script: |
+            set -eu
             cd /home/docker
-            IMAGE_TAG="${IMAGE_TAG#v}"
-            export DNETBLAZOR_IMAGE="ghcr.io/valdtechsso/dnetblazor:${IMAGE_TAG}"
+            export DNETBLAZOR_IMAGE="ghcr.io/valdtechsso/dnetblazor@${IMAGE_DIGEST}"
             printf '%s\n' "$GHCR_TOKEN" | docker login ghcr.io --username "$GHCR_USERNAME" --password-stdin
+
+            resolved_image="$(docker compose -f dnetblazor-docker-compose.yaml config --images)"
+            if [ "$resolved_image" != "$DNETBLAZOR_IMAGE" ]; then
+              echo "Compose resolved $resolved_image instead of $DNETBLAZOR_IMAGE"
+              exit 1
+            fi
+
             docker pull "$DNETBLAZOR_IMAGE"
-            docker compose -f dnetblazor-docker-compose.yaml stop
+            image_revision="$(docker image inspect --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}' "$DNETBLAZOR_IMAGE")"
+            if [ "$image_revision" != "$SOURCE_COMMIT" ]; then
+              echo "Image revision $image_revision does not match workflow commit $SOURCE_COMMIT"
+              exit 1
+            fi
+
+            docker compose -f dnetblazor-docker-compose.yaml up -d --force-recreate --pull never
+
+            container_id="$(docker compose -f dnetblazor-docker-compose.yaml ps -q blazorclient)"
+            running_image_id="$(docker inspect --format '{{.Image}}' "$container_id")"
+            expected_image_id="$(docker image inspect --format '{{.Id}}' "$DNETBLAZOR_IMAGE")"
+            if [ "$running_image_id" != "$expected_image_id" ]; then
+              echo "Running container does not use the image built by this workflow"
+              exit 1
+            fi
+
+            echo "Deployed commit $SOURCE_COMMIT using $DNETBLAZOR_IMAGE"
             docker container prune -f
             docker image prune -f
-            docker compose -f dnetblazor-docker-compose.yaml up -d
             docker logout ghcr.io

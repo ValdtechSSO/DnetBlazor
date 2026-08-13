@@ -17,4 +17,10 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\..\samples\Dnet.ClientSide\wwwroot\sample-data\person_500.json"
+          Link="Fixtures\person_500.json"
+          CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
