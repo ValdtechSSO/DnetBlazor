@@ -1,5 +1,13 @@
 # Changelog for Blazor Library
 
+## Version 5.0.4 (August 2026)
+
+- Added `PickList<TItem, TKey>` for controlled multi-selection over local and
+  server-side paged data.
+- Added PickList search, selection persistence, localization and browser
+  regression coverage.
+- Added trusted NuGet.org publishing through GitHub Actions.
+
 ## Unreleased — stabilization
 
 - Corrected overlay identity, viewport listener ownership and flexible positioning offsets.
