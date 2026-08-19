@@ -1,17 +1,15 @@
-/*! Sass Checkbox (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
-:root {
-  --dnet-checkbox-border-radius: 0px;
-  --dnet-checkbox-border-color: rgba(0,0,0,.54);
-  --dnet-checkbox-border-width: 1px;
-  --dnet-checkbox-background: var(--dnet-primary-color);
-  --dnet-checkbox-border-color: #b0b0b0;
-  --dnet-checkbox-size: 14px;
-  --dnet-checkbox-font-size: var(--dnet-component-sm-font-size);
-  --dnet-checkbox-font-color: var(--dnet-component-headline-text-color);
-  --dnet-checkbox-checkmark-path: #fafafa;
-}
+/*! Checkbox — migrado a tokens (6.0). Generado una vez; se edita a mano. */
 
 .dnet-checkbox {
+  --_size: var(--dnet-checkbox-size, 14px);
+  --_radius: var(--dnet-checkbox-border-radius, 0px);
+  --_border-color: var(--dnet-checkbox-border-color,
+    color-mix(in srgb, var(--dnet-sys-on-surface-subtle) 57.2%, var(--dnet-sys-surface)));
+  --_border-width: var(--dnet-checkbox-border-width, 1px);
+  --_checked-background: var(--dnet-checkbox-background, var(--dnet-sys-primary));
+  --_font-size: var(--dnet-checkbox-font-size, var(--dnet-sys-text-md));
+  --_check-color: var(--dnet-checkbox-checkmark-path, var(--dnet-sys-surface));
+
   display: inline-block;
   transition: background 400ms cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
@@ -23,7 +21,7 @@
 }
 
 .dnet-checkbox-disabled .dnet-checkbox-label {
-  color: rgba(0, 0, 0, 0.54);
+  color: var(--dnet-sys-on-surface-subtle);
 }
 
 .dnet-checkbox-layout {
@@ -50,8 +48,8 @@
 
 .dnet-checkbox-inner-container {
   display: inline-block;
-  height: var(--dnet-checkbox-size);
-  width: var(--dnet-checkbox-size);
+  height: var(--_size);
+  width: var(--_size);
   line-height: 0;
   margin: auto;
   order: 0;
@@ -83,10 +81,10 @@
 }
 
 .dnet-checkbox-frame {
-  border-color: var(--dnet-checkbox-border-color);
+  border-color: var(--_border-color);
   background-color: transparent;
   transition: border-color 90ms cubic-bezier(0, 0, 0.2, 0.1);
-  border-width: var(--dnet-checkbox-border-width);
+  border-width: var(--_border-width);
   border-style: solid;
 }
 
@@ -105,21 +103,21 @@
   right: 0;
   bottom: 0;
   position: absolute;
-  border-radius: var(--dnet-checkbox-border-radius);
+  border-radius: var(--_radius);
   box-sizing: border-box;
   pointer-events: none;
 }
 
 .dnet-checkbox-disabled:not(.dnet-checkbox-checked) .dnet-checkbox-frame {
-  border-color: var(--dnet-checkbox-border-color);
+  border-color: var(--_border-color);
 }
 
 .dnet-checkbox-checked.dnet-accent .dnet-checkbox-background, .dnet-checkbox-indeterminate.dnet-accent .dnet-checkbox-background {
-  background-color: var(--dnet-checkbox-background);
+  background-color: var(--_checked-background);
 }
 
 .dnet-checkbox-checked:not(.dnet-checkbox-disabled).dnet-accent .dnet-ripple-element, .dnet-checkbox:active:not(.dnet-checkbox-disabled).dnet-accent .dnet-ripple-element {
-  background: var(--dnet-checkbox-background);
+  background: var(--_checked-background);
 }
 
 .dnet-checkbox-checkmark {
@@ -140,7 +138,7 @@
 }
 
 .dnet-checkbox-checkmark {
-  fill: #fafafa;
+  fill: var(--_check-color);
 }
 
 .dnet-checkbox-checkmark-path {
@@ -150,7 +148,7 @@
 }
 
 .dnet-checkbox-checkmark-path {
-  stroke: var(--dnet-checkbox-checkmark-path) !important;
+  stroke: var(--_check-color) !important;
 }
 
 .dnet-checkbox-mixedmark {
@@ -162,7 +160,7 @@
 }
 
 .dnet-checkbox-mixedmark {
-  background-color: #fafafa;
+  background-color: var(--_check-color);
 }
 
 .dnet-checkbox-layout .dnet-checkbox-label {
@@ -174,7 +172,7 @@
   -moz-user-select: auto;
   -ms-user-select: auto;
   user-select: auto;
-  font-size: var(--dnet-checkbox-font-size);
+  font-size: var(--_font-size);
   grid-area: two;
 }
 

@@ -54,6 +54,14 @@
   `--dnet-tooltip-background` and `--dnet-tooltip-foreground`; the dead
   `--dnet-tooltip-margin` token was dropped. Measured with STY-002: the
   tooltip goldens are pixel-identical (0 px diff).
+- `Checkbox` migrated to the token architecture: the `:root` block was
+  removed and the dead `--dnet-checkbox-font-color` token was dropped. The
+  border color is derived from `--dnet-sys-on-surface-subtle` via
+  `color-mix` (verified to render exactly #b0b0b0), the checked background
+  follows `--dnet-sys-primary` and the check/mixedmark color follows
+  `--dnet-sys-surface`. The STY-002 goldens show a sub-pixel antialiasing
+  shift in the label text (values verified identical) and are stable across
+  two consecutive runs.
 
 ## Version 5.0.5 (August 2026)
 
