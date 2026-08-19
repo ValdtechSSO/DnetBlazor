@@ -1,0 +1,259 @@
+/*! PickList (recorte por offset; editado a mano en 6.0) — generado una vez; a partir de aquí se edita a mano. */
+.dnet-pick-list {
+  --_border: var(--dnet-picklist-border, var(--pick-list-border, var(--dnet-list-border-color, var(--dnet-sys-border))));
+  --_radius: var(--dnet-picklist-radius, var(--pick-list-radius, var(--dnet-list-border-radius, var(--dnet-sys-radius-lg))));
+  --_row-height: var(--dnet-picklist-item-height, var(--pick-list-item-height, var(--dnet-list-item-height, var(--dnet-sys-control-height))));
+  --_muted: var(--dnet-picklist-muted, var(--pick-list-muted, var(--dnet-list-supporting-text-color, var(--dnet-sys-on-surface-muted))));
+  --_hover: var(--dnet-picklist-item-hover, var(--pick-list-item-hover, var(--dnet-list-hover-background-color, var(--dnet-sys-surface-hover))));
+  --_background: var(--dnet-picklist-background, var(--pick-list-background, var(--dnet-sys-surface)));
+  --_foreground: var(--dnet-picklist-foreground, var(--pick-list-foreground, var(--dnet-sys-on-surface)));
+  --_item-background: var(--dnet-picklist-item-background, var(--pick-list-item-background, var(--dnet-sys-surface-raised)));
+  --_selected: var(--dnet-picklist-item-selected, var(--pick-list-item-selected, var(--dnet-sys-state-selected)));
+  --_primary: var(--dnet-picklist-primary, var(--pick-list-primary, var(--dnet-sys-primary)));
+  --_scrollbar: var(--dnet-picklist-scrollbar, var(--pick-list-scrollbar, var(--dnet-sys-border-strong)));
+  background: var(--_background);
+  border: 1px solid var(--_border);
+  border-radius: var(--_radius);
+  box-sizing: border-box;
+  color: var(--_foreground);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  padding-top: 15px;
+  width: 100%;
+}
+
+.dnet-pick-list-search {
+  box-sizing: border-box;
+  display: block;
+  flex: none;
+  font-weight: 400;
+  margin: 0;
+  padding: 6px 20px 10px;
+  position: relative;
+}
+
+.dnet-pick-list-search-icon {
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  box-sizing: border-box;
+  height: 13px;
+  left: 32px;
+  pointer-events: none;
+  position: absolute;
+  top: 17px;
+  width: 13px;
+  z-index: 1;
+}
+
+.dnet-pick-list-search-icon::after {
+  background: currentColor;
+  content: "";
+  height: 1.5px;
+  left: 9px;
+  position: absolute;
+  top: 10px;
+  transform: rotate(45deg);
+  transform-origin: left center;
+  width: 6px;
+}
+
+.dnet-pick-list-search input {
+  appearance: none;
+  background: var(--_item-background);
+  border: 1px solid var(--_border);
+  border-radius: var(--dnet-picklist-search-radius, var(--dnet-sys-radius-pill));
+  box-sizing: border-box;
+  color: inherit;
+  font: inherit;
+  height: 36px;
+  padding: 6px 38px;
+  transition: border-color var(--dnet-sys-motion-fast) var(--dnet-sys-motion-ease), box-shadow var(--dnet-sys-motion-fast) var(--dnet-sys-motion-ease);
+  width: 100%;
+}
+
+.dnet-pick-list-search input::placeholder {
+  color: var(--_muted);
+  opacity: 0.8;
+}
+
+.dnet-pick-list-search input::-webkit-search-cancel-button {
+  cursor: pointer;
+}
+
+.dnet-pick-list-toolbar,
+.dnet-pick-list-actions {
+  align-items: center;
+  display: flex;
+}
+
+.dnet-pick-list-toolbar {
+  box-sizing: border-box;
+  flex: none;
+  gap: 0.5rem;
+  justify-content: space-between;
+  min-height: var(--dnet-picklist-header-height, var(--pick-list-header-height, var(--dnet-list-header-footer-height, var(--dnet-sys-control-height))));
+  padding: 4px 15px 4px 20px;
+}
+
+.dnet-pick-list-counter {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  min-width: 0;
+}
+
+.dnet-pick-list-actions {
+  flex: none;
+  gap: 2px;
+}
+
+.dnet-pick-list button {
+  background: var(--dnet-sys-transparent);
+  border: 0;
+  border-radius: var(--dnet-picklist-item-radius, var(--dnet-list-hover-border-radius, var(--dnet-sys-radius-lg)));
+  color: var(--_muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.75rem;
+  min-height: 32px;
+  padding: 4px 8px;
+  transition: background-color var(--dnet-sys-motion-fast) var(--dnet-sys-motion-ease), color var(--dnet-sys-motion-fast) var(--dnet-sys-motion-ease);
+}
+
+.dnet-pick-list button:hover:not(:disabled) {
+  background: var(--_hover);
+  color: var(--_foreground);
+}
+
+.dnet-pick-list button:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+
+.dnet-pick-list-items {
+  box-sizing: border-box;
+  display: grid;
+  flex: 1 1 auto;
+  max-height: var(--dnet-picklist-items-max-height, var(--pick-list-items-max-height, 250px));
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 5px;
+  row-gap: 2px;
+  scrollbar-color: var(--_scrollbar) var(--dnet-picklist-scrollbar-track, var(--dnet-sys-transparent));
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+}
+
+.dnet-pick-list-items::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dnet-pick-list-items::-webkit-scrollbar-thumb {
+  background: var(--_scrollbar);
+  border-radius: var(--dnet-sys-radius-pill);
+}
+
+.dnet-pick-list-item {
+  align-items: center;
+  background: var(--_item-background);
+  border-radius: var(--dnet-picklist-item-radius, var(--dnet-list-hover-border-radius, var(--dnet-sys-radius-lg)));
+  box-sizing: border-box;
+  cursor: pointer;
+  display: grid;
+  font-weight: 400;
+  gap: 8px;
+  grid-template-columns: var(--dnet-picklist-check-width, var(--dnet-list-check-width, 24px)) minmax(0, 1fr);
+  min-height: var(--_row-height);
+  margin: 0;
+  padding: 5px 4px 5px 15px;
+  transition: background-color var(--dnet-sys-motion-fast) var(--dnet-sys-motion-ease);
+}
+
+.dnet-pick-list-item:hover {
+  background: var(--_hover);
+}
+
+.dnet-pick-list-item:has(.dnet-pick-list-checkbox:checked) {
+  background: var(--_selected);
+}
+
+.dnet-pick-list-item:has(.dnet-pick-list-checkbox:disabled) {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.dnet-pick-list-checkbox {
+  accent-color: var(--_primary);
+  height: 16px;
+  justify-self: center;
+  margin: 0;
+  width: 16px;
+}
+
+.dnet-pick-list-item-content {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.dnet-pick-list-footer {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  flex: none;
+  justify-content: flex-end;
+  min-height: var(--dnet-picklist-footer-height, var(--pick-list-footer-height, var(--dnet-list-header-footer-height, var(--dnet-sys-control-height))));
+  overflow: hidden;
+  padding: 4px 5px;
+}
+
+.dnet-pick-list-status {
+  align-self: center;
+  color: var(--_muted);
+  margin: 2rem 0;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.dnet-pick-list-checkbox:focus-visible,
+.dnet-pick-list-search input:focus-visible,
+.dnet-pick-list button:focus-visible {
+  outline: 2px solid var(--_primary);
+  outline-offset: 2px;
+}
+
+.dnet-pick-list-search input:focus-visible {
+  border-color: var(--_primary);
+  box-shadow: 0 0 0 1px var(--_primary);
+  outline: 0;
+}
+
+.dnet-pick-list-sr-only {
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+@media (max-width: 30rem) {
+  .dnet-pick-list-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+    padding-block: 8px;
+  }
+  .dnet-pick-list-actions {
+    align-self: stretch;
+    justify-content: flex-end;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dnet-pick-list-search input,
+  .dnet-pick-list button,
+  .dnet-pick-list-item {
+    transition: none;
+  }
+}

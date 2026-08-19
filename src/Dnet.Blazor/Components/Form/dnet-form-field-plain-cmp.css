@@ -1,0 +1,333 @@
+/*! Sass Form (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
+.mat-input-element {
+  font: inherit;
+  background: transparent;
+  color: currentColor;
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  vertical-align: bottom;
+  text-align: inherit;
+  box-sizing: content-box;
+}
+.mat-input-element:-moz-ui-invalid {
+  box-shadow: none;
+}
+.mat-input-element::-ms-clear, .mat-input-element::-ms-reveal {
+  display: none;
+}
+.mat-input-element, .mat-input-element::-webkit-search-cancel-button, .mat-input-element::-webkit-search-decoration, .mat-input-element::-webkit-search-results-button, .mat-input-element::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+}
+.mat-input-element::-webkit-contacts-auto-fill-button, .mat-input-element::-webkit-caps-lock-indicator, .mat-input-element::-webkit-credentials-auto-fill-button {
+  visibility: hidden;
+}
+.mat-input-element[type=date], .mat-input-element[type=datetime], .mat-input-element[type=datetime-local], .mat-input-element[type=month], .mat-input-element[type=week], .mat-input-element[type=time] {
+  line-height: 1;
+}
+.mat-input-element[type=date]::after, .mat-input-element[type=datetime]::after, .mat-input-element[type=datetime-local]::after, .mat-input-element[type=month]::after, .mat-input-element[type=week]::after, .mat-input-element[type=time]::after {
+  content: " ";
+  white-space: pre;
+  width: 1px;
+}
+.mat-input-element::-webkit-inner-spin-button, .mat-input-element::-webkit-calendar-picker-indicator, .mat-input-element::-webkit-clear-button {
+  font-size: 0.75em;
+}
+.mat-input-element::placeholder {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  transition: color 400ms 133.3333333333ms cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.mat-input-element::placeholder:-ms-input-placeholder {
+  -ms-user-select: text;
+}
+.mat-input-element::-moz-placeholder {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  transition: color 400ms 133.3333333333ms cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.mat-input-element::-moz-placeholder:-ms-input-placeholder {
+  -ms-user-select: text;
+}
+.mat-input-element::-webkit-input-placeholder {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  transition: color 400ms 133.3333333333ms cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.mat-input-element::-webkit-input-placeholder:-ms-input-placeholder {
+  -ms-user-select: text;
+}
+.mat-input-element:-ms-input-placeholder {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  transition: color 400ms 133.3333333333ms cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.mat-input-element:-ms-input-placeholder:-ms-input-placeholder {
+  -ms-user-select: text;
+}
+.mat-form-field-hide-placeholder .mat-input-element::placeholder {
+  color: transparent !important;
+  -webkit-text-fill-color: transparent;
+  transition: none;
+}
+.cdk-high-contrast-active .mat-form-field-hide-placeholder .mat-input-element::placeholder {
+  opacity: 0;
+}
+
+.mat-form-field-hide-placeholder .mat-input-element::-moz-placeholder {
+  color: transparent !important;
+  -webkit-text-fill-color: transparent;
+  transition: none;
+}
+.cdk-high-contrast-active .mat-form-field-hide-placeholder .mat-input-element::-moz-placeholder {
+  opacity: 0;
+}
+
+.mat-form-field-hide-placeholder .mat-input-element::-webkit-input-placeholder {
+  color: transparent !important;
+  -webkit-text-fill-color: transparent;
+  transition: none;
+}
+.cdk-high-contrast-active .mat-form-field-hide-placeholder .mat-input-element::-webkit-input-placeholder {
+  opacity: 0;
+}
+
+.mat-form-field-hide-placeholder .mat-input-element:-ms-input-placeholder {
+  color: transparent !important;
+  -webkit-text-fill-color: transparent;
+  transition: none;
+}
+.cdk-high-contrast-active .mat-form-field-hide-placeholder .mat-input-element:-ms-input-placeholder {
+  opacity: 0;
+}
+
+textarea.mat-input-element {
+  resize: vertical;
+  overflow: auto;
+}
+textarea.mat-input-element.cdk-textarea-autosize {
+  resize: none;
+}
+
+textarea.mat-input-element {
+  padding: 2px 0;
+  margin: -2px 0;
+  resize: none;
+}
+
+select.mat-input-element {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  background-color: transparent;
+  display: inline-flex;
+  box-sizing: border-box;
+  padding-top: 1em;
+  top: -1em;
+  margin-bottom: -1em;
+}
+select.mat-input-element::-ms-expand {
+  display: none;
+}
+select.mat-input-element::-moz-focus-inner {
+  border: 0;
+}
+select.mat-input-element:not(:disabled) {
+  cursor: pointer;
+}
+select.mat-input-element::-ms-value {
+  color: inherit;
+  background: none;
+}
+.mat-focused .cdk-high-contrast-active select.mat-input-element::-ms-value {
+  color: inherit;
+}
+
+.mat-form-field-type-mat-native-select .mat-form-field-infix::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  margin-top: -2.5px;
+  pointer-events: none;
+}
+[dir=rtl] .mat-form-field-type-mat-native-select .mat-form-field-infix::after {
+  right: auto;
+  left: 0;
+}
+.mat-form-field-type-mat-native-select .mat-input-element {
+  padding-right: 15px;
+}
+[dir=rtl] .mat-form-field-type-mat-native-select .mat-input-element {
+  padding-right: 0;
+  padding-left: 15px;
+}
+.mat-form-field-type-mat-native-select .mat-form-field-label-wrapper {
+  max-width: calc(100% - 10px);
+}
+.mat-form-field-type-mat-native-select.mat-form-field-appearance-outline .mat-form-field-infix::after {
+  margin-top: -5px;
+}
+.mat-form-field-type-mat-native-select.mat-form-field-appearance-fill .mat-form-field-infix::after {
+  margin-top: -10px;
+}
+
+:root {
+  --dnet-form-field-plain-label-font-size: var(--dnet-component-smx-font-size);
+  --dnet-form-field-plain-label-color: #757575;
+  --dnet-form-field-hint-font-size: var(--dnet-component-xs-font-size);
+  --dnet-form-field-hint-color: var(--dnet-component-supporting-text-color);
+}
+
+.dnet-form-field-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dnet-form-field-char-counter {
+  font-size: 0.75rem;
+}
+
+.dnet-form-field-plain-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.dnet-form-field-plain-label-wrapper {
+  padding-left: 3px;
+}
+
+.dnet-form-field-plain-label {
+  font-size: var(--dnet-form-field-plain-label-font-size);
+  color: var(--dnet-form-field-plain-label-color);
+}
+
+.dnet-form-field-plain-label-wrapper > label {
+  font-weight: 400;
+  margin: 0px;
+  padding: 0px;
+}
+
+.dnet-form-field-plain-control-container {
+  display: flex;
+  align-items: stretch;
+  min-height: 34px;
+  max-height: 272px;
+  margin-bottom: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 5px;
+}
+.dnet-form-field-plain-control-container.dnet-control-disable {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.dnet-form-field-plain-prefix,
+.dnet-form-field-plain-suffix {
+  width: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dnet-form-field-plain-control {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+}
+
+.dnet-form-field-plain-prefix + .dnet-form-field-plain-control {
+  padding-left: 0px;
+}
+
+.dnet-form-field-plain-info {
+  font-size: 0.7rem;
+}
+
+.dnet-form-field-plain-clear {
+  width: 24px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-right: 5px;
+}
+
+.dnet-component-icon {
+  display: block;
+  background-repeat: no-repeat;
+  background-size: 1em 1em;
+  height: 1em;
+  width: 1em;
+  cursor: pointer;
+  color: #5f6368;
+}
+
+.dnet-component-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 24px;
+}
+
+.dnet-floating-label--required::after {
+  margin-left: 2px;
+  margin-right: 0px;
+  content: "*";
+  font-size: var(--dnet-component-smx-font-size);
+}
+
+.dnet-component-clear-button {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'><path fill-rule='evenodd' clip-rule='evenodd' d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z'/></svg>");
+}
+
+.dnet-error {
+  color: red;
+}
+
+.dnet-form-field-hint-wrapper {
+  display: flex;
+  padding-left: 3px;
+}
+
+.dnet-hint {
+  color: var(--dnet-form-field-hint-color);
+  font-size: var(--dnet-form-field-hint-font-size);
+}
+
+.dnet-property-form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.dnet-property-form-group .dnet-property-value {
+  font-size: 14px;
+  color: rgb(0, 0, 0);
+  display: block;
+}
+
+.dnet-property-form-group .dnet-property-name {
+  font-size: 11px;
+  color: #757575;
+  display: block;
+}

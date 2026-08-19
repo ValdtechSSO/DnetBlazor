@@ -1,0 +1,86 @@
+/*! Button (recorte por offset; editado a mano en 6.0) — generado una vez; a partir de aquí se edita a mano. */
+.dnet-button, .dnet-icon-button {
+  --_background: var(--dnet-btn-background, var(--dnet-button-background-color, var(--dnet-sys-state-hover)));
+  --_hover: var(--dnet-btn-background-hover, var(--dnet-button-hover-color, var(--dnet-sys-state-hover)));
+  --_foreground: var(--dnet-btn-foreground, var(--dnet-sys-on-surface));
+  --_focus-overlay: var(--dnet-btn-focus-overlay, var(--dnet-sys-state-pressed));
+  --_font-size: var(--dnet-btn-font-size, var(--dnet-button-font-size, var(--dnet-sys-text-md)));
+  --_min-width: var(--dnet-btn-min-width, var(--dnet-button-min-width, 64px));
+  --_radius: var(--dnet-btn-radius, var(--dnet-button-border-radius, var(--dnet-sys-radius-sm)));
+  --_height: var(--dnet-btn-height, var(--dnet-button-line-height, 36px));
+  --_padding: var(--dnet-btn-padding, var(--dnet-button-padding, 0 var(--dnet-sys-space-4)));
+  --_margin: var(--dnet-btn-margin, var(--dnet-button-margin, 0));
+  box-sizing: border-box;
+  position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  -webkit-tap-highlight-color: transparent;
+  display: inline-block;
+  white-space: nowrap;
+  text-decoration: none;
+  vertical-align: baseline;
+  text-align: center;
+  margin: var(--_margin);
+  min-width: var(--_min-width);
+  line-height: var(--_height);
+  padding: var(--_padding);
+  border-radius: var(--_radius);
+  overflow: visible;
+  font-size: var(--_font-size);
+  background: var(--_background);
+  color: var(--_foreground);
+}
+.dnet-button.dnet-button-initial-focus, .dnet-icon-button.dnet-button-initial-focus {
+  background-color: var(--_background);
+}
+.dnet-button:hover, .dnet-icon-button:hover {
+  background-color: var(--_hover);
+}
+.dnet-button:focus .dnet-button-focus-overlay, .dnet-icon-button:focus .dnet-button-focus-overlay {
+  opacity: 0.12;
+}
+
+.dnet-button-ripple.mat-ripple, .dnet-button-focus-overlay {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.dnet-button-focus-overlay {
+  background: var(--_focus-overlay);
+  opacity: 0;
+  transition: opacity 200ms cubic-bezier(0.35, 0, 0.25, 1), background-color 200ms cubic-bezier(0.35, 0, 0.25, 1);
+}
+
+.dnet-icon-button {
+  --_padding: var(--dnet-btn-padding, 0);
+  --_min-width: var(--dnet-btn-min-width, 0);
+  --_radius: var(--dnet-btn-radius, var(--dnet-sys-radius-pill));
+  --_height: var(--dnet-btn-height, 40px);
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  outline: none;
+}
+.dnet-icon-button:focus {
+  outline: none;
+}
+
+.dnet-button-ripple-round {
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.dnet-ripple {
+  overflow: hidden;
+  position: relative;
+}

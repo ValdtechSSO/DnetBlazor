@@ -1,0 +1,74 @@
+/*! Sass shared (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
+:root {
+  --dnet-component-border-radius: 4px;
+  --dnet-component-box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.1), 0 1px 10px 0 rgba(0, 0, 0, 0.1);
+  --dnet-component-list-item-height: 50px;
+  --dnet-component-headline-text-color: #5f6368;
+  --dnet-component-supporting-text-color: #666666;
+  --dnet-component-lg-font-size: 1.25rem;
+  --dnet-component-md-font-size: 1rem;
+  --dnet-component-sm-font-size: 0.875rem;
+  --dnet-component-smx-font-size: 0.75rem;
+  --dnet-component-xs-font-size: 0.625rem;
+  --dnet-primary-color: #4fc3f7;
+  --dnet-secundary-color: #4fc3f7;
+  --dnet-color-reset: #000000;
+}
+
+[type=checkbox].dnet-checkbox-no-label:checked:before, [type=checkbox].dnet-checkbox-no-label:not(:checked):before,
+[type=checkbox].dnet-checkbox-no-label:checked:before,
+[type=checkbox].dnet-checkbox-no-label:not(:checked):before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 0;
+  box-shadow: none;
+}
+[type=checkbox].dnet-checkbox-no-label.negative:checked:before, [type=checkbox].dnet-checkbox-no-label.negative:not(:checked):before,
+[type=checkbox].dnet-checkbox-no-label.negative:checked:before,
+[type=checkbox].dnet-checkbox-no-label.negative:not(:checked):before {
+  content: "";
+  border: 1px solid var(--dnet-color-reset);
+  background: #FFFFFF;
+}
+
+/* checked mark aspect */
+[type=checkbox].dnet-checkbox-no-label:checked::after, [type=checkbox].dnet-checkbox-no-label:not(:checked)::after,
+[type=checkbox].dnet-checkbox-no-label:checked::after,
+[type=checkbox].dnet-checkbox-no-label:not(:checked)::after {
+  font-weight: 900;
+  position: absolute;
+  top: 0.18rem;
+  left: 0.15rem;
+  font-size: 0.625rem;
+  line-height: 0.8;
+  color: var(--dnet-color-reset);
+  transition: all 0.2s;
+  content: "";
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'><path fill-rule='evenodd' clip-rule='evenodd' d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/></svg>");
+  background-repeat: no-repeat;
+  background-size: 0.625rem 0.625rem;
+  width: 12px;
+  height: 12px;
+}
+[type=checkbox].dnet-checkbox-no-label.negative:checked:after, [type=checkbox].dnet-checkbox-no-label.negative:not(:checked):after,
+[type=checkbox].dnet-checkbox-no-label.negative:checked:after,
+[type=checkbox].dnet-checkbox-no-label.negative:not(:checked):after {
+  color: var(--dnet-color-reset);
+}
+
+/* checked mark aspect changes */
+[type=checkbox].dnet-checkbox-no-label:not(:checked):after {
+  opacity: 0;
+  transform: scale(0);
+}
+
+[type=checkbox].dnet-checkbox-no-label:checked:after.dnet-checkbox-no-label:checked:after {
+  opacity: 1;
+  transform: scale(1);
+}

@@ -1,0 +1,217 @@
+/*! Sass List (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
+:root {
+  --dnet-list-border-color: #ebebeb;
+  --dnet-list-border-radius: 10px;
+  --dnet-list-item-height: 50px;
+  --dnet-list-padding-vertical: 4px;
+  --dnet-list-padding-horizontal: 5px;
+  --dnet-list-header-footer-height: 50px;
+  --dnet-list-check-width: 24px;
+  --dnet-list-prefix-suffix-min-width: 40px;
+  --dnet-list-headline-font-size: 0.875rem;
+  --dnet-list-supporting-text-font-size: 0.75rem;
+  --dnet-list-supporting-text-color: #666666;
+  --dnet-list-hover-background-color: #f2f2f2;
+  --dnet-list-hover-border-radius: 10px;
+  --dnet-list-wrapper-horizontal-padding: 15px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.dnet-list-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  border: 1px solid var(--dnet-list-border-color);
+  border-radius: var(--dnet-list-border-radius);
+  padding-top: var(--dnet-list-wrapper-horizontal-padding);
+  padding-bottom: var(--dnet-list-wrapper-horizontal-padding);
+  transition: opacity 0.5s ease-in-out;
+}
+.dnet-list-wrapper .dnet-item-fadeout {
+  opacity: 0 !important;
+}
+
+.dnet-list-wrapper:has(.dnet-list-footer) {
+  padding-bottom: 0px;
+}
+
+.dnet-list-wrapper:has(.dnet-list-header) {
+  padding-top: 0px;
+}
+
+.dnet-list-wrapper:has(.dnet-list-form + .dnet-list-header) {
+  padding-top: var(--dnet-list-wrapper-horizontal-padding);
+}
+
+.dnet-list-form,
+.dnet-list-header,
+.dnet-list-footer {
+  min-height: var(--dnet-list-header-footer-height);
+  height: var(--dnet-list-header-footer-height);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--dnet-list-padding-vertical) var(--dnet-list-padding-horizontal);
+}
+
+.dnet-list-form {
+  padding: var(--dnet-list-padding-vertical) 20px;
+}
+.dnet-list-form .dnet-form-field-plain-wrapper {
+  margin-bottom: 0px;
+}
+.dnet-list-form .dnet-form-field-plain-control-container {
+  border-radius: 15px;
+}
+
+.dnet-list-header {
+  padding-left: 20px;
+  padding-right: 15px;
+}
+
+.dnet-list-header-content {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.dnet-list-header-text {
+  font-weight: 500;
+  font-size: small;
+}
+
+.dnet-list-items {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 0 var(--dnet-list-padding-horizontal);
+}
+
+.dnet-list-item {
+  display: flex;
+  align-items: center;
+  height: var(--dnet-list-item-height);
+  padding-left: 15px;
+  padding-right: var(--dnet-list-padding-vertical);
+  padding-top: var(--dnet-list-padding-horizontal);
+  padding-bottom: var(--dnet-list-padding-horizontal);
+  overflow: hidden;
+  transition: background-color 0.3s, border-radius 0.3s;
+}
+.dnet-list-item[draggable=false] {
+  user-drag: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  cursor: not-allowed;
+}
+
+.dnet-list-item:has(.dnet-list-item-prefix) {
+  padding-left: 0px;
+}
+
+.dnet-list-item:hover {
+  background-color: var(--dnet-list-hover-background-color);
+  border-radius: var(--dnet-list-hover-border-radius);
+}
+
+.dnet-list-item-prefix,
+.dnet-list-item-sufix,
+.dnet-list-header-sufix {
+  min-width: var(--dnet-list-prefix-suffix-min-width);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dnet-list-item-check,
+.dnet-list-header-checkall {
+  width: var(--dnet-list-check-width);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dnet-list-item-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  padding-right: 10px;
+}
+.dnet-list-item-content.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.dnet-list-item-headline {
+  font-size: var(--dnet-list-headline-font-size);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dnet-list-item-headline.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.dnet-list-item-supporting-text {
+  font-size: var(--dnet-list-supporting-text-font-size);
+  color: var(--dnet-list-supporting-text-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dnet-list-item-supporting-text.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.dnet-list-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.dnet-list-search-icon, .dnet-list-header-sort-icon {
+  display: block;
+  background-repeat: no-repeat;
+  background-size: 1em 1em;
+  height: 1em;
+  width: 1em;
+  cursor: pointer;
+  color: #5f6368;
+}
+
+.dnet-list-search-icon-default {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'><path fill-rule='evenodd' clip-rule='evenodd' d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/></svg>");
+}
+
+.dnet-list-search-disable .dnet-list-search-icon-default {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='grey'><path fill-rule='evenodd' clip-rule='evenodd' d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/></svg>");
+}
+.dnet-list-search-disable .dnet-list-search-icon-wrapper {
+  background-color: #e9ecef;
+}
+
+.dnet-icon-asc {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'><path fill-rule='evenodd' clip-rule='evenodd' d='M8 3.5a.5.5 0 01.5.5v9a.5.5 0 01-1 0V4a.5.5 0 01.5-.5z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M7.646 2.646a.5.5 0 01.708 0l3 3a.5.5 0 01-.708.708L8 3.707 5.354 6.354a.5.5 0 11-.708-.708l3-3z'/></svg>");
+}
+
+.dnet-icon-desc {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'><path fill-rule='evenodd' clip-rule='evenodd' d='M4.646 9.646a.5.5 0 01.708 0L8 12.293l2.646-2.647a.5.5 0 01.708.708l-3 3a.5.5 0 01-.708 0l-3-3a.5.5 0 010-.708z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M8 2.5a.5.5 0 01.5.5v9a.5.5 0 01-1 0V3a.5.5 0 01.5-.5z'/></svg>");
+}
+
+@media only screen and (max-width: 550px) {
+  .dnet-list-wrapper .dnet-checkbox {
+    display: none;
+  }
+}
