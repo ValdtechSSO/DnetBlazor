@@ -110,6 +110,9 @@ Exclusiones deliberadas (documentadas, no olvidadas):
   apilada (`ToastService._positionTracker`); el instante de captura y el
   offset varían entre ejecuciones (verificado con diffs intermitentes de
   ~6 000 px). Se captura la página en su estado por defecto.
+- **DatePicker (estado abierto)**: el calendario muestra variación subpixel
+  intermitente en la columna de días (diffs de 200-400 px entre ejecuciones);
+  se captura solo el input.
 - **Tooltip y AdminLayout en móvil**: los targets de la página de Tooltip
   están posicionados en absoluto y se solapan en viewport estrecho; el sidebar
   de AdminLayout colapsa a un drawer. El golden de escritorio cubre el shell.

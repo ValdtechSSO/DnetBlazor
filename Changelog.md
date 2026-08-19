@@ -172,6 +172,14 @@
   the Material calendar literals map to the same exact derivations used in
   `DatePicker`. No sample page exists, so this component is not covered by
   STY-002 goldens.
+- `DatePickerWeekRaw` migrated to the token architecture: same exact
+  derivations as `DatePickerWeek`/`DatePicker`; the two dead input tokens
+  (`--dnet-datepickerweek-raw-input-container-border`,
+  `--dnet-datepickerweek-raw-input-height`) were dropped. Not covered by
+  STY-002 goldens (no sample page).
+- STY-002: the open-calendar state of `DatePicker` was excluded from the
+  goldens (intermittent sub-pixel variance in the day column, 200-400 px
+  between runs); only the input is captured, like the open Toast/Spinner.
 
 ## Version 5.0.5 (August 2026)
 
