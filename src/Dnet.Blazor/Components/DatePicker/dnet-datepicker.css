@@ -1,16 +1,24 @@
-/*! Sass DatePicker (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
-:root {
-  --dnet-calendar-day-height: 40px;
-  --dnet-calendar-day-disabled-color: rgba(0,0,0,.38);
-  --dnet-calendar-selected-bg-color: var(--dnet-primary-color);
-  --dnet-calendar-today-bg-color: rgba(0,0,0,.1);
-  --dnet-calendar-background: #FFFFFF;
-}
+/*! DatePicker — migrado a tokens (6.0). Generado una vez; se edita a mano.
+   Las tintas Material (negro al p%) se derivan de on-surface con color-mix
+   al porcentaje equivalente sobre blanco, por lo que el render es idéntico
+   y el tema oscuro los adapta solo. */
 
 .dnet-datepicker-content {
+  --_day-height: var(--dnet-calendar-day-height, 40px);
+  --_tint-04: color-mix(in srgb, var(--dnet-sys-on-surface) 6.4%, transparent);
+  --_tint-38: color-mix(in srgb, var(--dnet-sys-on-surface) 60.5%, transparent);
+  --_tint-45: color-mix(in srgb, var(--dnet-sys-on-surface) 45%, transparent);
+  --_day-disabled: var(--dnet-calendar-day-disabled-color, var(--_tint-38));
+  --_selected-bg: var(--dnet-calendar-selected-bg-color, var(--dnet-sys-primary));
+  --_today-bg: var(--dnet-calendar-today-bg-color,
+    color-mix(in srgb, var(--dnet-sys-on-surface) 15.9%, transparent));
+  --_background: var(--dnet-calendar-background, var(--dnet-sys-surface));
+  --_icon-color: var(--dnet-sys-on-surface);
+  --_icon-disabled: var(--dnet-sys-state-disabled-fg);
+
   box-shadow: var(--dnet-component-box-shadow);
-  background: var(--dnet-calendar-background);
-  color: rgba(0, 0, 0, 0.87);
+  background: var(--_background);
+  color: var(--dnet-sys-on-surface-emphasis);
 }
 
 .dnet-calendar-header {
@@ -31,7 +39,7 @@
   outline: none;
 }
 .dnet-calendar-period-button:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: var(--dnet-sys-state-hover);
 }
 
 .dnet-calendar-arrow {
@@ -42,7 +50,7 @@
   border-right: 5px solid transparent;
   margin: 0 0 0 5px;
   vertical-align: middle;
-  border-top-color: rgba(0, 0, 0, 0.54);
+  border-top-color: var(--dnet-sys-on-surface-subtle);
 }
 
 .dnet-calendar-arrow-down {
@@ -66,7 +74,7 @@
   flex-shrink: 0;
   line-height: 40px;
   border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: var(--dnet-sys-state-hover);
 }
 
 .dnet-calendar-previous-button::after, .dnet-calendar-next-button::after {
@@ -79,17 +87,17 @@
   margin: 15.5px;
   border: 0 solid currentColor;
   border-top-width: 2px;
-  color: rgba(0, 0, 0, 0.54);
+  color: var(--dnet-sys-on-surface-subtle);
   outline: none;
 }
 
 button:disabled.dnet-calendar-previous-button::after,
 button[disabled].dnet-calendar-previous-button::after {
-  color: rgba(16, 16, 16, 0.3);
+  color: var(--_tint-45);
 }
 button:disabled.dnet-calendar-next-button::after,
 button[disabled].dnet-calendar-next-button::after {
-  color: rgba(16, 16, 16, 0.3);
+  color: var(--_tint-45);
 }
 
 .dnet-calendar-previous-button::after {
@@ -123,7 +131,7 @@ button[disabled].dnet-calendar-next-button::after {
 
 .dnet-calendar-content-header {
   display: flex;
-  color: rgba(0, 0, 0, 0.38);
+  color: var(--_tint-38);
   padding: 0px 0px 0 0px;
 }
 
@@ -134,15 +142,15 @@ button[disabled].dnet-calendar-next-button::after {
   padding: 0 0 0px 0;
   font-size: 11px;
   font-weight: 400;
-  color: rgba(0, 0, 0, 0.38);
+  color: var(--_tint-38);
   height: 21px;
-  width: var(--dnet-calendar-day-height);
+  width: var(--_day-height);
 }
 
 .dnet-calendar-content-body {
   display: grid;
-  grid-template-columns: repeat(7, var(--dnet-calendar-day-height));
-  grid-template-rows: repeat(6, var(--dnet-calendar-day-height));
+  grid-template-columns: repeat(7, var(--_day-height));
+  grid-template-rows: repeat(6, var(--_day-height));
   min-width: 224px;
   font-size: 13px;
 }
@@ -151,8 +159,8 @@ button[disabled].dnet-calendar-next-button::after {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 40px;
-  width: 40px;
+  height: var(--_day-height);
+  width: var(--_day-height);
 }
 
 .dnet-calendar-day-content {
@@ -169,34 +177,34 @@ button[disabled].dnet-calendar-next-button::after {
   border-width: 1px;
   border-style: solid;
   border-radius: 999px;
-  color: rgba(0, 0, 0, 0.87);
+  color: var(--dnet-sys-on-surface-emphasis);
   border-color: transparent;
   cursor: pointer;
 }
 .dnet-calendar-day-content:hover:not(.dnet-calendar-day-selected) {
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: var(--_tint-04);
   cursor: pointer;
 }
 .dnet-calendar-day-content:hover:not(.dnet-calendar-day-selected).disabled {
-  background-color: #FFFFFF;
+  background-color: var(--_background);
   cursor: default;
 }
 .dnet-calendar-day-content.disabled {
-  color: var(--dnet-calendar-day-disabled-color);
+  color: var(--_day-disabled);
 }
 
 .dnet-calendar-day-selected {
-  color: #FFFFFF;
-  background-color: var(--dnet-calendar-selected-bg-color);
+  color: var(--dnet-sys-on-primary);
+  background-color: var(--_selected-bg);
 }
 
 .dnet-calendar-day-today:not(.dnet-calendar-day-selected) {
-  box-shadow: inset 0 0 0 1px #fff;
-  background-color: var(--dnet-calendar-today-bg-color);
+  box-shadow: inset 0 0 0 1px var(--dnet-sys-surface);
+  background-color: var(--_today-bg);
 }
 
 .dnet-calendar-day-selected.dnet-calendar-day-today {
-  box-shadow: inset 0 0 0 1px #fff;
+  box-shadow: inset 0 0 0 1px var(--dnet-sys-surface);
 }
 
 .dnet-calendar-content-body-year {
@@ -228,34 +236,34 @@ button[disabled].dnet-calendar-next-button::after {
   border-width: 1px;
   border-style: solid;
   border-radius: 999px;
-  color: rgba(0, 0, 0, 0.87);
+  color: var(--dnet-sys-on-surface-emphasis);
   border-color: transparent;
   cursor: pointer;
 }
 .dnet-calendar-year-content:hover:not(.dnet-calendar-year-selected) {
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: var(--_tint-04);
   cursor: pointer;
 }
 .dnet-calendar-year-content:hover:not(.dnet-calendar-year-selected).disabled {
-  background-color: #FFFFFF;
+  background-color: var(--_background);
   cursor: default;
 }
 .dnet-calendar-year-content.disabled {
-  color: var(--dnet-calendar-day-disabled-color);
+  color: var(--_day-disabled);
 }
 
 .dnet-calendar-year-selected {
-  color: #FFFFFF;
-  background-color: var(--dnet-calendar-selected-bg-color);
+  color: var(--dnet-sys-on-primary);
+  background-color: var(--_selected-bg);
 }
 
 .dnet-calendar-year-today:not(.dnet-calendar-year-selected) {
-  box-shadow: inset 0 0 0 1px #fff;
-  background-color: rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 0 0 1px var(--dnet-sys-surface);
+  background-color: var(--_today-bg);
 }
 
 .dnet-calendar-year-selected.dnet-calendar-year-today {
-  box-shadow: inset 0 0 0 1px #fff;
+  box-shadow: inset 0 0 0 1px var(--dnet-sys-surface);
 }
 
 .dnet-calendar-content-body-month {
@@ -287,33 +295,33 @@ button[disabled].dnet-calendar-next-button::after {
   border-width: 1px;
   border-style: solid;
   border-radius: 999px;
-  color: rgba(0, 0, 0, 0.87);
+  color: var(--dnet-sys-on-surface-emphasis);
   border-color: transparent;
 }
 .dnet-calendar-month-content:hover {
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: var(--_tint-04);
   cursor: pointer;
 }
 .dnet-calendar-month-content:hover.disabled {
-  background-color: #FFFFFF;
+  background-color: var(--_background);
   cursor: default;
 }
 .dnet-calendar-month-content.disabled {
-  color: var(--dnet-calendar-day-disabled-color);
+  color: var(--_day-disabled);
 }
 
 .dnet-calendar-month-selected {
-  color: #FFFFFF;
-  background-color: var(--dnet-calendar-selected-bg-color);
+  color: var(--dnet-sys-on-primary);
+  background-color: var(--_selected-bg);
 }
 
 .dnet-calendar-month-today:not(.dnet-calendar-month-selected) {
-  box-shadow: inset 0 0 0 1px #fff;
-  background-color: rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 0 0 1px var(--dnet-sys-surface);
+  background-color: var(--_today-bg);
 }
 
 .dnet-calendar-month-selected.dnet-calendar-month-today {
-  box-shadow: inset 0 0 0 1px #fff;
+  box-shadow: inset 0 0 0 1px var(--dnet-sys-surface);
 }
 
 .dnet-calendar-header-footer {
@@ -339,8 +347,17 @@ button[disabled].dnet-calendar-next-button::after {
   padding-top: 2px;
 }
 
+/* Icono funcional monocromo (R9): mask-image + background-color. */
 .dnet-datepicker-reset-button {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'><path fill-rule='evenodd' clip-rule='evenodd' d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z'/></svg>");
+  background-color: var(--_icon-color);
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z'/></svg>");
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 1em 1em;
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z'/></svg>");
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: 1em 1em;
 }
 
 .dnet-datepicker-reset-test {
@@ -352,27 +369,28 @@ button[disabled].dnet-calendar-next-button::after {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  height: var(--dnet-datepicker-input-height);
-  width: var(--dnet-datepicker-input-height);
 }
 
+/* Icono funcional monocromo (R9): mask-image + background-color. */
 .dnet-datepicker-icon {
   display: block;
-  background-repeat: no-repeat;
-  background-size: 1em 1em;
+  background-color: var(--_icon-color);
   height: 1em;
   width: 1em;
   cursor: pointer;
-  color: #5f6368;
-}
-
-.dnet-datepicker-icon-default {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'><path fill-rule='evenodd' clip-rule='evenodd' d='M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1zm1-3a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M3.5 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5zm9 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5z'/></svg>");
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1zm1-3a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M3.5 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5zm9 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5z'/></svg>");
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 1em 1em;
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1zm1-3a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M3.5 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5zm9 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5z'/></svg>");
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: 1em 1em;
 }
 
 .dnet-datepicker-disable .dnet-datepicker-icon-default {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='grey'><path fill-rule='evenodd' clip-rule='evenodd' d='M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1zm1-3a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M3.5 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5zm9 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5z'/></svg>");
+  background-color: var(--_icon-disabled);
 }
 .dnet-datepicker-disable .dnet-datepicker-icon-wrapper {
-  background-color: #e9ecef;
+  background-color: var(--dnet-sys-surface-hover);
 }

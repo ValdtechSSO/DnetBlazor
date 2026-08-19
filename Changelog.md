@@ -70,6 +70,19 @@
   from `--dnet-sys-on-surface-subtle` via `color-mix` (renders exactly the
   old 38 % black). The STY-002 goldens show the same sub-pixel label
   antialiasing shift as Checkbox and are stable across two consecutive runs.
+- `DatePicker` migrated to the token architecture: the `:root` block was
+  removed and the ghost `--dnet-datepicker-input-height` (used without
+  fallback in the icon wrapper, so it resolved to `auto`) was dropped by
+  removing the inert declarations. The Material calendar tints are derived
+  from `--dnet-sys-*` with `color-mix` percentages that render exactly the
+  old black-alpha values (5 % → `state-hover`, 4 % → 6.4 % on-surface,
+  10 % → 15.9 %, 38 % → 60.5 %, 54 % → `on-surface-subtle`, 87 % →
+  `on-surface-emphasis`); measured with STY-002 the calendar is
+  pixel-identical. The trigger icon moved to a monochrome mask icon (R9) and
+  renders in `--dnet-sys-on-surface` (was a hard-coded black fill); the
+  reset icon was already invisible (a zero-size span) and stays unchanged.
+  The day cells now follow `--dnet-calendar-day-height` so the grid and the
+  cells stay aligned when the token is overridden.
 
 ## Version 5.0.5 (August 2026)
 
