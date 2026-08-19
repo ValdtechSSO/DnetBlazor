@@ -1,18 +1,13 @@
-/*! Sass Stepper (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
-/*@import '../core/style/variables';
-@import '../../cdk/a11y/a11y';*/
-:root {
-  --dnet-step-icon-height: 25px;
-  --dnet-step-icon-width: 25px;
-  --dnet-step-font-size: var(--dnet-component-sm-font-size);
-}
+/*! Stepper — migrado a tokens (6.0). Generado una vez; se edita a mano. */
 
 .dnet-stepper-vertical, .dnet-stepper-horizontal {
   display: block;
 }
 
 .dnet-stepper-horizontal, .dnet-stepper-vertical {
-  background-color: #fff;
+  --_font-size: var(--dnet-step-font-size, var(--dnet-sys-text-md));
+
+  background-color: var(--dnet-sys-surface);
 }
 
 .dnet-horizontal-stepper-header-container {
@@ -39,8 +34,8 @@
 }
 
 .dnet-step-header .dnet-step-icon {
-  background-color: rgba(0, 0, 0, 0.54);
-  color: #fff;
+  background-color: var(--dnet-sys-on-surface-subtle);
+  color: var(--dnet-sys-on-primary);
 }
 
 .dnet-horizontal-stepper-header .dnet-step-icon {
@@ -49,13 +44,13 @@
 }
 
 .dnet-step-header .dnet-step-icon-selected, .dnet-step-header .dnet-step-icon-state-done, .dnet-step-header .dnet-step-icon-state-edit {
-  background-color: #3f51b5;
-  color: #fff;
+  background-color: var(--dnet-sys-primary-emphasis);
+  color: var(--dnet-sys-on-primary);
 }
 
 .dnet-step-header.dnet-step-selected .dnet-step-icon {
-  background-color: #3f51b5;
-  color: #fff;
+  background-color: var(--dnet-sys-primary-emphasis);
+  color: var(--dnet-sys-on-primary);
 }
 
 .dnet-step-icon {
@@ -74,7 +69,7 @@
 }
 
 .dnet-step-header .dnet-step-label.dnet-step-label-active {
-  color: rgba(0, 0, 0, 0.87);
+  color: var(--dnet-sys-on-surface-emphasis);
 }
 
 .dnet-step-label {
@@ -84,15 +79,15 @@
   text-overflow: ellipsis;
   min-width: 50px;
   vertical-align: middle;
-  font-size: var(--dnet-step-font-size);
+  font-size: var(--_font-size);
 }
 
 .dnet-step-label-selected {
-  font-size: var(--dnet-step-font-size);
+  font-size: var(--_font-size);
 }
 
 .dnet-step-header.dnet-step-selected .dnet-step-label {
-  font-size: var(--dnet-step-font-size);
+  font-size: var(--_font-size);
 }
 
 .dnet-step-text-label {
@@ -101,10 +96,12 @@
 }
 
 .dnet-step-header .dnet-step-label.dnet-step-label-active {
-  color: rgba(0, 0, 0, 0.87);
+  color: var(--dnet-sys-on-surface-emphasis);
 }
 
 .dnet-stepper-horizontal-line {
+  --_line-color: color-mix(in srgb, var(--dnet-sys-on-surface) 19.4%, transparent);
+
   border-top-width: 1px;
   border-top-style: solid;
   flex: auto;
@@ -114,7 +111,7 @@
 }
 
 .dnet-horizontal-stepper-header:after, .dnet-horizontal-stepper-header:before, .dnet-stepper-horizontal-line {
-  border-top-color: rgba(0, 0, 0, 0.12);
+  border-top-color: var(--_line-color);
 }
 
 .dnet-horizontal-content-container {
@@ -156,6 +153,8 @@
 }
 
 .dnet-stepper-vertical-line::before {
+  --_line-color: color-mix(in srgb, var(--dnet-sys-on-surface) 19.4%, transparent);
+
   content: "";
   position: absolute;
   left: 0;
@@ -163,28 +162,5 @@
   border-left-style: solid;
   top: -16px;
   bottom: -16px;
-  border-left-color: rgba(0, 0, 0, 0.12);
-}
-
-.dnet-app-stepper-icon-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  width: var(--dnet-tree-icon-width);
-  height: var(--dnet-tree-icon-width);
-}
-
-.dnet-app-stepper-icon {
-  display: block;
-  background-repeat: no-repeat;
-  background-size: 1em 1em;
-  height: 1em;
-  width: 1em;
-  cursor: pointer;
-  color: #5f6368;
-}
-
-.dnet-app-stepper-step1 {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'><path fill-rule='evenodd' clip-rule='evenodd' d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/></svg>");
+  border-left-color: var(--_line-color);
 }

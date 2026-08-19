@@ -93,6 +93,14 @@
   old white/black fills per status. The toast-open STY-002 goldens show a
   sub-pixel rendering shift in the toast content (mask vs background-image);
   the suite is stable across four consecutive runs.
+- `Stepper` migrated to the token architecture: the `:root` block was
+  removed, the dead `--dnet-step-icon-height`/`-width` tokens were dropped
+  and the unused `.dnet-app-stepper-icon*` rules (which read a Tree token)
+  were removed. Step circles use `--dnet-sys-on-surface-subtle` (inactive)
+  and `--dnet-sys-primary-emphasis` (selected/done/edit, the exact indigo),
+  labels use `--dnet-sys-on-surface-emphasis`, the connector lines are
+  derived with `color-mix` (exact 12 % black) and the background follows
+  `--dnet-sys-surface`. Measured with STY-002: pixel-identical (0 px diff).
 
 ## Version 5.0.5 (August 2026)
 
