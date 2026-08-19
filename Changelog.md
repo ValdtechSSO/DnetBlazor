@@ -132,6 +132,12 @@
   Pixel-identical (0 px). The STY-002 goldens were refreshed to the current
   rendering baseline (sub-pixel antialiasing drift accumulated from the
   session's app rebuilds; verified stable across two consecutive runs).
+- `FloatingPanel` migrated to the token architecture: the `:root` block was
+  removed (it wrongly declared `--dnet-toast-margin`), the panel background
+  maps to `--dnet-sys-surface`, the shadow to `--dnet-sys-elevation-1` and
+  the demo-content colors to the closest roles (`--dnet-sys-primary-strong`
+  for the link blue, `--dnet-sys-warning` for the orange — approved
+  mapping). Pixel-identical in the sample (0 px).
 
 ## Version 5.0.5 (August 2026)
 

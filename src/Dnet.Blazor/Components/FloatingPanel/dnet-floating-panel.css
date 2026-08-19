@@ -1,7 +1,4 @@
-/*! Sass FloatingPanel (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
-:root {
-  --dnet-toast-margin: 0px;
-}
+/*! FloatingPanel — migrado a tokens (6.0). Generado una vez; se edita a mano. */
 
 .dnet-floating-panel-container {
   display: flex;
@@ -10,10 +7,9 @@
   box-sizing: border-box;
   width: 100%;
   height: calc(100dvh - 0px);
-  color: #FFFFFF;
-  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.1), 0 1px 10px 0 rgba(0, 0, 0, 0.1);
-  background: #fff;
-  color: rgba(0, 0, 0, 0.87);
+  box-shadow: var(--dnet-sys-elevation-1);
+  background: var(--dnet-sys-surface);
+  color: var(--dnet-sys-on-surface-emphasis);
 }
 
 /*Denet Panel*/
@@ -57,21 +53,21 @@
 }
 
 .dnet-panel-button-list-item {
-  color: rgb(0, 120, 212);
+  color: var(--dnet-sys-primary-strong);
   display: flex;
   align-items: center;
   cursor: pointer;
 }
 .dnet-panel-button-list-item.disabled {
-  color: rgb(161, 159, 157);
+  color: color-mix(in srgb, var(--dnet-sys-on-surface) 58.8%, transparent);
   cursor: default;
 }
 .dnet-panel-button-list-item.disabled .dnet-panel-button-list-item-text {
-  color: rgb(161, 159, 157);
+  color: color-mix(in srgb, var(--dnet-sys-on-surface) 58.8%, transparent);
 }
 
 .dnet-panel-button-list-item-text {
-  color: black;
+  color: var(--dnet-sys-on-surface-emphasis);
   font-size: 0.75rem;
   margin-left: 5px;
 }
@@ -91,7 +87,7 @@
 .dsec-panel-content-desciption {
   font-size: 0.75rem;
   font-weight: 300;
-  color: #db7500;
+  color: var(--dnet-sys-warning);
 }
 
 .dsec-panel-info {
@@ -101,14 +97,14 @@
 }
 
 .dsec-panel-info-subject {
-  color: rgb(0, 120, 212);
+  color: var(--dnet-sys-primary-strong);
   display: flex;
   align-items: center;
   cursor: pointer;
 }
 
 .dsec-panel-info-subject-title {
-  color: black;
+  color: var(--dnet-sys-on-surface-emphasis);
   font-size: 0.75rem;
   margin-left: 5px;
   margin-right: 5px;
@@ -119,7 +115,7 @@
 }
 
 .dsec-panel-info-subject-description-textb {
-  color: #757575;
+  color: var(--dnet-sys-on-surface-subtle);
 }
 
 /*Denet Panel End*/
