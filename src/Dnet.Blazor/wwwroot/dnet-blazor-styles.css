@@ -5181,17 +5181,9 @@ button.dnet-toast-icon-wrapper:focus-visible {
   padding-right: var(--_handset-h-padding);
 }
 
-/*! Sass Tree (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
-/*@import '../core/style/variables';
-@import '../../cdk/a11y/a11y';
-*/
-:root {
-  --dnet-tree-icon-height: 25px;
-  --dnet-tree-icon-width: 25px;
-  --dnet-tree-font-size: var(--dnet-component-sm-font-size);
-}
+/*! Tree — migrado a tokens (6.0). Generado una vez; se edita a mano. */
 
-li ul {
+ul[role=tree] li ul {
   background-color: transparent;
 }
 
@@ -5206,7 +5198,7 @@ li ul {
 }
 
 .dnet-tree-content {
-  font-size: var(--dnet-tree-font-size);
+  font-size: var(--dnet-tree-font-size, var(--dnet-sys-text-md));
 }
 
 .dnet-tree-node-outlet {
@@ -5225,12 +5217,14 @@ li ul {
 }
 
 .dnet-tree-icon-wrapper {
+  --_icon-size: var(--dnet-tree-icon-width, 25px);
+
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  width: var(--dnet-tree-icon-width);
-  height: var(--dnet-tree-icon-width);
+  width: var(--_icon-size);
+  height: var(--_icon-size);
   padding: 0;
   border: 0;
   background: transparent;
@@ -5243,22 +5237,29 @@ li ul {
   outline-offset: 1px;
 }
 
+/* Iconos funcionales monocromos (R9): mask-image + background-color. */
 .dnet-tree-icon {
   display: block;
-  background-repeat: no-repeat;
-  background-size: 1em 1em;
+  background-color: var(--dnet-sys-on-surface);
   height: 1em;
   width: 1em;
   cursor: pointer;
-  color: #5f6368;
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 1em 1em;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: 1em 1em;
 }
 
 .dnet-icon-node-close {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'><path fill-rule='evenodd' clip-rule='evenodd' d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/></svg>");
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/></svg>");
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/></svg>");
 }
 
 .dnet-icon-node-open {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'><path fill-rule='evenodd' clip-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>");
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>");
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>");
 }
 
 .dnet-tree-icon-dummy {

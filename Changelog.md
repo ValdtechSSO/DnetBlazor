@@ -101,6 +101,12 @@
   labels use `--dnet-sys-on-surface-emphasis`, the connector lines are
   derived with `color-mix` (exact 12 % black) and the background follows
   `--dnet-sys-surface`. Measured with STY-002: pixel-identical (0 px diff).
+- `Tree` migrated to the token architecture: the `:root` block was removed,
+  the dead `--dnet-tree-icon-height` token was dropped and the expand/collapse
+  chevrons moved to monochrome masks (R9) rendering in
+  `--dnet-sys-on-surface` (were hard-coded black). The page-global
+  `li ul { background: transparent }` rule was scoped to the tree subtree.
+  Measured with STY-002: only the chevron color changes (44 px).
 
 ## Version 5.0.5 (August 2026)
 
