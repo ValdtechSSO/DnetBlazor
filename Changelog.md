@@ -47,6 +47,13 @@
   the focus ring follows `--dnet-primary-color` with a `--dnet-sys-focus-ring`
   fallback. The List sample page now enables pagination so the paginator is
   demoed and covered by the STY-002 goldens.
+- `Tooltip` migrated to the token architecture: the `:root` block was removed
+  and its colors are now derived from system roles (`--dnet-sys-on-surface`
+  at 90 % for the background, `--dnet-sys-surface` for the text), so the
+  tooltip inverts automatically in dark themes. New public tokens
+  `--dnet-tooltip-background` and `--dnet-tooltip-foreground`; the dead
+  `--dnet-tooltip-margin` token was dropped. Measured with STY-002: the
+  tooltip goldens are pixel-identical (0 px diff).
 
 ## Version 5.0.5 (August 2026)
 

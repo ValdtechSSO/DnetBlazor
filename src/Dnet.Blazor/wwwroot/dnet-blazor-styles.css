@@ -5141,40 +5141,42 @@ button.dnet-toast-icon-wrapper:focus-visible {
   background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'><path fill-rule='evenodd' clip-rule='evenodd' d='M9.919 2.523A1 1 0 0 1 10.798 2h1.405a1 1 0 0 1 .879.523l9.214 16.973a1 1 0 0 1-.047 1.032l-.684 1.027a1 1 0 0 1-.832.445H2.268a1 1 0 0 1-.832-.445l.416-.278-.416.278-.685-1.027a1 1 0 0 1-.046-1.032L9.919 2.523zM12.203 3h-1.405L1.583 19.974 2.268 21h18.465l.684-1.026L12.203 3zM11 15V8h1v7h-1zm0 3v-1.5h1V18h-1z'/></svg>");
 }
 
-/*! Sass Tooltip (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
-:root {
-  --dnet-tooltip-horizontal-padding: 8px;
-  --dnet-tooltip-max-width: 250px;
-  --dnet-tooltip-margin: 14px;
-  --dnet-tooltip-handset-horizontal-padding: 16px;
-  --dnet-tooltip-handset-margin: 24px;
-  --dnet-tooltip-border-radius: 0px;
-}
+/*! Tooltip — migrado a tokens (6.0). Generado una vez; se edita a mano.
+   Los colores se derivan de roles sys para que se inviertan solos en tema
+   oscuro (superficie inversa): fondo = on-surface al 90%, texto = surface. */
 
 .dnet-tooltip-panel {
   pointer-events: none !important;
 }
 
 .dnet-tooltip {
-  color: white;
-  border-radius: var(--dnet-tooltip-border-radius);
-  /*    margin: var(--dnet-tooltip-margin);*/
+  --_background: var(--dnet-tooltip-background, color-mix(in srgb, var(--dnet-sys-on-surface) 90%, transparent));
+  --_foreground: var(--dnet-tooltip-foreground, var(--dnet-sys-surface));
+  --_radius: var(--dnet-tooltip-border-radius, 0px);
+  --_max-width: var(--dnet-tooltip-max-width, 250px);
+  --_h-padding: var(--dnet-tooltip-horizontal-padding, var(--dnet-sys-space-2));
+
+  color: var(--_foreground);
+  background: var(--_background);
+  border-radius: var(--_radius);
   margin: 0;
-  max-width: var(--dnet-tooltip-max-width);
-  padding-left: var(--dnet-tooltip-horizontal-padding);
-  padding-right: var(--dnet-tooltip-horizontal-padding);
+  max-width: var(--_max-width);
+  padding-left: var(--_h-padding);
+  padding-right: var(--_h-padding);
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 10px;
   padding-top: 6px;
   padding-bottom: 6px;
-  background: rgba(97, 97, 97, 0.9);
 }
 
 .dnet-tooltip-handset {
-  margin: var(--dnet-tooltip-handset-margin);
-  padding-left: var(--dnet-tooltip-handset-horizontal-padding);
-  padding-right: var(--dnet-tooltip-handset-horizontal-padding);
+  --_handset-margin: var(--dnet-tooltip-handset-margin, 24px);
+  --_handset-h-padding: var(--dnet-tooltip-handset-horizontal-padding, var(--dnet-sys-space-4));
+
+  margin: var(--_handset-margin);
+  padding-left: var(--_handset-h-padding);
+  padding-right: var(--_handset-h-padding);
 }
 
 /*! Sass Tree (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
