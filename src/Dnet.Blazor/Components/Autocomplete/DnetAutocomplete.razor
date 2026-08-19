@@ -573,7 +573,7 @@
         var flexibleConnectedPositionStrategyBuilder = new FlexibleConnectedPositionStrategyBuilder()
         .WithLockedPosition()
         .WithViewportMargin(8)
-        .SetOrigin(__inputReference)
+        .SetOrigin(_formFieldCascadingValues?.FormField ?? __inputReference)
         .WithFlexibleDimensions(false)
         .WithPositions(positions);
 
