@@ -189,6 +189,16 @@ public static class ComponentScenarios
             ".dnet-list-wrapper",
             [VisualState.Default, VisualState.Hover]),
 
+        // The paginator only renders inside a list with pagination enabled;
+        // the List sample page enables it. Hover targets the "next" button
+        // (first/previous are disabled on page one).
+        new(
+            "paginator",
+            "/List",
+            ".dnet-paginator",
+            [VisualState.Default, VisualState.Hover],
+            HoverSelector: ".dnet-paginator-navigation-next"),
+
         new(
             "toast",
             "/Toast",

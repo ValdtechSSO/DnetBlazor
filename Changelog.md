@@ -39,6 +39,14 @@
   stylesheet is scoped to each component subtree. Measured with STY-002:
   Select and Autocomplete are pixel-identical; the List search icon moved to a
   monochrome mask icon (R9) and renders in `--dnet-sys-on-surface`.
+- `Paginator` migrated to the token architecture: the `:root` block was
+  removed and the dead tokens (declared but never read, 14 of them) were
+  dropped — they had no effect, so overrides never worked. The 8 live tokens
+  remain as read-chain fallbacks. Icons now render in `--dnet-sys-on-surface`
+  instead of hard-coded black, and the hover uses `--dnet-sys-state-hover`;
+  the focus ring follows `--dnet-primary-color` with a `--dnet-sys-focus-ring`
+  fallback. The List sample page now enables pagination so the paginator is
+  demoed and covered by the STY-002 goldens.
 
 ## Version 5.0.5 (August 2026)
 
