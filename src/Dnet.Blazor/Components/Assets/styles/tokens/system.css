@@ -11,6 +11,9 @@
   --dnet-sys-primary: var(--dnet-ref-accent-300);
   --dnet-sys-primary-strong: var(--dnet-ref-accent-500);
   --dnet-sys-primary-emphasis: var(--dnet-ref-indigo-500);
+  --dnet-sys-success: var(--dnet-ref-green-500);
+  --dnet-sys-warning: var(--dnet-ref-yellow-500);
+  --dnet-sys-danger: var(--dnet-ref-red-500);
   --dnet-sys-on-primary: var(--dnet-ref-neutral-0);
   --dnet-sys-border: var(--dnet-ref-neutral-200);
   --dnet-sys-border-strong: var(--dnet-ref-neutral-300);

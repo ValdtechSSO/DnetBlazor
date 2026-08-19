@@ -83,6 +83,16 @@
   reset icon was already invisible (a zero-size span) and stays unchanged.
   The day cells now follow `--dnet-calendar-day-height` so the grid and the
   cells stay aligned when the token is overridden.
+- `Toast` migrated to the token architecture. Approved extension of the
+  semantic layer with status roles: `--dnet-ref-green-500`/`-yellow-500`/
+  `-red-500` primitives and `--dnet-sys-success`/`-warning`/`-danger` roles
+  (info reuses `--dnet-sys-primary-strong`, exact). The `:root` block was
+  removed and `--dnet-toast-bg-*`, `--dnet-toast-margin` and
+  `--dnet-toast-border-radius` remain as read-chain fallbacks. Toast icons
+  moved to monochrome masks (R9) that follow `currentColor`, reproducing the
+  old white/black fills per status. The toast-open STY-002 goldens show a
+  sub-pixel rendering shift in the toast content (mask vs background-image);
+  the suite is stable across four consecutive runs.
 
 ## Version 5.0.5 (August 2026)
 
