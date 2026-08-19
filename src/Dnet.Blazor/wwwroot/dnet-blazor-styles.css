@@ -6803,14 +6803,11 @@ select.mat-input-element::-ms-value {
   position: relative;
 }
 
-/*! Sass DynamicStepper (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
-:root {
-  --dnet-step-icon-height: 25px;
-  --dnet-step-icon-width: 25px;
-  --dnet-step-font-size: var(--dnet-component-sm-font-size);
-}
+/*! DynamicStepper — migrado a tokens (6.0). Generado una vez; se edita a mano. */
 
 .dnet-horizontal-dstepper-header-container {
+  --_font-size: var(--dnet-step-font-size, var(--dnet-sys-text-md));
+
   display: grid;
   gap: 0.3rem;
   overflow: hidden;
@@ -6850,8 +6847,8 @@ select.mat-input-element::-ms-value {
 }
 
 .dnet-dstep-header .dnet-dstep-icon {
-  background-color: rgba(0, 0, 0, 0.54);
-  color: #fff;
+  background-color: var(--dnet-sys-on-surface-subtle);
+  color: var(--dnet-sys-on-primary);
 }
 
 .dnet-horizontal-dstepper-header .dnet-dstep-icon {
@@ -6860,13 +6857,13 @@ select.mat-input-element::-ms-value {
 }
 
 .dnet-dstep-header .dnet-dstep-icon-selected, .dnet-dstep-header .dnet-dstep-icon-state-done, .dnet-dstep-header .dnet-dstep-icon-state-edit {
-  background-color: #3f51b5;
-  color: #fff;
+  background-color: var(--dnet-sys-primary-emphasis);
+  color: var(--dnet-sys-on-primary);
 }
 
 .dnet-dstep-header.dnet-dstep-selected .dnet-dstep-icon {
-  background-color: #3f51b5;
-  color: #fff;
+  background-color: var(--dnet-sys-primary-emphasis);
+  color: var(--dnet-sys-on-primary);
 }
 
 .dnet-dstep-icon {
@@ -6888,11 +6885,13 @@ select.mat-input-element::-ms-value {
   display: inline-block;
   min-width: 50px;
   vertical-align: middle;
-  font-size: var(--dnet-step-font-size);
+  font-size: var(--_font-size);
   margin-right: 0.3rem;
 }
 
 .dnet-dstepper-horizontal-line {
+  --_line-color: color-mix(in srgb, var(--dnet-sys-on-surface) 19.4%, transparent);
+
   border-top-width: 1px;
   border-top-style: solid;
   flex: auto;
@@ -6901,7 +6900,7 @@ select.mat-input-element::-ms-value {
 }
 
 .dnet-horizontal-dstepper-header:after, .dnet-horizontal-dstepper-header:before, .dnet-dstepper-horizontal-line {
-  border-top-color: rgba(0, 0, 0, 0.12);
+  border-top-color: var(--_line-color);
 }
 
 .dnet-app-dstepper-container {
