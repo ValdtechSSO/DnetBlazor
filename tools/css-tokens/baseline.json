@@ -1,0 +1,2064 @@
+{
+  "violations": [
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/Assets/styles/base/shared.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/Autocomplete/dnet-autocomplete.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/Checkbox/dnet-checkbox.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/ConnectedPanel/dnet-connected-panel.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/DatePicker/dnet-datepicker.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/DatePickerWeek/dnet-datepicker-week.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/DatePickerWeekRaw/dnet-datepicker-week-raw.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/Dialog/dnet-dialog.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/DynamicStepper/dnet-dynamic-stepper.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/ExpansionPanel/dnet-expansion-panel.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/FloatingDoubleList/dnet-floating-double-list.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/FloatingPanel/dnet-floating-panel.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/Form/dnet-form-field-plain-cmp.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/Grid/dnet-blgrid.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/ImageEditor/dnet-image-editor.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/List/dnet-list.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/Overlay/dnet-overlay-prebuilt.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/RadioButton/dnet-radio-button.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/Select/dnet-select.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/Spinner/dnet-spinner.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/Stepper/dnet-stepper.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/Tabs/dnet-tabs.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/Toast/dnet-toast.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/Tooltip/dnet-tooltip.css",
+      "token": ""
+    },
+    {
+      "rule": "R1-color-literal",
+      "file": "src/Dnet.Blazor/Components/Tree/dnet-tree.css",
+      "token": ""
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-color-reset"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-component-border-radius"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-component-box-shadow"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-component-headline-text-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-component-lg-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-component-list-item-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-component-md-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-component-sm-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-component-smx-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-component-supporting-text-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-component-xs-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-aside-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-aside-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-aside-width-minified"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-aside-width-minified"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-asideWidth"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-asideWidth"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-asideWidth-minified"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-asideWidth-minified"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-base-url"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-base-url"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-black"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-black"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-body-background-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-body-background-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-default-font-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-default-font-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-font-family-Headline"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-font-family-Headline"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-font-family-text"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-font-family-text"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-font-rem-reference"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-font-rem-reference"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-footer-background"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-footer-background"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-footer-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-footer-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-gray-dark"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-gray-dark"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-header-background"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-header-background"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-header-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-header-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-html-background-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-html-background-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-indicator-bgcolor"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-indicator-bgcolor"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-indicator-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-indicator-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-left-column-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-left-column-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-link-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-link-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-link-hover-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-link-hover-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-menu-item-parent-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-menu-item-parent-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-menu-left-padding-firts-level"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-menu-left-padding-firts-level"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-menu-left-padding-firts-level-has-image"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-menu-left-padding-firts-level-has-image"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-menu-left-padding-second-level"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-menu-left-padding-second-level"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-menu-left-padding-third-level"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-menu-left-padding-third-level"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-menu-text-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-menu-text-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-minifyme-bg-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-minifyme-bg-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-minifyme-chevron-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-minifyme-chevron-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-navbar-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-navbar-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-navbar-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-navbar-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-navigation-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-navigation-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-primary-dark"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-primary-dark"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-primary-light"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-primary-light"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-primary-reset"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-primary-reset"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-red"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-red"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-right-column-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-right-column-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-scrollbar-background-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-scrollbar-background-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-scrollbar-foreground-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-scrollbar-foreground-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-scrollbar-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-scrollbar-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-secondary-dark"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-secondary-dark"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-secondary-light"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-secondary-light"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-secondary-reset"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-secondary-reset"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-white"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-white"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-footer-border-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-footer-border-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-header-border-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-header-border-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-left-column-border-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-left-column-border-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-menu-container-bgcolor"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-menu-container-bgcolor"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-menu-container-open-bgcolor"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-menu-container-open-bgcolor"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-primary-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-right-column-border-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-right-column-border-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-secundary-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Assets/styles/base/shared.css",
+      "token": "--dnet-color-reset"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Assets/styles/base/shared.css",
+      "token": "--dnet-component-border-radius"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Assets/styles/base/shared.css",
+      "token": "--dnet-component-box-shadow"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Assets/styles/base/shared.css",
+      "token": "--dnet-component-headline-text-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Assets/styles/base/shared.css",
+      "token": "--dnet-component-lg-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Assets/styles/base/shared.css",
+      "token": "--dnet-component-list-item-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Assets/styles/base/shared.css",
+      "token": "--dnet-component-md-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Assets/styles/base/shared.css",
+      "token": "--dnet-component-sm-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Assets/styles/base/shared.css",
+      "token": "--dnet-component-smx-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Assets/styles/base/shared.css",
+      "token": "--dnet-component-supporting-text-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Assets/styles/base/shared.css",
+      "token": "--dnet-component-xs-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Assets/styles/base/shared.css",
+      "token": "--dnet-primary-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Assets/styles/base/shared.css",
+      "token": "--dnet-secundary-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Autocomplete/dnet-autocomplete.css",
+      "token": "--dnet-autocomplete-list-background-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Autocomplete/dnet-autocomplete.css",
+      "token": "--dnet-autocomplete-list-border-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Autocomplete/dnet-autocomplete.css",
+      "token": "--dnet-autocomplete-list-border-radius"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Autocomplete/dnet-autocomplete.css",
+      "token": "--dnet-autocomplete-list-box-shadow"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Autocomplete/dnet-autocomplete.css",
+      "token": "--dnet-autocomplete-list-check-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Autocomplete/dnet-autocomplete.css",
+      "token": "--dnet-autocomplete-list-header-footer-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Autocomplete/dnet-autocomplete.css",
+      "token": "--dnet-autocomplete-list-headline-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Autocomplete/dnet-autocomplete.css",
+      "token": "--dnet-autocomplete-list-headline-text-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Autocomplete/dnet-autocomplete.css",
+      "token": "--dnet-autocomplete-list-hover-background-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Autocomplete/dnet-autocomplete.css",
+      "token": "--dnet-autocomplete-list-hover-border-radius"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Autocomplete/dnet-autocomplete.css",
+      "token": "--dnet-autocomplete-list-item-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Autocomplete/dnet-autocomplete.css",
+      "token": "--dnet-autocomplete-list-padding-horizontal"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Autocomplete/dnet-autocomplete.css",
+      "token": "--dnet-autocomplete-list-padding-vertical"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Autocomplete/dnet-autocomplete.css",
+      "token": "--dnet-autocomplete-list-prefix-suffix-min-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Autocomplete/dnet-autocomplete.css",
+      "token": "--dnet-autocomplete-list-supporting-text-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Autocomplete/dnet-autocomplete.css",
+      "token": "--dnet-autocomplete-list-supporting-text-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Autocomplete/dnet-autocomplete.css",
+      "token": "--dnet-autocomplete-list-wrapper-horizontal-padding"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Checkbox/dnet-checkbox.css",
+      "token": "--dnet-checkbox-background"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Checkbox/dnet-checkbox.css",
+      "token": "--dnet-checkbox-border-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Checkbox/dnet-checkbox.css",
+      "token": "--dnet-checkbox-border-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Checkbox/dnet-checkbox.css",
+      "token": "--dnet-checkbox-border-radius"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Checkbox/dnet-checkbox.css",
+      "token": "--dnet-checkbox-border-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Checkbox/dnet-checkbox.css",
+      "token": "--dnet-checkbox-checkmark-path"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Checkbox/dnet-checkbox.css",
+      "token": "--dnet-checkbox-font-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Checkbox/dnet-checkbox.css",
+      "token": "--dnet-checkbox-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Checkbox/dnet-checkbox.css",
+      "token": "--dnet-checkbox-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
+      "token": "--dnet-chips-border-radius"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
+      "token": "--dnet-chips-icon-background-size-md"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
+      "token": "--dnet-chips-icon-background-size-md"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
+      "token": "--dnet-chips-icon-background-size-sm"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
+      "token": "--dnet-chips-icon-background-size-xs"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
+      "token": "--dnet-chips-icon-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
+      "token": "--dnet-chips-icon-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
+      "token": "--dnet-chips-padding"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
+      "token": "--dnet-chips-sm-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/ConnectedPanel/dnet-connected-panel.css",
+      "token": "--dnet-connected-panel-background"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/ConnectedPanel/dnet-connected-panel.css",
+      "token": "--dnet-connected-panel-padding"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/DatePicker/dnet-datepicker.css",
+      "token": "--dnet-calendar-background"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/DatePicker/dnet-datepicker.css",
+      "token": "--dnet-calendar-day-disabled-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/DatePicker/dnet-datepicker.css",
+      "token": "--dnet-calendar-day-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/DatePicker/dnet-datepicker.css",
+      "token": "--dnet-calendar-selected-bg-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/DatePicker/dnet-datepicker.css",
+      "token": "--dnet-calendar-today-bg-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/DatePickerWeek/dnet-datepicker-week.css",
+      "token": "--dnet-datepickerweek-input-container-border"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/DatePickerWeek/dnet-datepicker-week.css",
+      "token": "--dnet-datepickerweek-input-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/DatePickerWeek/dnet-datepicker-week.css",
+      "token": "--dnet-datepickerweekca-day-disabled-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/DatePickerWeek/dnet-datepicker-week.css",
+      "token": "--dnet-datepickerweekca-day-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/DatePickerWeek/dnet-datepicker-week.css",
+      "token": "--dnet-datepickerweekca-selected-bg-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/DatePickerWeek/dnet-datepicker-week.css",
+      "token": "--dnet-datepickerweekca-today-bg-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/DatePickerWeekRaw/dnet-datepicker-week-raw.css",
+      "token": "--dnet-datepickerweek-raw-input-container-border"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/DatePickerWeekRaw/dnet-datepicker-week-raw.css",
+      "token": "--dnet-datepickerweek-raw-input-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/DatePickerWeekRaw/dnet-datepicker-week-raw.css",
+      "token": "--dnet-datepickerweekca-raw-day-disabled-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/DatePickerWeekRaw/dnet-datepicker-week-raw.css",
+      "token": "--dnet-datepickerweekca-raw-day-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/DatePickerWeekRaw/dnet-datepicker-week-raw.css",
+      "token": "--dnet-datepickerweekca-raw-selected-bg-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/DatePickerWeekRaw/dnet-datepicker-week-raw.css",
+      "token": "--dnet-datepickerweekca-raw-today-bg-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Dialog/dnet-dialog.css",
+      "token": "--dnet-dialog-border-radius"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Dialog/dnet-dialog.css",
+      "token": "--dnet-dialog-button-margin"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Dialog/dnet-dialog.css",
+      "token": "--dnet-dialog-header-margin-bottom"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Dialog/dnet-dialog.css",
+      "token": "--dnet-dialog-height-compensation"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Dialog/dnet-dialog.css",
+      "token": "--dnet-dialog-max-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Dialog/dnet-dialog.css",
+      "token": "--dnet-dialog-padding-left-right"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Dialog/dnet-dialog.css",
+      "token": "--dnet-dialog-padding-top-bottom"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Dialog/dnet-dialog.css",
+      "token": "--dnet-dialog-title-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/DynamicStepper/dnet-dynamic-stepper.css",
+      "token": "--dnet-step-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/DynamicStepper/dnet-dynamic-stepper.css",
+      "token": "--dnet-step-icon-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/DynamicStepper/dnet-dynamic-stepper.css",
+      "token": "--dnet-step-icon-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/ExpansionPanel/dnet-expansion-panel.css",
+      "token": "--dnet-accordion-border-radius"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/ExpansionPanel/dnet-expansion-panel.css",
+      "token": "--dnet-accordion-box-shadow"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/ExpansionPanel/dnet-expansion-panel.css",
+      "token": "--dnet-accordion-title-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/FloatingPanel/dnet-floating-panel.css",
+      "token": "--dnet-toast-margin"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Form/dnet-form-field-plain-cmp.css",
+      "token": "--dnet-form-field-hint-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Form/dnet-form-field-plain-cmp.css",
+      "token": "--dnet-form-field-hint-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Form/dnet-form-field-plain-cmp.css",
+      "token": "--dnet-form-field-plain-label-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Form/dnet-form-field-plain-cmp.css",
+      "token": "--dnet-form-field-plain-label-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/List/dnet-list.css",
+      "token": "--dnet-list-border-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/List/dnet-list.css",
+      "token": "--dnet-list-border-radius"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/List/dnet-list.css",
+      "token": "--dnet-list-check-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/List/dnet-list.css",
+      "token": "--dnet-list-header-footer-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/List/dnet-list.css",
+      "token": "--dnet-list-headline-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/List/dnet-list.css",
+      "token": "--dnet-list-hover-background-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/List/dnet-list.css",
+      "token": "--dnet-list-hover-border-radius"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/List/dnet-list.css",
+      "token": "--dnet-list-item-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/List/dnet-list.css",
+      "token": "--dnet-list-padding-horizontal"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/List/dnet-list.css",
+      "token": "--dnet-list-padding-vertical"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/List/dnet-list.css",
+      "token": "--dnet-list-prefix-suffix-min-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/List/dnet-list.css",
+      "token": "--dnet-list-supporting-text-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/List/dnet-list.css",
+      "token": "--dnet-list-supporting-text-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/List/dnet-list.css",
+      "token": "--dnet-list-wrapper-horizontal-padding"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-icon-button-border-radius"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-icon-button-line-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-icon-button-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-button-decrement-icon-margin"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-button-first-decrement-icon-margin"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-button-first-icon-margin"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-button-first-last-icon-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-button-icon-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-button-icon-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-button-increment-icon-margin"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-button-last-icon-margin"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-button-last-increment-icon-margin"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-button-margin"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-items-per-page-label-margin"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-padding"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-page-size-margin-right"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-range-label-margin"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-selector-margin"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-selector-trigger-fill-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-selector-trigger-outline-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-selector-trigger-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/RadioButton/dnet-radio-button.css",
+      "token": "--dnet-radio-button-background"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/RadioButton/dnet-radio-button.css",
+      "token": "--dnet-radio-button-border-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/RadioButton/dnet-radio-button.css",
+      "token": "--dnet-radio-button-border-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/RadioButton/dnet-radio-button.css",
+      "token": "--dnet-radio-button-border-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/RadioButton/dnet-radio-button.css",
+      "token": "--dnet-radio-button-checkmark-path"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/RadioButton/dnet-radio-button.css",
+      "token": "--dnet-radio-button-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/RadioButton/dnet-radio-button.css",
+      "token": "--dnet-radio-button-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Select/dnet-select.css",
+      "token": "--dnet-select-list-border-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Select/dnet-select.css",
+      "token": "--dnet-select-list-border-radius"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Select/dnet-select.css",
+      "token": "--dnet-select-list-check-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Select/dnet-select.css",
+      "token": "--dnet-select-list-header-footer-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Select/dnet-select.css",
+      "token": "--dnet-select-list-headline-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Select/dnet-select.css",
+      "token": "--dnet-select-list-hover-background-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Select/dnet-select.css",
+      "token": "--dnet-select-list-hover-border-radius"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Select/dnet-select.css",
+      "token": "--dnet-select-list-item-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Select/dnet-select.css",
+      "token": "--dnet-select-list-padding-horizontal"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Select/dnet-select.css",
+      "token": "--dnet-select-list-padding-vertical"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Select/dnet-select.css",
+      "token": "--dnet-select-list-prefix-suffix-min-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Select/dnet-select.css",
+      "token": "--dnet-select-list-supporting-text-color"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Select/dnet-select.css",
+      "token": "--dnet-select-list-supporting-text-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Select/dnet-select.css",
+      "token": "--dnet-select-list-wrapper-horizontal-padding"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Stepper/dnet-stepper.css",
+      "token": "--dnet-step-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Stepper/dnet-stepper.css",
+      "token": "--dnet-step-icon-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Stepper/dnet-stepper.css",
+      "token": "--dnet-step-icon-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Toast/dnet-toast.css",
+      "token": "--dnet-toast-bg-danger"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Toast/dnet-toast.css",
+      "token": "--dnet-toast-bg-info"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Toast/dnet-toast.css",
+      "token": "--dnet-toast-bg-success"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Toast/dnet-toast.css",
+      "token": "--dnet-toast-bg-warning"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Toast/dnet-toast.css",
+      "token": "--dnet-toast-border-radius"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Toast/dnet-toast.css",
+      "token": "--dnet-toast-margin"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Tooltip/dnet-tooltip.css",
+      "token": "--dnet-tooltip-border-radius"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Tooltip/dnet-tooltip.css",
+      "token": "--dnet-tooltip-handset-horizontal-padding"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Tooltip/dnet-tooltip.css",
+      "token": "--dnet-tooltip-handset-margin"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Tooltip/dnet-tooltip.css",
+      "token": "--dnet-tooltip-horizontal-padding"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Tooltip/dnet-tooltip.css",
+      "token": "--dnet-tooltip-margin"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Tooltip/dnet-tooltip.css",
+      "token": "--dnet-tooltip-max-width"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Tree/dnet-tree.css",
+      "token": "--dnet-tree-font-size"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Tree/dnet-tree.css",
+      "token": "--dnet-tree-icon-height"
+    },
+    {
+      "rule": "R10-public-declaration",
+      "file": "src/Dnet.Blazor/Components/Tree/dnet-tree.css",
+      "token": "--dnet-tree-icon-width"
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": ""
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/Assets/styles/base/shared.css",
+      "token": ""
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/Autocomplete/dnet-autocomplete.css",
+      "token": ""
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/Checkbox/dnet-checkbox.css",
+      "token": ""
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
+      "token": ""
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/ConnectedPanel/dnet-connected-panel.css",
+      "token": ""
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/DatePicker/dnet-datepicker.css",
+      "token": ""
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/DatePickerWeek/dnet-datepicker-week.css",
+      "token": ""
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/DatePickerWeekRaw/dnet-datepicker-week-raw.css",
+      "token": ""
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/Dialog/dnet-dialog.css",
+      "token": ""
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/DynamicStepper/dnet-dynamic-stepper.css",
+      "token": ""
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/ExpansionPanel/dnet-expansion-panel.css",
+      "token": ""
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/FloatingPanel/dnet-floating-panel.css",
+      "token": ""
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/Form/dnet-form-field-plain-cmp.css",
+      "token": ""
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/Grid/dnet-blgrid.css",
+      "token": ""
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/List/dnet-list.css",
+      "token": ""
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": ""
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/RadioButton/dnet-radio-button.css",
+      "token": ""
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/Select/dnet-select.css",
+      "token": ""
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/Spinner/dnet-spinner.css",
+      "token": ""
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/Stepper/dnet-stepper.css",
+      "token": ""
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/Toast/dnet-toast.css",
+      "token": ""
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/Tooltip/dnet-tooltip.css",
+      "token": ""
+    },
+    {
+      "rule": "R2-root",
+      "file": "src/Dnet.Blazor/Components/Tree/dnet-tree.css",
+      "token": ""
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-component-lg-font-size"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-component-md-font-size"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-base-url"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-base-url"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-black"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-black"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-footer-background"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-footer-background"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-header-background"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-header-background"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-link-hover-color"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-link-hover-color"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-menu-left-padding-firts-level-has-image"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-menu-left-padding-firts-level-has-image"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-minifyme-chevron-color"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-minifyme-chevron-color"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-navbar-color"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-navbar-color"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-primary-light"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-primary-light"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-secondary-dark"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-secondary-dark"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-secondary-light"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-secondary-light"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-secondary-reset"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-secondary-reset"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-white"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-white"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-secundary-color"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--general-border-color"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Assets/styles/base/shared.css",
+      "token": "--dnet-component-lg-font-size"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Assets/styles/base/shared.css",
+      "token": "--dnet-component-md-font-size"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Assets/styles/base/shared.css",
+      "token": "--dnet-secundary-color"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Checkbox/dnet-checkbox.css",
+      "token": "--dnet-checkbox-font-color"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
+      "token": "--dnet-chips-icon-background-size-md"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
+      "token": "--dnet-chips-icon-background-size-md"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
+      "token": "--dnet-chips-icon-background-size-sm"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
+      "token": "--dnet-chips-icon-background-size-xs"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
+      "token": "--dnet-chips-icon-height"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/DatePickerWeekRaw/dnet-datepicker-week-raw.css",
+      "token": "--dnet-datepickerweek-raw-input-container-border"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/DatePickerWeekRaw/dnet-datepicker-week-raw.css",
+      "token": "--dnet-datepickerweek-raw-input-height"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/DynamicStepper/dnet-dynamic-stepper.css",
+      "token": "--dnet-step-icon-height"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/DynamicStepper/dnet-dynamic-stepper.css",
+      "token": "--dnet-step-icon-width"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Grid/dnet-blgrid.css",
+      "token": "--blg-header-height"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Grid/dnet-blgrid.css",
+      "token": "--blg-row-border-width"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-icon-button-line-height"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-button-decrement-icon-margin"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-button-first-decrement-icon-margin"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-button-first-icon-margin"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-button-first-last-icon-width"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-button-icon-height"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-button-icon-width"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-button-increment-icon-margin"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-button-last-icon-margin"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-button-last-increment-icon-margin"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-button-margin"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-height"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-padding"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Paginator/dnet-paginator.css",
+      "token": "--dnet-paginator-range-label-margin"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/RadioButton/dnet-radio-button.css",
+      "token": "--dnet-radio-button-border-color"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/RadioButton/dnet-radio-button.css",
+      "token": "--dnet-radio-button-border-color"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/RadioButton/dnet-radio-button.css",
+      "token": "--dnet-radio-button-checkmark-path"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Stepper/dnet-stepper.css",
+      "token": "--dnet-step-icon-height"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Stepper/dnet-stepper.css",
+      "token": "--dnet-step-icon-width"
+    },
+    {
+      "rule": "R3-dead-token",
+      "file": "src/Dnet.Blazor/Components/Tree/dnet-tree.css",
+      "token": "--dnet-tree-icon-height"
+    },
+    {
+      "rule": "R4-ghost-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--content-color"
+    },
+    {
+      "rule": "R4-ghost-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-floating-menu-left"
+    },
+    {
+      "rule": "R4-ghost-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-positioning-helper-color"
+    },
+    {
+      "rule": "R4-ghost-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--footer-color"
+    },
+    {
+      "rule": "R4-ghost-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--header-color"
+    },
+    {
+      "rule": "R4-ghost-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--left-column-color"
+    },
+    {
+      "rule": "R4-ghost-token",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--right-column-color"
+    },
+    {
+      "rule": "R4-ghost-token",
+      "file": "src/Dnet.Blazor/Components/DatePicker/dnet-datepicker.css",
+      "token": "--dnet-datepicker-input-height"
+    },
+    {
+      "rule": "R4-ghost-token",
+      "file": "src/Dnet.Blazor/Components/DatePicker/dnet-datepicker.css",
+      "token": "--dnet-datepicker-input-height"
+    },
+    {
+      "rule": "R4-ghost-token",
+      "file": "src/Dnet.Blazor/Components/Dialog/dnet-dialog.css",
+      "token": "--dnet-dialog-padding"
+    },
+    {
+      "rule": "R4-ghost-token",
+      "file": "src/Dnet.Blazor/Components/Dialog/dnet-dialog.css",
+      "token": "--dnet-dialog-padding"
+    },
+    {
+      "rule": "R4-ghost-token",
+      "file": "src/Dnet.Blazor/Components/Dialog/dnet-dialog.css",
+      "token": "--dnet-dialog-padding"
+    },
+    {
+      "rule": "R4-ghost-token",
+      "file": "src/Dnet.Blazor/Components/Grid/dnet-blgrid.css",
+      "token": "--foreground-color"
+    },
+    {
+      "rule": "R5-public-name",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-asideWidth"
+    },
+    {
+      "rule": "R5-public-name",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-asideWidth"
+    },
+    {
+      "rule": "R5-public-name",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-asideWidth-minified"
+    },
+    {
+      "rule": "R5-public-name",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-asideWidth-minified"
+    },
+    {
+      "rule": "R5-public-name",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-font-family-Headline"
+    },
+    {
+      "rule": "R5-public-name",
+      "file": "src/Dnet.Blazor/Components/AdminLayout/dnet-admin-layout.css",
+      "token": "--dnet-dash-font-family-Headline"
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 @charset "UTF-8";
-/* Frozen CSS output from the Sass source removed in the 6.0 styling migration. */
+/* Primer @import del bundle. ORDEN: tokens -> base -> componentes.
+   Los temas los enlaza el consumidor DESPUES del bundle. */
+/*! capa de primitivas del monolito — generado una vez; a partir de aquí se edita a mano. */
 :root {
   --dnet-ref-neutral-0: #ffffff;
   --dnet-ref-neutral-50: #fafafa;
@@ -15,6 +17,7 @@
   --dnet-ref-font-sans: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
+/*! capa semántica del monolito — generado una vez; a partir de aquí se edita a mano. */
 :root {
   --dnet-sys-surface: var(--dnet-ref-neutral-0);
   --dnet-sys-surface-raised: var(--dnet-ref-neutral-0);
@@ -58,6 +61,7 @@
   --dnet-sys-motion-ease: cubic-bezier(0.35, 0, 0.25, 1);
 }
 
+/*! Sass shared (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 :root {
   --dnet-component-border-radius: 4px;
   --dnet-component-box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.1), 0 1px 10px 0 rgba(0, 0, 0, 0.1);
@@ -132,6 +136,7 @@
   transform: scale(1);
 }
 
+/*! AdminLayout (recorte por offset; editado a mano en 6.0) — generado una vez; a partir de aquí se edita a mano. */
 :root {
   /*--General--*/
   --dnet-dash-font-family-text: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -1155,6 +1160,8 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
     display: none;
   }
 }
+
+/*! Sass Autocomplete (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 :root {
   --dnet-autocomplete-list-border-color: #ebebeb;
   --dnet-autocomplete-list-background-color: #ffffff;
@@ -1346,6 +1353,8 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
     display: flex;
   }
 }
+
+/*! Sass Checkbox (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 :root {
   --dnet-checkbox-border-radius: 0px;
   --dnet-checkbox-border-color: rgba(0,0,0,.54);
@@ -1541,6 +1550,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   position: relative;
 }
 
+/*! Sass Chips (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 :root {
   --dnet-chips-icon-height: 20px;
   --dnet-chips-icon-width: 20px;
@@ -1648,6 +1658,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'><path fill-rule='evenodd' clip-rule='evenodd' d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z'/></svg>");
 }
 
+/*! Sass ConnectedPanel (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 :root {
   --dnet-connected-panel-padding: 2px;
   --dnet-connected-panel-background: #FFFFFF;
@@ -1663,6 +1674,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   border-radius: var(--dnet-dialog-border-radius);
 }
 
+/*! Sass DatePicker (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 :root {
   --dnet-calendar-day-height: 40px;
   --dnet-calendar-day-disabled-color: rgba(0,0,0,.38);
@@ -2041,6 +2053,7 @@ button[disabled].dnet-calendar-next-button::after {
   background-color: #e9ecef;
 }
 
+/*! Sass Dialog (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 :root {
   --dnet-dialog-padding-top-bottom: 10px;
   --dnet-dialog-padding-left-right: 24px;
@@ -2140,6 +2153,7 @@ button[disabled].dnet-calendar-next-button::after {
   background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'><path fill-rule='evenodd' clip-rule='evenodd' d='M12 11.291l5.646-5.646.708.707-5.647 5.646 5.647 5.647-.707.707L12 12.705l-5.646 5.647-.708-.707 5.647-5.647-5.647-5.646.708-.707L12 11.29z'/></svg>");
 }
 
+/*! Sass ExpansionPanel (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 :root {
   --dnet-accordion-title-font-size: var(--dnet-component-sm-font-size);
   --dnet-accordion-border-radius: var(--dnet-component-border-radius);
@@ -2291,6 +2305,7 @@ button[disabled].dnet-calendar-next-button::after {
   padding: 0 24px 16px;
 }
 
+/*! Sass FloatingPanel (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 :root {
   --dnet-toast-margin: 0px;
 }
@@ -2415,6 +2430,8 @@ button[disabled].dnet-calendar-next-button::after {
 }
 
 /*Denet Panel End*/
+
+/*! Grid (recorte por offset; editado a mano en 6.0) — generado una vez; a partir de aquí se edita a mano. */
 .blg-theme-bootstrap {
   display: flex;
   width: 100%;
@@ -3195,6 +3212,8 @@ button[disabled].dnet-calendar-next-button::after {
   scrollbar-face-color: var(--blg-grid-foreground-color);
   scrollbar-track-color: var(--blg-grid-background-color);
 }
+
+/*! Sass ImageEditor (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 .dnet-image-editor-wrapper {
   display: flex;
   flex-direction: column;
@@ -3441,6 +3460,7 @@ button[disabled].dnet-calendar-next-button::after {
     }*/
 }
 
+/*! Sass List (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 :root {
   --dnet-list-border-color: #ebebeb;
   --dnet-list-border-radius: 10px;
@@ -3657,6 +3677,8 @@ button[disabled].dnet-calendar-next-button::after {
     display: none;
   }
 }
+
+/*! Sass Overlay (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 .cdk-overlay-container,
 .cdk-global-overlay-wrapper {
   pointer-events: none;
@@ -3748,6 +3770,8 @@ button[disabled].dnet-calendar-next-button::after {
     height: 65dvh;
   }
 }
+
+/*! Sass Paginator (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 :root {
   --dnet-paginator-height: 50px;
   --dnet-paginator-padding: 0 8px;
@@ -3932,6 +3956,7 @@ button[disabled].dnet-calendar-next-button::after {
   align-items: center;
 }
 
+/*! PickList (recorte por offset; editado a mano en 6.0) — generado una vez; a partir de aquí se edita a mano. */
 .dnet-pick-list {
   --_border: var(--dnet-picklist-border, var(--pick-list-border, var(--dnet-list-border-color, var(--dnet-sys-border))));
   --_radius: var(--dnet-picklist-radius, var(--pick-list-radius, var(--dnet-list-border-radius, var(--dnet-sys-radius-lg))));
@@ -4197,6 +4222,8 @@ button[disabled].dnet-calendar-next-button::after {
     transition: none;
   }
 }
+
+/*! Sass RadioButton (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 :root {
   --dnet-radio-button-border-color: rgba(0,0,0,.54);
   --dnet-radio-button-border-width: 1px;
@@ -4380,6 +4407,7 @@ button[disabled].dnet-calendar-next-button::after {
   padding-top: 1px;
 }
 
+/*! Sass Spinner (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 :root {
   --spinner-mask-background: rgba(0, 0, 0, 0.1);
   --spinner-color: #69b8d6;
@@ -4439,6 +4467,10 @@ button[disabled].dnet-calendar-next-button::after {
     -webkit-transform: scaleY(1);
   }
 }
+
+
+
+/*! Sass Stepper (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 /*@import '../core/style/variables';
 @import '../../cdk/a11y/a11y';*/
 :root {
@@ -4629,6 +4661,7 @@ button[disabled].dnet-calendar-next-button::after {
   background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'><path fill-rule='evenodd' clip-rule='evenodd' d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/></svg>");
 }
 
+/*! Sass Tabs (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 .mat-tab-body-content {
   height: 100%;
   width: 100%;
@@ -4889,6 +4922,7 @@ button[disabled].dnet-calendar-next-button::after {
   border-bottom: 2px solid #3f51b5;
 }
 
+/*! Sass Toast (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 :root {
   --dnet-toast-bg-success: #40AB35;
   --dnet-toast-bg-info: #42B0D5;
@@ -5017,6 +5051,7 @@ button.dnet-toast-icon-wrapper:focus-visible {
   background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'><path fill-rule='evenodd' clip-rule='evenodd' d='M9.919 2.523A1 1 0 0 1 10.798 2h1.405a1 1 0 0 1 .879.523l9.214 16.973a1 1 0 0 1-.047 1.032l-.684 1.027a1 1 0 0 1-.832.445H2.268a1 1 0 0 1-.832-.445l.416-.278-.416.278-.685-1.027a1 1 0 0 1-.046-1.032L9.919 2.523zM12.203 3h-1.405L1.583 19.974 2.268 21h18.465l.684-1.026L12.203 3zM11 15V8h1v7h-1zm0 3v-1.5h1V18h-1z'/></svg>");
 }
 
+/*! Sass Tooltip (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 :root {
   --dnet-tooltip-horizontal-padding: 8px;
   --dnet-tooltip-max-width: 250px;
@@ -5052,6 +5087,7 @@ button.dnet-toast-icon-wrapper:focus-visible {
   padding-right: var(--dnet-tooltip-handset-horizontal-padding);
 }
 
+/*! Sass Tree (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 /*@import '../core/style/variables';
 @import '../../cdk/a11y/a11y';
 */
@@ -5136,6 +5172,7 @@ li ul {
   height: 25px;
 }
 
+/*! Sass DatePickerWeek (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 :root {
   --dnet-datepickerweek-input-container-border: 1px solid #eee;
   --dnet-datepickerweek-input-height: 28px;
@@ -5555,6 +5592,7 @@ button[disabled].dnet-datepickerweekca-next-button::after {
   font-size: 0.75rem;
 }
 
+/*! Sass DatePickerWeekRaw (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 :root {
   --dnet-datepickerweek-raw-input-container-border: 1px solid #eee;
   --dnet-datepickerweek-raw-input-height: 28px;
@@ -5884,6 +5922,7 @@ button[disabled].dnet-datepickerweekca-raw-next-button::after {
   height: 20px;
 }
 
+/*! Sass FloatingDoubleList (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 .dnet-connected-panel-container-dl {
   display: flex;
   flex-direction: column;
@@ -5997,6 +6036,8 @@ button[disabled].dnet-datepickerweekca-raw-next-button::after {
     width: calc(100dvw - 30px);
   }
 }
+
+/*! Sass Form (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 .mat-input-element {
   font: inherit;
   background: transparent;
@@ -6322,6 +6363,7 @@ select.mat-input-element::-ms-value {
   display: block;
 }
 
+/*! Sass Select (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 :root {
   --dnet-select-list-border-color: #ebebeb;
   --dnet-select-list-border-radius: 5px;
@@ -6556,6 +6598,7 @@ select.mat-input-element::-ms-value {
   overflow: hidden;
 }
 
+/*! Button (recorte por offset; editado a mano en 6.0) — generado una vez; a partir de aquí se edita a mano. */
 .dnet-button, .dnet-icon-button {
   --_background: var(--dnet-btn-background, var(--dnet-button-background-color, var(--dnet-sys-state-hover)));
   --_hover: var(--dnet-btn-background-hover, var(--dnet-button-hover-color, var(--dnet-sys-state-hover)));
@@ -6641,6 +6684,7 @@ select.mat-input-element::-ms-value {
   position: relative;
 }
 
+/*! Sass DynamicStepper (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 :root {
   --dnet-step-icon-height: 25px;
   --dnet-step-icon-width: 25px;
@@ -6760,5 +6804,6 @@ select.mat-input-element::-ms-value {
     gap: 0px;
   }
 }
-/*@use "../../FormField/dnet-form-field.scss";*/
+
+
 

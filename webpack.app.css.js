@@ -19,7 +19,11 @@ var config = {
                     {
                         loader: "css-loader",
                         options: {
-                            url: false
+                            url: false,
+                            // Imprescindible desde el troceado del monolito: sin esto
+                            // css-loader resuelve los @import SIN volver a pasar por
+                            // postcss-loader, y autoprefixer no toca los componentes.
+                            importLoaders: 1
                         }
                     },
                     {

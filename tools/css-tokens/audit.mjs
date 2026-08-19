@@ -26,6 +26,8 @@ function findStyleFiles(directory) {
             return findStyleFiles(entryPath);
         }
 
+        // La entrada solo contiene @import: no hay nada que lintar en ella, pero
+        // NO se excluye ninguna otra cosa. Excluir el fuente real vaciaba el linter.
         if (entryPath.endsWith(`${join("Assets", "styles", "dnet-blazor-styles.css")}`)) {
             return [];
         }
@@ -56,7 +58,7 @@ function audit() {
         const fileName = basename(file);
         const isTokenLayer = file.includes(`${join("Assets", "styles", "tokens")}/`) ||
             file.includes(`${join("Assets", "styles", "theme")}/`) ||
-            file.includes(`${join("Assets", "scss", "tokens")}/`) ||
+            file.includes(`${join("Assets", "styles", "tokens")}/`) ||
             file.includes(`${join("wwwroot", "styles", "theme")}/`);
         const isComponentFile = !isTokenLayer;
         const declaredHere = new Set();
