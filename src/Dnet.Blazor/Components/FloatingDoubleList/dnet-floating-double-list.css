@@ -2,9 +2,9 @@
 .dnet-connected-panel-container-dl {
   display: flex;
   flex-direction: column;
-  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.1), 0 1px 10px 0 rgba(0, 0, 0, 0.1);
-  background: #fff;
-  color: rgba(0, 0, 0, 0.87);
+  box-shadow: var(--dnet-sys-elevation-1);
+  background: var(--dnet-sys-surface);
+  color: var(--dnet-sys-on-surface-emphasis);
   width: 100%;
   height: 100%;
   padding: 2px;
@@ -73,7 +73,7 @@
   font-size: 1em;
   cursor: pointer;
   outline: none;
-  color: #42b0d5;
+  color: var(--dnet-sys-primary-strong);
   font-size: 0.75rem;
 }
 

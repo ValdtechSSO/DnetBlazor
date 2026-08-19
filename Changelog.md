@@ -151,6 +151,10 @@
   `--dnet-sys-on-surface` via `color-mix`. The bar color shifts slightly
   from #69b8d6 to primary-strong (declared; not captured by goldens since
   the open spinner is timer-driven and excluded).
+- `FloatingDoubleList` migrated to the token architecture: the remaining
+  literals map exactly — shadow -> `--dnet-sys-elevation-1`, background ->
+  `--dnet-sys-surface`, text -> `--dnet-sys-on-surface-emphasis`, footer
+  color #42b0d5 -> `--dnet-sys-primary-strong`. Pixel-identical (0 px).
 
 ## Version 5.0.5 (August 2026)
 
