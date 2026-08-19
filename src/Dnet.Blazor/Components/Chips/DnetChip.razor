@@ -6,7 +6,7 @@
 
 @implements IDisposable
 
-<div class="dnet-chip dnet-standard-chip dnet-chip-with-trailing-icon"
+<div class="dnet-chip dnet-standard-chip dnet-chip-with-trailing-icon dnet-chip-size-@_chipSizeClass"
      style="@_dnetChipStyle"
      role="button"
      tabindex="@(Disabled ? -1 : 0)"
@@ -55,16 +55,16 @@
 	public RenderFragment? ChildContent { get; set; }
 
 	[Parameter]
-	public string BackgroungColor { get; set; } = "#e0e0e0";
+	public string? BackgroungColor { get; set; }
 
 	[Parameter]
-	public string Color { get; set; } = "rgba(0,0,0,.87)";
+	public string? Color { get; set; }
 
 	[Parameter]
-	public string BackgroungColorSelected { get; set; } = "#3f51b5";
+	public string? BackgroungColorSelected { get; set; }
 
 	[Parameter]
-	public string ColorSelected { get; set; } = "white";
+	public string? ColorSelected { get; set; }
 
 	[Parameter]
 	public bool Selectable { get; set; } = true;
@@ -94,14 +94,21 @@
 	private ValuesBySize _valuesBySize { get; set; } = new();
 
 	private string _dnetChipStyle =>
-		new StyleBuilder("font-size", _valuesBySize.FontSize)
-			.AddStyle("padding", _valuesBySize.Pading)
-			.AddStyle("min-height", _valuesBySize.MinHeight)
-			.AddStyle("background-color", BackgroungColor, when: !IsSelected())
-			.AddStyle("color", Color,  when: !IsSelected())
-			.AddStyle("background-color", BackgroungColorSelected, when: IsSelected())
-			.AddStyle("color", ColorSelected,  when: IsSelected())
+		new StyleBuilder()
+			.AddStyle("background-color", BackgroungColor, when: !IsSelected() && !string.IsNullOrEmpty(BackgroungColor))
+			.AddStyle("color", Color, when: !IsSelected() && !string.IsNullOrEmpty(Color))
+			.AddStyle("background-color", BackgroungColorSelected, when: IsSelected() && !string.IsNullOrEmpty(BackgroungColorSelected))
+			.AddStyle("color", ColorSelected, when: IsSelected() && !string.IsNullOrEmpty(ColorSelected))
 		.Build();
+
+	private string _chipSizeClass =>
+		ChipSize switch
+		{
+			ChipSize.Large => "lg",
+			ChipSize.Medium => "md",
+			ChipSize.ExtraSmall => "xs",
+			_ => "sm"
+		};
 
 	protected override void OnInitialized()
 	{
@@ -117,31 +124,19 @@
 		switch (ChipSize)
 		{
 			case ChipSize.Large:
-				valuesBySize.FontSize = "1.125rem";
 				valuesBySize.BackGroundSize = "1em";
-				valuesBySize.Pading = "7px 7px 8px 12px";
-				valuesBySize.MinHeight = "32px";
 				break;
 
 			case ChipSize.Medium:
-				valuesBySize.FontSize = "1em";
 				valuesBySize.BackGroundSize = "1rem";
-				valuesBySize.Pading = "7px 7px 8px 12px";
-				valuesBySize.MinHeight = "30px";
 				break;
 
 			case ChipSize.ExtraSmall:
-				valuesBySize.FontSize = "0.75rem";
 				valuesBySize.BackGroundSize = "0.8em";
-				valuesBySize.Pading = "0px 7px 0px 12px";
-				valuesBySize.MinHeight = "20px";
 				break;
 
 			default:
-				valuesBySize.FontSize = "0.875rem";
 				valuesBySize.BackGroundSize = "0.875em";
-				valuesBySize.Pading = "7px 7px 8px 12px";
-				valuesBySize.MinHeight = "28px";
 				break;
 		}
 

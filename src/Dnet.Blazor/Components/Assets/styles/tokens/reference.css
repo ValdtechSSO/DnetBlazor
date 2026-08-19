@@ -8,11 +8,13 @@
   --dnet-ref-neutral-100: #f2f2f2;
   --dnet-ref-neutral-200: #ebebeb;
   --dnet-ref-neutral-300: #e1e3e1;
+  --dnet-ref-neutral-400: #e0e0e0;
   --dnet-ref-neutral-500: #757575;
   --dnet-ref-neutral-600: #666666;
   --dnet-ref-neutral-700: #5f6368;
   --dnet-ref-neutral-1000: #000000;
   --dnet-ref-accent-300: #4fc3f7;
   --dnet-ref-accent-500: #42b0d5;
+  --dnet-ref-indigo-500: #3f51b5;
   --dnet-ref-font-sans: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }

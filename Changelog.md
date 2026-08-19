@@ -7,6 +7,16 @@
 - Added the CSS token audit to CI and documented the component token contract.
 - Began the 6.x compatibility window for legacy styling tokens; new overrides use
   `--dnet-sys-*` and documented component tokens.
+- Breaking: `DnetChip` color parameters (`BackgroungColor`, `Color`,
+  `BackgroungColorSelected`, `ColorSelected`) lost their hard-coded defaults and
+  are now `null` unless explicitly set. The previous defaults moved to the CSS
+  fallback chain (`--dnet-chips-background`, `--dnet-chips-foreground`,
+  `--dnet-chips-background-selected`, `--dnet-chips-foreground-selected`, backed
+  by the new `--dnet-sys-surface-variant`, `--dnet-sys-on-surface-emphasis` and
+  `--dnet-sys-primary-emphasis` roles), so the default look is unchanged and the
+  tokens/themes now take effect. Chip size variants moved from inline styles to
+  `.dnet-chip-size-{lg,md,sm,xs}` classes; the selected state is styled via
+  `[aria-pressed="true"]`.
 
 ## Version 5.0.5 (August 2026)
 

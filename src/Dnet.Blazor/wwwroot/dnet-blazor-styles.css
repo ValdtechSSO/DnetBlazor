@@ -8,12 +8,14 @@
   --dnet-ref-neutral-100: #f2f2f2;
   --dnet-ref-neutral-200: #ebebeb;
   --dnet-ref-neutral-300: #e1e3e1;
+  --dnet-ref-neutral-400: #e0e0e0;
   --dnet-ref-neutral-500: #757575;
   --dnet-ref-neutral-600: #666666;
   --dnet-ref-neutral-700: #5f6368;
   --dnet-ref-neutral-1000: #000000;
   --dnet-ref-accent-300: #4fc3f7;
   --dnet-ref-accent-500: #42b0d5;
+  --dnet-ref-indigo-500: #3f51b5;
   --dnet-ref-font-sans: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
@@ -22,11 +24,14 @@
   --dnet-sys-surface: var(--dnet-ref-neutral-0);
   --dnet-sys-surface-raised: var(--dnet-ref-neutral-0);
   --dnet-sys-surface-hover: var(--dnet-ref-neutral-100);
+  --dnet-sys-surface-variant: var(--dnet-ref-neutral-400);
   --dnet-sys-on-surface: var(--dnet-ref-neutral-700);
   --dnet-sys-on-surface-muted: var(--dnet-ref-neutral-600);
   --dnet-sys-on-surface-subtle: var(--dnet-ref-neutral-500);
+  --dnet-sys-on-surface-emphasis: color-mix(in srgb, var(--dnet-ref-neutral-1000) 87%, transparent);
   --dnet-sys-primary: var(--dnet-ref-accent-300);
   --dnet-sys-primary-strong: var(--dnet-ref-accent-500);
+  --dnet-sys-primary-emphasis: var(--dnet-ref-indigo-500);
   --dnet-sys-on-primary: var(--dnet-ref-neutral-0);
   --dnet-sys-border: var(--dnet-ref-neutral-200);
   --dnet-sys-border-strong: var(--dnet-ref-neutral-300);
@@ -1564,28 +1569,53 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   margin: 4px;
 }
 
-.dnet-standard-chip.dnet-chip-with-trailing-icon {
-  --_padding: var(--dnet-chips-padding, 7px 7px 8px 12px);
-}
-
 .dnet-chip.dnet-standard-chip {
-  --_background: var(--dnet-chips-background, var(--dnet-sys-surface-hover));
-  --_foreground: var(--dnet-chips-foreground, var(--dnet-sys-on-surface));
+  --_background: var(--dnet-chips-background, var(--dnet-sys-surface-variant));
+  --_foreground: var(--dnet-chips-foreground, var(--dnet-sys-on-surface-emphasis));
   background-color: var(--_background);
   color: var(--_foreground);
+}
+
+.dnet-standard-chip[aria-pressed="true"] {
+  --_background: var(--dnet-chips-background-selected, var(--dnet-sys-primary-emphasis));
+  --_foreground: var(--dnet-chips-foreground-selected, var(--dnet-sys-on-primary));
 }
 
 .dnet-standard-chip {
   --_padding: var(--dnet-chips-padding, 7px 12px);
   --_radius: var(--dnet-chips-radius, var(--dnet-chips-border-radius, var(--dnet-component-border-radius, var(--dnet-sys-radius-sm))));
+  --_min-height: var(--dnet-chips-min-height, 32px);
   transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
   padding: var(--_padding);
   border-radius: var(--_radius);
   align-items: center;
   cursor: default;
-  min-height: 32px;
+  min-height: var(--_min-height);
   height: 1px;
+}
+
+.dnet-chip-size-lg {
+  --_padding: var(--dnet-chips-padding, 7px 7px 8px 12px);
+  --_font-size: var(--dnet-chips-font-size, 1.125rem);
+  --_min-height: var(--dnet-chips-min-height, 32px);
+}
+
+.dnet-chip-size-md {
+  --_padding: var(--dnet-chips-padding, 7px 7px 8px 12px);
+  --_font-size: var(--dnet-chips-font-size, 1em);
+  --_min-height: var(--dnet-chips-min-height, 30px);
+}
+
+.dnet-chip-size-sm {
+  --_padding: var(--dnet-chips-padding, 7px 7px 8px 12px);
+  --_min-height: var(--dnet-chips-min-height, 28px);
+}
+
+.dnet-chip-size-xs {
+  --_padding: var(--dnet-chips-padding, 0px 7px 0px 12px);
+  --_font-size: var(--dnet-chips-font-size, 0.75rem);
+  --_min-height: var(--dnet-chips-min-height, 20px);
 }
 
 .dnet-chip {

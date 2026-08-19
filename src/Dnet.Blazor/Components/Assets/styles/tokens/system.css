@@ -3,11 +3,14 @@
   --dnet-sys-surface: var(--dnet-ref-neutral-0);
   --dnet-sys-surface-raised: var(--dnet-ref-neutral-0);
   --dnet-sys-surface-hover: var(--dnet-ref-neutral-100);
+  --dnet-sys-surface-variant: var(--dnet-ref-neutral-400);
   --dnet-sys-on-surface: var(--dnet-ref-neutral-700);
   --dnet-sys-on-surface-muted: var(--dnet-ref-neutral-600);
   --dnet-sys-on-surface-subtle: var(--dnet-ref-neutral-500);
+  --dnet-sys-on-surface-emphasis: color-mix(in srgb, var(--dnet-ref-neutral-1000) 87%, transparent);
   --dnet-sys-primary: var(--dnet-ref-accent-300);
   --dnet-sys-primary-strong: var(--dnet-ref-accent-500);
+  --dnet-sys-primary-emphasis: var(--dnet-ref-indigo-500);
   --dnet-sys-on-primary: var(--dnet-ref-neutral-0);
   --dnet-sys-border: var(--dnet-ref-neutral-200);
   --dnet-sys-border-strong: var(--dnet-ref-neutral-300);
