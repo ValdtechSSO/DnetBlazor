@@ -126,6 +126,12 @@
   `--dnet-component-border-radius` declarations were removed (the nested
   legacy links in the Autocomplete and Chips chains remain). The goldens show
   the same sub-pixel header-text antialiasing shift and are stable.
+- `ConnectedPanel` migrated to the token architecture: the `:root` block was
+  removed and the two `--dnet-connected-panel-*` tokens remain as read-chain
+  fallbacks (background -> `--dnet-sys-surface`, padding stays 2 px).
+  Pixel-identical (0 px). The STY-002 goldens were refreshed to the current
+  rendering baseline (sub-pixel antialiasing drift accumulated from the
+  session's app rebuilds; verified stable across two consecutive runs).
 
 ## Version 5.0.5 (August 2026)
 
