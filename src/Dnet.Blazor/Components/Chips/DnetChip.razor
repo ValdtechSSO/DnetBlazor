@@ -24,7 +24,7 @@
 			@if (!string.IsNullOrEmpty(AvatarIcon))
 			{
 				<div class="dnet-chips-icon-wrapper dnet-m-r-5">
-					<span style="background-size:@_valuesBySize.BackGroundSize" class="dnet-chips-icon @AvatarIcon"></span>
+					<span style="--_icon-scale:@_valuesBySize.BackGroundSize;background-size:@_valuesBySize.BackGroundSize" class="dnet-chips-icon @AvatarIcon"></span>
 				</div>
 			}
 			<span>@Value</span>
@@ -34,7 +34,7 @@
 	{
 		<button type="button" disabled="@Disabled" @onclick="RemoveChip" @onclick:stopPropagation="true" class="dnet-chip-remove dnet-chip-trailing-icon" aria-label="Remove chip">
 			<div class="dnet-chips-icon-wrapper">
-				<span style="background-size:@_valuesBySize.BackGroundSize" class="dnet-chips-icon @(string.IsNullOrEmpty(RemoveIcon) ? "dnet-chips-icon-remove" : @RemoveIcon)"></span>
+				<span style="--_icon-scale:@_valuesBySize.BackGroundSize;background-size:@_valuesBySize.BackGroundSize" class="dnet-chips-icon @(string.IsNullOrEmpty(RemoveIcon) ? "dnet-chips-icon-remove" : @RemoveIcon)"></span>
 			</div>
 		</button>
 	}
