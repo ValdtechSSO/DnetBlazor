@@ -165,6 +165,13 @@
   the new `--dnet-sys-scrim` semantic role (32 % black, derived from
   `--dnet-ref-neutral-1000` in the system layer — approved), so the scrim
   stays dark in every theme.
+- `DatePickerWeek` migrated to the token architecture: the `:root` block was
+  removed, the six `--dnet-datepickerweek-*` tokens remain as read-chain
+  fallbacks (input container border -> `--dnet-sys-border`, selected ->
+  `--dnet-sys-primary-strong`, day disabled/today tints via `color-mix`) and
+  the Material calendar literals map to the same exact derivations used in
+  `DatePicker`. No sample page exists, so this component is not covered by
+  STY-002 goldens.
 
 ## Version 5.0.5 (August 2026)
 

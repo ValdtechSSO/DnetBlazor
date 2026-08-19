@@ -1,22 +1,13 @@
 /*! Sass DatePickerWeek (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
-:root {
-  --dnet-datepickerweek-input-container-border: 1px solid #eee;
-  --dnet-datepickerweek-input-height: 28px;
-  --dnet-datepickerweekca-day-height: 30px;
-  --dnet-datepickerweekca-day-disabled-color: rgba(0,0,0,.38);
-  --dnet-datepickerweekca-selected-bg-color: #42b0d5;
-  --dnet-datepickerweekca-today-bg-color: rgba(0,0,0,.1);
-}
-
 .dnet-datepickerweek-content {
-  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.1), 0 1px 10px 0 rgba(0, 0, 0, 0.1);
-  background: #fff;
-  color: rgba(0, 0, 0, 0.87);
+  box-shadow: var(--dnet-sys-elevation-1);
+  background: var(--dnet-sys-surface);
+  color: var(--dnet-sys-on-surface-emphasis);
 }
 
 .dnet-datepickerweek-input-container {
   display: flex;
-  border: var(--dnet-datepickerweek-input-container-border);
+  border: var(--dnet-datepickerweek-input-container-border, 1px solid var(--dnet-sys-border));
   justify-content: space-between;
 }
 
@@ -27,18 +18,18 @@
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
-  background-color: #FFFFFF;
+  background-color: var(--dnet-sys-surface);
   -webkit-transition: none;
   transition: none;
   box-shadow: none;
   font-size: 0.875rem;
-  color: #5f6368;
-  border: 0px solid #eee !important;
-  height: var(--dnet-datepickerweek-input-height);
+  color: var(--dnet-sys-on-surface);
+  border: 0px solid var(--dnet-sys-border) !important;
+  height: var(--dnet-datepickerweek-input-height, 28px);
   outline: none;
 }
 .dnet-datepickerweek-input-search:focus {
-  box-shadow: 0 0 0 0rem rgba(0, 123, 255, 0.25);
+  box-shadow: none;
 }
 
 .dnet-datepickerweek-icon-wrapper {
@@ -46,8 +37,8 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  height: var(--dnet-datepickerweek-input-height);
-  width: var(--dnet-datepickerweek-input-height);
+  height: var(--dnet-datepickerweek-input-height, 28px);
+  width: var(--dnet-datepickerweek-input-height, 28px);
 }
 
 .dnet-datepickerweek-icon {
@@ -57,7 +48,7 @@
   height: 1em;
   width: 1em;
   cursor: pointer;
-  color: #5f6368;
+  color: var(--dnet-sys-on-surface);
 }
 
 .dnet-datepickerweek-icon-default {
@@ -68,7 +59,7 @@
   background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='grey'><path fill-rule='evenodd' clip-rule='evenodd' d='M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1zm1-3a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M3.5 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5zm9 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5z'/></svg>");
 }
 .dnet-datepickerweek-disable .dnet-datepickerweek-icon-wrapper {
-  background-color: #e9ecef;
+  background-color: var(--dnet-sys-surface-hover);
 }
 
 .dnet-datepickerweekca-header {
@@ -89,7 +80,7 @@
   outline: none;
 }
 .dnet-datepickerweekca-period-button:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: var(--dnet-sys-state-hover);
 }
 
 .dnet-datepickerweekca-arrow {
@@ -100,7 +91,7 @@
   border-right: 5px solid transparent;
   margin: 0 0 0 5px;
   vertical-align: middle;
-  border-top-color: rgba(0, 0, 0, 0.54);
+  border-top-color: var(--dnet-sys-on-surface-subtle);
 }
 
 .dnet-datepickerweekca-arrow-down {
@@ -124,7 +115,7 @@
   flex-shrink: 0;
   line-height: 40px;
   border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: var(--dnet-sys-state-hover);
 }
 
 .dnet-datepickerweekca-previous-button::after, .dnet-datepickerweekca-next-button::after {
@@ -137,17 +128,17 @@
   margin: 15.5px;
   border: 0 solid currentColor;
   border-top-width: 2px;
-  color: rgba(0, 0, 0, 0.54);
+  color: var(--dnet-sys-on-surface-subtle);
   outline: none;
 }
 
 button:disabled.dnet-datepickerweekca-previous-button::after,
 button[disabled].dnet-datepickerweekca-previous-button::after {
-  color: rgba(16, 16, 16, 0.3);
+  color: color-mix(in srgb, var(--dnet-sys-on-surface) 45%, transparent);
 }
 button:disabled.dnet-datepickerweekca-next-button::after,
 button[disabled].dnet-datepickerweekca-next-button::after {
-  color: rgba(16, 16, 16, 0.3);
+  color: color-mix(in srgb, var(--dnet-sys-on-surface) 45%, transparent);
 }
 
 .dnet-datepickerweekca-previous-button::after {
@@ -181,7 +172,7 @@ button[disabled].dnet-datepickerweekca-next-button::after {
 
 .dnet-datepickerweekca-content-header {
   display: flex;
-  color: rgba(0, 0, 0, 0.38);
+  color: color-mix(in srgb, var(--dnet-sys-on-surface) 60.5%, transparent);
   padding: 0px 0px 0 0px;
 }
 
@@ -192,15 +183,15 @@ button[disabled].dnet-datepickerweekca-next-button::after {
   padding: 0 0 0px 0;
   font-size: 11px;
   font-weight: 400;
-  color: rgba(0, 0, 0, 0.38);
+  color: color-mix(in srgb, var(--dnet-sys-on-surface) 60.5%, transparent);
   height: 21px;
-  width: var(--dnet-datepickerweekca-day-height);
+  width: var(--dnet-datepickerweekca-day-height, 30px);
 }
 
 .dnet-datepickerweekca-content-body {
   display: grid;
-  grid-template-columns: repeat(7, var(--dnet-datepickerweekca-day-height));
-  grid-template-rows: repeat(6, var(--dnet-datepickerweekca-day-height));
+  grid-template-columns: repeat(7, var(--dnet-datepickerweekca-day-height, 30px));
+  grid-template-rows: repeat(6, var(--dnet-datepickerweekca-day-height, 30px));
   min-width: 224px;
   font-size: 13px;
 }
@@ -226,39 +217,39 @@ button[disabled].dnet-datepickerweekca-next-button::after {
   line-height: 1;
   border-width: 1px;
   border-style: solid;
-  color: rgba(0, 0, 0, 0.87);
+  color: var(--dnet-sys-on-surface-emphasis);
   border-color: transparent;
   cursor: pointer;
   /* &:hover:not(.dnet-datepickerweekca-day-selected) {
-       background-color: rgba(0,0,0,.04);
+       background-color: color-mix(in srgb, var(--dnet-sys-on-surface) 6.4%, transparent);
        cursor: pointer;
 
        &.disabled {
-           background-color: #FFFFFF;
+           background-color: var(--dnet-sys-surface);
            cursor:default;
        }
    }*/
 }
 .dnet-datepickerweekca-day-content.disabled {
-  color: var(--dnet-datepickerweekca-day-disabled-color);
+  color: var(--dnet-datepickerweekca-day-disabled-color, color-mix(in srgb, var(--dnet-sys-on-surface) 60.5%, transparent));
 }
 
 .dnet-datepickerweekca-day-content.hovered:not(.dnet-datepickerweekca-day-selected) {
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: color-mix(in srgb, var(--dnet-sys-on-surface) 6.4%, transparent);
 }
 
 .dnet-datepickerweekca-day-selected {
-  color: #FFFFFF;
-  background-color: var(--dnet-datepickerweekca-selected-bg-color);
+  color: var(--dnet-sys-on-primary);
+  background-color: var(--dnet-datepickerweekca-selected-bg-color, var(--dnet-sys-primary-strong));
 }
 
 .dnet-datepickerweekca-day-today:not(.dnet-datepickerweekca-day-selected) {
-  box-shadow: inset 0 0 0 1px #fff;
-  background-color: var(--dnet-datepickerweekca-today-bg-color);
+  box-shadow: inset 0 0 0 1px var(--dnet-sys-surface);
+  background-color: var(--dnet-datepickerweekca-today-bg-color, color-mix(in srgb, var(--dnet-sys-on-surface) 15.9%, transparent));
 }
 
 .dnet-datepickerweekca-day-selected.dnet-datepickerweekca-day-today {
-  box-shadow: inset 0 0 0 1px #fff;
+  box-shadow: inset 0 0 0 1px var(--dnet-sys-surface);
 }
 
 .dnet-datepickerweekca-content-body-year {
@@ -290,34 +281,34 @@ button[disabled].dnet-datepickerweekca-next-button::after {
   border-width: 1px;
   border-style: solid;
   border-radius: 999px;
-  color: rgba(0, 0, 0, 0.87);
+  color: var(--dnet-sys-on-surface-emphasis);
   border-color: transparent;
   cursor: pointer;
 }
 .dnet-datepickerweekca-year-content:hover:not(.dnet-datepickerweekca-year-selected) {
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: color-mix(in srgb, var(--dnet-sys-on-surface) 6.4%, transparent);
   cursor: pointer;
 }
 .dnet-datepickerweekca-year-content:hover:not(.dnet-datepickerweekca-year-selected).disabled {
-  background-color: #FFFFFF;
+  background-color: var(--dnet-sys-surface);
   cursor: default;
 }
 .dnet-datepickerweekca-year-content.disabled {
-  color: var(--dnet-datepickerweekca-day-disabled-color);
+  color: var(--dnet-datepickerweekca-day-disabled-color, color-mix(in srgb, var(--dnet-sys-on-surface) 60.5%, transparent));
 }
 
 .dnet-datepickerweekca-year-selected {
-  color: #FFFFFF;
-  background-color: var(--dnet-datepickerweekca-selected-bg-color);
+  color: var(--dnet-sys-on-primary);
+  background-color: var(--dnet-datepickerweekca-selected-bg-color, var(--dnet-sys-primary-strong));
 }
 
 .dnet-datepickerweekca-year-today:not(.dnet-datepickerweekca-year-selected) {
-  box-shadow: inset 0 0 0 1px #fff;
-  background-color: rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 0 0 1px var(--dnet-sys-surface);
+  background-color: color-mix(in srgb, var(--dnet-sys-on-surface) 15.9%, transparent);
 }
 
 .dnet-datepickerweekca-year-selected.dnet-datepickerweekca-year-today {
-  box-shadow: inset 0 0 0 1px #fff;
+  box-shadow: inset 0 0 0 1px var(--dnet-sys-surface);
 }
 
 .dnet-datepickerweekca-content-body-month {
@@ -349,33 +340,33 @@ button[disabled].dnet-datepickerweekca-next-button::after {
   border-width: 1px;
   border-style: solid;
   border-radius: 999px;
-  color: rgba(0, 0, 0, 0.87);
+  color: var(--dnet-sys-on-surface-emphasis);
   border-color: transparent;
 }
 .dnet-datepickerweekca-month-content:hover {
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: color-mix(in srgb, var(--dnet-sys-on-surface) 6.4%, transparent);
   cursor: pointer;
 }
 .dnet-datepickerweekca-month-content:hover.disabled {
-  background-color: #FFFFFF;
+  background-color: var(--dnet-sys-surface);
   cursor: default;
 }
 .dnet-datepickerweekca-month-content.disabled {
-  color: var(--dnet-datepickerweekca-day-disabled-color);
+  color: var(--dnet-datepickerweekca-day-disabled-color, color-mix(in srgb, var(--dnet-sys-on-surface) 60.5%, transparent));
 }
 
 .dnet-datepickerweekca-month-selected {
-  color: #FFFFFF;
-  background-color: var(--dnet-datepickerweekca-selected-bg-color);
+  color: var(--dnet-sys-on-primary);
+  background-color: var(--dnet-datepickerweekca-selected-bg-color, var(--dnet-sys-primary-strong));
 }
 
 .dnet-datepickerweekca-month-today:not(.dnet-datepickerweekca-month-selected) {
-  box-shadow: inset 0 0 0 1px #fff;
-  background-color: rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 0 0 1px var(--dnet-sys-surface);
+  background-color: color-mix(in srgb, var(--dnet-sys-on-surface) 15.9%, transparent);
 }
 
 .dnet-datepickerweekca-month-selected.dnet-datepickerweekca-month-today {
-  box-shadow: inset 0 0 0 1px #fff;
+  box-shadow: inset 0 0 0 1px var(--dnet-sys-surface);
 }
 
 .dnet-datepickerweekca-header-footer {
@@ -408,7 +399,7 @@ button[disabled].dnet-datepickerweekca-next-button::after {
   height: 1em;
   width: 1em;
   cursor: pointer;
-  color: #5f6368;
+  color: var(--dnet-sys-on-surface);
 }
 
 .dnet-datepickerweek-reset-button {
