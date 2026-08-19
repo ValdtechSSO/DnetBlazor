@@ -161,6 +161,10 @@
   text -> `on-surface`/`on-surface-emphasis`) and the four toolbar icons
   moved to monochrome masks (R9). The dead `.dnet-btn-*` rules were removed.
   Declared changes; the editor is excluded from STY-002 goldens (canvas).
+- `Overlay` migrated to the token architecture: the dark backdrop now uses
+  the new `--dnet-sys-scrim` semantic role (32 % black, derived from
+  `--dnet-ref-neutral-1000` in the system layer — approved), so the scrim
+  stays dark in every theme.
 
 ## Version 5.0.5 (August 2026)
 

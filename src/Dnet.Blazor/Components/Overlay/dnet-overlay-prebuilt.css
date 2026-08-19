@@ -55,7 +55,7 @@
 }
 
 .cdk-overlay-dark-backdrop {
-  background: rgba(0, 0, 0, 0.32);
+  background: var(--dnet-sys-scrim);
 }
 
 .cdk-overlay-transparent-backdrop, .cdk-overlay-transparent-backdrop.cdk-overlay-backdrop-showing {
