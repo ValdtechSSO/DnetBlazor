@@ -4778,7 +4778,7 @@ button[disabled].dnet-calendar-next-button::after {
 
 .mat-tab-label.mat-tab-disabled {
   cursor: default;
-  color: rgba(0, 0, 0, 0.3803921569);
+  color: color-mix(in srgb, var(--dnet-sys-on-surface) 60.5%, transparent);
 }
 .mat-tab-label .mat-tab-label-content {
   display: inline-flex;
@@ -4843,7 +4843,7 @@ button[disabled].dnet-calendar-next-button::after {
   overflow: hidden;
   position: relative;
   flex-shrink: 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  border-bottom: 1px solid color-mix(in srgb, var(--dnet-sys-on-surface) 19.4%, transparent);
 }
 
 .mat-tab-header-pagination {
@@ -4972,7 +4972,7 @@ button[disabled].dnet-calendar-next-button::after {
 
 .mat-tab-label.mat-tab-disabled {
   cursor: default;
-  color: rgba(0, 0, 0, 0.3803921569);
+  color: color-mix(in srgb, var(--dnet-sys-on-surface) 60.5%, transparent);
 }
 .mat-tab-label .mat-tab-label-content {
   display: inline-flex;
@@ -4990,7 +4990,7 @@ button[disabled].dnet-calendar-next-button::after {
   }
 }
 .mat-tab-label-active {
-  border-bottom: 2px solid #3f51b5;
+  border-bottom: 2px solid var(--dnet-sys-primary-emphasis);
 }
 
 /*! Toast — migrado a tokens (6.0). Generado una vez; se edita a mano. */

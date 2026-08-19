@@ -138,6 +138,11 @@
   the demo-content colors to the closest roles (`--dnet-sys-primary-strong`
   for the link blue, `--dnet-sys-warning` for the orange — approved
   mapping). Pixel-identical in the sample (0 px).
+- `Tabs` migrated to the token architecture: the four remaining color
+  literals were replaced with exact derivations — the disabled label tint
+  (38 % black) via a 60.5 % `color-mix`, the divider (12 % black) via a
+  19.4 % `color-mix`, and the active-tab underline `#3f51b5` via
+  `--dnet-sys-primary-emphasis`. Pixel-identical (0 px).
 
 ## Version 5.0.5 (August 2026)
 
