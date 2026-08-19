@@ -1,15 +1,4 @@
-/*! Sass Chips (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
-:root {
-  --dnet-chips-icon-height: 20px;
-  --dnet-chips-icon-width: 20px;
-  --dnet-chips-icon-background-size-md: 1.25em;
-  --dnet-chips-icon-background-size-md: 1em;
-  --dnet-chips-icon-background-size-sm: 0.875em;
-  --dnet-chips-icon-background-size-xs: 0.625em;
-  --dnet-chips-sm-font-size: var(--dnet-component-sm-font-size);
-  --dnet-chips-border-radius: var(--dnet-component-border-radius);
-  --dnet-chips-padding: 7px 12px;
-}
+/*! Chips — generado una vez; a partir de aquí se edita a mano. */
 
 .dnet-chip-list-wrapper {
   display: flex;
@@ -24,19 +13,23 @@
 }
 
 .dnet-standard-chip.dnet-chip-with-trailing-icon {
-  padding: 7px 7px 8px 12px;
+  --_padding: var(--dnet-chips-padding, 7px 7px 8px 12px);
 }
 
 .dnet-chip.dnet-standard-chip {
-  background-color: #e0e0e0;
-  color: rgba(0, 0, 0, 0.87);
+  --_background: var(--dnet-chips-background, var(--dnet-sys-surface-hover));
+  --_foreground: var(--dnet-chips-foreground, var(--dnet-sys-on-surface));
+  background-color: var(--_background);
+  color: var(--_foreground);
 }
 
 .dnet-standard-chip {
+  --_padding: var(--dnet-chips-padding, 7px 12px);
+  --_radius: var(--dnet-chips-radius, var(--dnet-chips-border-radius, var(--dnet-component-border-radius, var(--dnet-sys-radius-sm))));
   transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
-  padding: var(--dnet-chips-padding);
-  border-radius: var(--dnet-chips-border-radius);
+  padding: var(--_padding);
+  border-radius: var(--_radius);
   align-items: center;
   cursor: default;
   min-height: 32px;
@@ -44,6 +37,7 @@
 }
 
 .dnet-chip {
+  --_font-size: var(--dnet-chips-font-size, var(--dnet-chips-sm-font-size, var(--dnet-component-sm-font-size, var(--dnet-sys-text-md))));
   position: relative;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
@@ -54,12 +48,12 @@
 }
 
 .dnet-chip {
-  font-size: var(--dnet-chips-sm-font-size);
+  font-size: var(--_font-size);
   font-weight: 500;
 }
 
 .dnet-chip.dnet-standard-chip .dnet-chip-remove {
-  color: rgba(0, 0, 0, 0.87);
+  color: var(--_foreground, var(--dnet-sys-on-surface));
   opacity: 0.4;
 }
 
@@ -83,15 +77,17 @@
 }
 
 .dnet-chips-icon-wrapper {
+  --_icon-size: var(--dnet-chips-icon-size, 20px);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  width: var(--dnet-chips-icon-width);
-  height: var(--dnet-chips-icon-width);
+  width: var(--_icon-size);
+  height: var(--_icon-size);
 }
 
 .dnet-chips-icon {
+  --_icon-color: var(--dnet-chips-icon-color, var(--dnet-sys-on-surface));
   display: block;
   background-position: center center;
   background-repeat: no-repeat;
@@ -99,9 +95,17 @@
   height: 1em;
   width: 1em;
   cursor: pointer;
-  color: #5f6368;
+  color: var(--_icon-color);
 }
 
 .dnet-chips-icon-remove {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'><path fill-rule='evenodd' clip-rule='evenodd' d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z'/></svg>");
+  background-color: currentColor;
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z'/></svg>");
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 1em;
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z'/></svg>");
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: 1em;
 }

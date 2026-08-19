@@ -22,11 +22,6 @@
     },
     {
       "rule": "R1-color-literal",
-      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
-      "token": ""
-    },
-    {
-      "rule": "R1-color-literal",
       "file": "src/Dnet.Blazor/Components/ConnectedPanel/dnet-connected-panel.css",
       "token": ""
     },
@@ -912,51 +907,6 @@
     },
     {
       "rule": "R10-public-declaration",
-      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
-      "token": "--dnet-chips-border-radius"
-    },
-    {
-      "rule": "R10-public-declaration",
-      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
-      "token": "--dnet-chips-icon-background-size-md"
-    },
-    {
-      "rule": "R10-public-declaration",
-      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
-      "token": "--dnet-chips-icon-background-size-md"
-    },
-    {
-      "rule": "R10-public-declaration",
-      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
-      "token": "--dnet-chips-icon-background-size-sm"
-    },
-    {
-      "rule": "R10-public-declaration",
-      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
-      "token": "--dnet-chips-icon-background-size-xs"
-    },
-    {
-      "rule": "R10-public-declaration",
-      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
-      "token": "--dnet-chips-icon-height"
-    },
-    {
-      "rule": "R10-public-declaration",
-      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
-      "token": "--dnet-chips-icon-width"
-    },
-    {
-      "rule": "R10-public-declaration",
-      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
-      "token": "--dnet-chips-padding"
-    },
-    {
-      "rule": "R10-public-declaration",
-      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
-      "token": "--dnet-chips-sm-font-size"
-    },
-    {
-      "rule": "R10-public-declaration",
       "file": "src/Dnet.Blazor/Components/ConnectedPanel/dnet-connected-panel.css",
       "token": "--dnet-connected-panel-background"
     },
@@ -1542,11 +1492,6 @@
     },
     {
       "rule": "R2-root",
-      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
-      "token": ""
-    },
-    {
-      "rule": "R2-root",
       "file": "src/Dnet.Blazor/Components/ConnectedPanel/dnet-connected-panel.css",
       "token": ""
     },
@@ -1809,31 +1754,6 @@
       "rule": "R3-dead-token",
       "file": "src/Dnet.Blazor/Components/Checkbox/dnet-checkbox.css",
       "token": "--dnet-checkbox-font-color"
-    },
-    {
-      "rule": "R3-dead-token",
-      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
-      "token": "--dnet-chips-icon-background-size-md"
-    },
-    {
-      "rule": "R3-dead-token",
-      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
-      "token": "--dnet-chips-icon-background-size-md"
-    },
-    {
-      "rule": "R3-dead-token",
-      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
-      "token": "--dnet-chips-icon-background-size-sm"
-    },
-    {
-      "rule": "R3-dead-token",
-      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
-      "token": "--dnet-chips-icon-background-size-xs"
-    },
-    {
-      "rule": "R3-dead-token",
-      "file": "src/Dnet.Blazor/Components/Chips/dnet-chip-list.css",
-      "token": "--dnet-chips-icon-height"
     },
     {
       "rule": "R3-dead-token",
