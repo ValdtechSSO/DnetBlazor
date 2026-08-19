@@ -106,6 +106,10 @@ Exclusiones deliberadas (documentadas, no olvidadas):
 - **Spinner (estado abierto)**: el spinner es timer-driven (aparece/desaparece
   con `SpinnerService`); incluso con animaciones desactivadas el instante de
   captura no es determinista. Se captura la página en su estado por defecto.
+- **Toast (estado abierto)**: el toast usa un contador de 1 s y una posición
+  apilada (`ToastService._positionTracker`); el instante de captura y el
+  offset varían entre ejecuciones (verificado con diffs intermitentes de
+  ~6 000 px). Se captura la página en su estado por defecto.
 - **Tooltip y AdminLayout en móvil**: los targets de la página de Tooltip
   están posicionados en absoluto y se solapan en viewport estrecho; el sidebar
   de AdminLayout colapsa a un drawer. El golden de escritorio cubre el shell.

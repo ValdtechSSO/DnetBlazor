@@ -203,9 +203,8 @@ public static class ComponentScenarios
             "toast",
             "/Toast",
             "button:has-text(\"Show Toast\")",
-            [VisualState.Default, VisualState.Open],
-            OpenSelector: "button:has-text(\"Show Toast\")",
-            PageCaptureStates: [VisualState.Default, VisualState.Open]),
+            [VisualState.Default],
+            PageCaptureStates: [VisualState.Default]), // the open toast is timer/position-driven (counter + stack offset); not deterministic
 
         new(
             "tooltip",
