@@ -180,6 +180,25 @@
 - STY-002: the open-calendar state of `DatePicker` was excluded from the
   goldens (intermittent sub-pixel variance in the day column, 200-400 px
   between runs); only the input is captured, like the open Toast/Spinner.
+- `Grid` (dnet-blgrid.css) migrated to the token architecture: both `:root`
+  blocks were removed and the 37 `--blg-*` declarations became `--dnet-grid-*`
+  read-chains with `--blg-*` kept as legacy links through 6.x (the sample
+  app's `--blg-font-family` override keeps working). Dead tokens
+  (`--blg-header-height`, `--blg-row-border-width`,
+  `--blg-root-wrapper-border-color`) were dropped and the ghost
+  `--foreground-color` usage was restored via `--dnet-grid-foreground-color`.
+  Colors map to system roles: foreground #5f6368 -> `--dnet-sys-on-surface`
+  (exact), borders -> `--dnet-sys-border`, surfaces -> `--dnet-sys-surface`,
+  paginator 54 % black -> `--dnet-sys-on-surface-subtle`, elevation shadows ->
+  `--dnet-sys-elevation-1`, validation red -> `--dnet-sys-danger`, filter-hover
+  orange -> `--dnet-sys-warning`. The 12 inline SVG icons moved to monochrome
+  masks (R9) and now render in `--dnet-sys-on-surface` instead of hard-coded
+  black (`--dnet-sys-on-surface-emphasis` for the checkbox check). Declared
+  visual changes: row hover/selected use a light primary tint instead of the
+  old blue #EFF6FC, clicked rows use the neutral `--dnet-sys-state-pressed`
+  instead of peach, disabled text uses `--dnet-sys-state-disabled-fg`. The
+  grid has no STY-002 golden coverage (virtual-scroll instability); the other
+  components were verified pixel-identical.
 
 ## Version 5.0.5 (August 2026)
 
