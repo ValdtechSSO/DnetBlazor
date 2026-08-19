@@ -1595,6 +1595,27 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   height: 1px;
 }
 
+.dnet-chip {
+  --_font-size: var(--dnet-chips-font-size, var(--dnet-chips-sm-font-size, var(--dnet-component-sm-font-size, var(--dnet-sys-text-md))));
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  transform: translateZ(0);
+  border: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.dnet-chip {
+  font-size: var(--_font-size);
+  font-weight: 500;
+}
+
+/* El orden importa: estas clases deben ir DESPUÉS de las declaraciones base
+   (.dnet-standard-chip y .dnet-chip). A igual especificidad (0,1,0) gana la
+   última regla, y este bloque es donde se re-declaran --_padding, --_font-size
+   y --_min-height. Reordenar el fichero vuelve a romper el tamaño de fuente
+   sin ningún error. */
 .dnet-chip-size-lg {
   --_padding: var(--dnet-chips-padding, 7px 7px 8px 12px);
   --_font-size: var(--dnet-chips-font-size, 1.125rem);
@@ -1616,22 +1637,6 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   --_padding: var(--dnet-chips-padding, 0px 7px 0px 12px);
   --_font-size: var(--dnet-chips-font-size, 0.75rem);
   --_min-height: var(--dnet-chips-min-height, 20px);
-}
-
-.dnet-chip {
-  --_font-size: var(--dnet-chips-font-size, var(--dnet-chips-sm-font-size, var(--dnet-component-sm-font-size, var(--dnet-sys-text-md))));
-  position: relative;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  transform: translateZ(0);
-  border: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}
-
-.dnet-chip {
-  font-size: var(--_font-size);
-  font-weight: 500;
 }
 
 .dnet-chip.dnet-standard-chip .dnet-chip-remove {
