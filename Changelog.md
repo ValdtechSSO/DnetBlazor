@@ -143,6 +143,14 @@
   (38 % black) via a 60.5 % `color-mix`, the divider (12 % black) via a
   19.4 % `color-mix`, and the active-tab underline `#3f51b5` via
   `--dnet-sys-primary-emphasis`. Pixel-identical (0 px).
+- `Spinner` migrated to the token architecture: the `:root` block was removed
+  and the two unprefixed tokens (`--spinner-color`,
+  `--spinner-mask-background`) were dropped per the namespace rule. The bars
+  follow the new `--dnet-spinner-color` token with a
+  `--dnet-sys-primary-strong` fallback and the mask is derived from
+  `--dnet-sys-on-surface` via `color-mix`. The bar color shifts slightly
+  from #69b8d6 to primary-strong (declared; not captured by goldens since
+  the open spinner is timer-driven and excluded).
 
 ## Version 5.0.5 (August 2026)
 

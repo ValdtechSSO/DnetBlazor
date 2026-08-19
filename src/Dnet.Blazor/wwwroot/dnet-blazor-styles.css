@@ -4502,19 +4502,20 @@ button[disabled].dnet-calendar-next-button::after {
   padding-top: 1px;
 }
 
-/*! Sass Spinner (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
-:root {
-  --spinner-mask-background: rgba(0, 0, 0, 0.1);
-  --spinner-color: #69b8d6;
-}
+/*! Spinner — migrado a tokens (6.0). Generado una vez; se edita a mano.
+   Los tokens sin prefijo --spinner-* se eliminan (colisionan con cualquier
+   hoja del consumidor); el color sigue a --dnet-spinner-color con fallback
+   en sys-primary-strong y la mascara se deriva de on-surface. */
 
 .mask-spinner {
+  --_mask-bg: color-mix(in srgb, var(--dnet-sys-on-surface) 15.9%, transparent);
+
   display: normal;
   position: absolute;
   top: 0;
   left: 0;
   z-index: 100000;
-  background: var(--spinner-mask-background);
+  background: var(--_mask-bg);
 }
 
 .mask-spinner.show {
@@ -4522,6 +4523,8 @@ button[disabled].dnet-calendar-next-button::after {
 }
 
 .spinner {
+  --_spinner-color: var(--dnet-spinner-color, var(--dnet-sys-primary-strong));
+
   width: 50px;
   height: 30px;
   text-align: center;
@@ -4529,7 +4532,7 @@ button[disabled].dnet-calendar-next-button::after {
 }
 
 .spinner > div {
-  background-color: var(--spinner-color);
+  background-color: var(--_spinner-color);
   height: 100%;
   width: 6px;
   margin-left: 1px;
@@ -4562,8 +4565,6 @@ button[disabled].dnet-calendar-next-button::after {
     -webkit-transform: scaleY(1);
   }
 }
-
-
 
 /*! Stepper — migrado a tokens (6.0). Generado una vez; se edita a mano. */
 
