@@ -114,6 +114,9 @@
 
 
 @code {
+
+    [CascadingParameter(Name = "DnetThemeScope")]
+    private string? _themeScope { get; set; }
     [CascadingParameter]
     private FormFieldCascadingValues? _formFieldCascadingValues { get; set; }
 
@@ -667,7 +670,8 @@
                 Height = Height,
                 Width = Width,
                 ComponentType = ComponentType.Select,
-                PanelClass = OverlayPanelClass
+                PanelClass = OverlayPanelClass,
+                ThemeScope = _themeScope
             };
 
         var menuContent = new RenderFragment(x =>

@@ -3,7 +3,7 @@
 Blazor component library for .NET 10, compatible with Blazor WebAssembly and
 interactive server-side applications.
 
-**Current version:** 5.0.5. See the [changelog](Changelog.md) for release
+**Current version:** 6.0.0. See the [changelog](Changelog.md) for release
 details.
 
 ## Components
@@ -20,7 +20,7 @@ application is available at [datalnet.com](https://www.datalnet.com).
 Install the package:
 
 ```bash
-dotnet add package Dnet.Blazor --version 5.0.5
+dotnet add package Dnet.Blazor --version 6.0.0
 ```
 
 Register the services in `Program.cs`:
@@ -41,9 +41,8 @@ Add the library assets to `wwwroot/index.html` (WebAssembly) or the host page
 <script src="_content/Dnet.Blazor/dnet-blazor.js"></script>
 ```
 
-If the application uses isolated component CSS, include its generated stylesheet
-too (for example, `<link href="MyApp.styles.css" rel="stylesheet" />`). This is
-required for `PickList` and any other component that uses CSS isolation.
+Use the base stylesheet as the single library styling bundle. Optional themes
+are regular CSS assets loaded after it; see the [styling guide](docs/styling/theming-guide.md).
 
 Add one overlay host in `MainLayout.razor` when using floating components such
 as dialogs, connected panels, floating panels, tooltips or toasts:
@@ -67,6 +66,7 @@ value that fits the application's own stacking layers.
 ## Documentation
 
 - [PickList guide](docs/pick-list.md)
+- [Styling guide](docs/styling/README.md)
 - [NuGet publishing guide](docs/nuget-publishing.md)
 - [Changelog](Changelog.md)
 - [Sample application](samples/)

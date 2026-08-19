@@ -102,6 +102,9 @@ namespace Dnet.Blazor.Components.Toast.Infrastructure.Services
                 HasTransparentBackdrop = toastConfig.HasTransparentBackdrop,
                 Width = toastConfig.Width + "px",
                 Height = toastConfig.Height + "px",
+                PanelClass = toastConfig.PanelClass,
+                PanelStyle = toastConfig.PanelStyle,
+                ThemeScope = toastConfig.ThemeScope,
                 GlobalPositionStrategy = globalPositionStrategy,
                 MaxHeight = "170px",
                 ComponentType = ComponentType.Toast

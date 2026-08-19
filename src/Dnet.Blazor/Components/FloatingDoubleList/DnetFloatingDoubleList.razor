@@ -50,6 +50,9 @@
     [CascadingParameter]
     private FormFieldCascadingValues? _formFieldCascadingValues { get; set; }
 
+    [CascadingParameter(Name = "DnetThemeScope")]
+    private string? _themeScope { get; set; }
+
     [Parameter]
     public EventCallback<SearchModel> OnSearchLeft { get; set; }
 
@@ -419,7 +422,8 @@
                 MarginTop = MarginTop,
                 Width = Width,
                 Height = Height,
-                ComponentType = ComponentType.FloatingDoubleList
+                ComponentType = ComponentType.FloatingDoubleList,
+                ThemeScope = _themeScope
             };
 
         var menuContent = new RenderFragment(x =>

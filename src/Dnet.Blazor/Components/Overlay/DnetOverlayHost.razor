@@ -7,7 +7,7 @@
 @inject IViewportRuler ViewportRuler
 @inject DnetOverlayInterop DnetOverlayInterop
 
-<div id="cdk-overlay-host-@OverlayConfig.OverlayReferenceId" class="@_cssClasses" style="@(Convert.ToString(_styles, CultureInfo.InvariantCulture))">
+<div id="cdk-overlay-host-@OverlayConfig.OverlayReferenceId" data-dnet-theme="@OverlayConfig.ThemeScope" class="@_cssClasses" style="@(Convert.ToString(_styles, CultureInfo.InvariantCulture))">
     <CascadingValue Value="this" IsFixed="true">
         @_contentChild
     </CascadingValue>

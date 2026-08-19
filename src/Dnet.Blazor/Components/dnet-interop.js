@@ -49,6 +49,18 @@
                     offsetLeft: elementRef.offsetLeft
                 };
             }
+        },
+
+        setStyleProperty: function (name, value) {
+            document.documentElement.style.setProperty(name, value);
+        },
+
+        setTheme: function (theme) {
+            document.documentElement.dataset.dnetTheme = theme;
+        },
+
+        copyText: async function (text) {
+            await navigator.clipboard.writeText(text);
         }
     };
 })();

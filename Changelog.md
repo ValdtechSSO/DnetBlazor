@@ -1,5 +1,13 @@
 # Changelog for Blazor Library
 
+## Version 6.0.0 (August 2026)
+
+- Introduced runtime reference, semantic and component CSS token layers.
+- Added `DnetThemeScope`, scoped themes and explicit overlay `PanelStyle` support.
+- Added the CSS token audit to CI and documented the component token contract.
+- Began the 6.x compatibility window for legacy styling tokens; new overrides use
+  `--dnet-sys-*` and documented component tokens.
+
 ## Version 5.0.5 (August 2026)
 
 - Added `PickList<TItem, TKey>` for controlled multi-selection over local and

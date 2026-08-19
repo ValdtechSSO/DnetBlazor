@@ -1,0 +1,9 @@
+[data-dnet-theme="compact"] {
+    --dnet-sys-space-unit: 3px;
+    --dnet-sys-control-height: 42px;
+    --dnet-sys-control-height-sm: 32px;
+    --dnet-sys-text-xs: 0.5625rem;
+    --dnet-sys-text-sm: 0.6875rem;
+    --dnet-sys-text-md: 0.8125rem;
+    --dnet-sys-text-lg: 0.9375rem;
+}

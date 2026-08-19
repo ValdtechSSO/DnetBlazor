@@ -38,6 +38,9 @@ namespace Dnet.Blazor.Components.Dialog.Infrastructure.Services
                 Height = dialogConfig.Height,
                 MaxHeight = dialogConfig.MaxHeight,
                 MaxWidth = dialogConfig.MaxWidth,
+                PanelClass = dialogConfig.PanelClass,
+                PanelStyle = dialogConfig.PanelStyle,
+                ThemeScope = dialogConfig.ThemeScope,
                 GlobalPositionStrategy = globalPositionStrategy,
                 ComponentType = ComponentType.Dialog
             };

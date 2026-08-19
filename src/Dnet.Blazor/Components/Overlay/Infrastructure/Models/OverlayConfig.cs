@@ -8,6 +8,10 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Models
 
         public string? PanelClass { get; set; }
 
+        public string? PanelStyle { get; set; }
+
+        public string? ThemeScope { get; set; }
+
         internal int? PanelZindex { get; set; }
 
         internal int? HostZindex { get; set; }

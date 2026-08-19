@@ -8,6 +8,10 @@ namespace Dnet.Blazor.Components.FloatingPanel.Infrastructure.Models
 
         public string? PanelClass { get; set; }
 
+        public string? PanelStyle { get; set; }
+
+        public string? ThemeScope { get; set; }
+
         public bool HasBackdrop { get; set; } = true;
 
         public bool HasTransparentBackdrop { get; set; }

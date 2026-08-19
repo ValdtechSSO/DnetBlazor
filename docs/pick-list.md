@@ -1,6 +1,7 @@
 # PickList
 
-El componente usa CSS isolation. En aplicaciones WebAssembly, añade también la hoja de estilos generada de la aplicación al `index.html` (por ejemplo, `<link href="MyApp.styles.css" rel="stylesheet" />`), igual que para cualquier componente Razor con `.razor.css`.
+Los estilos de PickList se distribuyen en el bundle global de DnetBlazor. No
+requiere una hoja `{App}.styles.css` para estilos de la librería.
 
 `PickList<TItem, TKey>` is a key-based multi-selector for complete local
 collections and paged server-side data. Selection is always controlled by the
@@ -130,17 +131,19 @@ The main CI workflow starts the sample and runs this gate automatically.
 
 ## Theme variables
 
-The isolated stylesheet inherits these optional custom properties from any
-ancestor: `--pick-list-background`, `--pick-list-foreground`,
-`--pick-list-primary`, `--pick-list-border`, `--pick-list-item-background`,
-`--pick-list-item-selected`, `--pick-list-item-hover`, `--pick-list-muted`,
-`--pick-list-radius`, `--pick-list-item-height`,
-`--pick-list-items-max-height`, `--pick-list-header-height`,
-`--pick-list-footer-height`, and `--pick-list-scrollbar`. The defaults inherit
-the equivalent `--dnet-list-*` tokens, so List and PickList keep the same visual
-language when an application theme changes them. The component occupies the
-available width; constrain it in the consuming layout when a narrower panel is
-desired. The footer inherits the shared paginator tokens, including
+PickList reads these optional public custom properties from any ancestor:
+`--dnet-picklist-background`, `--dnet-picklist-foreground`,
+`--dnet-picklist-primary`, `--dnet-picklist-border`,
+`--dnet-picklist-item-background`, `--dnet-picklist-item-selected`,
+`--dnet-picklist-item-hover`, `--dnet-picklist-muted`,
+`--dnet-picklist-radius`, `--dnet-picklist-item-height`,
+`--dnet-picklist-items-max-height`, `--dnet-picklist-header-height`,
+`--dnet-picklist-footer-height`, and `--dnet-picklist-scrollbar`. The legacy
+`--pick-list-*` names remain as fallback links for this major version. Defaults
+then inherit the equivalent `--dnet-list-*` tokens and finally semantic tokens,
+so List and PickList keep the same visual language when an application theme
+changes them. The component occupies the available width; constrain it in the
+consuming layout when a narrower panel is desired. The footer inherits the shared paginator tokens, including
 `--dnet-icon-button-size`, so paginator sizing stays consistent with `List` and
 `DoubleList`.
 

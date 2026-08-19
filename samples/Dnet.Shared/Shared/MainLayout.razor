@@ -41,7 +41,7 @@
                             <span>Datalnet Blazor Components</span>
                         </div>
                         <div id="app-tenant-name" style="font-size: 0.625rem;display: flex;justify-content: flex-start;">
-                            <span>v.5.0.5</span>
+                            <span>v.6.0.0</span>
                         </div>
                     </div>
                 </div>
@@ -113,7 +113,7 @@
     {
         AppName = "Datalnet Blazor Components";
         AppDescription = "";
-        AppVersion = "V.5.0.5";
+        AppVersion = "V.6.0.0";
         Title = "Ready to eat";
         UserName = "admin@datalnet.com";
         PersonName = "Adrian Mustelier";
@@ -281,6 +281,19 @@
                     "CanReadDashboard"
                 },
                 HasImage = true
+            },
+            new NavigationMenu {
+                MenuId = 11,
+                Link = "/theming",
+                ParentId = 0,
+                Text = "Theming",
+                MinifiedText = "Th",
+                IconClass = "",
+                Children = new List<NavigationMenu>(),
+                IsNode = true,
+                Rights = new List<string> {
+                    "CanReadDashboard"
+                },
             },
             new NavigationMenu {
                 MenuId = 11,

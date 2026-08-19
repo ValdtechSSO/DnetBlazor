@@ -986,6 +986,7 @@ body {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   background-color: #FFFFFF;
+  -webkit-transition: none;
   transition: none;
   box-shadow: none;
   font-size: 12px;
@@ -1057,6 +1058,7 @@ body {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   background-color: #FFFFFF;
+  -webkit-transition: none;
   transition: none;
   box-shadow: none;
   font-size: 12px;
@@ -1278,6 +1280,7 @@ body {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   background-color: #FFFFFF;
+  -webkit-transition: none;
   transition: none;
   box-shadow: none;
   font-size: 0.875rem;
@@ -1402,4 +1405,3 @@ body {
     background-color: transparent;
     border: 1px solid rgba(0,0,0,.06);
 }*/
-

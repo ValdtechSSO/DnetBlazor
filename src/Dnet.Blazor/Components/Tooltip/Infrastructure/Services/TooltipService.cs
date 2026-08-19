@@ -197,6 +197,8 @@ namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
                 PositionStrategy = PositionStrategy.FlexibleConnectedTo,
                 FlexibleConnectedPositionStrategyBuilder = flexibleConnectedPositionStrategyBuilder,
                 PanelClass = "dnet-tooltip-panel",
+                PanelStyle = tooltipConfig.PanelStyle,
+                ThemeScope = tooltipConfig.ThemeScope,
                 Width = tooltipConfig.Width,
                 Height = tooltipConfig.Height,
                 MinHeight = tooltipConfig.MinHeight,

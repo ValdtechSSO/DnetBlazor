@@ -21,6 +21,9 @@
 
 @code {
 
+    [CascadingParameter(Name = "DnetThemeScope")]
+    private string? _themeScope { get; set; }
+
     [Parameter]
     public AdvancedFilterModel? FilterData { get; set; }
 
@@ -106,7 +109,8 @@
             HasBackdrop = true,
             HasTransparentBackdrop = true,
             PositionStrategy = PositionStrategy.FlexibleConnectedTo,
-            FlexibleConnectedPositionStrategyBuilder = flexibleConnectedPositionStrategyBuilder
+            FlexibleConnectedPositionStrategyBuilder = flexibleConnectedPositionStrategyBuilder,
+            ThemeScope = _themeScope
         };
 
         var menuContent = new RenderFragment(x =>

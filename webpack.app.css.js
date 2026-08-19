@@ -13,7 +13,7 @@ var config = {
     module: {
         rules: [
             {
-                test: /\.scss$/,
+                test: /\.css$/,
                 use: [
                     MiniCssExtractPlugin.loader,
                     {
@@ -21,17 +21,6 @@ var config = {
                         options: {
                             url: false
                         }
-                    },
-                    {
-                        loader: "sass-loader",
-                        options: {
-                            sourceMap: true,
-                            implementation: require('sass'),
-                            // Uncoment for not minimize
-                            // sassOptions: {
-                            //     outputStyle: 'expanded'
-                            // }
-                        },
                     },
                     {
                         loader: "postcss-loader",
@@ -60,7 +49,7 @@ var config = {
 
 var siteConfig = Object.assign({}, config, {
     entry: {
-        site: path.resolve(__dirname, "samples/Dnet.Shared/assets/scss/site.scss"),
+        site: path.resolve(__dirname, "samples/Dnet.Shared/assets/styles/site.css"),
     },
     output: {
         path: path.resolve(__dirname, "samples/Dnet.Shared/wwwroot/css"),
@@ -69,7 +58,7 @@ var siteConfig = Object.assign({}, config, {
 
 var dnetBlazor = Object.assign({}, config, {
     entry: {
-        'dnet-blazor-styles': path.resolve(__dirname, "src/Dnet.Blazor/Components/Assets/scss/dnet-blazor-styles.scss"),
+        'dnet-blazor-styles': path.resolve(__dirname, "src/Dnet.Blazor/Components/Assets/styles/dnet-blazor-styles.css"),
         'dnet-blazor': path.resolve(__dirname, "src/Dnet.Blazor/Components/Assets/js/dnet-blazor.js"),
         // 'rxjs.min': path.resolve(__dirname, "src/Dnet.Blazor/Components/Assets/js/rxjs.min.js"),
     },

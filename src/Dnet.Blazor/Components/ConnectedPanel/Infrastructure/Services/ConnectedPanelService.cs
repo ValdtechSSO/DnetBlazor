@@ -101,6 +101,8 @@ namespace Dnet.Blazor.Components.ConnectedPanel.Infrastructure.Services
                 PositionStrategy = PositionStrategy.FlexibleConnectedTo,
                 Width = config.Width,
                 Height = config.Height,
+                PanelStyle = config.PanelStyle,
+                ThemeScope = config.ThemeScope,
                 FlexibleConnectedPositionStrategyBuilder = flexibleConnectedPositionStrategyBuilder,
                 ComponentType = ComponentType.ConnectedPanel
             };

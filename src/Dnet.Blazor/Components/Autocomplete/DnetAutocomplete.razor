@@ -37,6 +37,9 @@
     [CascadingParameter]
     private FormFieldCascadingValues? _formFieldCascadingValues { get; set; }
 
+    [CascadingParameter(Name = "DnetThemeScope")]
+    private string? _themeScope { get; set; }
+
     [Parameter]
     public EventCallback<TItem> OnItemSelected { get; set; }
 
@@ -591,7 +594,8 @@
                 Height = Height,
                 Width = Width,
                 ComponentType = ComponentType.Autocomplete,
-                PanelClass = OverlayPanelClass
+                PanelClass = OverlayPanelClass,
+                ThemeScope = _themeScope
             };
 
         var items = new List<TItem>();

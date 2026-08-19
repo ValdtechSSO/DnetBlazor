@@ -14,3 +14,10 @@
 - If Conclave fails, report the error instead of bypassing it silently.
 - Do not use `--development` unless the user explicitly requests a
   single-provider development run.
+
+## Styling contract
+
+- Before editing component styles, read `docs/styling/component-token-contract.md`.
+- Component styles only declare private `--_*` properties. Public `--dnet-*`
+  tokens are declared only in token or theme layers and are read through `var()`.
+- Run `npm run lint:css` and `npm run buildDnetBlazor` after styling changes.

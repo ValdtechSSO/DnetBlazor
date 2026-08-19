@@ -25,6 +25,7 @@ jobs:
       - name: Build frontend assets
         run: |
           npm ci --ignore-scripts
+          npm run lint:css
           npm run buildDnetBlazor
       - name: Restore
         run: dotnet restore DnetBlazorComponents.sln

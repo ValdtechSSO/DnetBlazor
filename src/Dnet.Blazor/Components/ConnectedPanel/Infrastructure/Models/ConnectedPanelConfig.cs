@@ -4,6 +4,10 @@
     {
         public string? ConnectedPanelClasses { get; set; }
 
+        public string? PanelStyle { get; set; }
+
+        public string? ThemeScope { get; set; }
+
         public int OverlayReferenceId { get; set; }
 
         public bool HasBackdrop { get; set; } = true;

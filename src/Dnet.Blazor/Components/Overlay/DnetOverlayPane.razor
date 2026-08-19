@@ -148,6 +148,11 @@
             .AddStyle("z-index", $"{OverlayConfig.PanelZindex}", when: OverlayConfig.PanelZindex != null)
             .Build();
 
+        if (!string.IsNullOrWhiteSpace(OverlayConfig.PanelStyle))
+        {
+            styles = string.Concat(styles, ";", OverlayConfig.PanelStyle);
+        }
+
         return styles;
     }
 

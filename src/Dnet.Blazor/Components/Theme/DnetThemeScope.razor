@@ -1,0 +1,16 @@
+<div data-dnet-theme="@Theme" class="@Class">
+    <CascadingValue Value="Theme" Name="DnetThemeScope" IsFixed="false">
+        @ChildContent
+    </CascadingValue>
+</div>
+
+@code {
+    [Parameter]
+    public string? Theme { get; set; }
+
+    [Parameter]
+    public string? Class { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

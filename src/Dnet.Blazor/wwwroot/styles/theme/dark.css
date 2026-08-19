@@ -1,0 +1,11 @@
+[data-dnet-theme="dark"] {
+    --dnet-sys-surface: #1e1f22;
+    --dnet-sys-surface-raised: #2b2d31;
+    --dnet-sys-surface-hover: #35373c;
+    --dnet-sys-on-surface: #e3e5e8;
+    --dnet-sys-on-surface-muted: #b5bac1;
+    --dnet-sys-on-surface-subtle: #8b8f98;
+    --dnet-sys-border: #3f4147;
+    --dnet-sys-border-strong: #50535a;
+    --dnet-sys-elevation-1: 0 2px 8px rgb(0 0 0 / .5);
+}

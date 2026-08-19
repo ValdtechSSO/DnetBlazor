@@ -1,0 +1,95 @@
+@page "/theming"
+@using Dnet.Blazor.Components.Button
+@using Dnet.Blazor.Components.Theme
+
+@inject IJSRuntime JSRuntime
+
+<div class="container-fluid" style="padding-top: 10px;">
+    <div class="dnet-page-content-left-margin dnet-m-t-20" style="max-width: 720px; display: grid; gap: 20px;">
+        <div>
+            <span class="dnet-app-comp-name">Theming</span>
+        </div>
+
+        <label>
+            Theme
+            <select value="@_theme" @onchange="ChangeTheme">
+                <option value="">Base</option>
+                <option value="dark">Dark</option>
+                <option value="compact">Compact</option>
+                <option value="high-contrast">High contrast</option>
+            </select>
+        </label>
+
+        <label>
+            Primary color
+            <input type="color" value="@_primaryColor" @onchange="ChangePrimaryColor" />
+        </label>
+
+        <label>
+            Density unit
+            <input type="number" min="2" max="8" value="@_spaceUnit" @onchange="ChangeSpaceUnit" /> px
+        </label>
+
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <DnetButton OnClick="SetGlobalRadius">Global radius</DnetButton>
+            <DnetButton OnClick="CopyTheme">Copy CSS</DnetButton>
+            <span>@_copyStatus</span>
+        </div>
+
+        <DnetThemeScope Theme="@_theme" Class="theming-preview">
+            <div style="--dnet-btn-background: #dfeff7; --dnet-btn-foreground: #12334a; padding: 16px; border: 1px solid var(--dnet-sys-border);">
+                <DnetButton>Subtree override</DnetButton>
+                <DnetButton style="--dnet-btn-background: #a63636; --dnet-btn-foreground: #ffffff;">Instance override</DnetButton>
+            </div>
+        </DnetThemeScope>
+
+        <DnetThemeScope Theme="dark">
+            <div style="padding: 16px; border: 1px solid var(--dnet-sys-border);">
+                <DnetButton>Nested dark scope</DnetButton>
+            </div>
+        </DnetThemeScope>
+    </div>
+</div>
+
+@code {
+    private string _theme = string.Empty;
+    private string _primaryColor = "#4fc3f7";
+    private int _spaceUnit = 4;
+    private string _copyStatus = string.Empty;
+
+    private async Task ChangeTheme(ChangeEventArgs args)
+    {
+        _theme = args.Value?.ToString() ?? string.Empty;
+        await JSRuntime.InvokeVoidAsync("dnetinterop.setTheme", _theme);
+    }
+
+    private async Task SetGlobalRadius()
+    {
+        await JSRuntime.InvokeVoidAsync("dnetinterop.setStyleProperty", "--dnet-btn-radius", "0");
+    }
+
+    private async Task ChangePrimaryColor(ChangeEventArgs args)
+    {
+        _primaryColor = args.Value?.ToString() ?? _primaryColor;
+        await JSRuntime.InvokeVoidAsync("dnetinterop.setStyleProperty", "--dnet-sys-primary", _primaryColor);
+    }
+
+    private async Task ChangeSpaceUnit(ChangeEventArgs args)
+    {
+        if (!int.TryParse(args.Value?.ToString(), out var spaceUnit))
+        {
+            return;
+        }
+
+        _spaceUnit = Math.Clamp(spaceUnit, 2, 8);
+        await JSRuntime.InvokeVoidAsync("dnetinterop.setStyleProperty", "--dnet-sys-space-unit", $"{_spaceUnit}px");
+    }
+
+    private async Task CopyTheme()
+    {
+        var selector = string.IsNullOrEmpty(_theme) ? ":root" : $"[data-dnet-theme=\"{_theme}\"]";
+        var css = $"{selector} {{\n  --dnet-sys-space-unit: {_spaceUnit}px;\n  --dnet-sys-primary: {_primaryColor};\n  --dnet-btn-radius: 0;\n}}";
+        await JSRuntime.InvokeVoidAsync("dnetinterop.copyText", css);
+        _copyStatus = "Copied";
+    }
+}

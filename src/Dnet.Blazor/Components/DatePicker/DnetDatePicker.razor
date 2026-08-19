@@ -35,6 +35,9 @@
     [CascadingParameter]
     private FormFieldCascadingValues? _formFieldCascadingValues { get; set; }
 
+    [CascadingParameter(Name = "DnetThemeScope")]
+    private string? _themeScope { get; set; }
+
     [Parameter]
     public EventCallback<string> OnError { get; set; }
 
@@ -317,7 +320,8 @@
                 PositionStrategy = PositionStrategy.FlexibleConnectedTo,
                 FlexibleConnectedPositionStrategyBuilder = flexibleConnectedPositionStrategyBuilder,
                 MarginTop = MarginTop,
-                ComponentType = ComponentType.DatePicker
+                ComponentType = ComponentType.DatePicker,
+                ThemeScope = _themeScope
             };
 
         var selectedDay = DateTime.Now;

@@ -1,0 +1,9 @@
+[data-dnet-theme="high-contrast"] {
+    --dnet-sys-surface: #ffffff;
+    --dnet-sys-surface-raised: #ffffff;
+    --dnet-sys-surface-hover: #e1e3e1;
+    --dnet-sys-on-surface: #000000;
+    --dnet-sys-on-surface-muted: #000000;
+    --dnet-sys-border: #000000;
+    --dnet-sys-border-strong: #000000;
+}
