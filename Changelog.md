@@ -155,6 +155,12 @@
   literals map exactly — shadow -> `--dnet-sys-elevation-1`, background ->
   `--dnet-sys-surface`, text -> `--dnet-sys-on-surface-emphasis`, footer
   color #42b0d5 -> `--dnet-sys-primary-strong`. Pixel-identical (0 px).
+- `ImageEditor` migrated to the token architecture: the color literals map to
+  the closest roles (canvas backdrop -> `surface-hover`, crop border ->
+  `primary-strong`, upload tones -> `border-strong`/`on-surface-muted`,
+  text -> `on-surface`/`on-surface-emphasis`) and the four toolbar icons
+  moved to monochrome masks (R9). The dead `.dnet-btn-*` rules were removed.
+  Declared changes; the editor is excluded from STY-002 goldens (canvas).
 
 ## Version 5.0.5 (August 2026)
 
