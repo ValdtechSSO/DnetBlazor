@@ -17,6 +17,16 @@
   tokens/themes now take effect. Chip size variants moved from inline styles to
   `.dnet-chip-size-{lg,md,sm,xs}` classes; the selected state is styled via
   `[aria-pressed="true"]`.
+- `Dialog` migrated to the token architecture: the `:root` block was removed
+  (`--dnet-dialog-*` names remain as read-chain fallbacks), color literals were
+  replaced by `--dnet-sys-*` roles, and the close icon moved to a mask-based
+  monochrome icon. The ghost token `--dnet-dialog-padding` (never declared; its
+  negative-margin + re-pad pattern was inert) was restored via
+  `--dnet-dialog-padding-left-right`. Two small, deliberate visual changes,
+  captured before/after with the STY-002 suite: the dialog shadow now derives
+  from `--dnet-sys-shadow-color` (softer than the old hard-coded 20/14/12 %
+  layers) and the close icon renders in `--dnet-sys-on-surface` instead of a
+  hard-coded black fill.
 
 ## Version 5.0.5 (August 2026)
 

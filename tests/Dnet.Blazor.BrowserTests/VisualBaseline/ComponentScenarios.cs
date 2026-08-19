@@ -85,6 +85,14 @@ public static class ComponentScenarios
                                // Captured on /Dialog because "/" redirects to /BlGrid in OnAfterRender.
 
         new(
+            "dialog",
+            "/Dialog",
+            "button:has-text(\"Show Dialog\")",
+            [VisualState.Default, VisualState.Open],
+            OpenSelector: "button:has-text(\"Show Dialog\")",
+            PageCaptureStates: [VisualState.Open]),
+
+        new(
             "autocomplete",
             "/Autocomplete",
             "input.mat-input-element",
