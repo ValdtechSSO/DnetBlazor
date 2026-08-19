@@ -188,13 +188,6 @@ select.mat-input-element::-ms-value {
   margin-top: -10px;
 }
 
-:root {
-  --dnet-form-field-plain-label-font-size: var(--dnet-component-smx-font-size);
-  --dnet-form-field-plain-label-color: #757575;
-  --dnet-form-field-hint-font-size: var(--dnet-component-xs-font-size);
-  --dnet-form-field-hint-color: var(--dnet-component-supporting-text-color);
-}
-
 .dnet-form-field-header {
   display: flex;
   justify-content: space-between;
@@ -217,8 +210,8 @@ select.mat-input-element::-ms-value {
 }
 
 .dnet-form-field-plain-label {
-  font-size: var(--dnet-form-field-plain-label-font-size);
-  color: var(--dnet-form-field-plain-label-color);
+  font-size: var(--dnet-form-field-plain-label-font-size, var(--dnet-sys-text-sm));
+  color: var(--dnet-form-field-plain-label-color, var(--dnet-sys-on-surface-subtle));
 }
 
 .dnet-form-field-plain-label-wrapper > label {
@@ -233,11 +226,11 @@ select.mat-input-element::-ms-value {
   min-height: 34px;
   max-height: 272px;
   margin-bottom: 3px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--dnet-sys-border);
   border-radius: 5px;
 }
 .dnet-form-field-plain-control-container.dnet-control-disable {
-  background-color: rgba(0, 0, 0, 0.08);
+  background-color: var(--dnet-sys-state-hover);
 }
 
 .dnet-form-field-plain-prefix,
@@ -271,14 +264,19 @@ select.mat-input-element::-ms-value {
   padding-right: 5px;
 }
 
+/* Icono funcional monocromo (R9): mask-image + background-color. */
 .dnet-component-icon {
   display: block;
-  background-repeat: no-repeat;
-  background-size: 1em 1em;
+  background-color: var(--dnet-sys-on-surface);
   height: 1em;
   width: 1em;
   cursor: pointer;
-  color: #5f6368;
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 1em 1em;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: 1em 1em;
 }
 
 .dnet-component-icon-wrapper {
@@ -297,11 +295,12 @@ select.mat-input-element::-ms-value {
 }
 
 .dnet-component-clear-button {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'><path fill-rule='evenodd' clip-rule='evenodd' d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z'/></svg>");
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z'/></svg>");
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z'/></svg>");
 }
 
 .dnet-error {
-  color: red;
+  color: var(--dnet-sys-danger);
 }
 
 .dnet-form-field-hint-wrapper {
@@ -310,8 +309,8 @@ select.mat-input-element::-ms-value {
 }
 
 .dnet-hint {
-  color: var(--dnet-form-field-hint-color);
-  font-size: var(--dnet-form-field-hint-font-size);
+  color: var(--dnet-form-field-hint-color, var(--dnet-sys-on-surface-muted));
+  font-size: var(--dnet-form-field-hint-font-size, var(--dnet-sys-text-xs));
 }
 
 .dnet-property-form-group {
@@ -322,12 +321,12 @@ select.mat-input-element::-ms-value {
 
 .dnet-property-form-group .dnet-property-value {
   font-size: 14px;
-  color: rgb(0, 0, 0);
+  color: var(--dnet-sys-on-surface-emphasis);
   display: block;
 }
 
 .dnet-property-form-group .dnet-property-name {
   font-size: 11px;
-  color: #757575;
+  color: var(--dnet-sys-on-surface-subtle);
   display: block;
 }

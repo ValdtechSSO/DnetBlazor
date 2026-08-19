@@ -107,6 +107,16 @@
   `--dnet-sys-on-surface` (were hard-coded black). The page-global
   `li ul { background: transparent }` rule was scoped to the tree subtree.
   Measured with STY-002: only the chevron color changes (44 px).
+- `Form` (form field) migrated to the token architecture: the `:root` block
+  was removed and the four `--dnet-form-field-*` tokens remain as read-chain
+  fallbacks. The control border maps exactly to `--dnet-sys-border` and the
+  disabled background to `--dnet-sys-state-hover`; labels/hints use
+  `on-surface-subtle`/`on-surface-muted` and the clear button moved to a
+  monochrome mask (R9). The validation error color adopts
+  `--dnet-sys-danger` (deliberate change: bright red to the danger role).
+  The orphaned `--dnet-component-xs-font-size` and
+  `--dnet-component-supporting-text-color` declarations were removed (their
+  nested legacy links in the Autocomplete chain remain).
 
 ## Version 5.0.5 (August 2026)
 
