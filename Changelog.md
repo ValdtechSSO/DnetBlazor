@@ -117,6 +117,15 @@
   The orphaned `--dnet-component-xs-font-size` and
   `--dnet-component-supporting-text-color` declarations were removed (their
   nested legacy links in the Autocomplete chain remain).
+- `ExpansionPanel` migrated to the token architecture: the `:root` block was
+  removed and the three `--dnet-accordion-*` tokens remain as read-chain
+  fallbacks (radius -> `--dnet-sys-radius-sm`, shadow -> `--dnet-sys-elevation-1`,
+  title font -> `--dnet-sys-text-md`). Colors map exactly (`on-surface-emphasis`
+  for text, `on-surface-subtle` for the description/indicator, a 41.3 %
+  `color-mix` for the disabled tint). The orphaned
+  `--dnet-component-border-radius` declarations were removed (the nested
+  legacy links in the Autocomplete and Chips chains remain). The goldens show
+  the same sub-pixel header-text antialiasing shift and are stable.
 
 ## Version 5.0.5 (August 2026)
 
