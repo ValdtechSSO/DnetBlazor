@@ -70,7 +70,6 @@
 :root {
   --dnet-component-border-radius: 4px;
   --dnet-component-box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.1), 0 1px 10px 0 rgba(0, 0, 0, 0.1);
-  --dnet-component-list-item-height: 50px;
   --dnet-component-headline-text-color: #5f6368;
   --dnet-component-supporting-text-color: #666666;
   --dnet-component-lg-font-size: 1.25rem;
@@ -269,7 +268,6 @@
 :root {
   --dnet-component-border-radius: 4px;
   --dnet-component-box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.1), 0 1px 10px 0 rgba(0, 0, 0, 0.1);
-  --dnet-component-list-item-height: 50px;
   --dnet-component-headline-text-color: #5f6368;
   --dnet-component-supporting-text-color: #666666;
   --dnet-component-lg-font-size: 1.25rem;
@@ -1166,39 +1164,38 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   }
 }
 
-/*! Sass Autocomplete (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
-:root {
-  --dnet-autocomplete-list-border-color: #ebebeb;
-  --dnet-autocomplete-list-background-color: #ffffff;
-  --dnet-autocomplete-list-border-radius: var(--dnet-component-border-radius);
-  --dnet-autocomplete-list-item-height: var(--dnet-component-list-item-height);
-  --dnet-autocomplete-list-padding-vertical: 4px;
-  --dnet-autocomplete-list-padding-horizontal: 5px;
-  --dnet-autocomplete-list-header-footer-height: 50px;
-  --dnet-autocomplete-list-check-width: 24px;
-  --dnet-autocomplete-list-prefix-suffix-min-width: 40px;
-  --dnet-autocomplete-list-headline-font-size: var(--dnet-component-sm-font-size);
-  --dnet-autocomplete-list-headline-text-color: var(--dnet-component-headline-text-color);
-  --dnet-autocomplete-list-supporting-text-font-size: var(--dnet-component-xs-font-size);
-  --dnet-autocomplete-list-supporting-text-color: var(--dnet-component-supporting-text-color);
-  --dnet-autocomplete-list-hover-background-color: #f2f2f2;
-  --dnet-autocomplete-list-hover-border-radius: 10px;
-  --dnet-autocomplete-list-wrapper-horizontal-padding: 15px;
-  --dnet-autocomplete-list-box-shadow: var(--dnet-component-box-shadow);
+/*! Autocomplete — migrado a tokens (6.0). Generado una vez; se edita a mano.
+   Tokens unificados bajo --dnet-list-* (ADR-04a); los nombres
+   --dnet-autocomplete-list-* se mantienen como eslabones de la cadena de
+   lectura. */
+
+/* box-sizing acotado al subárbol del panel (el antiguo `* { box-sizing }`
+   global vivía en dnet-list.css y cubría a todas las familias). */
+.dnet-autocomplete-list-wrapper,
+.dnet-autocomplete-list-wrapper *,
+.dnet-autocomplete-list-wrapper *::before,
+.dnet-autocomplete-list-wrapper *::after {
+  box-sizing: border-box;
 }
 
 .dnet-autocomplete-list-wrapper {
+  --_border-color: var(--dnet-list-border-color, var(--dnet-autocomplete-list-border-color, var(--dnet-sys-border)));
+  --_radius: var(--dnet-list-border-radius, var(--dnet-autocomplete-list-border-radius, var(--dnet-component-border-radius, var(--dnet-sys-radius-sm))));
+  --_wrapper-padding: var(--dnet-list-wrapper-horizontal-padding, var(--dnet-autocomplete-list-wrapper-horizontal-padding, 15px));
+  --_background: var(--dnet-list-background-color, var(--dnet-autocomplete-list-background-color, var(--dnet-sys-surface)));
+  --_shadow: var(--dnet-list-box-shadow, var(--dnet-autocomplete-list-box-shadow, var(--dnet-component-box-shadow, var(--dnet-sys-elevation-1))));
+
   display: flex;
   flex-direction: column;
   height: 100%;
   width: 100%;
-  border: 1px solid var(--dnet-autocomplete-list-border-color);
-  border-radius: var(--dnet-autocomplete-list-border-radius);
-  padding-top: var(--dnet-autocomplete-list-wrapper-horizontal-padding);
-  padding-bottom: var(--dnet-autocomplete-list-wrapper-horizontal-padding);
+  border: 1px solid var(--_border-color);
+  border-radius: var(--_radius);
+  padding-top: var(--_wrapper-padding);
+  padding-bottom: var(--_wrapper-padding);
   transition: opacity 0.5s ease-in-out;
-  background-color: var(--dnet-autocomplete-list-background-color);
-  box-shadow: var(--dnet-autocomplete-list-box-shadow);
+  background-color: var(--_background);
+  box-shadow: var(--_shadow);
 }
 .dnet-autocomplete-list-wrapper .dnet-item-fadeout {
   opacity: 0 !important;
@@ -1213,18 +1210,22 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-autocomplete-list-wrapper:has(.dnet-autocomplete-list-form + .dnet-autocomplete-list-header) {
-  padding-top: var(--dnet-autocomplete-list-wrapper-horizontal-padding);
+  padding-top: var(--_wrapper-padding);
 }
 
 .dnet-autocomplete-list-form,
 .dnet-autocomplete-list-header,
 .dnet-autocomplete-list-footer {
-  min-height: var(--dnet-autocomplete-list-header-footer-height);
-  height: var(--dnet-autocomplete-list-header-footer-height);
+  --_header-footer-height: var(--dnet-list-header-footer-height, var(--dnet-autocomplete-list-header-footer-height, 50px));
+  --_padding-vertical: var(--dnet-list-padding-vertical, var(--dnet-autocomplete-list-padding-vertical, 4px));
+  --_padding-horizontal: var(--dnet-list-padding-horizontal, var(--dnet-autocomplete-list-padding-horizontal, 5px));
+
+  min-height: var(--_header-footer-height);
+  height: var(--_header-footer-height);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--dnet-autocomplete-list-padding-vertical) var(--dnet-autocomplete-list-padding-horizontal);
+  padding: var(--_padding-vertical) var(--_padding-horizontal);
 }
 
 .dnet-autocomplete-list-form {
@@ -1232,7 +1233,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-autocomplete-list-form {
-  padding: var(--dnet-autocomplete-list-padding-vertical) 20px;
+  padding: var(--dnet-list-padding-vertical, var(--dnet-autocomplete-list-padding-vertical, 4px)) 20px;
 }
 .dnet-autocomplete-list-form .dnet-form-field-plain-wrapper {
   margin-bottom: 0px;
@@ -1262,19 +1263,25 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-autocomplete-list-items {
+  --_padding-horizontal: var(--dnet-list-padding-horizontal, var(--dnet-autocomplete-list-padding-horizontal, 5px));
+
   flex-grow: 1;
   overflow-y: auto;
-  padding: 0 var(--dnet-autocomplete-list-padding-horizontal);
+  padding: 0 var(--_padding-horizontal);
 }
 
 .dnet-autocomplete-list-item {
+  --_item-height: var(--dnet-list-item-height, var(--dnet-autocomplete-list-item-height, var(--dnet-component-list-item-height, var(--dnet-sys-control-height))));
+  --_padding-vertical: var(--dnet-list-padding-vertical, var(--dnet-autocomplete-list-padding-vertical, 4px));
+  --_padding-horizontal: var(--dnet-list-padding-horizontal, var(--dnet-autocomplete-list-padding-horizontal, 5px));
+
   display: flex;
   align-items: center;
-  height: var(--dnet-autocomplete-list-item-height);
+  height: var(--_item-height);
   padding-left: 15px;
-  padding-right: var(--dnet-autocomplete-list-padding-vertical);
-  padding-top: var(--dnet-autocomplete-list-padding-horizontal);
-  padding-bottom: var(--dnet-autocomplete-list-padding-horizontal);
+  padding-right: var(--_padding-vertical);
+  padding-top: var(--_padding-horizontal);
+  padding-bottom: var(--_padding-horizontal);
   overflow: hidden;
   transition: background-color 0.3s, border-radius 0.3s;
 }
@@ -1284,14 +1291,19 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-autocomplete-list-item:hover {
-  background-color: var(--dnet-autocomplete-list-hover-background-color);
-  border-radius: var(--dnet-autocomplete-list-hover-border-radius);
+  --_hover-background: var(--dnet-list-hover-background-color, var(--dnet-autocomplete-list-hover-background-color, var(--dnet-sys-surface-hover)));
+  --_hover-radius: var(--dnet-list-hover-border-radius, var(--dnet-autocomplete-list-hover-border-radius, var(--dnet-sys-radius-lg)));
+
+  background-color: var(--_hover-background);
+  border-radius: var(--_hover-radius);
 }
 
 .dnet-autocomplete-list-item-prefix,
 .dnet-autocomplete-list-item-sufix,
 .dnet-autocomplete-list-header-sufix {
-  min-width: var(--dnet-autocomplete-list-prefix-suffix-min-width);
+  --_prefix-min-width: var(--dnet-list-prefix-suffix-min-width, var(--dnet-autocomplete-list-prefix-suffix-min-width, 40px));
+
+  min-width: var(--_prefix-min-width);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1304,7 +1316,9 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 
 .dnet-autocomplete-list-item-check,
 .dnet-autocomplete-list-header-checkall {
-  width: var(--dnet-autocomplete-list-check-width);
+  --_check-width: var(--dnet-list-check-width, var(--dnet-autocomplete-list-check-width, 24px));
+
+  width: var(--_check-width);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1324,8 +1338,11 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-autocomplete-list-item-headline {
-  font-size: var(--dnet-autocomplete-list-headline-font-size);
-  color: var(--dnet-autocomplete-list-headline-text-color);
+  --_headline-font: var(--dnet-list-headline-font-size, var(--dnet-autocomplete-list-headline-font-size, var(--dnet-component-sm-font-size, var(--dnet-sys-text-md))));
+  --_headline-color: var(--dnet-list-headline-text-color, var(--dnet-autocomplete-list-headline-text-color, var(--dnet-component-headline-text-color, var(--dnet-sys-on-surface))));
+
+  font-size: var(--_headline-font);
+  color: var(--_headline-color);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1336,8 +1353,11 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-autocomplete-list-item-supporting-text {
-  font-size: var(--dnet-autocomplete-list-supporting-text-font-size);
-  color: var(--dnet-autocomplete-list-supporting-text-color);
+  --_supporting-font: var(--dnet-list-supporting-text-font-size, var(--dnet-autocomplete-list-supporting-text-font-size, var(--dnet-component-xs-font-size, var(--dnet-sys-text-xs))));
+  --_supporting-color: var(--dnet-list-supporting-text-color, var(--dnet-autocomplete-list-supporting-text-color, var(--dnet-component-supporting-text-color, var(--dnet-sys-on-surface-muted))));
+
+  font-size: var(--_supporting-font);
+  color: var(--_supporting-color);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -3514,40 +3534,37 @@ button[disabled].dnet-calendar-next-button::after {
     }*/
 }
 
-/*! Sass List (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
-:root {
-  --dnet-list-border-color: #ebebeb;
-  --dnet-list-border-radius: 10px;
-  --dnet-list-item-height: 50px;
-  --dnet-list-padding-vertical: 4px;
-  --dnet-list-padding-horizontal: 5px;
-  --dnet-list-header-footer-height: 50px;
-  --dnet-list-check-width: 24px;
-  --dnet-list-prefix-suffix-min-width: 40px;
-  --dnet-list-headline-font-size: 0.875rem;
-  --dnet-list-supporting-text-font-size: 0.75rem;
-  --dnet-list-supporting-text-color: #666666;
-  --dnet-list-hover-background-color: #f2f2f2;
-  --dnet-list-hover-border-radius: 10px;
-  --dnet-list-wrapper-horizontal-padding: 15px;
-}
+/*! List — migrado a tokens (6.0). Generado una vez; se edita a mano.
+   Tokens unificados bajo --dnet-list-* (ADR-04a); los nombres legacy de
+   Select/Autocomplete son eslabones en sus propios ficheros. */
 
-*,
-*::before,
-*::after {
+/* box-sizing acotado al subárbol del componente (sustituye al antiguo
+   `* { box-sizing }` global de este fichero). */
+.dnet-list-wrapper,
+.dnet-list-wrapper *,
+.dnet-list-wrapper *::before,
+.dnet-list-wrapper *::after {
   box-sizing: border-box;
 }
 
 .dnet-list-wrapper {
+  --_border-color: var(--dnet-list-border-color, var(--dnet-sys-border));
+  --_radius: var(--dnet-list-border-radius, var(--dnet-sys-radius-lg));
+  --_wrapper-padding: var(--dnet-list-wrapper-horizontal-padding, 15px);
+  --_background: var(--dnet-list-background-color, transparent);
+  --_shadow: var(--dnet-list-box-shadow, none);
+
   display: flex;
   flex-direction: column;
   height: 100%;
   width: 100%;
-  border: 1px solid var(--dnet-list-border-color);
-  border-radius: var(--dnet-list-border-radius);
-  padding-top: var(--dnet-list-wrapper-horizontal-padding);
-  padding-bottom: var(--dnet-list-wrapper-horizontal-padding);
+  border: 1px solid var(--_border-color);
+  border-radius: var(--_radius);
+  padding-top: var(--_wrapper-padding);
+  padding-bottom: var(--_wrapper-padding);
   transition: opacity 0.5s ease-in-out;
+  background-color: var(--_background);
+  box-shadow: var(--_shadow);
 }
 .dnet-list-wrapper .dnet-item-fadeout {
   opacity: 0 !important;
@@ -3562,22 +3579,26 @@ button[disabled].dnet-calendar-next-button::after {
 }
 
 .dnet-list-wrapper:has(.dnet-list-form + .dnet-list-header) {
-  padding-top: var(--dnet-list-wrapper-horizontal-padding);
+  padding-top: var(--_wrapper-padding);
 }
 
 .dnet-list-form,
 .dnet-list-header,
 .dnet-list-footer {
-  min-height: var(--dnet-list-header-footer-height);
-  height: var(--dnet-list-header-footer-height);
+  --_header-footer-height: var(--dnet-list-header-footer-height, 50px);
+  --_padding-vertical: var(--dnet-list-padding-vertical, 4px);
+  --_padding-horizontal: var(--dnet-list-padding-horizontal, 5px);
+
+  min-height: var(--_header-footer-height);
+  height: var(--_header-footer-height);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--dnet-list-padding-vertical) var(--dnet-list-padding-horizontal);
+  padding: var(--_padding-vertical) var(--_padding-horizontal);
 }
 
 .dnet-list-form {
-  padding: var(--dnet-list-padding-vertical) 20px;
+  padding: var(--dnet-list-padding-vertical, 4px) 20px;
 }
 .dnet-list-form .dnet-form-field-plain-wrapper {
   margin-bottom: 0px;
@@ -3603,19 +3624,25 @@ button[disabled].dnet-calendar-next-button::after {
 }
 
 .dnet-list-items {
+  --_padding-horizontal: var(--dnet-list-padding-horizontal, 5px);
+
   flex-grow: 1;
   overflow-y: auto;
-  padding: 0 var(--dnet-list-padding-horizontal);
+  padding: 0 var(--_padding-horizontal);
 }
 
 .dnet-list-item {
+  --_item-height: var(--dnet-list-item-height, var(--dnet-sys-control-height));
+  --_padding-vertical: var(--dnet-list-padding-vertical, 4px);
+  --_padding-horizontal: var(--dnet-list-padding-horizontal, 5px);
+
   display: flex;
   align-items: center;
-  height: var(--dnet-list-item-height);
+  height: var(--_item-height);
   padding-left: 15px;
-  padding-right: var(--dnet-list-padding-vertical);
-  padding-top: var(--dnet-list-padding-horizontal);
-  padding-bottom: var(--dnet-list-padding-horizontal);
+  padding-right: var(--_padding-vertical);
+  padding-top: var(--_padding-horizontal);
+  padding-bottom: var(--_padding-horizontal);
   overflow: hidden;
   transition: background-color 0.3s, border-radius 0.3s;
 }
@@ -3634,14 +3661,19 @@ button[disabled].dnet-calendar-next-button::after {
 }
 
 .dnet-list-item:hover {
-  background-color: var(--dnet-list-hover-background-color);
-  border-radius: var(--dnet-list-hover-border-radius);
+  --_hover-background: var(--dnet-list-hover-background-color, var(--dnet-sys-surface-hover));
+  --_hover-radius: var(--dnet-list-hover-border-radius, var(--dnet-sys-radius-lg));
+
+  background-color: var(--_hover-background);
+  border-radius: var(--_hover-radius);
 }
 
 .dnet-list-item-prefix,
 .dnet-list-item-sufix,
 .dnet-list-header-sufix {
-  min-width: var(--dnet-list-prefix-suffix-min-width);
+  --_prefix-min-width: var(--dnet-list-prefix-suffix-min-width, 40px);
+
+  min-width: var(--_prefix-min-width);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -3649,7 +3681,9 @@ button[disabled].dnet-calendar-next-button::after {
 
 .dnet-list-item-check,
 .dnet-list-header-checkall {
-  width: var(--dnet-list-check-width);
+  --_check-width: var(--dnet-list-check-width, 24px);
+
+  width: var(--_check-width);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -3669,7 +3703,11 @@ button[disabled].dnet-calendar-next-button::after {
 }
 
 .dnet-list-item-headline {
-  font-size: var(--dnet-list-headline-font-size);
+  --_headline-font: var(--dnet-list-headline-font-size, var(--dnet-sys-text-md));
+  --_headline-color: var(--dnet-list-headline-text-color, inherit);
+
+  font-size: var(--_headline-font);
+  color: var(--_headline-color);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -3680,8 +3718,11 @@ button[disabled].dnet-calendar-next-button::after {
 }
 
 .dnet-list-item-supporting-text {
-  font-size: var(--dnet-list-supporting-text-font-size);
-  color: var(--dnet-list-supporting-text-color);
+  --_supporting-font: var(--dnet-list-supporting-text-font-size, var(--dnet-sys-text-sm));
+  --_supporting-color: var(--dnet-list-supporting-text-color, var(--dnet-sys-on-surface-muted));
+
+  font-size: var(--_supporting-font);
+  color: var(--_supporting-color);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -3697,33 +3738,45 @@ button[disabled].dnet-calendar-next-button::after {
   align-items: center;
 }
 
-.dnet-list-search-icon, .dnet-list-header-sort-icon {
+/* Iconos funcionales monocromos (R9): mask-image + background-color; el color
+   lo da el token de sistema, no un fill fijo dentro del data-URI. */
+.dnet-list-search-icon,
+.dnet-list-header-sort-icon {
+  --_icon-color: var(--dnet-sys-on-surface);
+
   display: block;
-  background-repeat: no-repeat;
-  background-size: 1em 1em;
+  background-color: var(--_icon-color);
   height: 1em;
   width: 1em;
   cursor: pointer;
-  color: #5f6368;
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 1em 1em;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: 1em 1em;
 }
 
 .dnet-list-search-icon-default {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'><path fill-rule='evenodd' clip-rule='evenodd' d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/></svg>");
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/></svg>");
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/></svg>");
 }
 
 .dnet-list-search-disable .dnet-list-search-icon-default {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='grey'><path fill-rule='evenodd' clip-rule='evenodd' d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/></svg>");
+  --_icon-color: var(--dnet-sys-state-disabled-fg);
 }
 .dnet-list-search-disable .dnet-list-search-icon-wrapper {
-  background-color: #e9ecef;
+  background-color: var(--dnet-sys-surface-hover);
 }
 
 .dnet-icon-asc {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'><path fill-rule='evenodd' clip-rule='evenodd' d='M8 3.5a.5.5 0 01.5.5v9a.5.5 0 01-1 0V4a.5.5 0 01.5-.5z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M7.646 2.646a.5.5 0 01.708 0l3 3a.5.5 0 01-.708.708L8 3.707 5.354 6.354a.5.5 0 11-.708-.708l3-3z'/></svg>");
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M8 3.5a.5.5 0 01.5.5v9a.5.5 0 01-1 0V4a.5.5 0 01.5-.5z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M7.646 2.646a.5.5 0 01.708 0l3 3a.5.5 0 01-.708.708L8 3.707 5.354 6.354a.5.5 0 11-.708-.708l3-3z'/></svg>");
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M8 3.5a.5.5 0 01.5.5v9a.5.5 0 01-1 0V4a.5.5 0 01.5-.5z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M7.646 2.646a.5.5 0 01.708 0l3 3a.5.5 0 01-.708.708L8 3.707 5.354 6.354a.5.5 0 11-.708-.708l3-3z'/></svg>");
 }
 
 .dnet-icon-desc {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'><path fill-rule='evenodd' clip-rule='evenodd' d='M4.646 9.646a.5.5 0 01.708 0L8 12.293l2.646-2.647a.5.5 0 01.708.708l-3 3a.5.5 0 01-.708 0l-3-3a.5.5 0 010-.708z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M8 2.5a.5.5 0 01.5.5v9a.5.5 0 01-1 0V3a.5.5 0 01.5-.5z'/></svg>");
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M4.646 9.646a.5.5 0 01.708 0L8 12.293l2.646-2.647a.5.5 0 01.708.708l-3 3a.5.5 0 01-.708 0l-3-3a.5.5 0 010-.708z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M8 2.5a.5.5 0 01.5.5v9a.5.5 0 01-1 0V3a.5.5 0 01.5-.5z'/></svg>");
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M4.646 9.646a.5.5 0 01.708 0L8 12.293l2.646-2.647a.5.5 0 01.708.708l-3 3a.5.5 0 01-.708 0l-3-3a.5.5 0 010-.708z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M8 2.5a.5.5 0 01.5.5v9a.5.5 0 01-1 0V3a.5.5 0 01.5-.5z'/></svg>");
 }
 
 @media only screen and (max-width: 550px) {
@@ -6417,36 +6470,37 @@ select.mat-input-element::-ms-value {
   display: block;
 }
 
-/*! Sass Select (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
-:root {
-  --dnet-select-list-border-color: #ebebeb;
-  --dnet-select-list-border-radius: 5px;
-  --dnet-select-list-item-height: 50px;
-  --dnet-select-list-padding-vertical: 4px;
-  --dnet-select-list-padding-horizontal: 5px;
-  --dnet-select-list-header-footer-height: 50px;
-  --dnet-select-list-check-width: 24px;
-  --dnet-select-list-prefix-suffix-min-width: 40px;
-  --dnet-select-list-headline-font-size: 0.875rem;
-  --dnet-select-list-supporting-text-font-size: 0.75rem;
-  --dnet-select-list-supporting-text-color: #666666;
-  --dnet-select-list-hover-background-color: #f2f2f2;
-  --dnet-select-list-hover-border-radius: 5px;
-  --dnet-select-list-wrapper-horizontal-padding: 15px;
+/*! Select — migrado a tokens (6.0). Generado una vez; se edita a mano.
+   Tokens unificados bajo --dnet-list-* (ADR-04a); los nombres
+   --dnet-select-list-* se mantienen como eslabones de la cadena de lectura. */
+
+/* box-sizing acotado al subárbol del panel (el antiguo `* { box-sizing }`
+   global vivía en dnet-list.css y cubría a todas las familias). */
+.dnet-select-list-wrapper,
+.dnet-select-list-wrapper *,
+.dnet-select-list-wrapper *::before,
+.dnet-select-list-wrapper *::after {
+  box-sizing: border-box;
 }
 
 .dnet-select-list-wrapper {
+  --_border-color: var(--dnet-list-border-color, var(--dnet-select-list-border-color, var(--dnet-sys-border)));
+  --_radius: var(--dnet-list-border-radius, var(--dnet-select-list-border-radius, var(--dnet-sys-radius-md)));
+  --_wrapper-padding: var(--dnet-list-wrapper-horizontal-padding, var(--dnet-select-list-wrapper-horizontal-padding, 15px));
+  --_background: var(--dnet-list-background-color, var(--dnet-sys-surface));
+  --_shadow: var(--dnet-list-box-shadow, var(--dnet-sys-elevation-1));
+
   display: flex;
   flex-direction: column;
   height: 100%;
   width: 100%;
-  border: 1px solid var(--dnet-select-list-border-color);
-  border-radius: var(--dnet-select-list-border-radius);
-  padding-top: var(--dnet-select-list-wrapper-horizontal-padding);
-  padding-bottom: var(--dnet-select-list-wrapper-horizontal-padding);
+  border: 1px solid var(--_border-color);
+  border-radius: var(--_radius);
+  padding-top: var(--_wrapper-padding);
+  padding-bottom: var(--_wrapper-padding);
   transition: opacity 0.5s ease-in-out;
-  background-color: #ffffff;
-  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.1), 0 1px 10px 0 rgba(0, 0, 0, 0.1);
+  background-color: var(--_background);
+  box-shadow: var(--_shadow);
 }
 .dnet-select-list-wrapper .dnet-item-fadeout {
   opacity: 0 !important;
@@ -6461,22 +6515,26 @@ select.mat-input-element::-ms-value {
 }
 
 .dnet-select-list-wrapper:has(.dnet-select-list-form + .dnet-select-list-header) {
-  padding-top: var(--dnet-select-list-wrapper-horizontal-padding);
+  padding-top: var(--_wrapper-padding);
 }
 
 .dnet-select-list-form,
 .dnet-select-list-header,
 .dnet-select-list-footer {
-  min-height: var(--dnet-select-list-header-footer-height);
-  height: var(--dnet-select-list-header-footer-height);
+  --_header-footer-height: var(--dnet-list-header-footer-height, var(--dnet-select-list-header-footer-height, 50px));
+  --_padding-vertical: var(--dnet-list-padding-vertical, var(--dnet-select-list-padding-vertical, 4px));
+  --_padding-horizontal: var(--dnet-list-padding-horizontal, var(--dnet-select-list-padding-horizontal, 5px));
+
+  min-height: var(--_header-footer-height);
+  height: var(--_header-footer-height);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--dnet-select-list-padding-vertical) var(--dnet-select-list-padding-horizontal);
+  padding: var(--_padding-vertical) var(--_padding-horizontal);
 }
 
 .dnet-select-list-form {
-  padding: var(--dnet-select-list-padding-vertical) 20px;
+  padding: var(--dnet-list-padding-vertical, var(--dnet-select-list-padding-vertical, 4px)) 20px;
 }
 .dnet-select-list-form .dnet-form-field-plain-wrapper {
   margin-bottom: 0px;
@@ -6502,19 +6560,25 @@ select.mat-input-element::-ms-value {
 }
 
 .dnet-select-list-items {
+  --_padding-horizontal: var(--dnet-list-padding-horizontal, var(--dnet-select-list-padding-horizontal, 5px));
+
   flex-grow: 1;
   overflow-y: auto;
-  padding: 0 var(--dnet-select-list-padding-horizontal);
+  padding: 0 var(--_padding-horizontal);
 }
 
 .dnet-select-list-item {
+  --_item-height: var(--dnet-list-item-height, var(--dnet-select-list-item-height, var(--dnet-sys-control-height)));
+  --_padding-vertical: var(--dnet-list-padding-vertical, var(--dnet-select-list-padding-vertical, 4px));
+  --_padding-horizontal: var(--dnet-list-padding-horizontal, var(--dnet-select-list-padding-horizontal, 5px));
+
   display: flex;
   align-items: center;
-  height: var(--dnet-select-list-item-height);
+  height: var(--_item-height);
   padding-left: 15px;
-  padding-right: var(--dnet-select-list-padding-vertical);
-  padding-top: var(--dnet-select-list-padding-horizontal);
-  padding-bottom: var(--dnet-select-list-padding-horizontal);
+  padding-right: var(--_padding-vertical);
+  padding-top: var(--_padding-horizontal);
+  padding-bottom: var(--_padding-horizontal);
   overflow: hidden;
   transition: background-color 0.3s, border-radius 0.3s;
 }
@@ -6524,14 +6588,19 @@ select.mat-input-element::-ms-value {
 }
 
 .dnet-select-list-item:hover {
-  background-color: var(--dnet-select-list-hover-background-color);
-  border-radius: var(--dnet-select-list-hover-border-radius);
+  --_hover-background: var(--dnet-list-hover-background-color, var(--dnet-select-list-hover-background-color, var(--dnet-sys-surface-hover)));
+  --_hover-radius: var(--dnet-list-hover-border-radius, var(--dnet-select-list-hover-border-radius, var(--dnet-sys-radius-md)));
+
+  background-color: var(--_hover-background);
+  border-radius: var(--_hover-radius);
 }
 
 .dnet-select-list-item-prefix,
 .dnet-select-list-item-sufix,
 .dnet-select-list-header-sufix {
-  min-width: var(--dnet-select-list-prefix-suffix-min-width);
+  --_prefix-min-width: var(--dnet-list-prefix-suffix-min-width, var(--dnet-select-list-prefix-suffix-min-width, 40px));
+
+  min-width: var(--_prefix-min-width);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -6544,7 +6613,9 @@ select.mat-input-element::-ms-value {
 
 .dnet-select-list-item-check,
 .dnet-select-list-header-checkall {
-  width: var(--dnet-select-list-check-width);
+  --_check-width: var(--dnet-list-check-width, var(--dnet-select-list-check-width, 24px));
+
+  width: var(--_check-width);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -6564,7 +6635,11 @@ select.mat-input-element::-ms-value {
 }
 
 .dnet-select-list-item-headline {
-  font-size: var(--dnet-select-list-headline-font-size);
+  --_headline-font: var(--dnet-list-headline-font-size, var(--dnet-select-list-headline-font-size, var(--dnet-sys-text-md)));
+  --_headline-color: var(--dnet-list-headline-text-color, inherit);
+
+  font-size: var(--_headline-font);
+  color: var(--_headline-color);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -6575,8 +6650,11 @@ select.mat-input-element::-ms-value {
 }
 
 .dnet-select-list-item-supporting-text {
-  font-size: var(--dnet-select-list-supporting-text-font-size);
-  color: var(--dnet-select-list-supporting-text-color);
+  --_supporting-font: var(--dnet-list-supporting-text-font-size, var(--dnet-select-list-supporting-text-font-size, var(--dnet-sys-text-sm)));
+  --_supporting-color: var(--dnet-list-supporting-text-color, var(--dnet-select-list-supporting-text-color, var(--dnet-sys-on-surface-muted)));
+
+  font-size: var(--_supporting-font);
+  color: var(--_supporting-color);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -6625,8 +6703,8 @@ select.mat-input-element::-ms-value {
 .dnet-plain-select-arrow {
   width: 0;
   height: 0;
-  border-left: 5px solid rgba(0, 0, 0, 0);
-  border-right: 5px solid rgba(0, 0, 0, 0);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
   border-top: 5px solid;
   margin: 0 4px;
 }

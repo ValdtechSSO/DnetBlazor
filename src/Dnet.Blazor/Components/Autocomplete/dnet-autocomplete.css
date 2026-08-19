@@ -1,36 +1,35 @@
-/*! Sass Autocomplete (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
-:root {
-  --dnet-autocomplete-list-border-color: #ebebeb;
-  --dnet-autocomplete-list-background-color: #ffffff;
-  --dnet-autocomplete-list-border-radius: var(--dnet-component-border-radius);
-  --dnet-autocomplete-list-item-height: var(--dnet-component-list-item-height);
-  --dnet-autocomplete-list-padding-vertical: 4px;
-  --dnet-autocomplete-list-padding-horizontal: 5px;
-  --dnet-autocomplete-list-header-footer-height: 50px;
-  --dnet-autocomplete-list-check-width: 24px;
-  --dnet-autocomplete-list-prefix-suffix-min-width: 40px;
-  --dnet-autocomplete-list-headline-font-size: var(--dnet-component-sm-font-size);
-  --dnet-autocomplete-list-headline-text-color: var(--dnet-component-headline-text-color);
-  --dnet-autocomplete-list-supporting-text-font-size: var(--dnet-component-xs-font-size);
-  --dnet-autocomplete-list-supporting-text-color: var(--dnet-component-supporting-text-color);
-  --dnet-autocomplete-list-hover-background-color: #f2f2f2;
-  --dnet-autocomplete-list-hover-border-radius: 10px;
-  --dnet-autocomplete-list-wrapper-horizontal-padding: 15px;
-  --dnet-autocomplete-list-box-shadow: var(--dnet-component-box-shadow);
+/*! Autocomplete — migrado a tokens (6.0). Generado una vez; se edita a mano.
+   Tokens unificados bajo --dnet-list-* (ADR-04a); los nombres
+   --dnet-autocomplete-list-* se mantienen como eslabones de la cadena de
+   lectura. */
+
+/* box-sizing acotado al subárbol del panel (el antiguo `* { box-sizing }`
+   global vivía en dnet-list.css y cubría a todas las familias). */
+.dnet-autocomplete-list-wrapper,
+.dnet-autocomplete-list-wrapper *,
+.dnet-autocomplete-list-wrapper *::before,
+.dnet-autocomplete-list-wrapper *::after {
+  box-sizing: border-box;
 }
 
 .dnet-autocomplete-list-wrapper {
+  --_border-color: var(--dnet-list-border-color, var(--dnet-autocomplete-list-border-color, var(--dnet-sys-border)));
+  --_radius: var(--dnet-list-border-radius, var(--dnet-autocomplete-list-border-radius, var(--dnet-component-border-radius, var(--dnet-sys-radius-sm))));
+  --_wrapper-padding: var(--dnet-list-wrapper-horizontal-padding, var(--dnet-autocomplete-list-wrapper-horizontal-padding, 15px));
+  --_background: var(--dnet-list-background-color, var(--dnet-autocomplete-list-background-color, var(--dnet-sys-surface)));
+  --_shadow: var(--dnet-list-box-shadow, var(--dnet-autocomplete-list-box-shadow, var(--dnet-component-box-shadow, var(--dnet-sys-elevation-1))));
+
   display: flex;
   flex-direction: column;
   height: 100%;
   width: 100%;
-  border: 1px solid var(--dnet-autocomplete-list-border-color);
-  border-radius: var(--dnet-autocomplete-list-border-radius);
-  padding-top: var(--dnet-autocomplete-list-wrapper-horizontal-padding);
-  padding-bottom: var(--dnet-autocomplete-list-wrapper-horizontal-padding);
+  border: 1px solid var(--_border-color);
+  border-radius: var(--_radius);
+  padding-top: var(--_wrapper-padding);
+  padding-bottom: var(--_wrapper-padding);
   transition: opacity 0.5s ease-in-out;
-  background-color: var(--dnet-autocomplete-list-background-color);
-  box-shadow: var(--dnet-autocomplete-list-box-shadow);
+  background-color: var(--_background);
+  box-shadow: var(--_shadow);
 }
 .dnet-autocomplete-list-wrapper .dnet-item-fadeout {
   opacity: 0 !important;
@@ -45,18 +44,22 @@
 }
 
 .dnet-autocomplete-list-wrapper:has(.dnet-autocomplete-list-form + .dnet-autocomplete-list-header) {
-  padding-top: var(--dnet-autocomplete-list-wrapper-horizontal-padding);
+  padding-top: var(--_wrapper-padding);
 }
 
 .dnet-autocomplete-list-form,
 .dnet-autocomplete-list-header,
 .dnet-autocomplete-list-footer {
-  min-height: var(--dnet-autocomplete-list-header-footer-height);
-  height: var(--dnet-autocomplete-list-header-footer-height);
+  --_header-footer-height: var(--dnet-list-header-footer-height, var(--dnet-autocomplete-list-header-footer-height, 50px));
+  --_padding-vertical: var(--dnet-list-padding-vertical, var(--dnet-autocomplete-list-padding-vertical, 4px));
+  --_padding-horizontal: var(--dnet-list-padding-horizontal, var(--dnet-autocomplete-list-padding-horizontal, 5px));
+
+  min-height: var(--_header-footer-height);
+  height: var(--_header-footer-height);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--dnet-autocomplete-list-padding-vertical) var(--dnet-autocomplete-list-padding-horizontal);
+  padding: var(--_padding-vertical) var(--_padding-horizontal);
 }
 
 .dnet-autocomplete-list-form {
@@ -64,7 +67,7 @@
 }
 
 .dnet-autocomplete-list-form {
-  padding: var(--dnet-autocomplete-list-padding-vertical) 20px;
+  padding: var(--dnet-list-padding-vertical, var(--dnet-autocomplete-list-padding-vertical, 4px)) 20px;
 }
 .dnet-autocomplete-list-form .dnet-form-field-plain-wrapper {
   margin-bottom: 0px;
@@ -94,19 +97,25 @@
 }
 
 .dnet-autocomplete-list-items {
+  --_padding-horizontal: var(--dnet-list-padding-horizontal, var(--dnet-autocomplete-list-padding-horizontal, 5px));
+
   flex-grow: 1;
   overflow-y: auto;
-  padding: 0 var(--dnet-autocomplete-list-padding-horizontal);
+  padding: 0 var(--_padding-horizontal);
 }
 
 .dnet-autocomplete-list-item {
+  --_item-height: var(--dnet-list-item-height, var(--dnet-autocomplete-list-item-height, var(--dnet-component-list-item-height, var(--dnet-sys-control-height))));
+  --_padding-vertical: var(--dnet-list-padding-vertical, var(--dnet-autocomplete-list-padding-vertical, 4px));
+  --_padding-horizontal: var(--dnet-list-padding-horizontal, var(--dnet-autocomplete-list-padding-horizontal, 5px));
+
   display: flex;
   align-items: center;
-  height: var(--dnet-autocomplete-list-item-height);
+  height: var(--_item-height);
   padding-left: 15px;
-  padding-right: var(--dnet-autocomplete-list-padding-vertical);
-  padding-top: var(--dnet-autocomplete-list-padding-horizontal);
-  padding-bottom: var(--dnet-autocomplete-list-padding-horizontal);
+  padding-right: var(--_padding-vertical);
+  padding-top: var(--_padding-horizontal);
+  padding-bottom: var(--_padding-horizontal);
   overflow: hidden;
   transition: background-color 0.3s, border-radius 0.3s;
 }
@@ -116,14 +125,19 @@
 }
 
 .dnet-autocomplete-list-item:hover {
-  background-color: var(--dnet-autocomplete-list-hover-background-color);
-  border-radius: var(--dnet-autocomplete-list-hover-border-radius);
+  --_hover-background: var(--dnet-list-hover-background-color, var(--dnet-autocomplete-list-hover-background-color, var(--dnet-sys-surface-hover)));
+  --_hover-radius: var(--dnet-list-hover-border-radius, var(--dnet-autocomplete-list-hover-border-radius, var(--dnet-sys-radius-lg)));
+
+  background-color: var(--_hover-background);
+  border-radius: var(--_hover-radius);
 }
 
 .dnet-autocomplete-list-item-prefix,
 .dnet-autocomplete-list-item-sufix,
 .dnet-autocomplete-list-header-sufix {
-  min-width: var(--dnet-autocomplete-list-prefix-suffix-min-width);
+  --_prefix-min-width: var(--dnet-list-prefix-suffix-min-width, var(--dnet-autocomplete-list-prefix-suffix-min-width, 40px));
+
+  min-width: var(--_prefix-min-width);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -136,7 +150,9 @@
 
 .dnet-autocomplete-list-item-check,
 .dnet-autocomplete-list-header-checkall {
-  width: var(--dnet-autocomplete-list-check-width);
+  --_check-width: var(--dnet-list-check-width, var(--dnet-autocomplete-list-check-width, 24px));
+
+  width: var(--_check-width);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -156,8 +172,11 @@
 }
 
 .dnet-autocomplete-list-item-headline {
-  font-size: var(--dnet-autocomplete-list-headline-font-size);
-  color: var(--dnet-autocomplete-list-headline-text-color);
+  --_headline-font: var(--dnet-list-headline-font-size, var(--dnet-autocomplete-list-headline-font-size, var(--dnet-component-sm-font-size, var(--dnet-sys-text-md))));
+  --_headline-color: var(--dnet-list-headline-text-color, var(--dnet-autocomplete-list-headline-text-color, var(--dnet-component-headline-text-color, var(--dnet-sys-on-surface))));
+
+  font-size: var(--_headline-font);
+  color: var(--_headline-color);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -168,8 +187,11 @@
 }
 
 .dnet-autocomplete-list-item-supporting-text {
-  font-size: var(--dnet-autocomplete-list-supporting-text-font-size);
-  color: var(--dnet-autocomplete-list-supporting-text-color);
+  --_supporting-font: var(--dnet-list-supporting-text-font-size, var(--dnet-autocomplete-list-supporting-text-font-size, var(--dnet-component-xs-font-size, var(--dnet-sys-text-xs))));
+  --_supporting-color: var(--dnet-list-supporting-text-color, var(--dnet-autocomplete-list-supporting-text-color, var(--dnet-component-supporting-text-color, var(--dnet-sys-on-surface-muted))));
+
+  font-size: var(--_supporting-font);
+  color: var(--_supporting-color);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

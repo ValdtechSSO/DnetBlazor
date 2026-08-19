@@ -27,6 +27,18 @@
   from `--dnet-sys-shadow-color` (softer than the old hard-coded 20/14/12 %
   layers) and the close icon renders in `--dnet-sys-on-surface` instead of a
   hard-coded black fill.
+- `List`, `Select` and `Autocomplete` now share one public token namespace,
+  `--dnet-list-*` (ADR-04a): a single override affects the three families, and
+  each component keeps its own default in the private indirection (radii
+  10/5/4 px, hover radii, headline and supporting-text differences). The old
+  names `--dnet-select-list-*` and `--dnet-autocomplete-list-*` remain as
+  read-chain links through 6.x. The six structural constants
+  (`padding-*`, `header-footer-height`, `check-width`, `prefix-suffix-min-width`,
+  `wrapper-horizontal-padding`) are no longer public API (still readable).
+  The `* { box-sizing: border-box }` global rule that lived in the List
+  stylesheet is scoped to each component subtree. Measured with STY-002:
+  Select and Autocomplete are pixel-identical; the List search icon moved to a
+  monochrome mask icon (R9) and renders in `--dnet-sys-on-surface`.
 
 ## Version 5.0.5 (August 2026)
 
