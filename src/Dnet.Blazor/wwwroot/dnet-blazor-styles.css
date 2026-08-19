@@ -4311,18 +4311,15 @@ button[disabled].dnet-calendar-next-button::after {
   }
 }
 
-/*! Sass RadioButton (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
-:root {
-  --dnet-radio-button-border-color: rgba(0,0,0,.54);
-  --dnet-radio-button-border-width: 1px;
-  --dnet-radio-button-background: #42b0d5;
-  --dnet-radio-button-border-color: #b0b0b0;
-  --dnet-radio-button-size: 16px;
-  --dnet-radio-button-font-size: .875rem;
-  --dnet-radio-button-checkmark-path: #fafafa;
-}
+/*! RadioButton — migrado a tokens (6.0). Generado una vez; se edita a mano. */
 
 .dnet-radio-button {
+  --_size: var(--dnet-radio-button-size, 16px);
+  --_border-width: var(--dnet-radio-button-border-width, 1px);
+  --_checked-background: var(--dnet-radio-button-background, var(--dnet-sys-primary-strong));
+  --_font-size: var(--dnet-radio-button-font-size, var(--dnet-sys-text-md));
+  --_disabled-fg: color-mix(in srgb, var(--dnet-sys-on-surface-subtle) 70.3%, var(--dnet-sys-surface));
+
   display: inline-block;
   -webkit-tap-highlight-color: transparent;
   outline: 0;
@@ -4333,7 +4330,7 @@ button[disabled].dnet-calendar-next-button::after {
 }
 
 .dnet-radio-button.dnet-radio-disabled.dnet-radio-checked .dnet-radio-outer-circle, .dnet-radio-button.dnet-radio-disabled .dnet-radio-outer-circle {
-  border-color: rgba(0, 0, 0, 0.38);
+  border-color: var(--_disabled-fg);
 }
 
 .dnet-radio-label {
@@ -4346,7 +4343,7 @@ button[disabled].dnet-calendar-next-button::after {
   white-space: nowrap;
   /*vertical-align: middle;*/
   width: 100%;
-  font-size: var(--dnet-radio-button-font-size);
+  font-size: var(--_font-size);
   display: grid;
   align-items: center;
   gap: 5px;
@@ -4359,39 +4356,39 @@ button[disabled].dnet-calendar-next-button::after {
 }
 
 .dnet-radio-button.dnet-radio-disabled .dnet-radio-label-content {
-  color: rgba(0, 0, 0, 0.38);
+  color: var(--_disabled-fg);
 }
 
 .dnet-radio-container {
   box-sizing: border-box;
   display: inline-block;
   position: relative;
-  width: var(--dnet-radio-button-size);
-  height: var(--dnet-radio-button-size);
+  width: var(--_size);
+  height: var(--_size);
   flex-shrink: 0;
   grid-area: one;
 }
 
 .dnet-radio-button.dnet-accent.dnet-radio-checked .dnet-radio-outer-circle {
-  border-color: var(--dnet-radio-button-background);
+  border-color: var(--_checked-background);
 }
 
 .dnet-radio-outer-circle {
   box-sizing: border-box;
   display: block;
-  height: var(--dnet-radio-button-size);
+  height: var(--_size);
   left: 0;
   position: absolute;
   top: 0;
   transition: border-color ease 280ms;
-  width: var(--dnet-radio-button-size);
-  border-width: var(--dnet-radio-button-border-width);
+  width: var(--_size);
+  border-width: var(--_border-width);
   border-style: solid;
   border-radius: 50%;
 }
 
 .dnet-radio-button.dnet-accent.dnet-radio-checked .dnet-radio-persistent-ripple, .dnet-radio-button.dnet-accent .dnet-radio-inner-circle, .dnet-radio-button.dnet-accent .dnet-radio-ripple .dnet-ripple-element:not(.dnet-radio-persistent-ripple), .dnet-radio-button.dnet-accent:active .dnet-radio-persistent-ripple {
-  background-color: var(--dnet-radio-button-background);
+  background-color: var(--_checked-background);
 }
 
 .dnet-radio-checked .dnet-radio-inner-circle {
@@ -4401,20 +4398,20 @@ button[disabled].dnet-calendar-next-button::after {
 }
 
 .dnet-radio-button.dnet-accent.dnet-radio-checked .dnet-radio-outer-circle {
-  border-color: var(--dnet-radio-button-background);
+  border-color: var(--_checked-background);
 }
 
 .dnet-radio-inner-circle {
   border-radius: 50%;
   box-sizing: border-box;
   display: block;
-  height: var(--dnet-radio-button-size);
+  height: var(--_size);
   left: 0;
   position: absolute;
   top: 0;
   opacity: 0;
   transition: transform ease 280ms, background-color ease 280ms, opacity linear 1ms 280ms;
-  width: var(--dnet-radio-button-size);
+  width: var(--_size);
   transform: scale(0.001);
   -webkit-print-color-adjust: exact;
   color-adjust: exact;
@@ -4442,8 +4439,8 @@ button[disabled].dnet-calendar-next-button::after {
 
 .dnet-radio-button .dnet-radio-ripple {
   position: absolute;
-  left: calc(50% - var(--dnet-radio-button-size));
-  top: calc(50% - var(--dnet-radio-button-size));
+  left: calc(50% - var(--_size));
+  top: calc(50% - var(--_size));
   height: 40px;
   width: 40px;
   z-index: 1;

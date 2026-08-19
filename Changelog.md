@@ -62,6 +62,14 @@
   `--dnet-sys-surface`. The STY-002 goldens show a sub-pixel antialiasing
   shift in the label text (values verified identical) and are stable across
   two consecutive runs.
+- `RadioButton` migrated to the token architecture: the `:root` block was
+  removed and the dead tokens `--dnet-radio-button-border-color` (declared
+  twice but never read — the ring uses `currentColor`) and
+  `--dnet-radio-button-checkmark-path` were dropped. The checked color follows
+  `--dnet-sys-primary-strong` (exact) and the disabled foreground is derived
+  from `--dnet-sys-on-surface-subtle` via `color-mix` (renders exactly the
+  old 38 % black). The STY-002 goldens show the same sub-pixel label
+  antialiasing shift as Checkbox and are stable across two consecutive runs.
 
 ## Version 5.0.5 (August 2026)
 
