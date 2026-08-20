@@ -10,22 +10,29 @@ public sealed class OverlayPositionSchedulerTests
     {
         var scheduler = new OverlayPositionScheduler();
         var versions = new List<long>();
+        var firstStarted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var releaseFirst = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var applied = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        scheduler.Schedule(12, version =>
+        scheduler.Schedule(12, async version =>
         {
             versions.Add(version);
-            return Task.CompletedTask;
+            firstStarted.TrySetResult();
+            await releaseFirst.Task;
         });
+        await firstStarted.Task.WaitAsync(TimeSpan.FromSeconds(2));
+
         scheduler.Schedule(12, version =>
         {
             versions.Add(version);
             applied.TrySetResult();
             return Task.CompletedTask;
         });
+        releaseFirst.TrySetResult();
 
         await applied.Task.WaitAsync(TimeSpan.FromSeconds(2));
 
+        Assert.Equal(new[] { 1L, 2L }, versions);
         Assert.Equal(2L, versions.Last());
         Assert.False(scheduler.IsCurrent(12, 2));
     }
