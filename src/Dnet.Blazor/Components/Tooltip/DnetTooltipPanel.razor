@@ -6,12 +6,14 @@
 @inject IJSRuntime JSRuntime
 
 <div id="@TooltipId" role="tooltip" class="@_cssClasses" style="@_styles">
+    <div class="dnet-tooltip-content">
         @Text
         @ContentChild
         @if (ComponentType != null)
         {
             <DynamicComponent Type="@ComponentType" Parameters="@Parameters" />
         }
+    </div>
 </div>
 
 @code {

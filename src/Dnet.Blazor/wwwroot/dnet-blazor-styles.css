@@ -27,6 +27,7 @@
   --dnet-sys-surface: var(--dnet-ref-neutral-0);
   --dnet-sys-surface-raised: var(--dnet-ref-neutral-0);
   --dnet-sys-surface-hover: var(--dnet-ref-neutral-100);
+  --dnet-sys-surface-inverse: var(--dnet-ref-neutral-1000);
   --dnet-sys-surface-variant: var(--dnet-ref-neutral-400);
   --dnet-sys-on-surface: var(--dnet-ref-neutral-700);
   --dnet-sys-on-surface-muted: var(--dnet-ref-neutral-600);
@@ -4999,7 +5000,7 @@ button.dnet-toast-icon-wrapper:focus-visible {
 }
 
 .dnet-tooltip {
-  --_background: var(--dnet-tooltip-background, color-mix(in srgb, var(--dnet-sys-on-surface) 90%, transparent));
+  --_background: var(--dnet-tooltip-background, var(--dnet-sys-surface-inverse));
   --_foreground: var(--dnet-tooltip-foreground, var(--dnet-sys-surface));
   --_radius: var(--dnet-tooltip-border-radius, var(--dnet-sys-radius-lg));
   --_max-width: var(--dnet-tooltip-max-width, 250px);
@@ -5009,6 +5010,7 @@ button.dnet-toast-icon-wrapper:focus-visible {
   --_shadow: var(--dnet-tooltip-shadow, var(--dnet-sys-elevation-2));
   --_motion: var(--dnet-tooltip-motion, var(--dnet-sys-motion-fast));
   --_min-height: var(--dnet-sys-text-input-min-height);
+  --_arrow-size: 8px;
 
   display: flex;
   align-items: center;
@@ -5023,8 +5025,7 @@ button.dnet-toast-icon-wrapper:focus-visible {
   min-height: var(--_min-height);
   padding-left: var(--_h-padding);
   padding-right: var(--_h-padding);
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible;
   font-size: var(--_font-size);
   font-weight: 500;
   line-height: 1.4;
@@ -5032,6 +5033,71 @@ button.dnet-toast-icon-wrapper:focus-visible {
   padding-top: var(--_v-padding);
   padding-bottom: var(--_v-padding);
   animation: dnet-tooltip-in var(--_motion) var(--dnet-sys-motion-ease);
+}
+
+.dnet-tooltip-content {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dnet-tooltip::after {
+  content: "";
+  position: absolute;
+  width: calc(var(--_arrow-size) * 2);
+  height: var(--_arrow-size);
+  background: inherit;
+  pointer-events: none;
+}
+
+.dnet-tooltip-panel.dnet-tooltip-above .dnet-tooltip::after {
+  top: calc(100% - 1px);
+  left: 50%;
+  height: calc(var(--_arrow-size) + 1px);
+  -webkit-clip-path: polygon(0 0, 100% 0, 50% 100%);
+          clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform: translateX(-50%);
+}
+
+.dnet-tooltip-panel.dnet-tooltip-below .dnet-tooltip::after {
+  bottom: calc(100% - 1px);
+  left: 50%;
+  height: calc(var(--_arrow-size) + 1px);
+  -webkit-clip-path: polygon(50% 0, 100% 100%, 0 100%);
+          clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  transform: translateX(-50%);
+}
+
+.dnet-tooltip-panel.dnet-tooltip-left .dnet-tooltip::after {
+  top: 50%;
+  left: calc(100% - 1px);
+  width: calc(var(--_arrow-size) + 1px);
+  height: calc(var(--_arrow-size) * 2);
+  -webkit-clip-path: polygon(0 0, 100% 50%, 0 100%);
+          clip-path: polygon(0 0, 100% 50%, 0 100%);
+  transform: translateY(-50%);
+}
+
+.dnet-tooltip-panel.dnet-tooltip-right .dnet-tooltip::after {
+  top: 50%;
+  right: calc(100% - 1px);
+  width: calc(var(--_arrow-size) + 1px);
+  height: calc(var(--_arrow-size) * 2);
+  -webkit-clip-path: polygon(100% 0, 100% 100%, 0 50%);
+          clip-path: polygon(100% 0, 100% 100%, 0 50%);
+  transform: translateY(-50%);
+}
+
+.dnet-tooltip-panel.dnet-tooltip-start .dnet-tooltip::after {
+  left: var(--_arrow-size);
+  right: auto;
+  transform: none;
+}
+
+.dnet-tooltip-panel.dnet-tooltip-end .dnet-tooltip::after {
+  right: var(--_arrow-size);
+  left: auto;
+  transform: none;
 }
 
 @keyframes dnet-tooltip-in {

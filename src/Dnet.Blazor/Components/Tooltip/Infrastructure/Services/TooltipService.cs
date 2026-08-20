@@ -179,7 +179,8 @@ namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
                     OriginY = VerticalConnectionPos.Center,
                     OverlayX = HorizontalConnectionPos.End,
                     OverlayY = VerticalConnectionPos.Center,
-                    OffsetX = -8
+                    OffsetX = -8,
+                    PanelClass = new List<string> { "dnet-tooltip-left" }
                 },
                 new ConnectedPosition
                 {
@@ -187,7 +188,8 @@ namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
                     OriginY = VerticalConnectionPos.Center,
                     OverlayX = HorizontalConnectionPos.Start,
                     OverlayY = VerticalConnectionPos.Center,
-                    OffsetX = 8
+                    OffsetX = 8,
+                    PanelClass = new List<string> { "dnet-tooltip-right" }
                 },
                 new ConnectedPosition
                 {
@@ -195,7 +197,8 @@ namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
                     OriginY = VerticalConnectionPos.Top,
                     OverlayX = HorizontalConnectionPos.Center,
                     OverlayY = VerticalConnectionPos.Bottom,
-                    OffsetY = -8
+                    OffsetY = -8,
+                    PanelClass = new List<string> { "dnet-tooltip-above" }
                 },
                 new ConnectedPosition
                 {
@@ -203,7 +206,8 @@ namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
                     OriginY = VerticalConnectionPos.Bottom,
                     OverlayX = HorizontalConnectionPos.Center,
                     OverlayY = VerticalConnectionPos.Top,
-                    OffsetY = 8
+                    OffsetY = 8,
+                    PanelClass = new List<string> { "dnet-tooltip-below" }
                 },
                 new ConnectedPosition
                 {
@@ -212,7 +216,8 @@ namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
                     OverlayX = HorizontalConnectionPos.Start,
                     OverlayY = VerticalConnectionPos.Top,
                     OffsetX = -8,
-                    OffsetY = 8
+                    OffsetY = 8,
+                    PanelClass = new List<string> { "dnet-tooltip-below", "dnet-tooltip-start" }
                 },
                 new ConnectedPosition
                 {
@@ -221,7 +226,8 @@ namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
                     OverlayX = HorizontalConnectionPos.Start,
                     OverlayY = VerticalConnectionPos.Bottom,
                     OffsetX = -8,
-                    OffsetY = -8
+                    OffsetY = -8,
+                    PanelClass = new List<string> { "dnet-tooltip-above", "dnet-tooltip-start" }
                 },
                 new ConnectedPosition
                 {
@@ -230,7 +236,8 @@ namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
                     OverlayX = HorizontalConnectionPos.Start,
                     OverlayY = VerticalConnectionPos.Top,
                     OffsetX = 8,
-                    OffsetY = 8
+                    OffsetY = 8,
+                    PanelClass = new List<string> { "dnet-tooltip-below", "dnet-tooltip-end" }
                 },
                 new ConnectedPosition
                 {
@@ -239,7 +246,8 @@ namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
                     OverlayX = HorizontalConnectionPos.Start,
                     OverlayY = VerticalConnectionPos.Bottom,
                     OffsetX = 8,
-                    OffsetY = -8
+                    OffsetY = -8,
+                    PanelClass = new List<string> { "dnet-tooltip-above", "dnet-tooltip-end" }
                 }
             };
 

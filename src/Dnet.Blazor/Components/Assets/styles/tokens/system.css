@@ -3,6 +3,7 @@
   --dnet-sys-surface: var(--dnet-ref-neutral-0);
   --dnet-sys-surface-raised: var(--dnet-ref-neutral-0);
   --dnet-sys-surface-hover: var(--dnet-ref-neutral-100);
+  --dnet-sys-surface-inverse: var(--dnet-ref-neutral-1000);
   --dnet-sys-surface-variant: var(--dnet-ref-neutral-400);
   --dnet-sys-on-surface: var(--dnet-ref-neutral-700);
   --dnet-sys-on-surface-muted: var(--dnet-ref-neutral-600);

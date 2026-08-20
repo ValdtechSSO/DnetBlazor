@@ -45,6 +45,8 @@
 
     private string? _cssClasses { get; set; }
 
+    private List<string>? _positionClasses { get; set; }
+
     private ElementReference _paneReference;
 
     private int _viewportMargin = 0;
@@ -103,11 +105,13 @@
     private string GetCssClasses()
     {
         var componentcssclass = GetComponentCssClass(OverlayConfig);
+        var positionClasses = _positionClasses is { Count: > 0 } ? string.Join(" ", _positionClasses) : null;
 
         var classes = new CssBuilder()
             .AddClass("cdk-overlay-pane")
             .AddClass(OverlayConfig.PanelClass, when: !string.IsNullOrEmpty(OverlayConfig.PanelClass))
             .AddClass(componentcssclass, when: !string.IsNullOrEmpty(componentcssclass))
+            .AddClass(positionClasses, when: !string.IsNullOrEmpty(positionClasses))
             .Build();
 
         return classes;
@@ -278,6 +282,7 @@
 
         OverlayFit fallbackOverlayFit = null;
         ConnectedPosition fallbackPosition = null;
+        ConnectedPosition appliedPosition = null;
         Point fallbackOriginPoint = null;
 
         foreach (var position in preferredPositions)
@@ -297,6 +302,7 @@
                 styles = await SetOverlayElementStyles(originPoint, position, viewportRect);
 
                 await dnetOverlayHost.SetBoundingBoxStyles(originPoint, position);
+                appliedPosition = position;
 
                 break;
             }
@@ -310,15 +316,26 @@
             fallbackPosition = position;
         }
 
-        if (!string.IsNullOrEmpty(styles)) return styles;
+        if (!string.IsNullOrEmpty(styles))
+        {
+            ApplyPositionClasses(appliedPosition);
+            return styles;
+        }
 
         // All options for getting the overlay within the viewport have been exhausted, so go with the
         // position that went off-screen the least.
         styles = await SetOverlayElementStyles(fallbackOriginPoint, fallbackPosition, viewportRect);
 
         await dnetOverlayHost.SetBoundingBoxStyles(fallbackOriginPoint, fallbackPosition);
+        ApplyPositionClasses(fallbackPosition);
 
         return styles;
+    }
+
+    private void ApplyPositionClasses(ConnectedPosition position)
+    {
+        _positionClasses = position.PanelClass;
+        _cssClasses = GetCssClasses();
     }
 
     private async Task<string> SetOverlayElementStyles(Point originPoint, ConnectedPosition position, ClientRect viewportRect)
@@ -432,6 +449,7 @@
             };
 
         var overlayPoint = GetOverlayPoint(originPoint, overlayRect, position);
+        overlayPoint.Y += position.OffsetY ?? 0;
 
         if (_isPushed)
         {
@@ -490,6 +508,7 @@
         // changed since the last `apply`.
         //var styles = { left: '', right: ''} as CSSStyleDeclaration;
         var overlayPoint = GetOverlayPoint(originPoint, overlayRect, position);
+        overlayPoint.X += position.OffsetX ?? 0;
 
         if (_isPushed)
         {
