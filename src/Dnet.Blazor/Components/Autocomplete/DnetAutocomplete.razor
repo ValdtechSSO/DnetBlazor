@@ -40,110 +40,144 @@
     [CascadingParameter(Name = "DnetThemeScope")]
     private string? _themeScope { get; set; }
 
+    /// <summary>Raised when the user selects an item.</summary>
     [Parameter]
     public EventCallback<TItem> OnItemSelected { get; set; }
 
     [DisallowNull]
     public ElementReference __inputReference { get; protected set; }
 
+    /// <summary>Raised after the user stops typing.</summary>
     [Parameter]
     public EventCallback<string> OnStopTyping { get; set; }
 
+    /// <summary>Raised when the component receives focus.</summary>
     [Parameter]
     public EventCallback<string> OnFocus { get; set; }
 
+    /// <summary>Raised when focus enters the component.</summary>
     [Parameter]
     public EventCallback<string> OnFocusin { get; set; }
 
+    /// <summary>Raised when the user clears the input.</summary>
     [Parameter]
     public EventCallback<bool> OnClearInput { get; set; }
 
+    /// <summary>Gets or sets the function that converts an item to display text.</summary>
     [Parameter]
     [NotNull]
     public Func<TItem, string>? DisplayValueConverter { get; set; }
 
+    /// <summary>Gets or sets the value converter used by this component.</summary>
     [Parameter]
     [NotNull]
     public Expression<Func<TItem, TValue>>? ValueConverter { get; set; }
 
+    /// <summary>Gets or sets the sort by used by this component.</summary>
     [Parameter]
     public CustomSort<TItem>? SortBy { get; set; }
 
+    /// <summary>Gets or sets the filter by used by this component.</summary>
     [Parameter]
     public CustomFilter<TItem>? FilterBy { get; set; }
 
+    /// <summary>Gets or sets content rendered for item prefix.</summary>
     [Parameter]
     public RenderFragment<TItem>? ItemPrefixContent { get; set; }
 
+    /// <summary>Gets or sets content rendered for item sufix.</summary>
     [Parameter]
     public RenderFragment<TItem>? ItemSufixContent { get; set; }
 
+    /// <summary>Gets or sets content rendered for item child.</summary>
     [Parameter]
     public RenderFragment<TItem>? ItemChildContent { get; set; }
 
+    /// <summary>Gets or sets content rendered in the component footer.</summary>
     [Parameter]
     public RenderFragment<TItem>? FooterContent { get; set; }
 
+    /// <summary>Gets or sets the collection of items rendered by the component.</summary>
     [Parameter]
     public List<TItem> Items { get; set; } = new();
 
+    /// <summary>Gets or sets the order by used by this component.</summary>
     [Parameter]
     public string OrderBy { get; set; } = "ASC";
 
+    /// <summary>Gets or sets the component width.</summary>
     [Parameter]
     public string? Width { get; set; }
 
+    /// <summary>Gets or sets the component height.</summary>
     [Parameter]
     public string? Height { get; set; } = "300px";
 
+    /// <summary>Gets or sets the minimum component width.</summary>
     [Parameter]
     public string? MinWidth { get; set; } = "300px";
 
+    /// <summary>Gets or sets the minimum component height.</summary>
     [Parameter]
     public string? MinHeight { get; set; }
 
+    /// <summary>Gets or sets the maximum component width.</summary>
     [Parameter]
     public string? MaxWidth { get; set; }
 
+    /// <summary>Gets or sets the maximum component height.</summary>
     [Parameter]
     public string? MaxHeight { get; set; }
 
+    /// <summary>Gets or sets the margin top used by this component.</summary>
     [Parameter]
     public string MarginTop { get; set; } = "5px";
 
+    /// <summary>Gets or sets the item height used by this component.</summary>
     [Parameter]
     public int ItemHeight { get; set; } = 50;
 
+    /// <summary>Gets or sets the delay before a debounced input action is raised.</summary>
     [Parameter]
     public int DebounceTime { get; set; } = 300;
 
+    /// <summary>Gets or sets the number of additional items rendered outside the visible viewport.</summary>
     [Parameter]
     public int OverscanCount { get; set; } = 3;
 
+    /// <summary>Gets or sets the input text to upper used by this component.</summary>
     [Parameter]
     public bool InputTextToUpper { get; set; }
 
+    /// <summary>Gets or sets the item auto selection used by this component.</summary>
     [Parameter]
     public bool ItemAutoSelection { get; set; }
 
+    /// <summary>Gets or sets whether user interaction with the component is disabled.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
+    /// <summary>Gets or sets whether the component enable server side.</summary>
     [Parameter]
     public bool EnableServerSide { get; set; }
 
+    /// <summary>Gets or sets the order starting by searched string used by this component.</summary>
     [Parameter]
     public bool OrderStartingBySearchedString { get; set; } = false;
 
+    /// <summary>Gets or sets whether a value is required for validation.</summary>
     [Parameter]
     public bool IsRequired { get; set; }
 
+    /// <summary>Gets or sets placeholder text displayed when the input is empty.</summary>
     [Parameter]
     public string PlaceHolder { get; set; } = string.Empty;
 
+    /// <summary>Gets or sets the overlay panel class used by this component.</summary>
     [Parameter]
     public string? OverlayPanelClass { get; set; }
 
+    /// <summary>Gets or sets the panel label used by this component.</summary>
     [Parameter]
     public string PanelLabel { get; set; } = string.Empty;
 

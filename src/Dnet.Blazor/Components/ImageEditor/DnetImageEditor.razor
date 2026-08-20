@@ -22,45 +22,59 @@
 
 @code {
 
+    /// <summary>Raised when image selected occurs.</summary>
     [Parameter]
     public EventCallback<MemoryStream> OnImageSelected { get; set; }
 
+    /// <summary>Raised when star loading image occurs.</summary>
     [Parameter]
     public EventCallback OnStarLoadingImage { get; set; }
 
+    /// <summary>Raised when end loading image occurs.</summary>
     [Parameter]
     public EventCallback OnEndLoadingImage { get; set; }
 
+    /// <summary>Raised when cancel occurs.</summary>
     [Parameter]
     public EventCallback OnCancel { get; set; }
 
+    /// <summary>Gets or sets the image container height used by this component.</summary>
     [Parameter]
     public int ImageContainerHeight { get; set; } = 480;
 
+    /// <summary>Gets or sets the image container width used by this component.</summary>
     [Parameter]
     public int ImageContainerWidth { get; set; } = 640;
 
+    /// <summary>Gets or sets the image preview height used by this component.</summary>
     [Parameter]
     public int ImagePreviewHeight { get; set; } = 170;
 
+    /// <summary>Gets or sets the image preview width used by this component.</summary>
     [Parameter]
     public int ImagePreviewWidth { get; set; } = 170;
 
+    /// <summary>Gets or sets the modal dialog height used by this component.</summary>
     [Parameter]
     public int ModalDialogHeight { get; set; } = 668;
 
+    /// <summary>Gets or sets the modal dialog width used by this component.</summary>
     [Parameter]
     public int ModalDialogWidth { get; set; } = 1024;
 
+    /// <summary>Gets or sets the max file sizes used by this component.</summary>
     [Parameter]
     public long MaxFileSizes { get; set; }
 
+    /// <summary>Gets or sets the image file formats that may be selected.</summary>
     [Parameter]
     public List<string> AllowedFormats { get; set; } = new();
 
+    /// <summary>Gets or sets the image editing controls used by this component.</summary>
     [Parameter]
     public List<ImageEditorControlType> ImageEditingControls { get; set; } = new();
 
+    /// <summary>Gets or sets the image file used by this component.</summary>
     [Parameter]
     public IBrowserFile? ImageFile { get; set; }
 

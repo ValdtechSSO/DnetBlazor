@@ -1,0 +1,145 @@
+/*
+ * modern.css — Dnet.Blazor theme
+ *
+ * Redefines only the semantic layer (--dnet-sys-*). No component rules, no
+ * !important, no structural changes. Load it AFTER dnet-blazor-styles.css and
+ * activate with:  document.documentElement.dataset.dnetTheme = "modern";
+ *
+ * Scope it to a subtree instead by putting data-dnet-theme="modern" on any
+ * element, or by wrapping in <DnetThemeScope Theme="modern"> — which is what
+ * carries the theme into dialogs, tooltips and other overlays.
+ */
+
+[data-dnet-theme="modern"] {
+
+  /* ---------------------------------------------------------- surfaces */
+  /* Cool-tinted neutrals. Reads cleaner next to the indigo accent than the
+     warmer default scale. */
+  --dnet-sys-surface: #ffffff;
+  --dnet-sys-surface-raised: #ffffff;
+  --dnet-sys-surface-hover: #f4f4f5;
+  --dnet-sys-surface-variant: #f4f4f5;
+  --dnet-sys-surface-inverse: #18181b;
+
+  /* ------------------------------------------------------------- text */
+  /* Darker than the default #5f6368 — more presence without going pure black. */
+  --dnet-sys-on-surface: #3f3f46;
+  --dnet-sys-on-surface-muted: #71717a;
+  --dnet-sys-on-surface-subtle: #a1a1aa;
+  --dnet-sys-on-surface-emphasis: #18181b;
+
+  /* ------------------------------------------------------------ accent */
+  /* The default #4fc3f7 gives 2.0:1 against white, so white text on a primary
+     button fails WCAG AA outright. #5b5ce0 reaches 5.2:1 — the more common
+     #6366f1 lands at 4.47:1 and misses AA by a hair. */
+  --dnet-sys-primary: #5b5ce0;
+  --dnet-sys-primary-strong: #4f46e5;
+  --dnet-sys-primary-emphasis: #4338ca;
+  --dnet-sys-on-primary: #ffffff;
+
+  --dnet-sys-success: #16a34a;
+  --dnet-sys-warning: #d97706;
+  --dnet-sys-danger: #dc2626;
+
+  /* ----------------------------------------------------------- borders */
+  --dnet-sys-border: #e4e4e7;
+  --dnet-sys-border-strong: #d4d4d8;
+  --dnet-sys-border-width: 1px;
+
+  /* ------------------------------------------------------------ states */
+  /* Left deliberately unset except for selection: hover, pressed and disabled
+     are derived with color-mix from --dnet-sys-on-surface upstream, so they
+     follow the new text colour on their own. Selection is softened because a
+     12% indigo tint reads heavier than a 12% cyan one. */
+  --dnet-sys-state-selected: color-mix(in srgb, var(--dnet-sys-primary) 9%, transparent);
+  --dnet-sys-focus-ring: var(--dnet-sys-primary);
+
+  /* ------------------------------------------------------------- shape */
+  /* The single change with the largest visual payoff. */
+  --dnet-sys-radius-sm: 8px;
+  --dnet-sys-radius-md: 10px;
+  --dnet-sys-radius-lg: 14px;
+  --dnet-sys-radius-pill: 9999px;
+
+  /* --------------------------------------------------------- elevation */
+  /* Lower opacity, much larger blur, negative spread. Present but not visible. */
+  --dnet-sys-shadow-color: color-mix(in srgb, #18181b 8%, transparent);
+  --dnet-sys-scrim: color-mix(in srgb, #18181b 40%, transparent);
+
+  --dnet-sys-elevation-1:
+    0 1px 2px 0 var(--dnet-sys-shadow-color),
+    0 1px 3px -1px var(--dnet-sys-shadow-color);
+  --dnet-sys-elevation-2:
+    0 1px 3px 0 var(--dnet-sys-shadow-color),
+    0 8px 24px -6px var(--dnet-sys-shadow-color);
+  --dnet-sys-elevation-3:
+    0 2px 4px -1px var(--dnet-sys-shadow-color),
+    0 12px 32px -8px var(--dnet-sys-shadow-color);
+  --dnet-sys-elevation-4:
+    0 4px 8px -2px var(--dnet-sys-shadow-color),
+    0 20px 40px -12px var(--dnet-sys-shadow-color);
+  --dnet-sys-elevation-5:
+    0 8px 16px -4px var(--dnet-sys-shadow-color),
+    0 28px 56px -16px var(--dnet-sys-shadow-color);
+
+  /* ----------------------------------------------------------- density */
+  /* Shorter controls, more space between them. The two go together: the extra
+     breathing room is what lets the control itself shrink. */
+  --dnet-sys-space-unit: 5px;
+  --dnet-sys-control-height: 44px;
+  --dnet-sys-control-height-sm: 34px;
+  --dnet-sys-text-input-min-height: 32px;
+
+  /* -------------------------------------------------------- typography */
+  --dnet-sys-font: "Inter", ui-sans-serif, system-ui, -apple-system,
+                   "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --dnet-sys-text-xs: 0.6875rem;   /* 11px — the default 10px is too small */
+  --dnet-sys-text-sm: 0.8125rem;   /* 13px */
+  --dnet-sys-text-md: 0.875rem;    /* 14px */
+  --dnet-sys-text-lg: 1rem;        /* 16px */
+  --dnet-sys-text-xl: 1.25rem;     /* 20px */
+
+  /* ------------------------------------------------------------ motion */
+  --dnet-sys-motion-fast: 120ms;
+  --dnet-sys-motion-normal: 180ms;
+  --dnet-sys-motion-ease: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/*
+ * Optional: pill-shaped chips and buttons.
+ * Not part of the base theme because it's a stronger stylistic statement than
+ * the rest — delete this block if you want rounded rectangles everywhere.
+ */
+[data-dnet-theme="modern"] {
+  --dnet-chips-radius: var(--dnet-sys-radius-pill);
+  --dnet-btn-radius: var(--dnet-sys-radius-md);
+}
+
+/*
+ * Dark variant. Combine with:  data-dnet-theme="modern" data-dnet-scheme="dark"
+ * Only surfaces, text and borders need restating — the state layers invert
+ * themselves because they are derived from --dnet-sys-on-surface.
+ */
+[data-dnet-theme="modern"][data-dnet-scheme="dark"] {
+  --dnet-sys-surface: #18181b;
+  --dnet-sys-surface-raised: #27272a;
+  --dnet-sys-surface-hover: #27272a;
+  --dnet-sys-surface-variant: #27272a;
+  --dnet-sys-surface-inverse: #fafafa;
+
+  --dnet-sys-on-surface: #e4e4e7;
+  --dnet-sys-on-surface-muted: #a1a1aa;
+  --dnet-sys-on-surface-subtle: #71717a;
+  --dnet-sys-on-surface-emphasis: #fafafa;
+
+  --dnet-sys-primary: #818cf8;
+  --dnet-sys-primary-strong: #6366f1;
+  --dnet-sys-primary-emphasis: #a5b4fc;
+  --dnet-sys-on-primary: #1e1b4b;
+
+  --dnet-sys-border: #3f3f46;
+  --dnet-sys-border-strong: #52525b;
+
+  --dnet-sys-shadow-color: color-mix(in srgb, #000000 50%, transparent);
+  --dnet-sys-scrim: color-mix(in srgb, #000000 60%, transparent);
+}

@@ -45,24 +45,30 @@ else
     [CascadingParameter]
     private FormFieldCascadingValues? _formFieldCascadingValues { get; set; }
 
+    /// <summary>Raised when the user clears the input.</summary>
     [Parameter]
     public EventCallback<bool> OnClearInput { get; set; }
 
+    /// <summary>Raised after the user stops typing.</summary>
     [Parameter]
     public EventCallback<string> OnStopTyping { get; set; }
 
+    /// <summary>Gets or sets whether user interaction with the component is disabled.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
+    /// <summary>Gets or sets the immediate response used by this component.</summary>
     [Parameter]
     public bool ImmediateResponse { get; set; } = true;
 
     [DisallowNull]
     public ElementReference? __inputReference { get; protected set; }
 
+    /// <summary>Gets or sets the delay before a debounced input action is raised.</summary>
     [Parameter]
     public int DebounceTime { get; set; } = 300;
 
+    /// <summary>Gets or sets placeholder text displayed when the input is empty.</summary>
     [Parameter]
     public string? PlaceHolder { get; set; }
 

@@ -230,55 +230,72 @@
     [CascadingParameter]
     BlgGrid<TItem> BlgGrid { get; set; }
 
+    /// <summary>Gets or sets the grid columns used by this component.</summary>
     [Parameter]
     public List<GridColumn<TItem>> GridColumns { get; set; }
 
+    /// <summary>Gets or sets the group grid column used by this component.</summary>
     [Parameter]
     public GridColumn<TItem> GroupGridColumn { get; set; }
 
+    /// <summary>Gets or sets the group by columns used by this component.</summary>
     [Parameter]
     public List<string> GroupByColumns { get; set; }
 
+    /// <summary>Gets or sets the has grouping used by this component.</summary>
     [Parameter]
     public bool HasGrouping { get; set; }
 
+    /// <summary>Gets or sets whether expanded.</summary>
     [Parameter]
     public bool IsExpanded { get; set; }
 
+    /// <summary>Gets or sets the checkbox selection pinned used by this component.</summary>
     [Parameter]
     public bool CheckboxSelectionPinned { get; set; }
 
+    /// <summary>Gets or sets the pinned used by this component.</summary>
     [Parameter]
     public Pinned Pinned { get; set; }
 
+    /// <summary>Gets or sets the grid options used by this component.</summary>
     [Parameter]
     public GridOptions<TItem> GridOptions { get; set; }
 
 
+    /// <summary>Raised when filter occurs.</summary>
     [Parameter]
     public EventCallback OnFilter { get; set; }
 
+    /// <summary>Raised when advanced filter occurs.</summary>
     [Parameter]
     public EventCallback OnAdvancedFilter { get; set; }
 
+    /// <summary>Raised when sort occurs.</summary>
     [Parameter]
     public EventCallback<string> OnSort { get; set; }
 
+    /// <summary>Raised when add group occurs.</summary>
     [Parameter]
     public EventCallback<string> OnAddGroup { get; set; }
 
+    /// <summary>Raised when delete group occurs.</summary>
     [Parameter]
     public EventCallback<string> OnDeleteGroup { get; set; }
 
+    /// <summary>Raised when change select all nodes occurs.</summary>
     [Parameter]
     public EventCallback<bool> OnChangeSelectAllNodes { get; set; }
 
+    /// <summary>Raised when mouse down occurs.</summary>
     [Parameter]
     public EventCallback<Tuple<string, int>> OnMouseDown { get; set; }
 
+    /// <summary>Raised when header with change occurs.</summary>
     [Parameter]
     public EventCallback<int> OnHeaderWithChange { get; set; }
 
+    /// <summary>Raised when expand collapse occurs.</summary>
     [Parameter]
     public EventCallback<bool> OnExpandCollapse { get; set; }
 

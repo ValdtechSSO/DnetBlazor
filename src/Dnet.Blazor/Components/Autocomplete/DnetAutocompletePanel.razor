@@ -118,45 +118,59 @@
     [CascadingParameter]
     private int OverlayReferenceId { get; set; }
 
+    /// <summary>Gets or sets the collection of items rendered by the component.</summary>
     [Parameter]
     public List<TItem> Items { get; set; } = new();
 
+    /// <summary>Gets or sets the auto complete list service used by this component.</summary>
     [Parameter]
     public AutoCompleteListService<TItem>? AutoCompleteListService { get; set; }
 
+    /// <summary>Gets or sets the function that converts an item to display text.</summary>
     [Parameter]
     public Func<TItem, string>? DisplayValueConverter { get; set; }
 
+    /// <summary>Gets or sets the support text value converter used by this component.</summary>
     [Parameter]
     public Func<TItem, string>? SupportTextValueConverter { get; set; }
 
+    /// <summary>Gets or sets the child content rendered by the component.</summary>
     [Parameter]
     public RenderFragment<TItem>? ChildContent { get; set; }
 
+    /// <summary>Gets or sets content rendered for item prefix.</summary>
     [Parameter]
     public RenderFragment<TItem>? ItemPrefixContent { get; set; }
 
+    /// <summary>Gets or sets content rendered for item sufix.</summary>
     [Parameter]
     public RenderFragment<TItem>? ItemSufixContent { get; set; }
 
+    /// <summary>Gets or sets content rendered in the component footer.</summary>
     [Parameter]
     public RenderFragment<TItem>? FooterContent { get; set; }
 
+    /// <summary>Gets or sets the item height used by this component.</summary>
     [Parameter]
     public int ItemHeight { get; set; } = 40;
 
+    /// <summary>Gets or sets the container height used by this component.</summary>
     [Parameter]
     public int ContainerHeight { get; set; } = 200;
 
+    /// <summary>Gets or sets the number of additional items rendered outside the visible viewport.</summary>
     [Parameter]
     public int OverscanCount { get; set; } = 3;
 
+    /// <summary>Gets or sets placeholder text displayed when the input is empty.</summary>
     [Parameter]
     public string PlaceHolder { get; set; } = string.Empty;
 
+    /// <summary>Gets or sets the panel label used by this component.</summary>
     [Parameter]
     public string PanelLabel { get; set; } = string.Empty;
 
+    /// <summary>Gets or sets the current value used by this component.</summary>
     [Parameter]
     public string CurrentValue { get; set; } = string.Empty;
 

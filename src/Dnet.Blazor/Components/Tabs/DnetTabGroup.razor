@@ -64,18 +64,23 @@
 
 @code {
 
+    /// <summary>Gets or sets the child content rendered by the component.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+    /// <summary>Gets or sets the identifier of the selected tab.</summary>
     [Parameter]
     public int SelectedTabId { get; set; }
 
+    /// <summary>Gets or sets the tab header border used by this component.</summary>
     [Parameter]
     public bool TabHeaderBorder { get; set; }
 
+    /// <summary>Raised when tab clicked occurs.</summary>
     [Parameter]
     public EventCallback<TabClikedEventData> OnTabClicked { get; set; }
 
+    /// <summary>Gets or sets the all other attributes used by this component.</summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AllOtherAttributes { get; set; }
 

@@ -15,12 +15,13 @@
     <link href="_content/Dnet.Blazor/styles/theme/dark.css" rel="stylesheet" />
     <link href="_content/Dnet.Blazor/styles/theme/compact.css" rel="stylesheet" />
     <link href="_content/Dnet.Blazor/styles/theme/high-contrast.css" rel="stylesheet" />
+    <link href="_content/Dnet.Blazor/styles/theme/modern.css" rel="stylesheet" />
     <link href="_content/Dnet.App.Shared/css/site.css" rel="stylesheet" />
     <script>
         (() => {
             try {
                 const persistedTheme = JSON.parse(localStorage.getItem("dnet.theme") ?? "null");
-                const theme = ["", "dark", "compact", "high-contrast"].includes(persistedTheme)
+                const theme = ["", "dark", "compact", "high-contrast", "modern"].includes(persistedTheme)
                     ? persistedTheme
                     : "dark";
                 document.documentElement.dataset.dnetTheme = theme;

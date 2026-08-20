@@ -1,55 +1,57 @@
 # Tree
 
-Components: `<DnetTree>`, `<DnetTreeNode>`
-
 ## `<DnetTree>` — generic over TNode
 
-| Parameter | Type | Default |
-|---|---|---|
-| `NodeContent` | `RenderFragment<TNode>?` | — |
-| `OnTreeNodeClicked` | `EventCallback<TNode>` | — |
-| `OnCheckboxClicked` | `EventCallback<TNode>` | — |
-| `OnSelectionChange` | `EventCallback<List<TNode>>` | — |
-| `Nodes` | `ICollection<TNode>?` | — |
-| `DisplayValueConverter` | `Func<TNode, string>` | `value => value?.ToString() ?? string.Empty` |
-| `ChildNodes` | `Func<TNode, List<TNode>?>?` | — |
-| `ComponentType` | `Type` | — |
-| `Parameters` | `IDictionary<string, object>` | — |
-| `CheckboxSelection` | `bool` | — |
-
-## `<DnetTreeNode>` — generic over TNode
-
-| Parameter | Type | Default |
-|---|---|---|
-| `NodeContent` | `RenderFragment<TNode>?` | — |
-| `OnTreeNodeParentToggle` | `EventCallback<bool>` | — |
-| `OnTreeNodeClicked` | `EventCallback<TNode>` | — |
-| `OnCheckboxClicked` | `EventCallback<TNode>` | — |
-| `OnSelectionChange` | `EventCallback<List<TNode>>` | — |
-| `Node` | `TreeNodeModel<TNode>` | `default!` |
-| `ChildNodes` | `Func<TNode, List<TNode>?>?` | — |
-| `Parameters` | `IDictionary<string, object>?` | — |
-| `DisplayValueConverter` | `Func<TNode, string>` | `value => value?.ToString() ?? string.Empty` |
-| `CheckboxSelection` | `bool` | — |
-
-## Minimal usage
-
 ```razor
-<DnetTree TTNode="..."
-    Nodes="..."
-    ChildNodes="..."
+<DnetTree TNode="..."
     ComponentType="..."
+    Parameters="..."
+    CheckboxSelection="..."
 />
 ```
 
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `NodeContent` | `RenderFragment<TNode>?` | — | Gets or sets the template used to render a tree node. |
+| `OnTreeNodeClicked` | `EventCallback<TNode>` | — | Raised when tree node clicked occurs. |
+| `OnCheckboxClicked` | `EventCallback<TNode>` | — | Raised when checkbox clicked occurs. |
+| `OnSelectionChange` | `EventCallback<List<TNode>>` | — | Raised when the selection changes. |
+| `Nodes` | `ICollection<TNode>?` | — | Gets or sets the nodes used by this component. |
+| `DisplayValueConverter` | `Func<TNode, string>` | `value => value?.ToString() ?? string.Empty` | Gets or sets the function that converts an item to display text. |
+| `ChildNodes` | `Func<TNode, List<TNode>?>?` | — | Gets or sets the child nodes used by this component. |
+| `ComponentType` | `Type` | — | Gets or sets the component type rendered dynamically. |
+| `Parameters` | `IDictionary<string, object>` | — | Gets or sets parameters passed to the dynamically rendered component. |
+| `CheckboxSelection` | `bool` | — | Gets or sets the checkbox selection used by this component. |
+
+## `<DnetTreeNode>` — generic over TNode
+
+```razor
+<DnetTreeNode TNode="..."
+    CheckboxSelection="..."
+/>
+```
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `NodeContent` | `RenderFragment<TNode>?` | — | Gets or sets the template used to render a tree node. |
+| `OnTreeNodeParentToggle` | `EventCallback<bool>` | — | Raised when tree node parent toggle occurs. |
+| `OnTreeNodeClicked` | `EventCallback<TNode>` | — | Raised when tree node clicked occurs. |
+| `OnCheckboxClicked` | `EventCallback<TNode>` | — | Raised when checkbox clicked occurs. |
+| `OnSelectionChange` | `EventCallback<List<TNode>>` | — | Raised when the selection changes. |
+| `Node` | `TreeNodeModel<TNode>` | `default!` | Gets or sets the node used by this component. |
+| `ChildNodes` | `Func<TNode, List<TNode>?>?` | — | Gets or sets the child nodes used by this component. |
+| `Parameters` | `IDictionary<string, object>?` | — | Gets or sets parameters passed to the dynamically rendered component. |
+| `DisplayValueConverter` | `Func<TNode, string>` | `value => value?.ToString() ?? string.Empty` | Gets or sets the function that converts an item to display text. |
+| `CheckboxSelection` | `bool` | — | Gets or sets the checkbox selection used by this component. |
+
 ## Styling tokens
 
-Override these anywhere in the DOM above the component — `:root`, a
-container, or the element's own `style`. Nothing else is needed.
+Set any of these above the component in the DOM — `:root`, a container, or
+the element's own `style`. Nothing else is needed.
 
-| Token | Falls back to |
+| Token | Effective default |
 |---|---|
-| `--dnet-tree-font-size` | — |
+| `--dnet-tree-font-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
 | `--dnet-tree-icon-width` | `25px` |
 
 ```css

@@ -1,17 +1,13 @@
 # Overlay
 
-Components: `<DnetOverlay>`
-
 ## `<DnetOverlay>`
-
-| Parameter | Type | Default |
-|---|---|---|
-| `BaseZindex` | `int` | — |
-
-## Minimal usage
 
 ```razor
 <DnetOverlay
     BaseZindex="..."
 />
 ```
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `BaseZindex` | `int` | — | Gets or sets the base z-index used by overlays. |

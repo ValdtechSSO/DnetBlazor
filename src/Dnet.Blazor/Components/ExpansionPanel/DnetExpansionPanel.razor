@@ -8,18 +8,23 @@
 
 @code {
 
+	/// <summary>Raised when expanded changed occurs.</summary>
 	[Parameter]
 	public EventCallback<DnetExpansionPanelItem> OnExpandedChanged { get; set; }
 
+	/// <summary>Gets or sets the all other attributes used by this component.</summary>
 	[Parameter(CaptureUnmatchedValues = true)]
 	public Dictionary<string, object>? AllOtherAttributes { get; set; }
 
+	/// <summary>Gets or sets the child content rendered by the component.</summary>
 	[Parameter]
 	public RenderFragment? ChildContent { get; set; }
 
+	/// <summary>Gets or sets the expansion panel display mode used by this component.</summary>
 	[Parameter]
 	public ExpansionPanelDisplayMode ExpansionPanelDisplayMode { get; set; } = ExpansionPanelDisplayMode.Flat;
 
+	/// <summary>Gets or sets the multi used by this component.</summary>
 	[Parameter]
 	public bool Multi { get; set; } = true;
 

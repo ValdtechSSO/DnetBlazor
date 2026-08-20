@@ -58,9 +58,11 @@ namespace Dnet.Blazor.Components.RadioButton
             }
         }
 
+        /// <summary>Gets or sets the child content rendered by the component.</summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>Gets or sets whether user interaction with the component is disabled.</summary>
         [Parameter] 
         public bool Disabled { get; set; }
 

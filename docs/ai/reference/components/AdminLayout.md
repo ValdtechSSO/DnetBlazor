@@ -1,144 +1,206 @@
 # AdminLayout
 
-Components: `<DesktopFooter>`, `<DesktopHeader>`, `<DesktopLayout>`, `<DesktopLeftColumn>`, `<DesktopMinifyMenu>`, `<DesktopNavigation>`, `<DesktopNavigationMenu>`, `<DesktopRightColumn>`, `<MenuTree>`, `<MenuTreeLink>`, `<MenuTreeLinkHelper>`
-
 ## `<DesktopFooter>`
 
-| Parameter | Type | Default |
-|---|---|---|
-| `ChildContent` | `RenderFragment?` | — |
+```razor
+<DesktopFooter
+/>
+```
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `ChildContent` | `RenderFragment?` | — | Gets or sets the child content rendered by the component. |
 
 ## `<DesktopHeader>`
 
-| Parameter | Type | Default |
-|---|---|---|
-| `ChildContent` | `RenderFragment?` | — |
+```razor
+<DesktopHeader
+/>
+```
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `ChildContent` | `RenderFragment?` | — | Gets or sets the child content rendered by the component. |
 
 ## `<DesktopLayout>`
 
-| Parameter | Type | Default |
-|---|---|---|
-| `ChildContent` | `RenderFragment?` | — |
-| `IsHeaderFixed` | `bool` | — |
-| `IsLeftColumnFixed` | `bool` | — |
-| `ShowMinifier` | `bool` | — |
-| `IsMinified` | `bool` | — |
-| `IsHeaderHidden` | `bool` | — |
-| `IsFooterHidden` | `bool` | — |
-| `IsLeftColumnHidden` | `bool` | — |
-| `IsRightColumnHidden` | `bool` | — |
-| `IsDesktopMode` | `bool` | — |
+```razor
+<DesktopLayout
+    IsHeaderFixed="..."
+    IsLeftColumnFixed="..."
+    ShowMinifier="..."
+    IsMinified="..."
+/>
+```
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `ChildContent` | `RenderFragment?` | — | Gets or sets the child content rendered by the component. |
+| `AdditionalAttributes` | `IReadOnlyDictionary<string, object>?` | — | Gets or sets unmatched HTML attributes applied to the rendered element. |
+| `IsHeaderFixed` | `bool` | — | Gets or sets whether header fixed. |
+| `IsLeftColumnFixed` | `bool` | — | Gets or sets whether left column fixed. |
+| `ShowMinifier` | `bool` | — | Gets or sets whether the component show minifier. |
+| `IsMinified` | `bool` | — | Gets or sets whether minified. |
+| `IsHeaderHidden` | `bool` | — | Gets or sets whether header hidden. |
+| `IsFooterHidden` | `bool` | — | Gets or sets whether footer hidden. |
+| `IsLeftColumnHidden` | `bool` | — | Gets or sets whether left column hidden. |
+| `IsRightColumnHidden` | `bool` | — | Gets or sets whether right column hidden. |
+| `IsDesktopMode` | `bool` | — | Gets or sets whether desktop mode. |
 
 ## `<DesktopLeftColumn>`
 
-| Parameter | Type | Default |
-|---|---|---|
-| `ChildContent` | `RenderFragment?` | — |
+```razor
+<DesktopLeftColumn
+/>
+```
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `ChildContent` | `RenderFragment?` | — | Gets or sets the child content rendered by the component. |
 
 ## `<DesktopMinifyMenu>`
 
-| Parameter | Type | Default |
-|---|---|---|
-| `AllowMinified` | `bool` | — |
+```razor
+<DesktopMinifyMenu
+    AllowMinified="..."
+/>
+```
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `AllowMinified` | `bool` | — | Gets or sets whether the component allow minified. |
 
 ## `<DesktopNavigation>`
 
-| Parameter | Type | Default |
-|---|---|---|
-| `CompanyChildContent` | `RenderFragment?` | — |
-| `MenuChildContent` | `RenderFragment?` | — |
-| `MinifierChildContent` | `RenderFragment?` | — |
+```razor
+<DesktopNavigation
+/>
+```
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `CompanyChildContent` | `RenderFragment?` | — | Gets or sets content rendered for company child. |
+| `MenuChildContent` | `RenderFragment?` | — | Gets or sets content rendered for menu child. |
+| `MinifierChildContent` | `RenderFragment?` | — | Gets or sets content rendered for minifier child. |
 
 ## `<DesktopNavigationMenu>`
 
-| Parameter | Type | Default |
-|---|---|---|
-| `Menus` | `List<NavigationMenu>` | `new()` |
+```razor
+<DesktopNavigationMenu
+/>
+```
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `Menus` | `List<NavigationMenu>` | `new()` | Gets or sets the menus used by this component. |
 
 ## `<DesktopRightColumn>`
 
-| Parameter | Type | Default |
-|---|---|---|
-| `ChildContent` | `RenderFragment?` | — |
+```razor
+<DesktopRightColumn
+/>
+```
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `ChildContent` | `RenderFragment?` | — | Gets or sets the child content rendered by the component. |
 
 ## `<MenuTree>`
 
-| Parameter | Type | Default |
-|---|---|---|
-| `Menu` | `NavigationMenu?` | — |
+```razor
+<MenuTree
+/>
+```
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `Menu` | `NavigationMenu?` | — | Gets or sets the menu used by this component. |
 
 ## `<MenuTreeLink>`
 
-| Parameter | Type | Default |
-|---|---|---|
-| `Menu` | `NavigationMenu?` | — |
-| `OnLinkNodeClick` | `EventCallback<bool>` | — |
+```razor
+<MenuTreeLink
+/>
+```
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `AdditionalAttributes` | `Dictionary<string, object>` | `new()` | Gets or sets unmatched HTML attributes applied to the rendered element. |
+| `Menu` | `NavigationMenu?` | — | Gets or sets the menu used by this component. |
+| `OnLinkNodeClick` | `EventCallback<bool>` | — | Raised when link node click occurs. |
 
 ## `<MenuTreeLinkHelper>`
 
-| Parameter | Type | Default |
-|---|---|---|
-| `Menu` | `NavigationMenu?` | — |
-| `OnLinkNodeClick` | `EventCallback<bool>` | — |
-
-## Minimal usage
-
 ```razor
-<DesktopFooter />
+<MenuTreeLinkHelper
+/>
 ```
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `AdditionalAttributes` | `Dictionary<string, object>?` | — | Gets or sets unmatched HTML attributes applied to the rendered element. |
+| `Menu` | `NavigationMenu?` | — | Gets or sets the menu used by this component. |
+| `OnLinkNodeClick` | `EventCallback<bool>` | — | Raised when link node click occurs. |
 
 ## Styling tokens
 
-Override these anywhere in the DOM above the component — `:root`, a
-container, or the element's own `style`. Nothing else is needed.
+Set any of these above the component in the DOM — `:root`, a container, or
+the element's own `style`. Nothing else is needed.
 
-| Token | Falls back to |
+| Token | Effective default |
 |---|---|
 | `--dnet-dash-aside` | — |
-| `--dnet-dash-aside-width` | — |
-| `--dnet-dash-aside-width-minified` | — |
-| `--dnet-dash-body-background-color` | — |
-| `--dnet-dash-default-font-color` | — |
-| `--dnet-dash-floating-menu-left` | — |
+| `--dnet-dash-aside-width` | `250px` |
+| `--dnet-dash-aside-width-minified` | `60px` |
+| `--dnet-dash-body-background-color` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
+| `--dnet-dash-default-font-color` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
+| `--dnet-dash-floating-menu-left` | `60px` |
 | `--dnet-dash-font-family-` | — |
-| `--dnet-dash-font-family-headline` | — |
-| `--dnet-dash-font-family-text` | — |
-| `--dnet-dash-font-rem-reference` | — |
-| `--dnet-dash-footer-height` | — |
-| `--dnet-dash-gray-dark` | — |
-| `--dnet-dash-header-height` | — |
-| `--dnet-dash-html-background-color` | — |
-| `--dnet-dash-indicator-bgcolor` | — |
-| `--dnet-dash-indicator-width` | — |
-| `--dnet-dash-left-column-width` | — |
-| `--dnet-dash-link-color` | — |
-| `--dnet-dash-menu-item-parent-color` | — |
-| `--dnet-dash-menu-left-padding-firts-level` | — |
-| `--dnet-dash-menu-left-padding-second-level` | — |
-| `--dnet-dash-menu-left-padding-third-level` | — |
-| `--dnet-dash-menu-text-size` | — |
-| `--dnet-dash-minifyme-bg-color` | — |
-| `--dnet-dash-minifyme-foreground` | — |
-| `--dnet-dash-navbar-height` | — |
-| `--dnet-dash-navigation-color` | — |
-| `--dnet-dash-positioning-helper-color` | — |
-| `--dnet-dash-primary-dark` | — |
-| `--dnet-dash-primary-reset` | — |
-| `--dnet-dash-red` | — |
-| `--dnet-dash-right-column-width` | — |
-| `--dnet-dash-scrollbar-background-color` | — |
-| `--dnet-dash-scrollbar-foreground-color` | — |
-| `--dnet-dash-scrollbar-size` | — |
-| `--dnet-footer-border-color` | — |
-| `--dnet-header-border-color` | — |
-| `--dnet-layout-divider-color` | — |
+| `--dnet-dash-font-family-headline` | `"Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif` <br><sub>via `--dnet-sys-font`</sub> |
+| `--dnet-dash-font-family-text` | `"Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif` <br><sub>via `--dnet-sys-font`</sub> |
+| `--dnet-dash-font-rem-reference` | `16px` |
+| `--dnet-dash-footer-height` | `50px` |
+| `--dnet-dash-gray-dark` | `color-mix(in srgb, var(--dnet-ref-neutral-1000) 87%, transparent)` <br><sub>via `--dnet-sys-on-surface-emphasis`</sub> |
+| `--dnet-dash-header-height` | `50px` |
+| `--dnet-dash-html-background-color` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
+| `--dnet-dash-indicator-bgcolor` | `#42b0d5` <br><sub>via `--dnet-sys-primary-strong`</sub> |
+| `--dnet-dash-indicator-width` | `3px` |
+| `--dnet-dash-left-column-width` | `250px` |
+| `--dnet-dash-link-color` | `color-mix(in srgb, var(--dnet-ref-neutral-1000) 87%, transparent)` <br><sub>via `--dnet-sys-on-surface-emphasis`</sub> |
+| `--dnet-dash-menu-item-parent-color` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
+| `--dnet-dash-menu-left-padding-firts-level` | `1em` |
+| `--dnet-dash-menu-left-padding-second-level` | `2em` |
+| `--dnet-dash-menu-left-padding-third-level` | `4em` |
+| `--dnet-dash-menu-text-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
+| `--dnet-dash-minifyme-bg-color` | `#ebebeb` <br><sub>via `--dnet-sys-border`</sub> |
+| `--dnet-dash-minifyme-foreground` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
+| `--dnet-dash-navbar-height` | `38px` |
+| `--dnet-dash-positioning-helper-color` | `color-mix(in srgb, var(--dnet-ref-neutral-1000) 87%, transparent)` <br><sub>via `--dnet-sys-on-surface-emphasis`</sub> |
+| `--dnet-dash-primary-dark` | `color-mix(in srgb, var(--dnet-ref-neutral-1000) 87%, transparent)` <br><sub>via `--dnet-sys-on-surface-emphasis`</sub> |
+| `--dnet-dash-primary-reset` | `#42b0d5` <br><sub>via `--dnet-sys-primary-strong`</sub> |
+| `--dnet-dash-red` | `#b80012` <br><sub>via `--dnet-sys-danger`</sub> |
+| `--dnet-dash-right-column-width` | `250px` |
+| `--dnet-dash-scrollbar-background-color` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
+| `--dnet-dash-scrollbar-foreground-color` | `#ebebeb` <br><sub>via `--dnet-sys-border`</sub> |
+| `--dnet-dash-scrollbar-size` | `.4rem` |
+| `--dnet-footer-border-color` | `#e1e3e1` <br><sub>via `--dnet-sys-border-strong`</sub> |
+| `--dnet-header-border-color` | `#e1e3e1` <br><sub>via `--dnet-sys-border-strong`</sub> |
 | `--dnet-layout-divider-style` | `solid` |
 | `--dnet-layout-divider-width` | `0` |
-| `--dnet-left-column-border-color` | — |
-| `--dnet-menu-container-bgcolor` | — |
-| `--dnet-menu-container-open-bgcolor` | — |
-| `--dnet-right-column-border-color` | — |
+| `--dnet-left-column-border-color` | `#e1e3e1` <br><sub>via `--dnet-sys-border-strong`</sub> |
+| `--dnet-menu-container-bgcolor` | `#ebebeb` <br><sub>via `--dnet-sys-border`</sub> |
+| `--dnet-menu-container-open-bgcolor` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
+| `--dnet-right-column-border-color` | `#e1e3e1` <br><sub>via `--dnet-sys-border-strong`</sub> |
+
+<details><summary>Legacy token names still honoured</summary>
+
+Kept as intermediate links in the fallback chains so 5.x overrides keep
+working. Prefer the names above for new code; these go away in 7.0.
+
+`--dnet-dash-asideWidth`, `--dnet-dash-asideWidth-minified`, `--dnet-dash-font-family-Headline`, `--dnet-dash-navigation-color`, `--dnet-layout-divider-color`
+
+</details>
 
 ```css
-:root { --dnet-dash-aside: /* your value */; }
+:root { --dnet-dash-body-background-color: /* your value */; }
 ```

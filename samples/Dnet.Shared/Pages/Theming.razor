@@ -17,6 +17,7 @@
                 <option value="dark">Dark</option>
                 <option value="compact">Compact</option>
                 <option value="high-contrast">High contrast</option>
+                <option value="modern">Modern</option>
             </select>
         </label>
 
@@ -120,5 +121,5 @@
         _copyStatus = "Copied";
     }
 
-    private static bool IsSupportedTheme(string? theme) => theme is "" or "dark" or "compact" or "high-contrast";
+    private static bool IsSupportedTheme(string? theme) => theme is "" or "dark" or "compact" or "high-contrast" or "modern";
 }

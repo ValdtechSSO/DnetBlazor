@@ -112,24 +112,31 @@
 
 @code {
 
+    /// <summary>Gets or sets the date picker service used by this component.</summary>
     [Parameter]
     public DatePickerService? DatePickerService { get; set; }
 
+    /// <summary>Gets or sets the selected day used by this component.</summary>
     [Parameter]
     public CalendarDay? SelectedDay { get; set; }
 
+    /// <summary>Gets or sets the max day value used by this component.</summary>
     [Parameter]
     public DateTime? MaxDayValue { get; set; }
 
+    /// <summary>Gets or sets the min day value used by this component.</summary>
     [Parameter]
     public DateTime? MinDayValue { get; set; }
 
+    /// <summary>Gets or sets the first day to show used by this component.</summary>
     [Parameter]
     public DateTime? FirstDayToShow { get; set; }
 
+    /// <summary>Gets or sets the datepicker filter used by this component.</summary>
     [Parameter]
     public Func<CalendarDay, bool>? DatepickerFilter { get; set; }
 
+    /// <summary>Gets or sets the border radius used by this component.</summary>
     [Parameter]
     public string BorderRadius { get; set; } = "0px";
 

@@ -120,99 +120,131 @@
     [CascadingParameter]
     private FormFieldCascadingValues? _formFieldCascadingValues { get; set; }
 
+    /// <summary>Raised when the user selects an item.</summary>
     [Parameter]
     public EventCallback<TItem> OnItemSelected { get; set; }
 
+    /// <summary>Raised when the selection changes.</summary>
     [Parameter]
     public EventCallback<List<TItem>> OnSelectionChanged { get; set; }
 
+    /// <summary>Gets or sets the function that converts an item to display text.</summary>
     [Parameter]
     public Func<TItem, string>? DisplayValueConverter { get; set; }
 
+    /// <summary>Gets or sets the support text value converter used by this component.</summary>
     [Parameter]
     public Func<TItem, string>? SupportTextValueConverter { get; set; }
 
+    /// <summary>Gets or sets the value converter used by this component.</summary>
     [Parameter]
     public Expression<Func<TItem, TValue>>? ValueConverter { get; set; }
 
+    /// <summary>Gets or sets whether selected fn.</summary>
     [Parameter]
     public Func<TItem, TItem, bool>? IsSelectedFn { get; set; }
 
+    /// <summary>Gets or sets content rendered for item prefix.</summary>
     [Parameter]
     public RenderFragment<TItem>? ItemPrefixContent { get; set; }
 
+    /// <summary>Gets or sets content rendered for item sufix.</summary>
     [Parameter]
     public RenderFragment<TItem>? ItemSufixContent { get; set; }
 
+    /// <summary>Gets or sets content rendered for item child.</summary>
     [Parameter]
     public RenderFragment<TItem>? ItemChildContent { get; set; }
 
+    /// <summary>Gets or sets content rendered for value display.</summary>
     [Parameter]
     public RenderFragment<TItem>? ValueDisplayContent { get; set; }
 
+    /// <summary>Gets or sets the collection of items rendered by the component.</summary>
     [Parameter]
     public List<TItem> Items { get; set; } = new();
 
+    /// <summary>Gets or sets the currently selected items.</summary>
     [Parameter]
     public List<TItem> SelectedItems { get; set; } = new();
 
+    /// <summary>Gets or sets the component width.</summary>
     [Parameter]
     public string? Width { get; set; } = "300px";
 
+    /// <summary>Gets or sets the component height.</summary>
     [Parameter]
     public string? Height { get; set; } = "300px";
 
+    /// <summary>Gets or sets the minimum component width.</summary>
     [Parameter]
     public string? MinWidth { get; set; }
 
+    /// <summary>Gets or sets the minimum component height.</summary>
     [Parameter]
     public string? MinHeight { get; set; }
 
+    /// <summary>Gets or sets the maximum component width.</summary>
     [Parameter]
     public string? MaxWidth { get; set; }
 
+    /// <summary>Gets or sets the maximum component height.</summary>
     [Parameter]
     public string? MaxHeight { get; set; }
 
+    /// <summary>Gets or sets the item height used by this component.</summary>
     [Parameter]
     public int ItemHeight { get; set; } = 40;
 
+    /// <summary>Gets or sets the border radius used by this component.</summary>
     [Parameter]
     public string BorderRadius { get; set; } = "5px";
 
+    /// <summary>Gets or sets the margin top used by this component.</summary>
     [Parameter]
     public string MarginTop { get; set; } = "5px";
 
+    /// <summary>Gets or sets the input text to upper used by this component.</summary>
     [Parameter]
     public bool InputTextToUpper { get; set; }
 
+    /// <summary>Gets or sets the item auto selection used by this component.</summary>
     [Parameter]
     public bool ItemAutoSelection { get; set; }
 
+    /// <summary>Gets or sets whether user interaction with the component is disabled.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
+    /// <summary>Gets or sets the hint used by this component.</summary>
     [Parameter]
     public string? Hint { get; set; }
 
+    /// <summary>Gets or sets the disabled clear button used by this component.</summary>
     [Parameter]
     public bool DisabledClearButton { get; set; }
 
+    /// <summary>Gets or sets whether the component multi select.</summary>
     [Parameter]
     public bool MultiSelect { get; set; }
 
+    /// <summary>Gets or sets whether the component confirm buttons.</summary>
     [Parameter]
     public bool ConfirmButtons { get; set; }
 
+    /// <summary>Gets or sets whether a value is required for validation.</summary>
     [Parameter]
     public bool IsRequired { get; set; }
 
+    /// <summary>Gets or sets placeholder text displayed when the input is empty.</summary>
     [Parameter]
     public string? PlaceHolder { get; set; }
 
+    /// <summary>Gets or sets the responsive label used by this component.</summary>
     [Parameter]
     public string? ResponsiveLabel { get; set; }
 
+    /// <summary>Gets or sets the overlay panel class used by this component.</summary>
     [Parameter]
     public string? OverlayPanelClass { get; set; }
 

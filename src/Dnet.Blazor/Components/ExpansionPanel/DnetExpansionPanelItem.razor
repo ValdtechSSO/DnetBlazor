@@ -50,33 +50,43 @@
 	[CascadingParameter]
 	private DnetExpansionPanel? Parent { get; set; }
 
+	/// <summary>Gets or sets the child content rendered by the component.</summary>
 	[Parameter]
 	public RenderFragment? ChildContent { get; set; }
 
+	/// <summary>Gets or sets the template used to render item header.</summary>
 	[Parameter]
 	public RenderFragment? ItemHeaderTemplate { get; set; }
 
+	/// <summary>Gets or sets the title displayed by the component.</summary>
 	[Parameter]
 	public string? Title { get; set; }
 
+	/// <summary>Gets or sets content rendered for title.</summary>
 	[Parameter]
 	public RenderFragment? TitleContent { get; set; }
 
+	/// <summary>Gets or sets the description used by this component.</summary>
 	[Parameter]
 	public string? Description { get; set; }
 
+	/// <summary>Gets or sets content rendered for description.</summary>
 	[Parameter]
 	public RenderFragment? DescriptionContent { get; set; }
 
+	/// <summary>Gets or sets the order used by this component.</summary>
 	[Parameter]
 	public int Order { get; set; } = 0;
 
+	/// <summary>Gets or sets whether user interaction with the component is disabled.</summary>
 	[Parameter]
 	public bool Disabled { get; set; } = false;
 
+	/// <summary>Gets or sets whether the component hide toggle.</summary>
 	[Parameter]
 	public bool HideToggle { get; set; } = false;
 
+	/// <summary>Gets or sets the accordion shadow used by this component.</summary>
 	[Parameter]
 	public bool AccordionShadow { get; set; } = true;
 

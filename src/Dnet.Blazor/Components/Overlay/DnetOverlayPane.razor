@@ -26,9 +26,11 @@
 
     [CascadingParameter] DnetOverlayHost? dnetOverlayHost { get; set; }
 
+    /// <summary>Gets or sets custom content rendered by the component.</summary>
     [Parameter]
     public RenderFragment? ContentChild { get; set; }
 
+    /// <summary>Gets or sets the overlay config used by this component.</summary>
     [Parameter]
     public OverlayConfig OverlayConfig { get; set; }
 

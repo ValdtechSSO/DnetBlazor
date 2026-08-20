@@ -82,27 +82,35 @@ else
 </CascadingValue>
 
 @code {
+    /// <summary>Raised when the selection changes.</summary>
     [Parameter]
     public EventCallback<Tuple<int, int>> OnSelectionChange { get; set; }
 
+    /// <summary>Gets or sets the all other attributes used by this component.</summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AllOtherAttributes { get; set; }
 
+    /// <summary>Gets or sets the child content rendered by the component.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+    /// <summary>Gets or sets the identifier of the selected step.</summary>
     [Parameter]
     public int SelectedStepId { get; set; }
 
+    /// <summary>Gets or sets the orientation used by this component.</summary>
     [Parameter]
     public int Orientation { get; set; } = (int)StepperOrientation.Horizontal;
 
+    /// <summary>Gets or sets the label position used by this component.</summary>
     [Parameter]
     public int LabelPosition { get; set; }
 
+    /// <summary>Gets or sets the linear used by this component.</summary>
     [Parameter]
     public bool Linear { get; set; } = false;
 
+    /// <summary>Gets or sets the editable used by this component.</summary>
     [Parameter]
     public bool Editable { get; set; } = true;
 

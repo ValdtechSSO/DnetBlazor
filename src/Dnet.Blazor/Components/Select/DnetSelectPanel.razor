@@ -124,63 +124,83 @@
     [CascadingParameter]
     private int OverlayReferenceId { get; set; }
 
+    /// <summary>Gets or sets the collection of items rendered by the component.</summary>
     [Parameter]
     public List<RowNode<TItem>>? Items { get; set; }
 
+    /// <summary>Gets or sets the component width.</summary>
     [Parameter]
     public string Width { get; set; } = "200px";
 
+    /// <summary>Gets or sets the component height.</summary>
     [Parameter]
     public string Height { get; set; } = "200px";
 
+    /// <summary>Gets or sets the minimum component width.</summary>
     [Parameter]
     public string? MinWidth { get; set; }
 
+    /// <summary>Gets or sets the minimum component height.</summary>
     [Parameter]
     public string? MinHeight { get; set; }
 
+    /// <summary>Gets or sets the maximum component width.</summary>
     [Parameter]
     public string? MaxWidth { get; set; }
 
+    /// <summary>Gets or sets the maximum component height.</summary>
     [Parameter]
     public string? MaxHeight { get; set; }
 
+    /// <summary>Gets or sets the border radius used by this component.</summary>
     [Parameter]
     public string BorderRadius { get; set; } = "0px";
 
+    /// <summary>Gets or sets the select service used by this component.</summary>
     [Parameter]
     public SelectService<TItem>? SelectService { get; set; }
 
+    /// <summary>Gets or sets the function that converts an item to display text.</summary>
     [Parameter]
     public Func<TItem, string>? DisplayValueConverter { get; set; }
 
+    /// <summary>Gets or sets the support text value converter used by this component.</summary>
     [Parameter]
     public Func<TItem, string>? SupportTextValueConverter { get; set; }
 
+    /// <summary>Gets or sets the child content rendered by the component.</summary>
     [Parameter]
     public RenderFragment<TItem>? ChildContent { get; set; }
 
+    /// <summary>Gets or sets content rendered for item prefix.</summary>
     [Parameter]
     public RenderFragment<TItem>? ItemPrefixContent { get; set; }
 
+    /// <summary>Gets or sets content rendered for item sufix.</summary>
     [Parameter]
     public RenderFragment<TItem>? ItemSufixContent { get; set; }
 
+    /// <summary>Gets or sets the item height used by this component.</summary>
     [Parameter]
     public int ItemHeight { get; set; } = 40;
 
+    /// <summary>Gets or sets the container height used by this component.</summary>
     [Parameter]
     public int ContainerHeight { get; set; } = 200;
 
+    /// <summary>Gets or sets whether the component multi select.</summary>
     [Parameter]
     public bool MultiSelect { get; set; }
 
+    /// <summary>Gets or sets whether the component confirm buttons.</summary>
     [Parameter]
     public bool ConfirmButtons { get; set; }
 
+    /// <summary>Gets or sets the selected row nodes used by this component.</summary>
     [Parameter]
     public List<RowNode<TItem>>? SelectedRowNodes { get; set; }
 
+    /// <summary>Gets or sets the label displayed for the component.</summary>
     [Parameter]
     public string Label { get; set; } = string.Empty;
 

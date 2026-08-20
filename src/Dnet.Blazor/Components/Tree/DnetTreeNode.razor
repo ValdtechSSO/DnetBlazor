@@ -59,33 +59,43 @@
 	[CascadingParameter]
 	public DnetTree<TNode> DnetTreeComponent { get; set; } = default!;
 
+	/// <summary>Gets or sets the template used to render a tree node.</summary>
 	[Parameter]
 	public RenderFragment<TNode>? NodeContent { get; set; }
 
+	/// <summary>Raised when tree node parent toggle occurs.</summary>
 	[Parameter]
 	public EventCallback<bool> OnTreeNodeParentToggle { get; set; }
 
+	/// <summary>Raised when tree node clicked occurs.</summary>
 	[Parameter]
 	public EventCallback<TNode> OnTreeNodeClicked { get; set; }
 
+	/// <summary>Raised when checkbox clicked occurs.</summary>
 	[Parameter]
 	public EventCallback<TNode> OnCheckboxClicked { get; set; }
 
+	/// <summary>Raised when the selection changes.</summary>
 	[Parameter]
 	public EventCallback<List<TNode>> OnSelectionChange { get; set; }
 
+	/// <summary>Gets or sets the node used by this component.</summary>
 	[Parameter]
 	public TreeNodeModel<TNode> Node { get; set; } = default!;
 
+	/// <summary>Gets or sets the child nodes used by this component.</summary>
 	[Parameter]
 	public Func<TNode, List<TNode>?>? ChildNodes { get; set; }
 
+	/// <summary>Gets or sets parameters passed to the dynamically rendered component.</summary>
 	[Parameter]
 	public IDictionary<string, object>? Parameters { get; set; }
 
+	/// <summary>Gets or sets the function that converts an item to display text.</summary>
 	[Parameter]
 	public Func<TNode, string> DisplayValueConverter { get; set; } = value => value?.ToString() ?? string.Empty;
 
+	/// <summary>Gets or sets the checkbox selection used by this component.</summary>
 	[Parameter]
 	public bool CheckboxSelection { get; set; }
 

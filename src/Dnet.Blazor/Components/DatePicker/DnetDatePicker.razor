@@ -38,48 +38,62 @@
     [CascadingParameter(Name = "DnetThemeScope")]
     private string? _themeScope { get; set; }
 
+    /// <summary>Raised when error occurs.</summary>
     [Parameter]
     public EventCallback<string> OnError { get; set; }
 
     [DisallowNull]
     public ElementReference __inputReference { get; protected set; }
 
+    /// <summary>Gets or sets whether user interaction with the component is disabled.</summary>
     [Parameter]
     public bool Disabled { get; set; } = false;
 
+    /// <summary>Gets or sets the display and parsing format for the value.</summary>
     [Parameter]
     public string Format { get; set; } = $"yyyy/MM/dd";
 
+    /// <summary>Gets or sets the formats used by this component.</summary>
     [Parameter]
     public string[] Formats { get; set; } = new[] { "yyyy/MM/dd", "yyyy/M/dd", "yyyy/MM/d" };
 
+    /// <summary>Gets or sets the culture used to format and parse values.</summary>
     [Parameter]
     public CultureInfo? Culture { get; set; } = CultureInfo.CurrentCulture;
 
+    /// <summary>Gets or sets the max day value used by this component.</summary>
     [Parameter]
     public DateTime? MaxDayValue { get; set; }
 
+    /// <summary>Gets or sets the min day value used by this component.</summary>
     [Parameter]
     public DateTime? MinDayValue { get; set; }
 
+    /// <summary>Gets or sets the first day to show used by this component.</summary>
     [Parameter]
     public DateTime? FirstDayToShow { get; set; }
 
+    /// <summary>Gets or sets the datepicker filter used by this component.</summary>
     [Parameter]
     public Func<CalendarDay, bool>? DatepickerFilter { get; set; }
 
+    /// <summary>Raised when day selected occurs.</summary>
     [Parameter]
     public EventCallback<CalendarDay> OnDaySelected { get; set; }
 
+    /// <summary>Gets or sets the border radius used by this component.</summary>
     [Parameter]
     public string BorderRadius { get; set; } = "5px";
 
+    /// <summary>Gets or sets the margin top used by this component.</summary>
     [Parameter]
     public string MarginTop { get; set; } = "5px";
 
+    /// <summary>Gets or sets placeholder text displayed when the input is empty.</summary>
     [Parameter]
     public string? PlaceHolder { get; set; }
 
+    /// <summary>Gets or sets whether the component show internal errors.</summary>
     [Parameter]
     public bool ShowInternalErrors { get; set; } = true;
 

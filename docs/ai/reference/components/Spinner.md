@@ -1,17 +1,6 @@
 # Spinner
 
-Components: `<DnetSpinner>`
-
 ## `<DnetSpinner>`
-
-| Parameter | Type | Default |
-|---|---|---|
-| `CanRun` | `bool` | — |
-| `BindToView` | `bool` | — |
-| `ShowMask` | `bool` | — |
-| `DebounceTime` | `int` | `250` |
-
-## Minimal usage
 
 ```razor
 <DnetSpinner
@@ -21,14 +10,21 @@ Components: `<DnetSpinner>`
 />
 ```
 
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `CanRun` | `bool` | — | Gets or sets the can run used by this component. |
+| `BindToView` | `bool` | — | Gets or sets the can run used by this component. Gets or sets the bind to view used by this component. |
+| `ShowMask` | `bool` | — | Gets or sets the can run used by this component. Gets or sets the bind to view used by this component. Gets or sets whether a loading mask is displayed. |
+| `DebounceTime` | `int` | `250` | Gets or sets the bind to view used by this component. Gets or sets whether a loading mask is displayed. Gets or sets the delay before a debounced input action is raised. |
+
 ## Styling tokens
 
-Override these anywhere in the DOM above the component — `:root`, a
-container, or the element's own `style`. Nothing else is needed.
+Set any of these above the component in the DOM — `:root`, a container, or
+the element's own `style`. Nothing else is needed.
 
-| Token | Falls back to |
+| Token | Effective default |
 |---|---|
-| `--dnet-spinner-color` | `var(--dnet-sys-primary-strong)` |
+| `--dnet-spinner-color` | `#42b0d5` <br><sub>via `--dnet-sys-primary-strong`</sub> |
 | `--dnet-spinner-mask-background` | `color-mix(in srgb, var(--dnet-sys-on-surface) 16%, transparent)` |
 
 ```css

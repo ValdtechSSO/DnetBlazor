@@ -43,54 +43,70 @@
 
 @code {
 
+    /// <summary>Gets or sets the row nodes used by this component.</summary>
     [Parameter]
     public List<RowNode<TItem>> RowNodes { get; set; }
 
+    /// <summary>Gets or sets the grid columns used by this component.</summary>
     [Parameter]
     public List<GridColumn<TItem>> GridColumns { get; set; }
 
+    /// <summary>Gets or sets the group grid column used by this component.</summary>
     [Parameter]
     public GridColumn<TItem> GroupGridColumn { get; set; }
 
+    /// <summary>Gets or sets the grid options used by this component.</summary>
     [Parameter]
     public GridOptions<TItem> GridOptions { get; set; }
 
+    /// <summary>Gets or sets the grid api used by this component.</summary>
     [Parameter]
     public GridApi<TItem> GridApi { get; set; }
 
+    /// <summary>Gets or sets the has grouping used by this component.</summary>
     [Parameter]
     public bool HasGrouping { get; set; }
 
+    /// <summary>Gets or sets the component name used by this component.</summary>
     [Parameter]
     public BlGridMessageEmitter ComponentName { get; set; }
 
+    /// <summary>Raised when change expanded occurs.</summary>
     [Parameter]
     public EventCallback<long> OnChangeExpanded { get; set; }
 
     //In Events OnCellClicked, OnRowClicked, OnRowDoubleClicked, OnSelectionChanged T should be
     //the generic form of RowNode, GridColumn etc. See implementation in BlGrid
     //It is a Bug in Blazor  https://github.com/dotnet/aspnetcore/issues/28410
+    /// <summary>Raised when cell clicked occurs.</summary>
     [Parameter]
     public EventCallback<CellClikedEventData> OnCellClicked { get; set; }
 
+    /// <summary>Raised when row clicked occurs.</summary>
     [Parameter]
     public EventCallback<long> OnRowClicked { get; set; }
 
+    /// <summary>Raised when row double clicked occurs.</summary>
     [Parameter]
     public EventCallback<long> OnRowDoubleClicked { get; set; }
 
+    /// <summary>Raised when the selection changes.</summary>
     [Parameter]
     public EventCallback<List<long>> OnSelectionChanged { get; set; }
 
+    /// <summary>Raised when mouse over occurs.</summary>
     [Parameter]
     public EventCallback<long> OnMouseOver { get; set; }
 
+    /// <summary>Gets or sets the pinned used by this component.</summary>
     [Parameter]
     public Pinned Pinned { get; set; }
 
+    /// <summary>Gets or sets the checkbox selection pinned used by this component.</summary>
     [Parameter]
     public bool CheckboxSelectionPinned { get; set; }
 
+    /// <summary>Gets or sets the row index offset used by this component.</summary>
     [Parameter]
     public int RowIndexOffset { get; set; }
 

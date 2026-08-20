@@ -131,12 +131,15 @@
     [CascadingParameter]
     private DesktopLayout? _desktopLayout { get; set; }
 
+    /// <summary>Gets or sets unmatched HTML attributes applied to the rendered element.</summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object> AdditionalAttributes { get; set; } = new();
 
+    /// <summary>Gets or sets the menu used by this component.</summary>
     [Parameter]
     public NavigationMenu? Menu { get; set; }
 
+    /// <summary>Raised when link node click occurs.</summary>
     [Parameter]
     public EventCallback<bool> OnLinkNodeClick { get; set; }
 

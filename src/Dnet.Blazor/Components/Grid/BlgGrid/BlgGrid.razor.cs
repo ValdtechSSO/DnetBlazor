@@ -17,48 +17,63 @@ public partial class BlgGrid<TItem> : ComponentBase, IVirtualizeJsCallbacks, IAs
 {
     #region Parameters
 
+    /// <summary>Raised when cell clicked occurs.</summary>
     [Parameter]
     public EventCallback<CellClikedData<TItem>> OnCellClicked { get; set; }
 
+    /// <summary>Raised when row clicked occurs.</summary>
     [Parameter]
     public EventCallback<RowNode<TItem>> OnRowClicked { get; set; }
 
+    /// <summary>Raised when row double clicked occurs.</summary>
     [Parameter]
     public EventCallback<RowNode<TItem>> OnRowDoubleClicked { get; set; }
 
+    /// <summary>Raised when the selection changes.</summary>
     [Parameter]
     public EventCallback<List<RowNode<TItem>>> OnSelectionChanged { get; set; }
 
+    /// <summary>Raised when pagination changed occurs.</summary>
     [Parameter]
     public EventCallback<SearchModel> OnPaginationChanged { get; set; }
 
+    /// <summary>Raised when sorting changed occurs.</summary>
     [Parameter]
     public EventCallback<SearchModel> OnSortingChanged { get; set; }
 
+    /// <summary>Raised when filter changed occurs.</summary>
     [Parameter]
     public EventCallback<SearchModel> OnFilterChanged { get; set; }
 
+    /// <summary>Raised when advanced filter changed occurs.</summary>
     [Parameter]
     public EventCallback<SearchModel> OnAdvancedFilterChanged { get; set; }
 
+    /// <summary>Raised when grouping changed occurs.</summary>
     [Parameter]
     public EventCallback<GroupModel> OnGroupingChanged { get; set; }
 
+    /// <summary>Gets or sets the grid data used by this component.</summary>
     [Parameter, EditorRequired]
     public IEnumerable<TItem> GridData { get; set; } = new List<TItem>();
 
+    /// <summary>Gets or sets the grid columns used by this component.</summary>
     [Parameter, EditorRequired]
     public List<GridColumn<TItem>> GridColumns { get; set; } = new();
 
+    /// <summary>Gets or sets the group grid column used by this component.</summary>
     [Parameter]
     public GridColumn<TItem> GroupGridColumn { get; set; } = new();
 
+    /// <summary>Gets or sets the grid options used by this component.</summary>
     [Parameter]
     public GridOptions<TItem> GridOptions { get; set; } = new();
 
+    /// <summary>Gets or sets the has grouping used by this component.</summary>
     [Parameter]
     public bool HasGrouping { get; set; }
 
+    /// <summary>Gets or sets the items count used by this component.</summary>
     [Parameter]
     public bool ItemsCount { get; set; }
 

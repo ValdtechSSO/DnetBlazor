@@ -49,39 +49,51 @@
     [CascadingParameter(Name = "DnetThemeScope")]
     private string? _themeScope { get; set; }
 
+    /// <summary>Gets or sets whether user interaction with the component is disabled.</summary>
     [Parameter]
     public bool Disabled { get; set; } = false;
 
+    /// <summary>Gets or sets the display and parsing format for the value.</summary>
     [Parameter]
     public string Format { get; set; } = $"yyyy/MM/dd";
 
+    /// <summary>Gets or sets placeholder text displayed when the input is empty.</summary>
     [Parameter]
     public string PlaceHolder { get; set; } = "";
 
+    /// <summary>Gets or sets the max day value used by this component.</summary>
     [Parameter]
     public DateTime? MaxDayValue { get; set; }
 
+    /// <summary>Gets or sets the min day value used by this component.</summary>
     [Parameter]
     public DateTime? MinDayValue { get; set; }
 
+    /// <summary>Gets or sets the first day to show used by this component.</summary>
     [Parameter]
     public DateTime? FirstDayToShow { get; set; }
 
+    /// <summary>Gets or sets the datepicker filter used by this component.</summary>
     [Parameter]
     public Func<CalendarDay, bool>? DatepickerFilter { get; set; }
 
+    /// <summary>Raised when week selected occurs.</summary>
     [Parameter]
     public EventCallback<List<CalendarDay>> OnWeekSelected { get; set; }
 
+    /// <summary>Gets or sets content rendered before the main control content.</summary>
     [Parameter]
     public RenderFragment? PrefixContent { get; set; }
 
+    /// <summary>Gets or sets supporting content displayed with the control.</summary>
     [Parameter]
     public RenderFragment? HintContent { get; set; }
 
+    /// <summary>Gets or sets content displayed when validation reports an error.</summary>
     [Parameter]
     public RenderFragment? ErrorContent { get; set; }
 
+    /// <summary>Gets or sets the component theme used by this component.</summary>
     [Parameter]
     public ComponentTheme ComponentTheme { get; set; } = ComponentTheme.Material;
 

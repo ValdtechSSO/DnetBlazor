@@ -53,99 +53,131 @@
     [CascadingParameter(Name = "DnetThemeScope")]
     private string? _themeScope { get; set; }
 
+    /// <summary>Raised when search left occurs.</summary>
     [Parameter]
     public EventCallback<SearchModel> OnSearchLeft { get; set; }
 
+    /// <summary>Raised when search right occurs.</summary>
     [Parameter]
     public EventCallback<SearchModel> OnSearchRight { get; set; }
 
+    /// <summary>Raised when sort occurs.</summary>
     [Parameter]
     public EventCallback<SearchModel> OnSort { get; set; }
 
+    /// <summary>Gets or sets the right items used by this component.</summary>
     [Parameter]
     public List<TItem>? RightItems { get; set; }
 
+    /// <summary>Gets or sets the left items used by this component.</summary>
     [Parameter]
     public List<TItem>? LeftItems { get; set; }
 
+    /// <summary>Raised when the selection changes.</summary>
     [Parameter]
     public EventCallback<TransferredItems<TItem>> OnSelectionChanged { get; set; }
 
+    /// <summary>Gets or sets content rendered for list item.</summary>
     [Parameter]
     public RenderFragment<TItem>? ListItemContent { get; set; }
 
+    /// <summary>Gets or sets content rendered for item prefix.</summary>
     [Parameter]
     public RenderFragment<TItem>? ItemPrefixContent { get; set; }
 
+    /// <summary>Gets or sets content rendered for item sufix.</summary>
     [Parameter]
     public RenderFragment<TItem>? ItemSufixContent { get; set; }
 
+    /// <summary>Gets or sets the left list options used by this component.</summary>
     [Parameter]
     public ListOptions<TItem>? LeftListOptions { get; set; }
 
+    /// <summary>Gets or sets the right list options used by this component.</summary>
     [Parameter]
     public ListOptions<TItem>? RightListOptions { get; set; }
 
+    /// <summary>Gets or sets content rendered for item child.</summary>
     [Parameter]
     public RenderFragment? ItemChildContent { get; set; }
 
+    /// <summary>Gets or sets the component width.</summary>
     [Parameter]
     public string? Width { get; set; }
     
+    /// <summary>Gets or sets the component height.</summary>
     [Parameter]
     public string? Height { get; set; } = "300px";
 
+    /// <summary>Gets or sets the minimum component width.</summary>
     [Parameter]
     public string? MinWidth { get; set; }
 
+    /// <summary>Gets or sets the minimum component height.</summary>
     [Parameter]
     public string? MinHeight { get; set; }
 
+    /// <summary>Gets or sets the maximum component width.</summary>
     [Parameter]
     public string? MaxWidth { get; set; }
 
+    /// <summary>Gets or sets the maximum component height.</summary>
     [Parameter]
     public string? MaxHeight { get; set; }
 
+    /// <summary>Gets or sets the item height used by this component.</summary>
     [Parameter]
     public int ItemHeight { get; set; } = 40;
 
+    /// <summary>Gets or sets the border radius used by this component.</summary>
     [Parameter]
     public string BorderRadius { get; set; } = "5px";
 
+    /// <summary>Gets or sets the margin top used by this component.</summary>
     [Parameter]
     public string MarginTop { get; set; } = "5px";
 
+    /// <summary>Gets or sets the delay before a debounced input action is raised.</summary>
     [Parameter]
     public int DebounceTime { get; set; } = 300;
 
+    /// <summary>Gets or sets the input item height used by this component.</summary>
     [Parameter]
     public int InputItemHeight { get; set; } = 34;
 
+    /// <summary>Gets or sets the input text to upper used by this component.</summary>
     [Parameter]
     public bool InputTextToUpper { get; set; }
 
+    /// <summary>Gets or sets the item auto selection used by this component.</summary>
     [Parameter]
     public bool ItemAutoSelection { get; set; }
 
+    /// <summary>Gets or sets whether user interaction with the component is disabled.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
+    /// <summary>Gets or sets the disabled clear button used by this component.</summary>
     [Parameter]
     public bool DisabledClearButton { get; set; }
 
+    /// <summary>Gets or sets whether a value is required for validation.</summary>
     [Parameter]
     public bool IsRequired { get; set; }
 
+    /// <summary>Gets or sets the search control options used by this component.</summary>
     [Parameter]
     public SearchControlOptions? SearchControlOptions { get; set; }
 
+    /// <summary>Gets or sets the comparer used to match item values.</summary>
     [Parameter]
     public IEqualityComparer<TItem>? EqualityComparer { get; set; }
 
+    /// <summary>Gets or sets the function that converts an item to display text.</summary>
     [Parameter]
     public Func<TItem, string>? DisplayValueConverter { get; set; }
 
+    /// <summary>Gets or sets the side for selections used by this component.</summary>
     [Parameter]
     public ListToShow SideForSelections { get; set; }
 

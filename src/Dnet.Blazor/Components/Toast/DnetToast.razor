@@ -48,42 +48,55 @@
 
     [CascadingParameter] private int OverlayReferenceId { get; set; }
 
+    /// <summary>Gets or sets the component type rendered dynamically.</summary>
     [Parameter]
     public Type? ComponentType { get; set; }
 
+    /// <summary>Gets or sets custom content rendered by the component.</summary>
     [Parameter]
     public RenderFragment? ContentChild { get; set; }
 
+    /// <summary>Gets or sets parameters passed to the dynamically rendered component.</summary>
     [Parameter]
     public IDictionary<string, object>? Parameters { get; set; }
 
+    /// <summary>Gets or sets the title displayed by the component.</summary>
     [Parameter]
     public string? Title { get; set; }
 
+    /// <summary>Gets or sets the text used by this component.</summary>
     [Parameter]
     public string? Text { get; set; }
 
+    /// <summary>Gets or sets the toast type used by this component.</summary>
     [Parameter]
     public ToastType ToastType { get; set; }
 
+    /// <summary>Gets or sets the type icon class used by this component.</summary>
     [Parameter]
     public string? TypeIconClass { get; set; }
 
+    /// <summary>Gets or sets the toast type icon class used by this component.</summary>
     [Parameter]
     public string? ToastTypeIconClass { get; set; }
 
+    /// <summary>Gets or sets the close icon class used by this component.</summary>
     [Parameter]
     public string? CloseIconClass { get; set; }
 
+    /// <summary>Gets or sets the toast type color used by this component.</summary>
     [Parameter]
     public string? ToastTypeColor { get; set; }
 
+    /// <summary>Gets or sets the toast class used by this component.</summary>
     [Parameter]
     public string? ToastClass { get; set; }
 
+    /// <summary>Gets or sets the excution time used by this component.</summary>
     [Parameter]
     public int ExcutionTime { get; set; }
 
+    /// <summary>Gets or sets whether the component show excution time.</summary>
     [Parameter]
     public bool ShowExcutionTime { get; set; }
 

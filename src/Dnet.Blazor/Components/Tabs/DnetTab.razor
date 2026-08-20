@@ -5,21 +5,27 @@
     [CascadingParameter]
     private DnetTabGroup? Parent { get; set; }
 
+    /// <summary>Gets or sets the child content rendered by the component.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+    /// <summary>Gets or sets the label displayed for the component.</summary>
     [Parameter]
     public string? Label { get; set; }
 
+    /// <summary>Gets or sets the template used to render header.</summary>
     [Parameter]
     public Type? HeaderTemplate { get; set; }
 
+    /// <summary>Gets or sets the order used by this component.</summary>
     [Parameter]
     public int Order { get; set; }
 
+    /// <summary>Gets or sets whether user interaction with the component is disabled.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
+    /// <summary>Gets or sets whether hidden.</summary>
     [Parameter]
     public bool IsHidden { get; set; }
 

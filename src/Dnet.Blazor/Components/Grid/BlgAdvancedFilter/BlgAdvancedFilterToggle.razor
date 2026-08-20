@@ -24,18 +24,23 @@
     [CascadingParameter(Name = "DnetThemeScope")]
     private string? _themeScope { get; set; }
 
+    /// <summary>Gets or sets the filter data used by this component.</summary>
     [Parameter]
     public AdvancedFilterModel? FilterData { get; set; }
 
+    /// <summary>Gets or sets whether filtered.</summary>
     [Parameter]
     public bool IsFiltered { get; set; }
 
+    /// <summary>Gets or sets the default advanced filter operator used by this component.</summary>
     [Parameter]
     public FilterOperator DefaultAdvancedFilterOperator { get; set; }
 
+    /// <summary>Raised when filter occurs.</summary>
     [Parameter]
     public EventCallback<bool> OnFilter { get; set; }
 
+    /// <summary>Gets or sets the format used to display date values.</summary>
     [Parameter]
     public string? DateFormat { get; set; }
 

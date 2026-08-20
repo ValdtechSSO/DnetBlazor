@@ -85,30 +85,39 @@
 
 @code {
 
+    /// <summary>Gets or sets the child content rendered by the component.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+    /// <summary>Gets or sets content rendered before the main control content.</summary>
     [Parameter]
     public RenderFragment? PrefixContent { get; set; }
 
+    /// <summary>Gets or sets content rendered after the main control content.</summary>
     [Parameter]
     public RenderFragment? SufixContent { get; set; }
 
+    /// <summary>Gets or sets supporting content displayed with the control.</summary>
     [Parameter]
     public RenderFragment? HintContent { get; set; }
 
+    /// <summary>Gets or sets content displayed when validation reports an error.</summary>
     [Parameter]
     public RenderFragment? ErrorContent { get; set; }
 
+    /// <summary>Gets or sets whether the component use clear button.</summary>
     [Parameter]
     public bool UseClearButton { get; set; } = false;
 
+    /// <summary>Gets or sets the empty icon class used by this component.</summary>
     [Parameter]
     public string? EmptyIconClass { get; set; }
 
+    /// <summary>Gets or sets the label displayed for the component.</summary>
     [Parameter]
     public string? Label { get; set; }
 
+    /// <summary>Gets or sets whether a value is required for validation.</summary>
     [Parameter]
     public bool IsRequired { get; set; }
 

@@ -19,33 +19,43 @@
 @code {
     [CascadingParameter] private int OverlayReferenceId { get; set; }
 
+    /// <summary>Gets or sets custom content rendered by the component.</summary>
     [Parameter]
     public RenderFragment? ContentChild { get; set; }
 
+    /// <summary>Gets or sets the component type rendered dynamically.</summary>
     [Parameter]
     public Type? ComponentType { get; set; } = null;
 
+    /// <summary>Gets or sets parameters passed to the dynamically rendered component.</summary>
     [Parameter]
     public IDictionary<string, object>? Parameters { get; set; }
 
+    /// <summary>Gets or sets the text used by this component.</summary>
     [Parameter]
     public string? Text { get; set; }
 
+    /// <summary>Gets or sets the tooltip color used by this component.</summary>
     [Parameter]
     public string? TooltipColor { get; set; }
 
+    /// <summary>Gets or sets the tooltip foreground used by this component.</summary>
     [Parameter]
     public string? TooltipForeground { get; set; }
 
+    /// <summary>Gets or sets the tooltip class used by this component.</summary>
     [Parameter]
     public string? TooltipClass { get; set; }
 
+    /// <summary>Gets or sets the trigger element used by this component.</summary>
     [Parameter]
     public ElementReference TriggerElement { get; set; }
 
+    /// <summary>Gets or sets the maximum component width.</summary>
     [Parameter]
     public string? MaxWidth { get; set; }
 
+    /// <summary>Gets or sets the maximum component height.</summary>
     [Parameter]
     public string? MaxHeight { get; set; }
 

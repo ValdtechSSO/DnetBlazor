@@ -1,17 +1,6 @@
 # Button
 
-Components: `<DnetButton>`
-
 ## `<DnetButton>`
-
-| Parameter | Type | Default |
-|---|---|---|
-| `InitialFocus` | `bool` | — |
-| `OnClick` | `EventCallback` | — |
-| `ButtonType` | `string` | `"button"` |
-| `ChildContent` | `RenderFragment?` | — |
-
-## Minimal usage
 
 ```razor
 <DnetButton
@@ -19,31 +8,40 @@ Components: `<DnetButton>`
 />
 ```
 
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `InitialFocus` | `bool` | — | Gets or sets whether the component receives focus after it is rendered. |
+| `AdditionalAttributes` | `IReadOnlyDictionary<string, object>?` | — | Gets or sets unmatched HTML attributes applied to the rendered element. |
+| `OnClick` | `EventCallback` | — | Raised when the user clicks the component. |
+| `ButtonType` | `string` | `"button"` | Gets or sets the HTML button type rendered by the component. |
+| `ChildContent` | `RenderFragment?` | — | Gets or sets the child content rendered by the component. |
+
 ## Styling tokens
 
-Override these anywhere in the DOM above the component — `:root`, a
-container, or the element's own `style`. Nothing else is needed.
+Set any of these above the component in the DOM — `:root`, a container, or
+the element's own `style`. Nothing else is needed.
 
-| Token | Falls back to |
+| Token | Effective default |
 |---|---|
-| `--dnet-btn-background` | `var(--dnet-button-background-color, var(--dnet-sys-transparent))` |
-| `--dnet-btn-background-hover` | `var(--dnet-button-hover-color, var(--dnet-sys-state-hover))` |
-| `--dnet-btn-focus-overlay` | `var(--dnet-sys-state-pressed)` |
-| `--dnet-btn-font-size` | `var(--dnet-button-font-size, var(--dnet-sys-text-md))` |
-| `--dnet-btn-foreground` | `var(--dnet-sys-on-surface)` |
-| `--dnet-btn-height` | `var(--dnet-button-line-height, 36px)` |
-| `--dnet-btn-margin` | `var(--dnet-button-margin, 0)` |
-| `--dnet-btn-min-width` | `var(--dnet-button-min-width, 64px)` |
-| `--dnet-btn-padding` | `var(--dnet-button-padding, 0 var(--dnet-sys-space-4))` |
-| `--dnet-btn-radius` | `var(--dnet-button-border-radius, var(--dnet-sys-radius-sm))` |
-| `--dnet-button-background-color` | — |
-| `--dnet-button-border-radius` | — |
-| `--dnet-button-font-size` | — |
-| `--dnet-button-hover-color` | — |
-| `--dnet-button-line-height` | — |
-| `--dnet-button-margin` | — |
-| `--dnet-button-min-width` | — |
-| `--dnet-button-padding` | — |
+| `--dnet-btn-background` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
+| `--dnet-btn-background-hover` | `color-mix(in srgb, var(--dnet-sys-on-surface) 8%, transparent)` <br><sub>via `--dnet-sys-state-hover`</sub> |
+| `--dnet-btn-focus-overlay` | `color-mix(in srgb, var(--dnet-sys-on-surface) 14%, transparent)` <br><sub>via `--dnet-sys-state-pressed`</sub> |
+| `--dnet-btn-font-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
+| `--dnet-btn-foreground` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
+| `--dnet-btn-height` | `36px` |
+| `--dnet-btn-margin` | `0` |
+| `--dnet-btn-min-width` | `64px` |
+| `--dnet-btn-padding` | `0 var(--dnet-sys-space-4)` |
+| `--dnet-btn-radius` | `4px` <br><sub>via `--dnet-sys-radius-sm`</sub> |
+
+<details><summary>Legacy token names still honoured</summary>
+
+Kept as intermediate links in the fallback chains so 5.x overrides keep
+working. Prefer the names above for new code; these go away in 7.0.
+
+`--dnet-button-background-color`, `--dnet-button-border-radius`, `--dnet-button-font-size`, `--dnet-button-hover-color`, `--dnet-button-line-height`, `--dnet-button-margin`, `--dnet-button-min-width`, `--dnet-button-padding`
+
+</details>
 
 ```css
 :root { --dnet-btn-background: /* your value */; }

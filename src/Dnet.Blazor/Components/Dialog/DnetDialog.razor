@@ -24,15 +24,19 @@
 
     [CascadingParameter] private int OverlayReferenceId { get; set; }
 
+    /// <summary>Gets or sets the component type rendered dynamically.</summary>
     [Parameter]
     public Type? ComponentType { get; set; }
 
+    /// <summary>Gets or sets parameters passed to the dynamically rendered component.</summary>
     [Parameter]
     public IDictionary<string, object>? Parameters { get; set; }
 
+    /// <summary>Gets or sets the title displayed by the component.</summary>
     [Parameter]
     public string Title { get; set; } = string.Empty;
 
+    /// <summary>Gets or sets the dialog class used by this component.</summary>
     [Parameter]
     public string DialogClass { get; set; } = string.Empty;
 

@@ -10,13 +10,13 @@
 		<Description>Set of Components for Blazor Framework</Description>
 		<Copyright>Datalnet</Copyright>
 		<PackageTags>Blazor-Components-Datalnet</PackageTags>
-		<PackageVersion>6.0.2</PackageVersion>
+		<PackageVersion>6.0.3</PackageVersion>
 		<PackageProjectUrl>https://datalnet.com/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ValdtechSSO/DnetBlazor</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
-			- Grid: Row-span cells now stay synchronized with the visual row hover state.
-			- Samples: Removed an unnecessary CSS-isolation preload warning.
+			- Themes: Added the Modern semantic theme and support in the sample selector.
+			- Documentation: Added XML summaries for component parameters and refreshed the agent reference.
 		</PackageReleaseNotes>
 	</PropertyGroup>
 

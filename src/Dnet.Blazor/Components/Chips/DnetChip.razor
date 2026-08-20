@@ -45,48 +45,63 @@
 	[CascadingParameter]
 	private DnetChipList Parent { get; set; }
 
+	/// <summary>Raised when the selection changes.</summary>
 	[Parameter]
 	public EventCallback<string> OnSelectionChange { get; set; }
 
+	/// <summary>Raised when removed occurs.</summary>
 	[Parameter]
 	public EventCallback<DnetChip> OnRemoved { get; set; }
 
+	/// <summary>Gets or sets the child content rendered by the component.</summary>
 	[Parameter]
 	public RenderFragment? ChildContent { get; set; }
 
+	/// <summary>Gets or sets the backgroung color used by this component.</summary>
 	[Parameter]
 	public string? BackgroungColor { get; set; }
 
+	/// <summary>Gets or sets the color used by this component.</summary>
 	[Parameter]
 	public string? Color { get; set; }
 
+	/// <summary>Gets or sets the backgroung color selected used by this component.</summary>
 	[Parameter]
 	public string? BackgroungColorSelected { get; set; }
 
+	/// <summary>Gets or sets the color selected used by this component.</summary>
 	[Parameter]
 	public string? ColorSelected { get; set; }
 
+	/// <summary>Gets or sets the selectable used by this component.</summary>
 	[Parameter]
 	public bool Selectable { get; set; } = true;
 
+	/// <summary>Gets or sets the selected used by this component.</summary>
 	[Parameter]
 	public bool Selected { get; set; }
 
+	/// <summary>Gets or sets the removable used by this component.</summary>
 	[Parameter]
 	public bool Removable { get; set; } = true;
 
+	/// <summary>Gets or sets the component value.</summary>
 	[Parameter]
 	public string? Value { get; set; }
 
+	/// <summary>Gets or sets the chip size used by this component.</summary>
 	[Parameter]
 	public ChipSize ChipSize { get; set; } = ChipSize.Small;
 
+	/// <summary>Gets or sets whether user interaction with the component is disabled.</summary>
 	[Parameter]
 	public bool Disabled { get; set; }
 
+	/// <summary>Gets or sets the remove icon used by this component.</summary>
 	[Parameter]
 	public string? RemoveIcon { get; set; }
 
+	/// <summary>Gets or sets the avatar icon used by this component.</summary>
 	[Parameter]
 	public string? AvatarIcon { get; set; }
 

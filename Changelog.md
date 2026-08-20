@@ -1,5 +1,12 @@
 # Changelog for Blazor Library
 
+## Version 6.0.3 (August 2026)
+
+- Added the Modern semantic theme, including its demo asset and persisted theme
+  selector support.
+- Added XML summaries to component parameters and regenerated the agent-facing
+  API reference.
+
 ## Version 6.0.2 (August 2026)
 
 - Fixed `BlgGrid` hover synchronization for `RowSpanFn` cells. A cell spanning

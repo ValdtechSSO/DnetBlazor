@@ -1,30 +1,6 @@
 # DynamicStepper
 
-Components: `<DnetDynamicStep>`, `<DnetDynamicStepper>`
-
 ## `<DnetDynamicStep>`
-
-| Parameter | Type | Default |
-|---|---|---|
-| `ChildContent` | `RenderFragment?` | — |
-| `StepHeaderTemplate` | `RenderFragment?` | — |
-| `Label` | `string` | — |
-| `Order` | `int` | `0` |
-| `Completed` | `bool` | — |
-
-## `<DnetDynamicStepper>`
-
-| Parameter | Type | Default |
-|---|---|---|
-| `OnSelectionChange` | `EventCallback<Tuple<int, int>>` | — |
-| `ChildContent` | `RenderFragment?` | — |
-| `ShowButtons` | `bool` | `true` |
-| `SelectedStepId` | `int` | — |
-| `LabelPosition` | `int` | — |
-| `Linear` | `bool` | `false` |
-| `Editable` | `bool` | `true` |
-
-## Minimal usage
 
 ```razor
 <DnetDynamicStep
@@ -33,14 +9,42 @@ Components: `<DnetDynamicStep>`, `<DnetDynamicStepper>`
 />
 ```
 
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `ChildContent` | `RenderFragment?` | — | Gets or sets the child content rendered by the component. |
+| `StepHeaderTemplate` | `RenderFragment?` | — | Gets or sets the template used to render step header. |
+| `Label` | `string` | — | Gets or sets the label displayed for the component. |
+| `Order` | `int` | `0` | Gets or sets the order used by this component. |
+| `Completed` | `bool` | — | Gets or sets the completed used by this component. |
+
+## `<DnetDynamicStepper>`
+
+```razor
+<DnetDynamicStepper
+    SelectedStepId="..."
+    LabelPosition="..."
+/>
+```
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `OnSelectionChange` | `EventCallback<Tuple<int, int>>` | — | Raised when the selection changes. |
+| `AllOtherAttributes` | `Dictionary<string, object>?` | — | Gets or sets the all other attributes used by this component. |
+| `ChildContent` | `RenderFragment?` | — | Gets or sets the child content rendered by the component. |
+| `ShowButtons` | `bool` | `true` | Gets or sets whether the component show buttons. |
+| `SelectedStepId` | `int` | — | Gets or sets the identifier of the selected step. |
+| `LabelPosition` | `int` | — | Gets or sets the label position used by this component. |
+| `Linear` | `bool` | `false` | Gets or sets the linear used by this component. |
+| `Editable` | `bool` | `true` | Gets or sets the editable used by this component. |
+
 ## Styling tokens
 
-Override these anywhere in the DOM above the component — `:root`, a
-container, or the element's own `style`. Nothing else is needed.
+Set any of these above the component in the DOM — `:root`, a container, or
+the element's own `style`. Nothing else is needed.
 
-| Token | Falls back to |
+| Token | Effective default |
 |---|---|
-| `--dnet-step-font-size` | `var(--dnet-sys-text-md)` |
+| `--dnet-step-font-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
 
 ```css
 :root { --dnet-step-font-size: /* your value */; }

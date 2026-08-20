@@ -49,48 +49,63 @@
 
 @code {
 
+    /// <summary>Gets or sets the left list options used by this component.</summary>
     [Parameter]
     public ListOptions<TItem>? LeftListOptions { get; set; }
 
+    /// <summary>Gets or sets the right list options used by this component.</summary>
     [Parameter]
     public ListOptions<TItem>? RightListOptions { get; set; }
 
+    /// <summary>Gets or sets the comparer used to match item values.</summary>
     [Parameter]
     public IEqualityComparer<TItem>? EqualityComparer { get; set; }
 
+    /// <summary>Gets or sets the right items used by this component.</summary>
     [Parameter]
     public List<TItem>? RightItems { get; set; }
 
+    /// <summary>Gets or sets the left items used by this component.</summary>
     [Parameter]
     public List<TItem>? LeftItems { get; set; }
 
+    /// <summary>Gets or sets the component width.</summary>
     [Parameter]
     public string? Width { get; set; }
 
+    /// <summary>Gets or sets the border radius used by this component.</summary>
     [Parameter]
     public string BorderRadius { get; set; } = "0px";
 
+    /// <summary>Gets or sets the item height used by this component.</summary>
     [Parameter]
     public int ItemHeight { get; set; } = 40;
 
+    /// <summary>Gets or sets the delay before a debounced input action is raised.</summary>
     [Parameter]
     public int DebounceTime { get; set; } = 250;
 
+    /// <summary>Gets or sets the floating double list service used by this component.</summary>
     [Parameter]
     public FloatingDoubleListService<TItem>? FloatingDoubleListService { get; set; }
 
+    /// <summary>Gets or sets content rendered for list item.</summary>
     [Parameter]
     public RenderFragment<TItem>? ListItemContent { get; set; }
 
+    /// <summary>Gets or sets content rendered for item prefix.</summary>
     [Parameter]
     public RenderFragment<TItem>? ItemPrefixContent { get; set; }
 
+    /// <summary>Gets or sets content rendered for item sufix.</summary>
     [Parameter]
     public RenderFragment<TItem>? ItemSufixContent { get; set; }
 
+    /// <summary>Gets or sets the child content rendered by the component.</summary>
     [Parameter]
     public RenderFragment<TItem>? ChildContent { get; set; }
 
+    /// <summary>Gets or sets the search control options used by this component.</summary>
     [Parameter]
     public SearchControlOptions? SearchControlOptions { get; set; }
 

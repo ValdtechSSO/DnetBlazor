@@ -42,7 +42,7 @@
                             <span>Datalnet Blazor Components</span>
                         </div>
                         <div id="app-tenant-name" style="font-size: 0.625rem;display: flex;justify-content: flex-start;">
-                            <span>v.6.0.2</span>
+                            <span>v.6.0.3</span>
                         </div>
                     </div>
                 </div>
@@ -56,6 +56,7 @@
                             <option value="dark">Dark</option>
                             <option value="compact">Compact</option>
                             <option value="high-contrast">High contrast</option>
+                            <option value="modern">Modern</option>
                         </select>
                     </label>
                     <div class="dnet-dashboard-user-data">
@@ -126,7 +127,7 @@
     {
         AppName = "Datalnet Blazor Components";
         AppDescription = "";
-        AppVersion = "V.6.0.2";
+        AppVersion = "V.6.0.3";
         Title = "Ready to eat";
         UserName = "admin@datalnet.com";
         PersonName = "Adrian Mustelier";
@@ -164,7 +165,7 @@
         await JSRuntime.InvokeVoidAsync("dnetinterop.set", ThemeStorageKey, _theme);
     }
 
-    private static bool IsSupportedTheme(string? theme) => theme is "" or "dark" or "compact" or "high-contrast";
+    private static bool IsSupportedTheme(string? theme) => theme is "" or "dark" or "compact" or "high-contrast" or "modern";
 
     private void SetupTheme()
     {

@@ -3,18 +3,23 @@
 	[CascadingParameter]
 	private DnetDynamicStepper Parent { get; set; }
 
+	/// <summary>Gets or sets the child content rendered by the component.</summary>
 	[Parameter]
 	public RenderFragment? ChildContent { get; set; }
 
+	/// <summary>Gets or sets the template used to render step header.</summary>
 	[Parameter]
 	public RenderFragment? StepHeaderTemplate { get; set; }
 
+	/// <summary>Gets or sets the label displayed for the component.</summary>
 	[Parameter]
 	public string Label { get; set; }
 
+	/// <summary>Gets or sets the order used by this component.</summary>
 	[Parameter]
 	public int Order { get; set; } = 0;
 
+	/// <summary>Gets or sets the completed used by this component.</summary>
 	[Parameter]
 	public bool Completed { get; set; }
 

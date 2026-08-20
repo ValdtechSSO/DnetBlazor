@@ -102,9 +102,11 @@
 
 @code {
 
+    /// <summary>Raised when week selected occurs.</summary>
     [Parameter]
     public EventCallback<List<CalendarDay>> OnWeekSelected { get; set; }
 
+    /// <summary>Gets or sets the display and parsing format for the value.</summary>
     [Parameter]
     public string Format { get; set; } = $"yyyy/MM/dd";
 

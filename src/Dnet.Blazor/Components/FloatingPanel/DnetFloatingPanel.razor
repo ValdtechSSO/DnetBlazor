@@ -15,12 +15,15 @@
 	[CascadingParameter]
 	private int OverlayReferenceId { get; set; }
 
+	/// <summary>Gets or sets the component type rendered dynamically.</summary>
 	[Parameter]
 	public Type? ComponentType { get; set; } = null;
 
+	/// <summary>Gets or sets parameters passed to the dynamically rendered component.</summary>
 	[Parameter]
 	public IDictionary<string, object>? Parameters { get; set; }
 
+	/// <summary>Gets or sets the floating panel class used by this component.</summary>
 	[Parameter]
 	public string FloatingPanelClass { get; set; }= string.Empty;
 

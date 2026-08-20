@@ -32,9 +32,11 @@ namespace Dnet.Blazor.Components.Checkbox
         [Parameter]
         public RenderFragment? ChildContent { get; set; }
 
+        /// <summary>Gets or sets whether user interaction with the component is disabled.</summary>
         [Parameter] 
         public bool Disabled { get; set; }
 
+		/// <summary>Gets or sets the text placed before used by this component.</summary>
 		[Parameter] 
         public bool TextPlacedBefore { get; set; } = false;
 

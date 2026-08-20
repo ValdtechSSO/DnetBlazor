@@ -14,12 +14,15 @@
 
 @code {
 
+	/// <summary>Raised when the selection changes.</summary>
 	[Parameter]
 	public EventCallback<List<DnetChip>> OnSelectionChange { get; set; }
 
+	/// <summary>Gets or sets the child content rendered by the component.</summary>
 	[Parameter]
 	public RenderFragment? ChildContent { get; set; }
 
+	/// <summary>Gets or sets the multi used by this component.</summary>
 	[Parameter]
 	public bool Multi { get; set; }
 

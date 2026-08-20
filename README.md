@@ -3,7 +3,7 @@
 Blazor component library for .NET 10, compatible with Blazor WebAssembly and
 interactive server-side applications.
 
-**Current version:** 6.0.2. See the [changelog](Changelog.md) for release
+**Current version:** 6.0.3. See the [changelog](Changelog.md) for release
 details.
 
 ## Components
@@ -20,7 +20,7 @@ application is available at [datalnet.com](https://www.datalnet.com).
 Install the package:
 
 ```bash
-dotnet add package Dnet.Blazor --version 6.0.2
+dotnet add package Dnet.Blazor --version 6.0.3
 ```
 
 Register the services in `Program.cs`:
@@ -62,11 +62,11 @@ Each release ships a machine-readable reference: every component's parameters,
 every styling token, plus setup and theming guides. Plain markdown, so it works
 with Claude, Codex, Cursor, Gemini CLI or anything else that reads project docs.
 
-**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/latest/download/dnet-blazor-agent-reference-6.0.2.zip)**
+**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/latest/download/dnet-blazor-agent-reference-6.0.3.zip)**
 — attached to every release.
 
 ```bash
-unzip dnet-blazor-agent-reference-6.0.2.zip -d docs/
+unzip dnet-blazor-agent-reference-6.0.3.zip -d docs/
 ```
 
 Then point your agent at it. The archive's `AGENTS-snippet.md` has text you can
@@ -80,6 +80,13 @@ npx degit ValdtechSSO/DnetBlazor/docs/ai/reference docs/dnet-blazor
 
 The reference is a snapshot of the version it ships with — grab the matching one
 when you upgrade the package.
+
+## What's new in 6.0.3
+
+- Added the Modern semantic theme and made it available through the persisted
+  theme selector in the sample application.
+- Added XML documentation for public component parameters and refreshed the
+  bundled agent reference.
 
 ## What's new in 6.0.2
 

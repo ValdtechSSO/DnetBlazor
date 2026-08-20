@@ -15,9 +15,13 @@
 }
 
 @code {
+    /// <summary>Gets or sets the can run used by this component.</summary>
     [Parameter] public bool CanRun { get; set; }
+    /// <summary>Gets or sets the bind to view used by this component.</summary>
     [Parameter] public bool BindToView { get; set; }
+    /// <summary>Gets or sets whether a loading mask is displayed.</summary>
     [Parameter] public bool ShowMask { get; set; }
+    /// <summary>Gets or sets the delay before a debounced input action is raised.</summary>
     [Parameter] public int DebounceTime { get; set; } = 250;
 
     private int _counterRequest;
