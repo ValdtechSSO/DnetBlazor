@@ -27,21 +27,21 @@
 
 	protected override void OnInitialized()
 	{
-		_timer = new Timer(350);
+		_timer = new Timer(1_000);
 
 		_timer.Elapsed += OnOperationFinish;
 
 		_timer.AutoReset = false;
 
 
-		_timer1 = new Timer(600);
+		_timer1 = new Timer(2_000);
 
 		_timer1.Elapsed += OnOperationFinish1;
 
 		_timer1.AutoReset = false;
 
 
-		_timer2 = new Timer(800);
+		_timer2 = new Timer(5_000);
 
 		_timer2.Elapsed += OnOperationFinish2;
 
@@ -80,6 +80,4 @@
 
 
 }
-
-
 

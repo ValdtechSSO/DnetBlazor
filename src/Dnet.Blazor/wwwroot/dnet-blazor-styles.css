@@ -4407,67 +4407,53 @@ button[disabled].dnet-calendar-next-button::after {
   padding-top: 1px;
 }
 
-/*! Spinner — migrado a tokens (6.0). Generado una vez; se edita a mano.
-   Los tokens sin prefijo --spinner-* se eliminan (colisionan con cualquier
-   hoja del consumidor); el color sigue a --dnet-spinner-color con fallback
-   en sys-primary-strong y la mascara se deriva de on-surface. */
+/* Modern ring spinner, based on the loading indicator used by Vitara. */
+.dnet-spinner-mask {
+  --_background: var(--dnet-spinner-mask-background, color-mix(in srgb, var(--dnet-sys-on-surface) 16%, transparent));
 
-.mask-spinner {
-  --_mask-bg: color-mix(in srgb, var(--dnet-sys-on-surface) 15.9%, transparent);
-
-  display: normal;
-  position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   z-index: 100000;
-  background: var(--_mask-bg);
+  background: var(--_background);
 }
 
-.mask-spinner.show {
-  display: normal;
+.dnet-spinner {
+  --_color: var(--dnet-spinner-color, var(--dnet-sys-primary-strong));
+  --_size: 22.4px;
+  --_stroke-width: 5.6px;
+
+  z-index: 100001;
+  width: var(--_size);
+  height: var(--_size);
+  transform: translate(-50%, -50%);
 }
 
-.spinner {
-  --_spinner-color: var(--dnet-spinner-color, var(--dnet-sys-primary-strong));
-
-  width: 50px;
-  height: 30px;
-  text-align: center;
-  font-size: 10px;
-}
-
-.spinner > div {
-  background-color: var(--_spinner-color);
+.dnet-spinner::before {
+  content: "";
+  position: absolute;
+  width: 100%;
   height: 100%;
-  width: 6px;
-  margin-left: 1px;
-  display: inline-block;
-  animation: stretchdelay 1.2s infinite ease-in-out;
+  box-sizing: border-box;
+  border: var(--_stroke-width) solid var(--_color);
+  border-radius: 50%;
+  box-shadow: 0 -33.6px 0 -5.6px var(--_color);
+  animation: dnet-spinner-reveal 0.7s backwards, dnet-spinner-rotate 1.8s 0.7s infinite ease;
 }
 
-.spinner .rect2 {
-  animation-delay: -1.1s;
-}
-
-.spinner .rect3 {
-  animation-delay: -1s;
-}
-
-.spinner .rect4 {
-  animation-delay: -0.9s;
-}
-
-.spinner .rect5 {
-  animation-delay: -0.8s;
-}
-@keyframes stretchdelay {
-  0%, 40%, 100% {
-    transform: scaleY(0.4);
-    -webkit-transform: scaleY(0.4);
+@keyframes dnet-spinner-reveal {
+  from {
+    box-shadow: 0 0 0 -5.6px var(--_color);
   }
-  20% {
-    transform: scaleY(1);
-    -webkit-transform: scaleY(1);
+}
+
+@keyframes dnet-spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dnet-spinner::before {
+    animation: none;
   }
 }
 

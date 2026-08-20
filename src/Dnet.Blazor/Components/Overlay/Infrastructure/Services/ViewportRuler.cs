@@ -1,6 +1,7 @@
 ﻿using Dnet.Blazor.Components.Overlay.Infrastructure.Interfaces;
 using Dnet.Blazor.Components.Overlay.Infrastructure.Models;
 using Microsoft.JSInterop;
+using System.Threading;
 
 namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
 {
@@ -10,7 +11,9 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
         private readonly IJSRuntime _jsRuntime;
         private EventHandler<Models.Size>? _onResized;
         private DotNetObjectReference<ViewportRuler>? _selfReference;
+        private readonly SemaphoreSlim _listenerGate = new(1, 1);
         private bool _listenersAttached;
+        private bool _listenersRequested;
 
         private bool _disposed;
 
@@ -127,51 +130,67 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
 
             if (_onResized == null)
             {
-                _ = RemoveWindowEventListeners();
+                _listenersRequested = false;
+                _ = SynchronizeWindowEventListenersAsync();
             }
         }
 
         private void Subscribe(EventHandler<Models.Size> value)
         {
             _onResized += value;
+            _listenersRequested = true;
 
-            if (!_listenersAttached)
-            {
-                _ = AddWindowEventListeners();
-            }
+            _ = SynchronizeWindowEventListenersAsync();
         }
 
         public async ValueTask<bool> AddWindowEventListeners()
         {
-            if (_disposed || _listenersAttached)
-            {
-                return !_disposed;
-            }
-
-            _selfReference ??= DotNetObjectReference.Create(this);
-            _listenersAttached = await _jsRuntime.InvokeAsync<bool>("dnetoverlay.addWindowEventListeners", _selfReference);
+            _listenersRequested = true;
+            await SynchronizeWindowEventListenersAsync();
             return _listenersAttached;
         }
 
         public async ValueTask RemoveWindowEventListeners()
         {
-            if (_selfReference is null)
-            {
-                return;
-            }
+            _listenersRequested = false;
+            await SynchronizeWindowEventListenersAsync();
+        }
 
+        private async ValueTask SynchronizeWindowEventListenersAsync()
+        {
+            await _listenerGate.WaitAsync();
             try
             {
-                if (_listenersAttached)
+                if (_listenersRequested && !_disposed && !_listenersAttached)
                 {
-                    await _jsRuntime.InvokeVoidAsync("dnetoverlay.removeWindowEventListeners", _selfReference);
+                    _selfReference ??= DotNetObjectReference.Create(this);
+                    _listenersAttached = await _jsRuntime.InvokeAsync<bool>("dnetoverlay.addWindowEventListeners", _selfReference);
+                }
+
+                // The desired state can change while the JavaScript registration is awaited.
+                // Re-evaluate it while holding the gate so a late registration is immediately removed.
+                if (!_listenersRequested || _disposed)
+                {
+                    if (_listenersAttached && _selfReference is not null)
+                    {
+                        try
+                        {
+                            await _jsRuntime.InvokeVoidAsync("dnetoverlay.removeWindowEventListeners", _selfReference);
+                        }
+                        catch (JSDisconnectedException)
+                        {
+                            // The browser is gone, so its event listeners no longer matter.
+                        }
+                    }
+
+                    _listenersAttached = false;
+                    _selfReference?.Dispose();
+                    _selfReference = null;
                 }
             }
             finally
             {
-                _listenersAttached = false;
-                _selfReference.Dispose();
-                _selfReference = null;
+                _listenerGate.Release();
             }
         }
 
@@ -183,8 +202,9 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
             }
 
             _disposed = true;
+            _listenersRequested = false;
             _onResized = null;
-            _ = RemoveWindowEventListeners();
+            _ = SynchronizeWindowEventListenersAsync();
             GC.SuppressFinalize(this);
         }
 
@@ -197,7 +217,8 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
 
             _onResized = null;
             _disposed = true;
-            await RemoveWindowEventListeners();
+            _listenersRequested = false;
+            await SynchronizeWindowEventListenersAsync();
             GC.SuppressFinalize(this);
         }
     }
