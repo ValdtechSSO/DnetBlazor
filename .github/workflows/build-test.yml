@@ -49,4 +49,5 @@ jobs:
           exit 1
         env:
           DNET_BLAZOR_BROWSER_TESTS: "true"
+          DNET_BLAZOR_VISUAL_TESTS: "true"
           DNET_BLAZOR_BASE_URL: http://127.0.0.1:5101

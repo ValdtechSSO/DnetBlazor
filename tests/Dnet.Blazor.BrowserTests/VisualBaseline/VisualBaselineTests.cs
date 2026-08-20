@@ -90,7 +90,8 @@ public sealed class VisualBaselineFixture : IAsyncLifetime
     }
 }
 
-public sealed class VisualBaselineTests : IClassFixture<VisualBaselineFixture>
+[Collection("Visual baseline")]
+public sealed class VisualBaselineTests
 {
     private static readonly (string Name, int Width, int Height)[] Viewports =
     [
@@ -127,50 +128,25 @@ public sealed class VisualBaselineTests : IClassFixture<VisualBaselineFixture>
             return;
         }
 
-        var page = await _fixture.NewPageAsync(width, height);
-        try
+        // Every state starts from a fresh route. Reusing one page lets a failed
+        // click, an earlier selection, or an open overlay leak into later
+        // captures and can freeze an incorrect image as a different state.
+        foreach (var state in scenario.States)
         {
-            await page.GotoAsync($"{_fixture.BaseUrl.TrimEnd('/')}{scenario.Route}", new()
-            {
-                WaitUntil = WaitUntilState.NetworkIdle,
-                Timeout = 60_000,
-            });
-
-            var root = page.Locator(scenario.RootSelector).First;
-            await root.WaitForAsync(new()
-            {
-                State = WaitForSelectorState.Visible,
-                Timeout = 60_000,
-            });
-
-            if (scenario.ReadyFunction is not null)
-            {
-                await page.WaitForFunctionAsync(scenario.ReadyFunction, null, new()
-                {
-                    Timeout = 30_000,
-                });
-            }
-
-            await SettleAsync(page);
-
-            foreach (var state in scenario.States)
-            {
-                await CaptureStateAsync(page, scenario, state, viewport);
-            }
-
-            foreach (var variant in scenario.Variants)
-            {
-                await CaptureVariantAsync(page, scenario, variant, viewport);
-            }
+            await CaptureStateAsync(scenario, state, viewport, width, height);
         }
-        finally
+
+        foreach (var variant in scenario.Variants)
         {
-            await page.CloseAsync();
+            await CaptureVariantAsync(scenario, variant, viewport, width, height);
         }
     }
 
-    private async Task CaptureStateAsync(IPage page, ComponentScenario scenario, VisualState state, string viewport)
+    private async Task CaptureStateAsync(ComponentScenario scenario, VisualState state, string viewport, int width, int height)
     {
+        var page = await OpenScenarioPageAsync(scenario, width, height);
+        try
+        {
         var capturePage = scenario.PageCaptureStates.Contains(state);
 
         switch (state)
@@ -182,37 +158,90 @@ public sealed class VisualBaselineTests : IClassFixture<VisualBaselineFixture>
                 await FocusViaKeyboardAsync(page, scenario.FocusSelector ?? scenario.RootSelector);
                 break;
             case VisualState.Selected:
-                await page.Locator(scenario.SelectedSelector ?? scenario.RootSelector).First.ClickAsync();
+                if (!scenario.SelectedPreconfigured)
+                {
+                    // Exercise the component's accessible state transition.
+                    // This avoids a chip's trailing remove button, which sits
+                    // inside its visual host and can receive a pointer click.
+                    var selected = page.Locator(scenario.SelectedSelector ?? scenario.RootSelector).First;
+                    await selected.FocusAsync();
+                    await selected.PressAsync("Enter");
+                }
                 break;
             case VisualState.Open:
                 await page.Locator(scenario.OpenSelector ?? scenario.RootSelector).First.ClickAsync();
                 break;
         }
 
+        if (state is not VisualState.Default && scenario.StateAssertion is not null)
+        {
+            try
+            {
+                await page.WaitForFunctionAsync(scenario.StateAssertion, null, new() { Timeout = 10_000 });
+            }
+            catch (TimeoutException)
+            {
+                var selector = scenario.SelectedSelector ?? scenario.RootSelector;
+                var target = page.Locator(selector).First;
+                throw new Xunit.Sdk.XunitException(
+                    $"State transition for '{scenario.Name}' did not satisfy '{scenario.StateAssertion}'. " +
+                    $"Target: {await target.EvaluateAsync<string>("element => element.outerHTML")}.");
+            }
+        }
+
         await SettleAsync(page);
 
+        var captureSelector = state == VisualState.Selected
+            ? scenario.SelectedCaptureSelector ?? scenario.RootSelector
+            : scenario.RootSelector;
         var bytes = capturePage
             ? await page.ScreenshotAsync()
-            : await page.Locator(scenario.RootSelector).First.ScreenshotAsync();
+            : await page.Locator(captureSelector).First.ScreenshotAsync();
 
         await CompareOrUpdateAsync(scenario, $"{StateName(state)}", viewport, bytes);
+        }
+        finally
+        {
+            await page.CloseAsync();
+        }
     }
 
-    private async Task CaptureVariantAsync(IPage page, ComponentScenario scenario, ComponentVariant variant, string viewport)
+    private async Task CaptureVariantAsync(ComponentScenario scenario, ComponentVariant variant, string viewport, int width, int height)
     {
-        // Variants are captured on a fresh page so earlier states (selection,
-        // open panels) cannot leak into them.
-        await page.GotoAsync($"{_fixture.BaseUrl.TrimEnd('/')}{scenario.Route}", new()
+        var page = await OpenScenarioPageAsync(scenario, width, height);
+        try
         {
-            WaitUntil = WaitUntilState.NetworkIdle,
-            Timeout = 60_000,
-        });
         var locator = page.Locator(variant.Selector).First;
         await locator.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 60_000 });
         await SettleAsync(page);
 
         var bytes = await locator.ScreenshotAsync();
         await CompareOrUpdateAsync(scenario, $"variant-{variant.Label}", viewport, bytes);
+        }
+        finally
+        {
+            await page.CloseAsync();
+        }
+    }
+
+    private async Task<IPage> OpenScenarioPageAsync(ComponentScenario scenario, int width, int height)
+    {
+        var page = await _fixture.NewPageAsync(width, height);
+        await page.GotoAsync($"{_fixture.BaseUrl.TrimEnd('/')}{scenario.Route}", new()
+        {
+            WaitUntil = WaitUntilState.NetworkIdle,
+            Timeout = 60_000,
+        });
+
+        var root = page.Locator(scenario.RootSelector).First;
+        await root.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 60_000 });
+        if (scenario.ReadyFunction is not null)
+        {
+            await page.WaitForFunctionAsync(scenario.ReadyFunction, null, new() { Timeout = 30_000 });
+        }
+
+        await SettleAsync(page);
+        return page;
     }
 
     private async Task CompareOrUpdateAsync(ComponentScenario scenario, string state, string viewport, byte[] actual)

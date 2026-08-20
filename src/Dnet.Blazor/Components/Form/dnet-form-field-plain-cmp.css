@@ -291,7 +291,7 @@ select.mat-input-element::-ms-value {
   margin-left: 2px;
   margin-right: 0px;
   content: "*";
-  font-size: var(--dnet-component-smx-font-size);
+  font-size: var(--dnet-sys-text-xs);
 }
 
 .dnet-component-clear-button {

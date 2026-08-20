@@ -17,6 +17,7 @@
   --dnet-sys-on-primary: var(--dnet-ref-neutral-0);
   --dnet-sys-border: var(--dnet-ref-neutral-200);
   --dnet-sys-border-strong: var(--dnet-ref-neutral-300);
+  --dnet-sys-border-width: 1px;
   --dnet-sys-transparent: transparent;
   --dnet-sys-state-hover: color-mix(in srgb, var(--dnet-sys-on-surface) 8%, transparent);
   --dnet-sys-state-pressed: color-mix(in srgb, var(--dnet-sys-on-surface) 14%, transparent);
@@ -30,6 +31,10 @@
   --dnet-sys-shadow-color: color-mix(in srgb, var(--dnet-ref-neutral-1000) 10%, transparent);
   --dnet-sys-scrim: color-mix(in srgb, var(--dnet-ref-neutral-1000) 32%, transparent);
   --dnet-sys-elevation-1: 0 2px 1px -1px var(--dnet-sys-shadow-color), 0 1px 2px 0 var(--dnet-sys-shadow-color), 0 1px 10px 0 var(--dnet-sys-shadow-color);
+  --dnet-sys-elevation-2: 0 3px 3px -2px var(--dnet-sys-shadow-color), 0 3px 4px 0 var(--dnet-sys-shadow-color), 0 1px 8px 0 var(--dnet-sys-shadow-color);
+  --dnet-sys-elevation-3: 0 3px 5px -1px var(--dnet-sys-shadow-color), 0 6px 10px 0 var(--dnet-sys-shadow-color), 0 1px 18px 0 var(--dnet-sys-shadow-color);
+  --dnet-sys-elevation-4: 0 5px 5px -3px var(--dnet-sys-shadow-color), 0 8px 10px 1px var(--dnet-sys-shadow-color), 0 3px 14px 2px var(--dnet-sys-shadow-color);
+  --dnet-sys-elevation-5: 0 8px 10px -5px var(--dnet-sys-shadow-color), 0 16px 24px 2px var(--dnet-sys-shadow-color), 0 6px 30px 5px var(--dnet-sys-shadow-color);
   --dnet-sys-space-unit: 4px;
   --dnet-sys-space-1: calc(var(--dnet-sys-space-unit) * 1);
   --dnet-sys-space-2: calc(var(--dnet-sys-space-unit) * 2);

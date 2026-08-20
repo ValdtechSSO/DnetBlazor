@@ -5,7 +5,7 @@ const repositoryRoot = resolve(import.meta.dirname, "../..");
 const stylesRoot = join(repositoryRoot, "src/Dnet.Blazor/Components");
 const themeRoot = join(repositoryRoot, "src/Dnet.Blazor/wwwroot/styles/theme");
 const baselinePath = join(import.meta.dirname, "baseline.json");
-const frozenStylesheetPath = join(repositoryRoot, "src/Dnet.Blazor/Components/Assets/styles/dnet-blazor-styles.css");
+const systemTokenPath = join(repositoryRoot, "src/Dnet.Blazor/Components/Assets/styles/tokens/system.css");
 const tokenDocumentationPath = join(repositoryRoot, "docs/styling/tokens.md");
 const ci = process.argv.includes("--ci");
 const writeBaseline = process.argv.includes("--write-baseline");
@@ -135,7 +135,7 @@ function audit() {
 }
 
 function generateTokenDocumentation() {
-    const stylesheet = readFileSync(frozenStylesheetPath, "utf8");
+    const stylesheet = readFileSync(systemTokenPath, "utf8");
     const tokens = [...stylesheet.matchAll(/^\s*(--dnet-sys-[a-z0-9-]+):\s*([^;]+);/gm)]
         .map((match) => [match[1], match[2].trim()])
         .sort(([left], [right]) => left.localeCompare(right));

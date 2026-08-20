@@ -4,7 +4,7 @@ Every component reads its public token with a local private indirection:
 
 ```css
 .dnet-button {
-    --_background: var(--dnet-btn-background, var(--dnet-sys-state-hover));
+    --_background: var(--dnet-btn-background, var(--dnet-sys-transparent));
     background: var(--_background);
 }
 ```

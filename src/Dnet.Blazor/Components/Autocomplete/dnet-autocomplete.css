@@ -14,10 +14,10 @@
 
 .dnet-autocomplete-list-wrapper {
   --_border-color: var(--dnet-list-border-color, var(--dnet-autocomplete-list-border-color, var(--dnet-sys-border)));
-  --_radius: var(--dnet-list-border-radius, var(--dnet-autocomplete-list-border-radius, var(--dnet-component-border-radius, var(--dnet-sys-radius-sm))));
+  --_radius: var(--dnet-list-border-radius, var(--dnet-autocomplete-list-border-radius, var(--dnet-sys-radius-sm)));
   --_wrapper-padding: var(--dnet-list-wrapper-horizontal-padding, var(--dnet-autocomplete-list-wrapper-horizontal-padding, 15px));
   --_background: var(--dnet-list-background-color, var(--dnet-autocomplete-list-background-color, var(--dnet-sys-surface)));
-  --_shadow: var(--dnet-list-box-shadow, var(--dnet-autocomplete-list-box-shadow, var(--dnet-component-box-shadow, var(--dnet-sys-elevation-1))));
+  --_shadow: var(--dnet-list-box-shadow, var(--dnet-autocomplete-list-box-shadow, var(--dnet-sys-elevation-1)));
 
   display: flex;
   flex-direction: column;
@@ -105,7 +105,7 @@
 }
 
 .dnet-autocomplete-list-item {
-  --_item-height: var(--dnet-list-item-height, var(--dnet-autocomplete-list-item-height, var(--dnet-component-list-item-height, var(--dnet-sys-control-height))));
+  --_item-height: var(--dnet-list-item-height, var(--dnet-autocomplete-list-item-height, var(--dnet-sys-control-height)));
   --_padding-vertical: var(--dnet-list-padding-vertical, var(--dnet-autocomplete-list-padding-vertical, 4px));
   --_padding-horizontal: var(--dnet-list-padding-horizontal, var(--dnet-autocomplete-list-padding-horizontal, 5px));
 
@@ -172,8 +172,8 @@
 }
 
 .dnet-autocomplete-list-item-headline {
-  --_headline-font: var(--dnet-list-headline-font-size, var(--dnet-autocomplete-list-headline-font-size, var(--dnet-component-sm-font-size, var(--dnet-sys-text-md))));
-  --_headline-color: var(--dnet-list-headline-text-color, var(--dnet-autocomplete-list-headline-text-color, var(--dnet-component-headline-text-color, var(--dnet-sys-on-surface))));
+  --_headline-font: var(--dnet-list-headline-font-size, var(--dnet-autocomplete-list-headline-font-size, var(--dnet-sys-text-md)));
+  --_headline-color: var(--dnet-list-headline-text-color, var(--dnet-autocomplete-list-headline-text-color, var(--dnet-sys-on-surface)));
 
   font-size: var(--_headline-font);
   color: var(--_headline-color);
@@ -187,8 +187,8 @@
 }
 
 .dnet-autocomplete-list-item-supporting-text {
-  --_supporting-font: var(--dnet-list-supporting-text-font-size, var(--dnet-autocomplete-list-supporting-text-font-size, var(--dnet-component-xs-font-size, var(--dnet-sys-text-xs))));
-  --_supporting-color: var(--dnet-list-supporting-text-color, var(--dnet-autocomplete-list-supporting-text-color, var(--dnet-component-supporting-text-color, var(--dnet-sys-on-surface-muted))));
+  --_supporting-font: var(--dnet-list-supporting-text-font-size, var(--dnet-autocomplete-list-supporting-text-font-size, var(--dnet-sys-text-xs)));
+  --_supporting-color: var(--dnet-list-supporting-text-color, var(--dnet-autocomplete-list-supporting-text-color, var(--dnet-sys-on-surface-muted)));
 
   font-size: var(--_supporting-font);
   color: var(--_supporting-color);

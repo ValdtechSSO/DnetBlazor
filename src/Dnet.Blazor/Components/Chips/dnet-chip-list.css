@@ -24,9 +24,13 @@
   --_foreground: var(--dnet-chips-foreground-selected, var(--dnet-sys-on-primary));
 }
 
+.dnet-standard-chip:not([aria-pressed="true"]):hover {
+  background-color: var(--dnet-chips-background-hover, var(--dnet-sys-surface-hover));
+}
+
 .dnet-standard-chip {
   --_padding: var(--dnet-chips-padding, 7px 12px);
-  --_radius: var(--dnet-chips-radius, var(--dnet-chips-border-radius, var(--dnet-component-border-radius, var(--dnet-sys-radius-sm))));
+  --_radius: var(--dnet-chips-radius, var(--dnet-chips-border-radius, var(--dnet-sys-radius-sm)));
   --_min-height: var(--dnet-chips-min-height, 32px);
   transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
@@ -39,7 +43,7 @@
 }
 
 .dnet-chip {
-  --_font-size: var(--dnet-chips-font-size, var(--dnet-chips-sm-font-size, var(--dnet-component-sm-font-size, var(--dnet-sys-text-md))));
+  --_font-size: var(--dnet-chips-font-size, var(--dnet-chips-sm-font-size, var(--dnet-sys-text-md)));
   position: relative;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;

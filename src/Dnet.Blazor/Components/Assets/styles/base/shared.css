@@ -1,16 +1,4 @@
 /*! Sass shared (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
-:root {
-  --dnet-component-box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.1), 0 1px 10px 0 rgba(0, 0, 0, 0.1);
-  --dnet-component-headline-text-color: #5f6368;
-  --dnet-component-lg-font-size: 1.25rem;
-  --dnet-component-md-font-size: 1rem;
-  --dnet-component-sm-font-size: 0.875rem;
-  --dnet-component-smx-font-size: 0.75rem;
-  --dnet-primary-color: #4fc3f7;
-  --dnet-secundary-color: #4fc3f7;
-  --dnet-color-reset: #000000;
-}
-
 [type=checkbox].dnet-checkbox-no-label:checked:before, [type=checkbox].dnet-checkbox-no-label:not(:checked):before,
 [type=checkbox].dnet-checkbox-no-label:checked:before,
 [type=checkbox].dnet-checkbox-no-label:not(:checked):before {
@@ -20,8 +8,8 @@
   top: 0;
   width: 0.9rem;
   height: 0.9rem;
-  border: 1px solid #ccc;
-  background: #fff;
+  border: var(--dnet-sys-border-width) solid var(--dnet-sys-border);
+  background: var(--dnet-sys-surface);
   border-radius: 0;
   box-shadow: none;
 }
@@ -29,8 +17,8 @@
 [type=checkbox].dnet-checkbox-no-label.negative:checked:before,
 [type=checkbox].dnet-checkbox-no-label.negative:not(:checked):before {
   content: "";
-  border: 1px solid var(--dnet-color-reset);
-  background: #FFFFFF;
+  border: var(--dnet-sys-border-width) solid var(--dnet-sys-on-surface);
+  background: var(--dnet-sys-surface);
 }
 
 /* checked mark aspect */
@@ -43,10 +31,12 @@
   left: 0.15rem;
   font-size: 0.625rem;
   line-height: 0.8;
-  color: var(--dnet-color-reset);
+  color: var(--dnet-sys-on-surface);
   transition: all 0.2s;
   content: "";
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'><path fill-rule='evenodd' clip-rule='evenodd' d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/></svg>");
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/></svg>");
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/></svg>");
+  background-color: var(--dnet-sys-on-surface);
   background-repeat: no-repeat;
   background-size: 0.625rem 0.625rem;
   width: 12px;
@@ -55,7 +45,7 @@
 [type=checkbox].dnet-checkbox-no-label.negative:checked:after, [type=checkbox].dnet-checkbox-no-label.negative:not(:checked):after,
 [type=checkbox].dnet-checkbox-no-label.negative:checked:after,
 [type=checkbox].dnet-checkbox-no-label.negative:not(:checked):after {
-  color: var(--dnet-color-reset);
+  color: var(--dnet-sys-on-surface);
 }
 
 /* checked mark aspect changes */

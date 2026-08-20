@@ -10,7 +10,7 @@
      style="@_dnetChipStyle"
      role="button"
      tabindex="@(Disabled ? -1 : 0)"
-     aria-pressed="@IsSelected()"
+     aria-pressed="@(IsSelected() ? "true" : "false")"
      aria-disabled="@Disabled"
      @onclick="Toggle"
      @onkeydown="HandleKeyDown">
@@ -70,6 +70,9 @@
 	public bool Selectable { get; set; } = true;
 
 	[Parameter]
+	public bool Selected { get; set; }
+
+	[Parameter]
 	public bool Removable { get; set; } = true;
 
 	[Parameter]
@@ -117,6 +120,11 @@
 		Parent.AddChip(this);
 	}
 
+	protected override void OnParametersSet()
+	{
+		_selected = Selected;
+	}
+
 	private ValuesBySize GetValuesBySize()
 	{
 		var valuesBySize = new ValuesBySize();
@@ -143,18 +151,19 @@
 		return valuesBySize;
 	}
 
-	private void Toggle()
+	private async Task Toggle()
 	{
 		if (Disabled || !SelectThisChip(!IsSelected())) return;
 
-		_ = Parent.ChipClicked(this);
+		await Parent.ChipClicked(this);
+		StateHasChanged();
 	}
 
-	private void HandleKeyDown(KeyboardEventArgs args)
+	private async Task HandleKeyDown(KeyboardEventArgs args)
 	{
 		if (args.Key is "Enter" or " ")
 		{
-			Toggle();
+			await Toggle();
 		}
 	}
 

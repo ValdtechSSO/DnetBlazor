@@ -123,7 +123,7 @@
   opacity: 0.48;
 }
 .dnet-paginator-icon-button:focus-visible {
-  outline: 2px solid var(--dnet-primary-color, var(--dnet-sys-focus-ring)) !important;
+  outline: 2px solid var(--dnet-sys-focus-ring) !important;
   outline-offset: 1px;
 }
 
@@ -157,8 +157,8 @@
   box-shadow: none;
 }
 .dnet-paginator-page-input:focus-visible {
-  border-bottom-color: var(--dnet-primary-color, var(--dnet-sys-focus-ring)) !important;
-  outline: 2px solid var(--dnet-primary-color, var(--dnet-sys-focus-ring)) !important;
+  border-bottom-color: var(--dnet-sys-focus-ring) !important;
+  outline: 2px solid var(--dnet-sys-focus-ring) !important;
   outline-offset: 2px;
 }
 

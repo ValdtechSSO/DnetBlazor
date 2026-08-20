@@ -16,7 +16,7 @@
   --_icon-color: var(--dnet-sys-on-surface);
   --_icon-disabled: var(--dnet-sys-state-disabled-fg);
 
-  box-shadow: var(--dnet-component-box-shadow);
+  box-shadow: var(--dnet-sys-elevation-1);
   background: var(--_background);
   color: var(--dnet-sys-on-surface-emphasis);
 }
@@ -32,7 +32,7 @@
 
 .dnet-calendar-period-button {
   min-width: 0;
-  font-size: var(--dnet-component-sm-font-size);
+  font-size: var(--dnet-sys-text-md);
   font-weight: 500;
 }
 .dnet-calendar-period-button:focus {
@@ -361,7 +361,7 @@ button[disabled].dnet-calendar-next-button::after {
 }
 
 .dnet-datepicker-reset-test {
-  font-size: var(--dnet-component-smx-font-size);
+  font-size: var(--dnet-sys-text-xs);
 }
 
 .dnet-datepicker-icon-wrapper {

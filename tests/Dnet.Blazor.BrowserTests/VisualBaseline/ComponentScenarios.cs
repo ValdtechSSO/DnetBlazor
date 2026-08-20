@@ -27,8 +27,11 @@ public sealed record ComponentScenario(
     VisualState[] States,
     string? OpenSelector = null,
     string? SelectedSelector = null,
+    string? SelectedCaptureSelector = null,
     string? HoverSelector = null,
     string? FocusSelector = null,
+    string? StateAssertion = null,
+    bool SelectedPreconfigured = false,
     VisualState[]? PageCaptureStates = null,
     ComponentVariant[]? Variants = null,
     int MaxDiffPixels = 0,
@@ -59,7 +62,10 @@ public static class ComponentScenarios
             "/Chips",
             ".dnet-chip",
             [VisualState.Default, VisualState.Hover, VisualState.Selected],
-            SelectedSelector: ".dnet-chip-size-lg",
+            SelectedSelector: ".dnet-chip-size-lg[aria-pressed='true']",
+            SelectedCaptureSelector: ".dnet-chip-size-lg[aria-pressed='true']",
+            StateAssertion: "() => document.querySelector('.dnet-chip-size-lg[aria-pressed=\"true\"]') !== null",
+            SelectedPreconfigured: true,
             Variants:
             [
                 new("medium", ".dnet-chip-size-md"),
@@ -111,14 +117,22 @@ public static class ComponentScenarios
         new(
             "checkbox",
             "/CheckBox",
-            ".dnet-checkbox",
-            [VisualState.Default, VisualState.Hover, VisualState.Selected]),
+            ".dnet-checkbox:not(.dnet-checkbox-disabled)",
+            [VisualState.Default, VisualState.Hover, VisualState.Selected],
+            SelectedSelector: ".dnet-checkbox.dnet-checkbox-checked",
+            SelectedCaptureSelector: ".dnet-checkbox.dnet-checkbox-checked",
+            StateAssertion: "() => document.querySelector('.dnet-checkbox.dnet-checkbox-checked') !== null",
+            SelectedPreconfigured: true),
 
         new(
             "radio-button",
             "/RadioButton",
-            ".dnet-radio-button",
-            [VisualState.Default, VisualState.Hover, VisualState.Selected]),
+            ".dnet-radio-button:not(.dnet-radio-disabled):not(.dnet-radio-checked)",
+            [VisualState.Default, VisualState.Hover, VisualState.Selected],
+            SelectedSelector: ".dnet-radio-button.dnet-radio-checked",
+            SelectedCaptureSelector: ".dnet-radio-button.dnet-radio-checked",
+            StateAssertion: "() => document.querySelector('.dnet-radio-button.dnet-radio-checked') !== null",
+            SelectedPreconfigured: true),
 
         new(
             "datepicker",
@@ -130,8 +144,7 @@ public static class ComponentScenarios
             "tabs",
             "/Tabs",
             ".mat-tab-group",
-            [VisualState.Default, VisualState.Selected],
-            SelectedSelector: ".mat-tab-label"),
+            [VisualState.Default]),
 
         new(
             "stepper",

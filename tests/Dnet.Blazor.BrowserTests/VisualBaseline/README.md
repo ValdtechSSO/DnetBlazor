@@ -49,9 +49,10 @@ dotnet test tests/Dnet.Blazor.BrowserTests \
   -e DNET_BLAZOR_BASE_URL=http://127.0.0.1:5101
 ```
 
-La suite es **opt-in** (`DNET_BLAZOR_VISUAL_TESTS=true`): el CI principal solo
-activa `DNET_BLAZOR_BROWSER_TESTS`, así que el build no depende de goldens
-hasta que se congelen los oficiales de Linux.
+La suite se activa en CI con `DNET_BLAZOR_VISUAL_TESTS=true`; por tanto el job
+Linux/Chromium compara todos los estados y falla tanto ante un golden ausente
+como ante una regresión visual. Localmente la variable sigue siendo explícita
+para no exigir una aplicación de muestra arrancada en cada `dotnet test`.
 
 ## Congelar / actualizar goldens (procedimiento deliberado)
 
@@ -79,8 +80,8 @@ fuentes difieren). El procedimiento para congelar los oficiales:
    `DNET_BLAZOR_UPDATE_GOLDENS=true` y commitear los `goldens/linux/*`.
 2. A partir de ahí, el CI compara contra esos ficheros.
 
-Hasta que existan los `goldens/linux/*`, el build principal no ejecuta esta
-suite (variable de activación separada).
+Los `goldens/linux/*` son un requisito del CI: no se aceptan sustitutos de
+Darwin ni se permiten capturas faltantes.
 
 ## Cobertura y exclusiones conocidas
 
@@ -128,10 +129,13 @@ fallar si cambia su color de hover (el defecto que motiva la Fase 2 — el defau
 y el hover de `Button` caen hoy ambos en `--dnet-sys-state-hover`, así que los
 goldens `button-hover` y `button-default` son idénticos por construcción).
 
-Para demostrarlo, se aplica temporalmente cualquier override al color de hover
-(añadiendo una regla como `.dnet-button:hover { background-color: red !important; }`
-en el harness) y se ejecuta la suite: los goldens `button/hover` deben fallar.
-Una captura en estado por defecto no detectaría ese cambio.
+Además de comparar contra el golden, `VisualGoldenIntegrityTests` calcula un
+hash por PNG y falla si los estados que declaran un cambio visual (selección,
+apertura, foco y los hover de Button y Chips) son idénticos. La captura de cada
+estado abre una página nueva y espera una aserción de DOM para `selected`, así
+que no puede volver a congelar por error el estado anterior. Para demostrar la
+protección de Button, basta cambiar temporalmente su hover: el golden
+`button/hover` debe fallar.
 
 ## Ajuste de tolerancia
 

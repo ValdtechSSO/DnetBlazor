@@ -1,6 +1,6 @@
 /*! Button (recorte por offset; editado a mano en 6.0) — generado una vez; a partir de aquí se edita a mano. */
 .dnet-button, .dnet-icon-button {
-  --_background: var(--dnet-btn-background, var(--dnet-button-background-color, var(--dnet-sys-state-hover)));
+  --_background: var(--dnet-btn-background, var(--dnet-button-background-color, var(--dnet-sys-transparent)));
   --_hover: var(--dnet-btn-background-hover, var(--dnet-button-hover-color, var(--dnet-sys-state-hover)));
   --_foreground: var(--dnet-btn-foreground, var(--dnet-sys-on-surface));
   --_focus-overlay: var(--dnet-btn-focus-overlay, var(--dnet-sys-state-pressed));

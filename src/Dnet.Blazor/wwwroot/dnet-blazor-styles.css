@@ -41,6 +41,7 @@
   --dnet-sys-on-primary: var(--dnet-ref-neutral-0);
   --dnet-sys-border: var(--dnet-ref-neutral-200);
   --dnet-sys-border-strong: var(--dnet-ref-neutral-300);
+  --dnet-sys-border-width: 1px;
   --dnet-sys-transparent: transparent;
   --dnet-sys-state-hover: color-mix(in srgb, var(--dnet-sys-on-surface) 8%, transparent);
   --dnet-sys-state-pressed: color-mix(in srgb, var(--dnet-sys-on-surface) 14%, transparent);
@@ -54,6 +55,10 @@
   --dnet-sys-shadow-color: color-mix(in srgb, var(--dnet-ref-neutral-1000) 10%, transparent);
   --dnet-sys-scrim: color-mix(in srgb, var(--dnet-ref-neutral-1000) 32%, transparent);
   --dnet-sys-elevation-1: 0 2px 1px -1px var(--dnet-sys-shadow-color), 0 1px 2px 0 var(--dnet-sys-shadow-color), 0 1px 10px 0 var(--dnet-sys-shadow-color);
+  --dnet-sys-elevation-2: 0 3px 3px -2px var(--dnet-sys-shadow-color), 0 3px 4px 0 var(--dnet-sys-shadow-color), 0 1px 8px 0 var(--dnet-sys-shadow-color);
+  --dnet-sys-elevation-3: 0 3px 5px -1px var(--dnet-sys-shadow-color), 0 6px 10px 0 var(--dnet-sys-shadow-color), 0 1px 18px 0 var(--dnet-sys-shadow-color);
+  --dnet-sys-elevation-4: 0 5px 5px -3px var(--dnet-sys-shadow-color), 0 8px 10px 1px var(--dnet-sys-shadow-color), 0 3px 14px 2px var(--dnet-sys-shadow-color);
+  --dnet-sys-elevation-5: 0 8px 10px -5px var(--dnet-sys-shadow-color), 0 16px 24px 2px var(--dnet-sys-shadow-color), 0 6px 30px 5px var(--dnet-sys-shadow-color);
   --dnet-sys-space-unit: 4px;
   --dnet-sys-space-1: calc(var(--dnet-sys-space-unit) * 1);
   --dnet-sys-space-2: calc(var(--dnet-sys-space-unit) * 2);
@@ -74,18 +79,6 @@
 }
 
 /*! Sass shared (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
-:root {
-  --dnet-component-box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.1), 0 1px 10px 0 rgba(0, 0, 0, 0.1);
-  --dnet-component-headline-text-color: #5f6368;
-  --dnet-component-lg-font-size: 1.25rem;
-  --dnet-component-md-font-size: 1rem;
-  --dnet-component-sm-font-size: 0.875rem;
-  --dnet-component-smx-font-size: 0.75rem;
-  --dnet-primary-color: #4fc3f7;
-  --dnet-secundary-color: #4fc3f7;
-  --dnet-color-reset: #000000;
-}
-
 [type=checkbox].dnet-checkbox-no-label:checked:before, [type=checkbox].dnet-checkbox-no-label:not(:checked):before,
 [type=checkbox].dnet-checkbox-no-label:checked:before,
 [type=checkbox].dnet-checkbox-no-label:not(:checked):before {
@@ -95,8 +88,8 @@
   top: 0;
   width: 0.9rem;
   height: 0.9rem;
-  border: 1px solid #ccc;
-  background: #fff;
+  border: var(--dnet-sys-border-width) solid var(--dnet-sys-border);
+  background: var(--dnet-sys-surface);
   border-radius: 0;
   box-shadow: none;
 }
@@ -104,8 +97,8 @@
 [type=checkbox].dnet-checkbox-no-label.negative:checked:before,
 [type=checkbox].dnet-checkbox-no-label.negative:not(:checked):before {
   content: "";
-  border: 1px solid var(--dnet-color-reset);
-  background: #FFFFFF;
+  border: var(--dnet-sys-border-width) solid var(--dnet-sys-on-surface);
+  background: var(--dnet-sys-surface);
 }
 
 /* checked mark aspect */
@@ -118,10 +111,12 @@
   left: 0.15rem;
   font-size: 0.625rem;
   line-height: 0.8;
-  color: var(--dnet-color-reset);
+  color: var(--dnet-sys-on-surface);
   transition: all 0.2s;
   content: "";
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'><path fill-rule='evenodd' clip-rule='evenodd' d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/></svg>");
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/></svg>");
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/></svg>");
+  background-color: var(--dnet-sys-on-surface);
   background-repeat: no-repeat;
   background-size: 0.625rem 0.625rem;
   width: 12px;
@@ -130,7 +125,7 @@
 [type=checkbox].dnet-checkbox-no-label.negative:checked:after, [type=checkbox].dnet-checkbox-no-label.negative:not(:checked):after,
 [type=checkbox].dnet-checkbox-no-label.negative:checked:after,
 [type=checkbox].dnet-checkbox-no-label.negative:not(:checked):after {
-  color: var(--dnet-color-reset);
+  color: var(--dnet-sys-on-surface);
 }
 
 /* checked mark aspect changes */
@@ -163,7 +158,7 @@ body {
   padding: 0;
   min-height: 100%;
   background-color: var(--dnet-dash-body-background-color, var(--dnet-sys-surface));
-  font-size: var(--dnet-component-sm-font-size, var(--dnet-sys-text-md));
+  font-size: var(--dnet-sys-text-md);
 }
 
 *,
@@ -1047,10 +1042,10 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 
 .dnet-autocomplete-list-wrapper {
   --_border-color: var(--dnet-list-border-color, var(--dnet-autocomplete-list-border-color, var(--dnet-sys-border)));
-  --_radius: var(--dnet-list-border-radius, var(--dnet-autocomplete-list-border-radius, var(--dnet-component-border-radius, var(--dnet-sys-radius-sm))));
+  --_radius: var(--dnet-list-border-radius, var(--dnet-autocomplete-list-border-radius, var(--dnet-sys-radius-sm)));
   --_wrapper-padding: var(--dnet-list-wrapper-horizontal-padding, var(--dnet-autocomplete-list-wrapper-horizontal-padding, 15px));
   --_background: var(--dnet-list-background-color, var(--dnet-autocomplete-list-background-color, var(--dnet-sys-surface)));
-  --_shadow: var(--dnet-list-box-shadow, var(--dnet-autocomplete-list-box-shadow, var(--dnet-component-box-shadow, var(--dnet-sys-elevation-1))));
+  --_shadow: var(--dnet-list-box-shadow, var(--dnet-autocomplete-list-box-shadow, var(--dnet-sys-elevation-1)));
 
   display: flex;
   flex-direction: column;
@@ -1138,7 +1133,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-autocomplete-list-item {
-  --_item-height: var(--dnet-list-item-height, var(--dnet-autocomplete-list-item-height, var(--dnet-component-list-item-height, var(--dnet-sys-control-height))));
+  --_item-height: var(--dnet-list-item-height, var(--dnet-autocomplete-list-item-height, var(--dnet-sys-control-height)));
   --_padding-vertical: var(--dnet-list-padding-vertical, var(--dnet-autocomplete-list-padding-vertical, 4px));
   --_padding-horizontal: var(--dnet-list-padding-horizontal, var(--dnet-autocomplete-list-padding-horizontal, 5px));
 
@@ -1205,8 +1200,8 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-autocomplete-list-item-headline {
-  --_headline-font: var(--dnet-list-headline-font-size, var(--dnet-autocomplete-list-headline-font-size, var(--dnet-component-sm-font-size, var(--dnet-sys-text-md))));
-  --_headline-color: var(--dnet-list-headline-text-color, var(--dnet-autocomplete-list-headline-text-color, var(--dnet-component-headline-text-color, var(--dnet-sys-on-surface))));
+  --_headline-font: var(--dnet-list-headline-font-size, var(--dnet-autocomplete-list-headline-font-size, var(--dnet-sys-text-md)));
+  --_headline-color: var(--dnet-list-headline-text-color, var(--dnet-autocomplete-list-headline-text-color, var(--dnet-sys-on-surface)));
 
   font-size: var(--_headline-font);
   color: var(--_headline-color);
@@ -1220,8 +1215,8 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-autocomplete-list-item-supporting-text {
-  --_supporting-font: var(--dnet-list-supporting-text-font-size, var(--dnet-autocomplete-list-supporting-text-font-size, var(--dnet-component-xs-font-size, var(--dnet-sys-text-xs))));
-  --_supporting-color: var(--dnet-list-supporting-text-color, var(--dnet-autocomplete-list-supporting-text-color, var(--dnet-component-supporting-text-color, var(--dnet-sys-on-surface-muted))));
+  --_supporting-font: var(--dnet-list-supporting-text-font-size, var(--dnet-autocomplete-list-supporting-text-font-size, var(--dnet-sys-text-xs)));
+  --_supporting-color: var(--dnet-list-supporting-text-color, var(--dnet-autocomplete-list-supporting-text-color, var(--dnet-sys-on-surface-muted)));
 
   font-size: var(--_supporting-font);
   color: var(--_supporting-color);
@@ -1466,9 +1461,13 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   --_foreground: var(--dnet-chips-foreground-selected, var(--dnet-sys-on-primary));
 }
 
+.dnet-standard-chip:not([aria-pressed="true"]):hover {
+  background-color: var(--dnet-chips-background-hover, var(--dnet-sys-surface-hover));
+}
+
 .dnet-standard-chip {
   --_padding: var(--dnet-chips-padding, 7px 12px);
-  --_radius: var(--dnet-chips-radius, var(--dnet-chips-border-radius, var(--dnet-component-border-radius, var(--dnet-sys-radius-sm))));
+  --_radius: var(--dnet-chips-radius, var(--dnet-chips-border-radius, var(--dnet-sys-radius-sm)));
   --_min-height: var(--dnet-chips-min-height, 32px);
   transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
@@ -1481,7 +1480,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-chip {
-  --_font-size: var(--dnet-chips-font-size, var(--dnet-chips-sm-font-size, var(--dnet-component-sm-font-size, var(--dnet-sys-text-md))));
+  --_font-size: var(--dnet-chips-font-size, var(--dnet-chips-sm-font-size, var(--dnet-sys-text-md)));
   position: relative;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
@@ -1589,9 +1588,9 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   --_background: var(--dnet-connected-panel-background, var(--dnet-sys-surface));
   --_padding: var(--dnet-connected-panel-padding, 2px);
 
-  box-shadow: var(--dnet-component-box-shadow);
+  box-shadow: var(--dnet-sys-elevation-1);
   background: var(--_background);
-  color: var(--dnet-component-headline-text-color);
+  color: var(--dnet-sys-on-surface);
   width: 100%;
   height: 100%;
   padding: var(--_padding);
@@ -1616,7 +1615,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   --_icon-color: var(--dnet-sys-on-surface);
   --_icon-disabled: var(--dnet-sys-state-disabled-fg);
 
-  box-shadow: var(--dnet-component-box-shadow);
+  box-shadow: var(--dnet-sys-elevation-1);
   background: var(--_background);
   color: var(--dnet-sys-on-surface-emphasis);
 }
@@ -1632,7 +1631,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 
 .dnet-calendar-period-button {
   min-width: 0;
-  font-size: var(--dnet-component-sm-font-size);
+  font-size: var(--dnet-sys-text-md);
   font-weight: 500;
 }
 .dnet-calendar-period-button:focus {
@@ -1961,7 +1960,7 @@ button[disabled].dnet-calendar-next-button::after {
 }
 
 .dnet-datepicker-reset-test {
-  font-size: var(--dnet-component-smx-font-size);
+  font-size: var(--dnet-sys-text-xs);
 }
 
 .dnet-datepicker-icon-wrapper {
@@ -3861,7 +3860,7 @@ button[disabled].dnet-calendar-next-button::after {
   opacity: 0.48;
 }
 .dnet-paginator-icon-button:focus-visible {
-  outline: 2px solid var(--dnet-primary-color, var(--dnet-sys-focus-ring)) !important;
+  outline: 2px solid var(--dnet-sys-focus-ring) !important;
   outline-offset: 1px;
 }
 
@@ -3894,8 +3893,8 @@ button[disabled].dnet-calendar-next-button::after {
   box-shadow: none;
 }
 .dnet-paginator-page-input:focus-visible {
-  border-bottom-color: var(--dnet-primary-color, var(--dnet-sys-focus-ring)) !important;
-  outline: 2px solid var(--dnet-primary-color, var(--dnet-sys-focus-ring)) !important;
+  border-bottom-color: var(--dnet-sys-focus-ring) !important;
+  outline: 2px solid var(--dnet-sys-focus-ring) !important;
   outline-offset: 2px;
 }
 
@@ -5157,11 +5156,13 @@ ul[role=tree] li ul {
 }
 
 .dnet-datepickerweek-icon-default {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'><path fill-rule='evenodd' clip-rule='evenodd' d='M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1zm1-3a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M3.5 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5zm9 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5z'/></svg>");
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1zm1-3a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M3.5 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5zm9 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5z'/></svg>");
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1zm1-3a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M3.5 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5zm9 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5z'/></svg>");
+  background-color: var(--dnet-sys-on-surface);
 }
 
 .dnet-datepickerweek-disable .dnet-datepickerweek-icon-default {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='grey'><path fill-rule='evenodd' clip-rule='evenodd' d='M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1zm1-3a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M3.5 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5zm9 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5z'/></svg>");
+  background-color: var(--dnet-sys-state-disabled-fg);
 }
 .dnet-datepickerweek-disable .dnet-datepickerweek-icon-wrapper {
   background-color: var(--dnet-sys-surface-hover);
@@ -5508,7 +5509,9 @@ button[disabled].dnet-datepickerweekca-next-button::after {
 }
 
 .dnet-datepickerweek-reset-button {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'><path fill-rule='evenodd' clip-rule='evenodd' d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z'/></svg>");
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z'/></svg>");
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z'/></svg>");
+  background-color: var(--dnet-sys-on-surface);
 }
 
 .dnet-datepickerweek-reset-test {
@@ -6236,7 +6239,7 @@ select.mat-input-element::-ms-value {
   margin-left: 2px;
   margin-right: 0px;
   content: "*";
-  font-size: var(--dnet-component-smx-font-size);
+  font-size: var(--dnet-sys-text-xs);
 }
 
 .dnet-component-clear-button {
@@ -6538,7 +6541,7 @@ select.mat-input-element::-ms-value {
 
 /*! Button (recorte por offset; editado a mano en 6.0) — generado una vez; a partir de aquí se edita a mano. */
 .dnet-button, .dnet-icon-button {
-  --_background: var(--dnet-btn-background, var(--dnet-button-background-color, var(--dnet-sys-state-hover)));
+  --_background: var(--dnet-btn-background, var(--dnet-button-background-color, var(--dnet-sys-transparent)));
   --_hover: var(--dnet-btn-background-hover, var(--dnet-button-hover-color, var(--dnet-sys-state-hover)));
   --_foreground: var(--dnet-btn-foreground, var(--dnet-sys-on-surface));
   --_focus-overlay: var(--dnet-btn-focus-overlay, var(--dnet-sys-state-pressed));
