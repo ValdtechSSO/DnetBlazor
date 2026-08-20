@@ -1,4 +1,4 @@
-## Conclave planning
+<!-- ## Conclave planning
 
 - Before implementing a non-trivial feature, migration, or architectural change,
   run `conclave doctor` and resolve any failed readiness check.
@@ -13,7 +13,7 @@
   implementation.
 - If Conclave fails, report the error instead of bypassing it silently.
 - Do not use `--development` unless the user explicitly requests a
-  single-provider development run.
+  single-provider development run. -->
 
 ## Styling contract
 
