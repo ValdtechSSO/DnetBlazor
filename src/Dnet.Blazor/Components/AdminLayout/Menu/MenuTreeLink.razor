@@ -1,4 +1,4 @@
-﻿@using Dnet.Blazor.Components.AdminLayout.DesktopLayout
+@using Dnet.Blazor.Components.AdminLayout.DesktopLayout
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.AspNetCore.Components.Web
 @using Dnet.Blazor.Components.AdminLayout.Infrastructure.Interfaces
@@ -29,7 +29,7 @@
             }
             else if (Menu is not null && Menu.CustomContent != null)
             {
-                <div class="dnet-menu-img" style="background-color: transparent; border-color: white">
+                <div class="dnet-menu-img">
                     @Menu.CustomContent
                     @if (_desktopLayout is not null && (!_desktopLayout.GetIsMinified() || (_desktopLayout.GetIsMinified() && !Menu.IsNode)))
                     {
@@ -43,7 +43,7 @@
             }
             else
             {
-                <div class="dnet-menu-img" style="background-color: transparent; border-color: white">
+                <div class="dnet-menu-img">
                     <span class="@Menu.IconClass"></span>
                     @if (_desktopLayout is not null && (!_desktopLayout.GetIsMinified() || (_desktopLayout.GetIsMinified() && !Menu.IsNode)))
                     {
@@ -92,13 +92,13 @@
                 <div class="dnet-tree-cmp-link-indicator no-minified"></div>
                 @if (!string.IsNullOrEmpty(Menu.IconClass))
                 {
-                    <div class="dnet-menu-img" style="background-color: transparent; border-color: white">
+                    <div class="dnet-menu-img">
                         <span class="@Menu.IconClass"></span>
                     </div>
                 }
                 else if (Menu is not null && Menu.CustomContent != null)
                 {
-                    <div class="dnet-menu-img" style="background-color: transparent; border-color: white">
+                    <div class="dnet-menu-img">
                         @Menu.CustomContent
                     </div>
                 }
@@ -109,13 +109,13 @@
                 <div class="dnet-tree-cmp-link-indicator yes-minified"></div>
                 @if (!string.IsNullOrEmpty(Menu.IconClass))
                 {
-                    <div class="dnet-menu-img" style="background-color: transparent; border-color: white">
+                    <div class="dnet-menu-img">
                         <span class="@Menu.IconClass"></span>
                     </div>
                 }
                 else if (Menu is not null && Menu.CustomContent != null)
                 {
-                    <div class="dnet-menu-img" style="background-color: transparent; border-color: white">
+                    <div class="dnet-menu-img">
                         @Menu.CustomContent
                     </div>
                 }

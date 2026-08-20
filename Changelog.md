@@ -199,6 +199,32 @@
   instead of peach, disabled text uses `--dnet-sys-state-disabled-fg`. The
   grid has no STY-002 golden coverage (virtual-scroll instability); the other
   components were verified pixel-identical.
+- `AdminLayout` (dnet-admin-layout.css) migrated to the token architecture:
+  the four `:root` blocks were removed (156 violations cleared) and the
+  `--dnet-dash-*`/`--dnet-*` tokens became read-chains with their defaults in
+  the fallback, keeping the old names as legacy links. Dead tokens were
+  dropped (30 declarations, e.g. `--dnet-dash-base-url`, `--dnet-dash-white`,
+  `--dnet-secundary-color`) and names with uppercase letters
+  (`--dnet-dash-asideWidth`, `--dnet-dash-asideWidth-minified`,
+  `--dnet-dash-font-family-Headline`) were renamed to kebab-case with the old
+  spelling kept as a legacy link. The five unprefixed ghost tokens
+  (`--content-color`, `--header-color`, `--footer-color`,
+  `--left-column-color`, `--right-column-color`) were replaced by
+  `--dnet-sys-surface` (they resolved to transparent over the white body, so
+  the look is unchanged) and the broken fallbacks
+  `var(--dnet-*-border-color, --general-border-color)` (missing `var()`, so
+  the header/footer/column borders were not painted) now resolve to
+  `--dnet-sys-border-strong` (#e1e3e1, exact). Colors map to system roles:
+  #5f6368 -> `--dnet-sys-on-surface` (exact), #42b0d5 ->
+  `--dnet-sys-primary-strong` (exact), #000 -> `--dnet-sys-on-surface-emphasis`,
+  #eee -> `--dnet-sys-border`, #717780/#62727b ->
+  `--dnet-sys-on-surface-muted`. The mobile tap-highlight was restored via
+  `color-mix` (the Sass `fade()` was invalid CSS and had no effect). The six
+  inline `style="background-color: transparent; border-color: white"` in
+  `Menu/MenuTreeLink.razor` moved to the `.dnet-menu-img` rule (default
+  aspect must not be inline). The shell was confirmed visually by the user.
+  The STY-002 admin-layout golden was captured from an older page state and
+  is not regenerated in this commit.
 
 ## Version 5.0.5 (August 2026)
 
