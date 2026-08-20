@@ -82,7 +82,7 @@
     }
     if (header.IsSortNone())
     {
-        SortIconClass = "";
+        SortIconClass = "blg-icon-sort";
     }
 
     var cellTextStyle = header.WrapHeaderText ? "white-space: normal; line-height: 15px;" : "overflow: hidden;text-overflow: ellipsis;";
@@ -195,7 +195,7 @@
                         case CellDataType.Boolean:
                         case CellDataType.Text:
                             <EditForm Model="@header" style="width:100%">
-                                <DnetFormField UseClearButton="true">
+                                <DnetFormField UseClearButton="true" EmptyIconClass="dnet-component-search-icon">
                                     <ChildContent>
                                         <DnetInputText @bind-Value="@header.Filter" type="text" OnStopTyping="StopTyping" OnClearInput="StopTyping">
                                         </DnetInputText>

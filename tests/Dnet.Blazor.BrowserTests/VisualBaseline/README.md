@@ -137,6 +137,26 @@ que no puede volver a congelar por error el estado anterior. Para demostrar la
 protección de Button, basta cambiar temporalmente su hover: el golden
 `button/hover` debe fallar.
 
+### Hover sin delta visual (exclusiones intencionales)
+
+Los siguientes escenarios conservan la sonda de `hover` para ejercitar la
+interacción, pero su golden es **intencionalmente idéntico** al de `default`:
+el componente no define hoy un estilo visual al pasar el ratón. No son falsos
+positivos de la prueba de integridad ni un golden congelado por error:
+
+- `checkbox-hover`
+- `radio-button-hover`
+- `select-hover`
+- `stepper-hover`
+- `tree-hover`
+- `dynamic-stepper-hover`
+
+Por ello, `VisualGoldenIntegrityTests` excluye estos hover (y cualquier otro
+sin tratamiento visual declarado) de la comprobación de hashes distintos. Si
+alguno de esos componentes adquiere feedback visual de hover, debe eliminarse
+de esta excepción y el golden nuevo debe diferir de `default` en ambas
+plataformas.
+
 ## Ajuste de tolerancia
 
 Cada escenario acepta `MaxDiffPixels` y `ChannelThreshold`. Los valores por

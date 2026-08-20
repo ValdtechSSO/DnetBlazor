@@ -50,8 +50,11 @@
             }
             else
             {
-                <div class="dnet-component-icon-wrapper" @onclick="ClearInput">
-                    <span class="dnet-component-icon"></span>
+                <div class="dnet-component-icon-wrapper" aria-hidden="true">
+                    @if (!string.IsNullOrWhiteSpace(EmptyIconClass))
+                    {
+                        <span class="dnet-component-icon @EmptyIconClass"></span>
+                    }
                 </div>
             }
         }
@@ -99,6 +102,9 @@
 
     [Parameter]
     public bool UseClearButton { get; set; } = false;
+
+    [Parameter]
+    public string? EmptyIconClass { get; set; }
 
     [Parameter]
     public string? Label { get; set; }
