@@ -5,6 +5,7 @@
     --dnet-sys-on-surface: #e3e5e8;
     --dnet-sys-on-surface-muted: #b5bac1;
     --dnet-sys-on-surface-subtle: #8b8f98;
+    --dnet-sys-on-surface-emphasis: color-mix(in srgb, var(--dnet-sys-on-surface) 87%, transparent);
     --dnet-sys-border: #3f4147;
     --dnet-sys-border-strong: #50535a;
     --dnet-sys-elevation-1: 0 2px 8px rgb(0 0 0 / .5);

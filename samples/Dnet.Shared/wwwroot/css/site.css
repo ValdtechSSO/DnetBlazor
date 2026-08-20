@@ -954,6 +954,7 @@ body {
 .dnet-desktop-content {
   padding: 0;
   flex: 1 1 0;
+  color: var(--dnet-sys-on-surface);
 }
 .dnet-desktop-content.destok-layout {
   height: calc(100vh - 25px);
@@ -1402,4 +1403,3 @@ body {
     background-color: transparent;
     border: 1px solid rgba(0,0,0,.06);
 }*/
-

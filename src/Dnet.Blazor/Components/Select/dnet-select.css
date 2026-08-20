@@ -16,6 +16,7 @@
   --_radius: var(--dnet-list-border-radius, var(--dnet-select-list-border-radius, var(--dnet-sys-radius-md)));
   --_wrapper-padding: var(--dnet-list-wrapper-horizontal-padding, var(--dnet-select-list-wrapper-horizontal-padding, 15px));
   --_background: var(--dnet-list-background-color, var(--dnet-sys-surface));
+  --_foreground: var(--dnet-list-foreground, var(--dnet-select-list-foreground, var(--dnet-sys-on-surface)));
   --_shadow: var(--dnet-list-box-shadow, var(--dnet-sys-elevation-1));
 
   display: flex;
@@ -28,6 +29,7 @@
   padding-bottom: var(--_wrapper-padding);
   transition: opacity 0.5s ease-in-out;
   background-color: var(--_background);
+  color: var(--_foreground);
   box-shadow: var(--_shadow);
 }
 .dnet-select-list-wrapper .dnet-item-fadeout {
@@ -164,7 +166,7 @@
 
 .dnet-select-list-item-headline {
   --_headline-font: var(--dnet-list-headline-font-size, var(--dnet-select-list-headline-font-size, var(--dnet-sys-text-md)));
-  --_headline-color: var(--dnet-list-headline-text-color, inherit);
+  --_headline-color: var(--dnet-list-headline-text-color, var(--dnet-select-list-headline-text-color, var(--_foreground)));
 
   font-size: var(--_headline-font);
   color: var(--_headline-color);
@@ -199,11 +201,14 @@
 }
 
 .dnet-plain-select {
+  --_foreground: var(--dnet-select-foreground, var(--dnet-sys-on-surface));
+
   display: flex;
   justify-items: end;
   width: 100%;
   outline: none;
   padding-right: 5px;
+  color: var(--_foreground);
 }
 
 .dnet-plain-select-trigger {
@@ -221,6 +226,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: var(--_foreground);
 }
 
 .dnet-plain-select-arrow-wrapper {
@@ -233,7 +239,7 @@
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-top: 5px solid;
+  border-top: 5px solid var(--_foreground);
   margin: 0 4px;
 }
 

@@ -304,8 +304,10 @@ body {
 }
 
 .dnet-footer {
+  --_foreground: var(--dnet-sys-on-surface);
   grid-area: footer;
   background-color: var(--dnet-sys-surface);
+  color: var(--_foreground);
   text-align: center;
   border-top: 1px solid var(--dnet-footer-border-color, var(--dnet-sys-border-strong));
 }
@@ -439,21 +441,26 @@ body {
 #logo-group {
   font-family: var(--dnet-dash-font-family-headline, var(--dnet-dash-font-family-Headline, var(--dnet-sys-font)));
 }
-#logo-group div#app-name {
-  color: var(--dnet-sys-on-surface-emphasis);
+#logo-group div#app-name,
+#logo-group div#app-tenant-dp {
+  --_foreground: var(--dnet-sys-on-surface-emphasis);
+  color: var(--_foreground);
   font-size: 1rem;
   font-weight: 500;
   padding-top: 2px;
   font-family: var(--dnet-dash-font-family-headline, var(--dnet-dash-font-family-Headline, var(--dnet-sys-font)));
 }
 #logo-group div#app-description {
-  color: var(--dnet-sys-on-surface-emphasis);
+  --_foreground: var(--dnet-sys-on-surface-emphasis);
+  color: var(--_foreground);
   font-size: 0.75rem;
   text-transform: uppercase;
   padding-top: 5px;
 }
-#logo-group div#app-version {
-  color: var(--dnet-sys-on-surface-muted);
+#logo-group div#app-version,
+#logo-group div#app-tenant-name {
+  --_foreground: var(--dnet-sys-on-surface-muted);
+  color: var(--_foreground);
   font-size: 0.75rem;
   padding-top: 6px;
 }
@@ -1119,6 +1126,9 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-autocomplete-list-header-text {
+  --_foreground: var(--dnet-sys-on-surface-emphasis);
+
+  color: var(--_foreground);
   font-weight: 500;
   font-size: small;
   white-space: nowrap;
@@ -1974,6 +1984,7 @@ button[disabled].dnet-calendar-next-button::after {
 
 /* Icono funcional monocromo (R9): mask-image + background-color. */
 .dnet-datepicker-icon {
+  --_icon-color: var(--dnet-sys-on-surface);
   display: block;
   background-color: var(--_icon-color);
   height: 1em;
@@ -1987,6 +1998,11 @@ button[disabled].dnet-calendar-next-button::after {
   mask-position: center;
   mask-repeat: no-repeat;
   mask-size: 1em 1em;
+}
+
+/* Evita que hojas de estilos heredadas reemplacen el icono tokenizado por un SVG negro. */
+.dnet-datepicker-icon-wrapper .dnet-datepicker-icon.dnet-datepicker-icon-default {
+  background-image: none;
 }
 
 .dnet-datepicker-disable .dnet-datepicker-icon-default {
@@ -6403,6 +6419,7 @@ select.mat-input-element::-ms-value {
   --_radius: var(--dnet-list-border-radius, var(--dnet-select-list-border-radius, var(--dnet-sys-radius-md)));
   --_wrapper-padding: var(--dnet-list-wrapper-horizontal-padding, var(--dnet-select-list-wrapper-horizontal-padding, 15px));
   --_background: var(--dnet-list-background-color, var(--dnet-sys-surface));
+  --_foreground: var(--dnet-list-foreground, var(--dnet-select-list-foreground, var(--dnet-sys-on-surface)));
   --_shadow: var(--dnet-list-box-shadow, var(--dnet-sys-elevation-1));
 
   display: flex;
@@ -6415,6 +6432,7 @@ select.mat-input-element::-ms-value {
   padding-bottom: var(--_wrapper-padding);
   transition: opacity 0.5s ease-in-out;
   background-color: var(--_background);
+  color: var(--_foreground);
   box-shadow: var(--_shadow);
 }
 .dnet-select-list-wrapper .dnet-item-fadeout {
@@ -6551,7 +6569,7 @@ select.mat-input-element::-ms-value {
 
 .dnet-select-list-item-headline {
   --_headline-font: var(--dnet-list-headline-font-size, var(--dnet-select-list-headline-font-size, var(--dnet-sys-text-md)));
-  --_headline-color: var(--dnet-list-headline-text-color, inherit);
+  --_headline-color: var(--dnet-list-headline-text-color, var(--dnet-select-list-headline-text-color, var(--_foreground)));
 
   font-size: var(--_headline-font);
   color: var(--_headline-color);
@@ -6586,11 +6604,14 @@ select.mat-input-element::-ms-value {
 }
 
 .dnet-plain-select {
+  --_foreground: var(--dnet-select-foreground, var(--dnet-sys-on-surface));
+
   display: flex;
   justify-items: end;
   width: 100%;
   outline: none;
   padding-right: 5px;
+  color: var(--_foreground);
 }
 
 .dnet-plain-select-trigger {
@@ -6608,6 +6629,7 @@ select.mat-input-element::-ms-value {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: var(--_foreground);
 }
 
 .dnet-plain-select-arrow-wrapper {
@@ -6620,7 +6642,7 @@ select.mat-input-element::-ms-value {
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-top: 5px solid;
+  border-top: 5px solid var(--_foreground);
   margin: 0 4px;
 }
 

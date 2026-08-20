@@ -373,6 +373,7 @@ button[disabled].dnet-calendar-next-button::after {
 
 /* Icono funcional monocromo (R9): mask-image + background-color. */
 .dnet-datepicker-icon {
+  --_icon-color: var(--dnet-sys-on-surface);
   display: block;
   background-color: var(--_icon-color);
   height: 1em;
@@ -386,6 +387,11 @@ button[disabled].dnet-calendar-next-button::after {
   mask-position: center;
   mask-repeat: no-repeat;
   mask-size: 1em 1em;
+}
+
+/* Evita que hojas de estilos heredadas reemplacen el icono tokenizado por un SVG negro. */
+.dnet-datepicker-icon-wrapper .dnet-datepicker-icon.dnet-datepicker-icon-default {
+  background-image: none;
 }
 
 .dnet-datepicker-disable .dnet-datepicker-icon-default {

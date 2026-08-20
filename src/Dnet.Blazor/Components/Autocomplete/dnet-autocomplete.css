@@ -89,6 +89,9 @@
 }
 
 .dnet-autocomplete-list-header-text {
+  --_foreground: var(--dnet-sys-on-surface-emphasis);
+
+  color: var(--_foreground);
   font-weight: 500;
   font-size: small;
   white-space: nowrap;

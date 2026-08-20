@@ -162,8 +162,10 @@ body {
 }
 
 .dnet-footer {
+  --_foreground: var(--dnet-sys-on-surface);
   grid-area: footer;
   background-color: var(--dnet-sys-surface);
+  color: var(--_foreground);
   text-align: center;
   border-top: 1px solid var(--dnet-footer-border-color, var(--dnet-sys-border-strong));
 }
@@ -297,21 +299,26 @@ body {
 #logo-group {
   font-family: var(--dnet-dash-font-family-headline, var(--dnet-dash-font-family-Headline, var(--dnet-sys-font)));
 }
-#logo-group div#app-name {
-  color: var(--dnet-sys-on-surface-emphasis);
+#logo-group div#app-name,
+#logo-group div#app-tenant-dp {
+  --_foreground: var(--dnet-sys-on-surface-emphasis);
+  color: var(--_foreground);
   font-size: 1rem;
   font-weight: 500;
   padding-top: 2px;
   font-family: var(--dnet-dash-font-family-headline, var(--dnet-dash-font-family-Headline, var(--dnet-sys-font)));
 }
 #logo-group div#app-description {
-  color: var(--dnet-sys-on-surface-emphasis);
+  --_foreground: var(--dnet-sys-on-surface-emphasis);
+  color: var(--_foreground);
   font-size: 0.75rem;
   text-transform: uppercase;
   padding-top: 5px;
 }
-#logo-group div#app-version {
-  color: var(--dnet-sys-on-surface-muted);
+#logo-group div#app-version,
+#logo-group div#app-tenant-name {
+  --_foreground: var(--dnet-sys-on-surface-muted);
+  color: var(--_foreground);
   font-size: 0.75rem;
   padding-top: 6px;
 }
