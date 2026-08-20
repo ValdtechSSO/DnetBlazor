@@ -12,27 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Pages\app-chips.scss" />
-    <None Remove="Pages\app-formfield.scss" />
-    <None Remove="Pages\app-stepper.scss" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Pages\app-chips.scss">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="Pages\app-formfield.scss">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="Pages\app-stepper.scss">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="Pages\BlGridPages\AdvancedFilteringExample.razor" />
     <None Include="Pages\BlGridPages\BlGrid.razor" />
     <None Include="Pages\BlGridPages\CellTemplatesExample.razor" />
