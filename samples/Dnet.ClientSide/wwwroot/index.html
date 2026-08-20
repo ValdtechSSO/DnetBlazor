@@ -17,6 +17,18 @@
     <link href="_content/Dnet.Blazor/styles/theme/high-contrast.css" rel="stylesheet" />
     <link href="Dnet.App.ClientSide.styles.css" rel="stylesheet" />
     <link href="_content/Dnet.App.Shared/css/site.css" rel="stylesheet" />
+    <script>
+        (() => {
+            try {
+                const theme = JSON.parse(localStorage.getItem("dnet.theme") ?? "null");
+                if (["", "dark", "compact", "high-contrast"].includes(theme)) {
+                    document.documentElement.dataset.dnetTheme = theme;
+                }
+            } catch {
+                // An invalid preference must not prevent the application from loading.
+            }
+        })();
+    </script>
 </head>
 
 <body>

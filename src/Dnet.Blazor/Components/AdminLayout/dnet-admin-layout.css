@@ -527,7 +527,7 @@ body {
   min-height: 0;
   min-width: 0;
   padding: 0;
-  color: var(--dnet-sys-surface);
+  color: var(--dnet-dash-minifyme-foreground, var(--dnet-sys-on-surface));
   text-align: center;
 }
 .minifyme .img-container .dnet-chevron {

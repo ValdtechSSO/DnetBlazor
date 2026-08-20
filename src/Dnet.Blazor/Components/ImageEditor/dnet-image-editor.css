@@ -41,6 +41,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  gap: var(--dnet-sys-space-2);
 }
 
 .dnet-image-original-text {
@@ -122,13 +123,11 @@
   padding: 0;
 }
 
-.dnet-icon-wrapper {
+.dnet-image-editor-control .dnet-button-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-right: 10px;
-  cursor: pointer;
-  margin-right: 20px;
+  gap: var(--dnet-sys-space-2);
 }
 
 .dnet-icon {
@@ -136,8 +135,7 @@
   background-color: var(--dnet-sys-on-surface);
   height: 1em;
   width: 1em;
-  cursor: pointer;
-  margin-right: 5px;
+  flex: 0 0 auto;
   -webkit-mask-position: center;
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-size: 1em 1em;

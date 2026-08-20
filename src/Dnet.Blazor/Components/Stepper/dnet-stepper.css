@@ -59,6 +59,9 @@
   width: 24px;
   flex-shrink: 0;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .dnet-step-icon-content, .dnet-step-icon .dnet-icon {

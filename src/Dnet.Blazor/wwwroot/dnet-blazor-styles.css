@@ -667,7 +667,7 @@ body {
   min-height: 0;
   min-width: 0;
   padding: 0;
-  color: var(--dnet-sys-surface);
+  color: var(--dnet-dash-minifyme-foreground, var(--dnet-sys-on-surface));
   text-align: center;
 }
 .minifyme .img-container .dnet-chevron {
@@ -3210,6 +3210,7 @@ button[disabled].dnet-calendar-next-button::after {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  gap: var(--dnet-sys-space-2);
 }
 
 .dnet-image-original-text {
@@ -3291,13 +3292,11 @@ button[disabled].dnet-calendar-next-button::after {
   padding: 0;
 }
 
-.dnet-icon-wrapper {
+.dnet-image-editor-control .dnet-button-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-right: 10px;
-  cursor: pointer;
-  margin-right: 20px;
+  gap: var(--dnet-sys-space-2);
 }
 
 .dnet-icon {
@@ -3305,8 +3304,7 @@ button[disabled].dnet-calendar-next-button::after {
   background-color: var(--dnet-sys-on-surface);
   height: 1em;
   width: 1em;
-  cursor: pointer;
-  margin-right: 5px;
+  flex: 0 0 auto;
   -webkit-mask-position: center;
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-size: 1em 1em;
@@ -4504,6 +4502,9 @@ button[disabled].dnet-calendar-next-button::after {
   width: 24px;
   flex-shrink: 0;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .dnet-step-icon-content, .dnet-step-icon .dnet-icon {
@@ -4621,9 +4622,16 @@ button[disabled].dnet-calendar-next-button::after {
 }
 
 .mat-tab-group {
+  --_background: var(--dnet-tabs-background, var(--dnet-sys-surface));
+  --_foreground: var(--dnet-tabs-foreground, var(--dnet-sys-on-surface));
+  --_disabled-foreground: var(--dnet-tabs-disabled-foreground, var(--dnet-sys-on-surface-muted));
+  --_indicator: var(--dnet-tabs-indicator-color, var(--dnet-sys-primary-emphasis));
+
   display: flex;
   flex-direction: column;
   height: 100%;
+  background-color: var(--_background);
+  color: var(--_foreground);
 }
 .mat-tab-group.mat-tab-group-inverted-header {
   flex-direction: column-reverse;
@@ -4656,7 +4664,7 @@ button[disabled].dnet-calendar-next-button::after {
 
 .mat-tab-label.mat-tab-disabled {
   cursor: default;
-  color: color-mix(in srgb, var(--dnet-sys-on-surface) 60.5%, transparent);
+  color: var(--_disabled-foreground);
 }
 .mat-tab-label .mat-tab-label-content {
   display: inline-flex;
@@ -4739,6 +4747,7 @@ button[disabled].dnet-calendar-next-button::after {
   touch-action: none;
   border: none;
   background: none;
+  color: var(--_foreground);
   padding: 0;
   padding-bottom: 2px;
 }
@@ -4762,6 +4771,7 @@ button[disabled].dnet-calendar-next-button::after {
 
 .mat-tab-header-pagination-chevron {
   border-style: solid;
+  border-color: currentColor;
   border-width: 1px 1px 0 0;
   content: "";
   height: 8px;
@@ -4850,7 +4860,7 @@ button[disabled].dnet-calendar-next-button::after {
 
 .mat-tab-label.mat-tab-disabled {
   cursor: default;
-  color: color-mix(in srgb, var(--dnet-sys-on-surface) 60.5%, transparent);
+  color: var(--_disabled-foreground);
 }
 .mat-tab-label .mat-tab-label-content {
   display: inline-flex;
@@ -4868,7 +4878,7 @@ button[disabled].dnet-calendar-next-button::after {
   }
 }
 .mat-tab-label-active {
-  border-bottom: 2px solid var(--dnet-sys-primary-emphasis);
+  border-bottom: 2px solid var(--_indicator);
 }
 
 /*! Toast — migrado a tokens (6.0). Generado una vez; se edita a mano. */

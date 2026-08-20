@@ -23,24 +23,24 @@
         <div class="dnet-image-editor-controls">
             @if (ShowControl(ImageEditorControlType.Crop))
             {
-            <button type="button" @onclick="OnCropImage" class="dnet-icon-wrapper">
+            <DnetButton OnClick="OnCropImage" class="dnet-image-editor-control">
                 <span class="dnet-icon dnet-icon-crop" unselectable="on"></span>
                 <span class="dnet-icon-text" unselectable="on">Crop</span>
-            </button>
+            </DnetButton>
             }
             @if (ShowControl(ImageEditorControlType.FlipHorizontal))
             {
-            <button type="button" @onclick="OnFlipHorizontal" class="dnet-icon-wrapper">
+            <DnetButton OnClick="OnFlipHorizontal" class="dnet-image-editor-control">
                 <span class="dnet-icon dnet-icon-flip-h" unselectable="on">⇄</span>
                 <span class="dnet-icon-text" unselectable="on">Flip H</span>
-            </button>
+            </DnetButton>
             }
             @if (ShowControl(ImageEditorControlType.FlipVertical))
             {
-            <button type="button" @onclick="OnFlipVertical" class="dnet-icon-wrapper">
+            <DnetButton OnClick="OnFlipVertical" class="dnet-image-editor-control">
                 <span class="dnet-icon dnet-icon-flip-v" unselectable="on">⇅</span>
                 <span class="dnet-icon-text" unselectable="on">Flip V</span>
-            </button>
+            </DnetButton>
             }
         </div>
         <div class="dnet-editor-container">
