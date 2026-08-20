@@ -1,4 +1,5 @@
-﻿using Dnet.Blazor.Components.Overlay.Infrastructure.Models;
+﻿using Dnet.Blazor.Components.Overlay;
+using Dnet.Blazor.Components.Overlay.Infrastructure.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
@@ -14,9 +15,27 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
             _jsRuntime = jsRuntime;
         }
 
-        public ValueTask<object> AddKeyDownEventListener(ElementReference element)
+        public ValueTask<long> ActivateFocusTrap(ElementReference element, string? initialFocusSelector, bool restoreFocus)
         {
-            return _jsRuntime.InvokeAsync<object>("dnetoverlay.addKeyDownEventListener", element);
+            return _jsRuntime.InvokeAsync<long>("dnetoverlay.activateFocusTrap", element, initialFocusSelector, restoreFocus);
+        }
+
+        public ValueTask DeactivateFocusTrap(long focusTrapId)
+        {
+            return _jsRuntime.InvokeVoidAsync("dnetoverlay.deactivateFocusTrap", focusTrapId);
+        }
+
+        public ValueTask<long> ObserveOverlaySize(
+            ElementReference pane,
+            ElementReference origin,
+            DotNetObjectReference<DnetOverlayPane> callback)
+        {
+            return _jsRuntime.InvokeAsync<long>("dnetoverlay.observeOverlaySize", pane, origin, callback);
+        }
+
+        public ValueTask StopObservingOverlaySize(long observerId)
+        {
+            return _jsRuntime.InvokeVoidAsync("dnetoverlay.stopObservingOverlaySize", observerId);
         }
 
         public ValueTask<ViewportScrollPosition> GetViewportScrollPosition()

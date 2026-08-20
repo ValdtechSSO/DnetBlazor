@@ -4,12 +4,16 @@
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Services
 @using Dnet.Blazor.Infrastructure.Services.CssBuilder
 @using Microsoft.AspNetCore.Components.Web
+@using Microsoft.JSInterop
 
 @inject IOverlayService OverlayService
 @inject DnetOverlayInterop DnetOverlayInterop
 @inject IViewportRuler ViewportRuler
+@inject IOverlayInteractionDispatcher OverlayInteractionDispatcher
+@inject IJSRuntime JSRuntime
 
 @implements IDisposable
+@implements IAsyncDisposable
 
 <div @ref="_overlayContainerRef" class="@_overlayCssClasses">
     <CascadingValue Value="this" IsFixed="true">
@@ -40,6 +44,10 @@
 
     private int _windowWidth { get; set; }
 
+    private long? _fullscreenContainerSubscriptionId;
+
+    private bool _disposed;
+
 
     protected override void OnInitialized()
     {
@@ -49,6 +57,9 @@
 
         ((OverlayService)OverlayService).OnAttach += AttachOverlay;
         ((OverlayService)OverlayService).OnDetach += DetachOverlay;
+        OverlayInteractionDispatcher.KeyDown += HandleKeyDown;
+        OverlayInteractionDispatcher.OutsidePointer += HandleOutsidePointer;
+        OverlayInteractionDispatcher.DocumentScrolled += HandleDocumentScrolled;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -56,6 +67,10 @@
         if (firstRender)
         {
             _windowWidth = await DnetOverlayInterop.GetWindowWidth();
+
+            _fullscreenContainerSubscriptionId = await JSRuntime.InvokeAsync<long>(
+                "dnetoverlay.initializeFullscreenContainer",
+                _overlayContainerRef);
 
              ViewportRuler.OnResized += UpdateWindowsSize;
 
@@ -95,6 +110,8 @@
 
         _contenHost = AddHostConent(_overlays);
 
+        SynchronizeInteractionInfrastructure();
+
         _ = InvokeAsync(StateHasChanged);
     }
 
@@ -110,7 +127,110 @@
 
         _contenHost = AddHostConent(_overlays);
 
+        SynchronizeInteractionInfrastructure();
+
         _ = InvokeAsync(StateHasChanged);
+    }
+
+    private void HandleKeyDown(object? _, OverlayKeyEventArgs args)
+    {
+        if (!string.Equals(args.Key, "Escape", StringComparison.Ordinal) || args.DefaultPrevented)
+        {
+            return;
+        }
+
+        var overlay = GetOverlaysFromTop().FirstOrDefault(candidate => candidate.CloseOnEscape);
+        if (overlay is not null)
+        {
+            OverlayService.Detach(new OverlayResult
+            {
+                OverlayReferenceId = overlay.OverlayReferenceId,
+                CloseReason = CloseReason.Cancel
+            });
+        }
+    }
+
+    private void HandleOutsidePointer(object? _, OverlayOutsidePointerEventArgs args)
+    {
+        foreach (var overlay in GetOverlaysFromTop())
+        {
+            if (args.PointerDownOverlayId == overlay.OverlayReferenceId || args.TargetOverlayId == overlay.OverlayReferenceId)
+            {
+                return;
+            }
+
+            if (!overlay.CloseOnOutsidePointer)
+            {
+                continue;
+            }
+
+            OverlayService.Detach(new OverlayResult
+            {
+                OverlayReferenceId = overlay.OverlayReferenceId,
+                CloseReason = CloseReason.Cancel
+            });
+            return;
+        }
+    }
+
+    private void HandleDocumentScrolled(object? _, OverlayScrollEventArgs args)
+    {
+        foreach (var overlay in GetOverlaysFromTop().ToArray())
+        {
+            switch (overlay.ScrollStrategy)
+            {
+                case OverlayScrollStrategy.Reposition:
+                    OverlayService.RequestPositionUpdate(overlay.OverlayReferenceId);
+                    break;
+                case OverlayScrollStrategy.Close:
+                    if (args.SourceOverlayId == overlay.OverlayReferenceId && !overlay.CloseOnOverlayScroll)
+                    {
+                        continue;
+                    }
+
+                    OverlayService.Detach(new OverlayResult
+                    {
+                        OverlayReferenceId = overlay.OverlayReferenceId,
+                        CloseReason = CloseReason.Cancel
+                    });
+                    break;
+            }
+        }
+    }
+
+    private IEnumerable<OverlayConfig> GetOverlaysFromTop() => _overlays.Values
+        .Select(overlay => overlay.Item2)
+        .OrderByDescending(overlay => overlay.LastZindex ?? 0);
+
+    private void SynchronizeInteractionInfrastructure()
+    {
+        var overlays = _overlays.Values.Select(overlay => overlay.Item2).ToArray();
+        var needsInteractionEvents = overlays.Any(overlay =>
+            overlay.CloseOnEscape ||
+            overlay.CloseOnOutsidePointer ||
+            overlay.ScrollStrategy is OverlayScrollStrategy.Reposition or OverlayScrollStrategy.Close);
+
+        if (needsInteractionEvents)
+        {
+            OverlayInteractionDispatcher.Start();
+        }
+        else
+        {
+            OverlayInteractionDispatcher.Stop();
+        }
+
+        var shouldBlockDocumentScroll = overlays.Any(overlay => overlay.ScrollStrategy == OverlayScrollStrategy.Block);
+        _ = InvokeAsync(async () =>
+        {
+            try
+            {
+                await JSRuntime.InvokeVoidAsync("dnetoverlay.setDocumentScrollBlocked", shouldBlockDocumentScroll);
+            }
+            catch (JSDisconnectedException)
+            {
+                // The browser is already gone.
+            }
+        });
     }
 
     private void AttachBackdrop(OverlayConfig overlayConfig, int zIndex)
@@ -256,8 +376,47 @@
 
     public void Dispose()
     {
+        DisposeCore();
+        _ = ReleaseBrowserResourcesAsync();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        DisposeCore();
+        await ReleaseBrowserResourcesAsync();
+    }
+
+    private void DisposeCore()
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        _disposed = true;
         ((OverlayService)OverlayService).OnAttach -= AttachOverlay;
         ((OverlayService)OverlayService).OnDetach -= DetachOverlay;
         ViewportRuler.OnResized -= UpdateWindowsSize;
+        OverlayInteractionDispatcher.KeyDown -= HandleKeyDown;
+        OverlayInteractionDispatcher.OutsidePointer -= HandleOutsidePointer;
+        OverlayInteractionDispatcher.DocumentScrolled -= HandleDocumentScrolled;
+        OverlayInteractionDispatcher.Stop();
+    }
+
+    private async Task ReleaseBrowserResourcesAsync()
+    {
+        if (_fullscreenContainerSubscriptionId is long subscriptionId)
+        {
+            _fullscreenContainerSubscriptionId = null;
+            try
+            {
+                await JSRuntime.InvokeVoidAsync("dnetoverlay.disposeFullscreenContainer", subscriptionId);
+                await JSRuntime.InvokeVoidAsync("dnetoverlay.setDocumentScrollBlocked", false);
+            }
+            catch (JSDisconnectedException)
+            {
+                // The browser has already torn down the listeners and document styles.
+            }
+        }
     }
 }

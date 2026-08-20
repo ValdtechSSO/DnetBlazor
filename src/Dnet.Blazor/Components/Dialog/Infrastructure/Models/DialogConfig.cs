@@ -20,6 +20,14 @@
 
         public bool DisableBackdropClick { get; set; }
 
+        public bool CloseOnEscape { get; set; } = true;
+
+        public bool TrapFocus { get; set; } = true;
+
+        public bool RestoreFocus { get; set; } = true;
+
+        public string? InitialFocusSelector { get; set; }
+
         public string? BackdropClass { get; set; }
 
         public string Width { get; set; } = "100%";

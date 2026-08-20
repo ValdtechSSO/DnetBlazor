@@ -18,6 +18,10 @@ namespace Dnet.Blazor.Components.FloatingPanel.Infrastructure.Models
 
         public bool DisableBackdropClick { get; set; }
 
+        public bool CloseOnEscape { get; set; } = true;
+
+        public bool CloseOnOutsidePointer { get; set; } = true;
+
         public string? BackdropClass { get; set; }
 
         public int? Width { get; set; }

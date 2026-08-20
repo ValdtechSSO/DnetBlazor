@@ -40,7 +40,13 @@ namespace Dnet.Blazor.Infrastructure.Services
 
             services.AddScoped(typeof(IThemeMessageService<>), typeof(ThemeMessageService<>));
 
-            services.AddTransient<IViewportRuler, ViewportRuler>();
+            // The viewport is shared infrastructure for all overlays in the current circuit.
+            // A transient ruler installs one global resize listener per overlay pane.
+            services.AddScoped<IViewportRuler, ViewportRuler>();
+
+            services.AddScoped<IOverlayInteractionDispatcher, OverlayInteractionDispatcher>();
+
+            services.AddScoped<IOverlayPositionScheduler, OverlayPositionScheduler>();
 
             services.AddTransient<DnetOverlayInterop, DnetOverlayInterop>();
             

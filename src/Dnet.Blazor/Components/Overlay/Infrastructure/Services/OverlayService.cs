@@ -13,6 +13,10 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
 
         public event Action OnBackdropClicked;
 
+        public event Action<int> OnPositionUpdate;
+
+        public event Action<int> OnConfigurationUpdate;
+
         private readonly object _syncRoot = new();
         private readonly List<OverlayReference> _overlayReferences = new();
         private int _sequenceNumber;
@@ -22,7 +26,12 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
             ArgumentNullException.ThrowIfNull(overlayContent);
             ArgumentNullException.ThrowIfNull(overlayConfig);
 
-            var overlayReference = new OverlayReference(Interlocked.Increment(ref _sequenceNumber));
+            var overlayReference = new OverlayReference(
+                Interlocked.Increment(ref _sequenceNumber),
+                overlayConfig,
+                Detach,
+                RequestPositionUpdate,
+                RequestConfigurationUpdate);
 
             lock (_syncRoot)
             {
@@ -30,6 +39,8 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
             }
 
             overlayConfig.OverlayReferenceId = overlayReference.OverlayReferenceId;
+
+            overlayReference.MarkAttached();
 
             OnAttach?.Invoke(overlayContent, overlayConfig);
 
@@ -60,6 +71,32 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
         public void BackdropClicked(OverlayResult overlayDataResult)
         {
             Detach(overlayDataResult);
+        }
+
+        public void RequestPositionUpdate(int overlayReferenceId)
+        {
+            lock (_syncRoot)
+            {
+                if (_overlayReferences.All(reference => reference.OverlayReferenceId != overlayReferenceId))
+                {
+                    return;
+                }
+            }
+
+            OnPositionUpdate?.Invoke(overlayReferenceId);
+        }
+
+        public void RequestConfigurationUpdate(int overlayReferenceId)
+        {
+            lock (_syncRoot)
+            {
+                if (_overlayReferences.All(reference => reference.OverlayReferenceId != overlayReferenceId))
+                {
+                    return;
+                }
+            }
+
+            OnConfigurationUpdate?.Invoke(overlayReferenceId);
         }
     }
 }

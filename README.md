@@ -37,9 +37,11 @@ Add the library assets to `wwwroot/index.html` (WebAssembly) or the host page
 ```html
 <link href="_content/Dnet.Blazor/dnet-blazor-styles.css" rel="stylesheet" />
 
-<script src="_content/Dnet.Blazor/rxjs.min.js"></script>
 <script src="_content/Dnet.Blazor/dnet-blazor.js"></script>
 ```
+
+`DnetOverlay` has no RxJS dependency. Applications using `ImageEditor` must
+also load `_content/Dnet.Blazor/rxjs.min.js` before `dnet-blazor.js`.
 
 Use the base stylesheet as the single library styling bundle. Optional themes
 are regular CSS assets loaded after it; see the [styling guide](docs/styling/theming-guide.md).
@@ -66,6 +68,7 @@ value that fits the application's own stacking layers.
 ## Documentation
 
 - [PickList guide](docs/pick-list.md)
+- [Overlay guide](docs/overlay.md)
 - [Styling guide](docs/styling/README.md)
 - [NuGet publishing guide](docs/nuget-publishing.md)
 - [Changelog](Changelog.md)

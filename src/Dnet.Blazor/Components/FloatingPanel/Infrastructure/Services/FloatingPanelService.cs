@@ -1,6 +1,7 @@
 ﻿using Dnet.Blazor.Components.FloatingPanel.Infrastructure.Enums;
 using Dnet.Blazor.Components.FloatingPanel.Infrastructure.Interfaces;
 using Dnet.Blazor.Components.FloatingPanel.Infrastructure.Models;
+using Dnet.Blazor.Components.Overlay.Infrastructure.Enums;
 using Dnet.Blazor.Components.Overlay.Infrastructure.Interfaces;
 using Dnet.Blazor.Components.Overlay.Infrastructure.Models;
 using Dnet.Blazor.Components.Overlay.Infrastructure.Services;
@@ -104,6 +105,9 @@ namespace Dnet.Blazor.Components.FloatingPanel.Infrastructure.Services
                 HasBackdrop = floatingPanelConfig.HasBackdrop,
                 HasTransparentBackdrop = floatingPanelConfig.HasTransparentBackdrop,
                 DisableBackdropClick  = floatingPanelConfig.DisableBackdropClick,
+                CloseOnEscape = floatingPanelConfig.CloseOnEscape,
+                CloseOnOutsidePointer = !floatingPanelConfig.HasBackdrop && floatingPanelConfig.CloseOnOutsidePointer,
+                ScrollStrategy = OverlayScrollStrategy.Block,
                 Width = floatingPanelConfig.Width == null ? "100vw" : floatingPanelConfig.Width + "px",
                 Height = floatingPanelConfig.Height == null ? "100vh" : floatingPanelConfig.Height + "px",
                 PanelClass = floatingPanelConfig.PanelClass,

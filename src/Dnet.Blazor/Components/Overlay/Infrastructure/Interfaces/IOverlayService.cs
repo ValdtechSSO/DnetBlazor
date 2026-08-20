@@ -9,10 +9,18 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Interfaces
     {
         event Action OnBackdropClicked;
 
+        event Action<int> OnPositionUpdate;
+
+        event Action<int> OnConfigurationUpdate;
+
         OverlayReference Attach(RenderFragment overlayContent, OverlayConfig overlayConfig);
 
         void Detach(OverlayResult overlayDataResult);
 
         void BackdropClicked(OverlayResult overlayDataResult);
+
+        void RequestPositionUpdate(int overlayReferenceId);
+
+        void RequestConfigurationUpdate(int overlayReferenceId);
     }
 }

@@ -261,6 +261,9 @@ namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
             {
                 HasBackdrop = false,
                 HasTransparentBackdrop = true,
+                CloseOnOutsidePointer = true,
+                ScrollStrategy = OverlayScrollStrategy.Reposition,
+                Role = "tooltip",
                 PositionStrategy = PositionStrategy.FlexibleConnectedTo,
                 FlexibleConnectedPositionStrategyBuilder = flexibleConnectedPositionStrategyBuilder,
                 PanelClass = "dnet-tooltip-panel",

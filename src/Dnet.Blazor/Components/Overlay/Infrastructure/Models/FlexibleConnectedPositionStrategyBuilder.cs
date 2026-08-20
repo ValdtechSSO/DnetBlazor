@@ -204,6 +204,12 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Models
             return _originElementReference;
         }
 
+        /// <summary>Gets the element currently used as the connected-position origin.</summary>
+        public ElementReference Origin()
+        {
+            return _originElementReference;
+        }
+
         private void ValidatePositions()
         {
             var preferredPositions = this._preferredPositions;

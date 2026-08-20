@@ -1,10 +1,26 @@
 # Plan de implementación: estabilización y evolución de Overlay inspirada en Angular CDK
 
-**Estado:** listo para implementación  
+**Estado:** implementado en `codex/overlay-cdk-parity`
 **Fecha:** 2026-08-20  
 **Ámbito:** `src/Dnet.Blazor/Components/Overlay`, sus consumidores, JavaScript interop, pruebas de navegador y documentación  
 **Referencia funcional:** [Angular CDK Overlay](https://github.com/angular/components/tree/main/src/cdk/overlay)  
 **Planes relacionados:** [`dnet-blazor-stabilization-plan.md`](./dnet-blazor-stabilization-plan.md) y [`dnet-blazor-styling-architecture-plan.md`](./dnet-blazor-styling-architecture-plan.md)
+
+## Estado de implementación
+
+- Viewport, teclado, puntero, scroll y observación de tamaño tienen listeners
+  compartidos por circuito, con handles estables y limpieza segura frente a
+  `DotNetObjectReference` ya liberadas.
+- `OverlayScrollStrategy` incorpora `Noop`, `Reposition`, `Close` y `Block`.
+  Los eventos de scroll se coalescen por frame y distinguen el scroll interno
+  del propio panel.
+- `OverlayReference` expone estado adjunto, detach/dispose idempotente,
+  reposición y actualización de tamaño. La reposición está serializada por
+  overlay y descarta resultados desfasados.
+- Se incorporaron dispatcher para Escape/clic exterior, ARIA configurable,
+  focus trap/restauración opt-in y host compatible con Fullscreen API.
+- La cobertura incluye pruebas unitarias de lifecycle, scheduler y listeners,
+  además de una prueba Playwright opt-in para diálogo modal.
 
 ## 1. Propósito
 

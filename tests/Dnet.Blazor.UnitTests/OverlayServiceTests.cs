@@ -5,6 +5,7 @@ using Dnet.Blazor.Components.Dialog.Infrastructure.Services;
 using Dnet.Blazor.Components.FloatingPanel.Infrastructure.Models;
 using Dnet.Blazor.Components.FloatingPanel.Infrastructure.Services;
 using Dnet.Blazor.Components.Overlay.Infrastructure.Models;
+using Dnet.Blazor.Components.Overlay.Infrastructure.Enums;
 using Dnet.Blazor.Components.Overlay.Infrastructure.Services;
 using Dnet.Blazor.Components.Toast.Infrastructure.Models;
 using Dnet.Blazor.Components.Toast.Infrastructure.Services;
@@ -64,6 +65,35 @@ public sealed class OverlayServiceTests
         Assert.Same(config, attachedConfig);
         Assert.Equal("dark", attachedConfig!.ThemeScope);
         Assert.Equal("--dnet-btn-radius: 0", attachedConfig.PanelStyle);
+    }
+
+    [Fact]
+    public void Overlay_reference_has_an_idempotent_lifecycle_and_can_request_an_update()
+    {
+        var service = new OverlayService();
+        var detached = new List<OverlayResult>();
+        var updateRequests = new List<int>();
+        var configurationUpdates = new List<int>();
+        service.OnDetach += detached.Add;
+        service.OnPositionUpdate += updateRequests.Add;
+        service.OnConfigurationUpdate += configurationUpdates.Add;
+
+        var reference = service.Attach(static builder => builder.AddContent(0, "overlay"), new OverlayConfig());
+        Assert.True(reference.IsAttached);
+
+        reference.UpdateSize(new OverlaySize { Width = "32rem", MaxHeight = "80dvh" });
+        reference.RequestPositionUpdate();
+        reference.Detach(CloseReason.Ok);
+        reference.Detach(CloseReason.Cancel);
+        reference.RequestPositionUpdate();
+
+        Assert.False(reference.IsAttached);
+        Assert.Single(detached);
+        Assert.Equal(CloseReason.Ok, detached[0].CloseReason);
+        Assert.Equal(new[] { reference.GetOverlayReferenceId() }, updateRequests);
+        Assert.Equal(new[] { reference.GetOverlayReferenceId() }, configurationUpdates);
+        Assert.Equal("32rem", reference.Config!.Width);
+        Assert.Equal("80dvh", reference.Config.MaxHeight);
     }
 
     [Fact]

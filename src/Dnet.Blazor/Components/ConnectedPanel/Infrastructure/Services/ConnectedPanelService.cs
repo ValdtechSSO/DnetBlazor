@@ -98,6 +98,10 @@ namespace Dnet.Blazor.Components.ConnectedPanel.Infrastructure.Services
             {
                 HasBackdrop = config.HasBackdrop,
                 HasTransparentBackdrop = config.HasTransparentBackdrop,
+                DisableBackdropClick = config.DisableBackdropClick,
+                CloseOnEscape = config.CloseOnEscape,
+                CloseOnOutsidePointer = !config.HasBackdrop && config.CloseOnOutsidePointer,
+                ScrollStrategy = OverlayScrollStrategy.Reposition,
                 PositionStrategy = PositionStrategy.FlexibleConnectedTo,
                 Width = config.Width,
                 Height = config.Height,

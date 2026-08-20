@@ -14,6 +14,12 @@
 
         public bool HasTransparentBackdrop { get; set; } = true;
 
+        public bool DisableBackdropClick { get; set; }
+
+        public bool CloseOnEscape { get; set; } = true;
+
+        public bool CloseOnOutsidePointer { get; set; } = true;
+
         public string? BackdropClass { get; set; }
 
         public string Width { get; set; } = "100%";

@@ -9,10 +9,13 @@
 
 @inject IViewportRuler ViewportRuler
 @inject DnetOverlayInterop DnetOverlayInterop
+@inject IOverlayService OverlayService
+@inject IOverlayPositionScheduler OverlayPositionScheduler
 
 @implements IDisposable
+@implements IAsyncDisposable
 
-<div @ref="_paneReference" id="cdk-overlay-pane-@OverlayConfig.OverlayReferenceId" class="@_cssClasses" style="@(Convert.ToString(_styles, CultureInfo.InvariantCulture))">
+<div @ref="_paneReference" id="cdk-overlay-pane-@OverlayConfig.OverlayReferenceId" data-dnet-overlay-id="@OverlayConfig.OverlayReferenceId" role="@OverlayConfig.Role" aria-label="@OverlayConfig.AriaLabel" aria-labelledby="@OverlayConfig.AriaLabelledBy" aria-describedby="@OverlayConfig.AriaDescribedBy" aria-modal="@(OverlayConfig.AriaModal ? "true" : null)" dir="@OverlayConfig.Direction" tabindex="@(OverlayConfig.TrapFocus ? "-1" : null)" class="@_cssClasses" style="@(Convert.ToString(_styles, CultureInfo.InvariantCulture))">
     <CascadingValue Value="OverlayReferenceId" IsFixed="true">
         @_contentChild
     </CascadingValue>
@@ -52,6 +55,18 @@
     private int _viewportMargin = 0;
 
     private OverlayConfig? _overlayConfig { get; set; }
+
+    private bool _isSubscribedToViewport;
+
+    private bool _isSubscribedToPositionUpdates;
+
+    private long? _focusTrapId;
+
+    private long? _sizeObserverId;
+
+    private DotNetObjectReference<DnetOverlayPane>? _selfReference;
+
+    private bool _disposed;
 
 
 
@@ -96,7 +111,29 @@
                 var tt = Convert.ToString(_styles, CultureInfo.InvariantCulture);
             }
 
-            ViewportRuler.OnResized += ApplyFlexibleStyles;
+            if (OverlayConfig.PositionStrategy == PositionStrategy.FlexibleConnectedTo)
+            {
+                ViewportRuler.OnResized += ApplyFlexibleStyles;
+                _isSubscribedToViewport = true;
+                OverlayService.OnPositionUpdate += RequestPositionUpdate;
+                _isSubscribedToPositionUpdates = true;
+
+                _selfReference = DotNetObjectReference.Create(this);
+                _sizeObserverId = await DnetOverlayInterop.ObserveOverlaySize(
+                    _paneReference,
+                    OverlayConfig.FlexibleConnectedPositionStrategyBuilder.Origin(),
+                    _selfReference);
+            }
+
+            OverlayService.OnConfigurationUpdate += RefreshConfiguration;
+
+            if (OverlayConfig.TrapFocus)
+            {
+                _focusTrapId = await DnetOverlayInterop.ActivateFocusTrap(
+                    _paneReference,
+                    OverlayConfig.InitialFocusSelector,
+                    OverlayConfig.RestoreFocus);
+            }
 
             await InvokeAsync(StateHasChanged);
         }
@@ -148,7 +185,7 @@
             .AddStyle("max-width", OverlayConfig.MaxWidth, when: !string.IsNullOrEmpty(OverlayConfig.MaxWidth))
             .AddStyle("max-height", OverlayConfig.MaxHeight, when: !string.IsNullOrEmpty(OverlayConfig.MaxHeight))
             .AddStyle("margin-top", OverlayConfig.MarginTop, when: !string.IsNullOrEmpty(OverlayConfig.MarginTop))
-            .AddStyle("margin-bottom", OverlayConfig.MarginTop, when: !string.IsNullOrEmpty(OverlayConfig.MarginTop))
+            .AddStyle("margin-bottom", OverlayConfig.MarginBottom, when: !string.IsNullOrEmpty(OverlayConfig.MarginBottom))
             .AddStyle("z-index", $"{OverlayConfig.PanelZindex}", when: OverlayConfig.PanelZindex != null)
             .Build();
 
@@ -242,17 +279,63 @@
     }
 
 
-    private void ApplyFlexibleStyles(object _, Size size) => _ = InvokeAsync(() => ApplyFlexibleStylesAsync(size));
+    private void ApplyFlexibleStyles(object _, Size size) => QueueFlexibleStyleUpdate();
 
-    private async Task ApplyFlexibleStylesAsync(Size size)
+    private void RequestPositionUpdate(int overlayReferenceId)
+    {
+        if (overlayReferenceId == OverlayConfig.OverlayReferenceId)
+        {
+            QueueFlexibleStyleUpdate();
+        }
+    }
+
+    [JSInvokable]
+    public void OnOverlayResized() => QueueFlexibleStyleUpdate();
+
+    private void QueueFlexibleStyleUpdate()
+    {
+        if (_disposed || OverlayConfig.PositionStrategy != PositionStrategy.FlexibleConnectedTo)
+        {
+            return;
+        }
+
+        OverlayPositionScheduler.Schedule(
+            OverlayReferenceId,
+            requestVersion => InvokeAsync(() => ApplyFlexibleStylesAsync(requestVersion)));
+    }
+
+    private void RefreshConfiguration(int overlayReferenceId)
+    {
+        if (_disposed || overlayReferenceId != OverlayReferenceId)
+        {
+            return;
+        }
+
+        if (OverlayConfig.PositionStrategy == PositionStrategy.FlexibleConnectedTo)
+        {
+            QueueFlexibleStyleUpdate();
+            return;
+        }
+
+        _styles = GetStyles();
+        _cssClasses = GetCssClasses();
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    private async Task ApplyFlexibleStylesAsync(long requestVersion)
     {
         if (OverlayConfig.PositionStrategy != PositionStrategy.FlexibleConnectedTo) return;
 
         var viewportRect = await ViewportRuler.GetViewportRectNoScroll(_viewportMargin);
 
-        _styles = await GetFlexibleStyles(viewportRect);
+        var styles = await GetFlexibleStyles(viewportRect);
 
-        var tt = Convert.ToString(_styles, CultureInfo.InvariantCulture);
+        if (_disposed || !OverlayPositionScheduler.IsCurrent(OverlayReferenceId, requestVersion))
+        {
+            return;
+        }
+
+        _styles = styles;
 
         await InvokeAsync(StateHasChanged);
     }
@@ -707,9 +790,95 @@
 
     public void Dispose()
     {
-        if (ViewportRuler != null)
+        DisposeCore();
+
+        if (_focusTrapId is long focusTrapId)
+        {
+            _focusTrapId = null;
+            _ = ReleaseFocusTrapAsync(focusTrapId);
+        }
+
+        DisposeSizeObserver();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        DisposeCore();
+
+        if (_focusTrapId is long focusTrapId)
+        {
+            _focusTrapId = null;
+            await ReleaseFocusTrapAsync(focusTrapId);
+        }
+
+        if (_sizeObserverId is long observerId)
+        {
+            _sizeObserverId = null;
+            await StopObservingOverlaySizeAsync(observerId);
+        }
+
+        _selfReference?.Dispose();
+        _selfReference = null;
+    }
+
+    private void DisposeCore()
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        _disposed = true;
+        OverlayPositionScheduler.Remove(OverlayReferenceId);
+
+        if (_isSubscribedToViewport)
         {
             ViewportRuler.OnResized -= ApplyFlexibleStyles;
+            _isSubscribedToViewport = false;
+        }
+
+        if (_isSubscribedToPositionUpdates)
+        {
+            OverlayService.OnPositionUpdate -= RequestPositionUpdate;
+            _isSubscribedToPositionUpdates = false;
+        }
+
+        OverlayService.OnConfigurationUpdate -= RefreshConfiguration;
+    }
+
+    private void DisposeSizeObserver()
+    {
+        if (_sizeObserverId is long observerId)
+        {
+            _sizeObserverId = null;
+            _ = StopObservingOverlaySizeAsync(observerId);
+        }
+
+        _selfReference?.Dispose();
+        _selfReference = null;
+    }
+
+    private async Task ReleaseFocusTrapAsync(long focusTrapId)
+    {
+        try
+        {
+            await DnetOverlayInterop.DeactivateFocusTrap(focusTrapId);
+        }
+        catch (JSDisconnectedException)
+        {
+            // No focus can remain trapped after the browser disconnects.
+        }
+    }
+
+    private async Task StopObservingOverlaySizeAsync(long observerId)
+    {
+        try
+        {
+            await DnetOverlayInterop.StopObservingOverlaySize(observerId);
+        }
+        catch (JSDisconnectedException)
+        {
+            // The observer belongs to a document that no longer exists.
         }
     }
 

@@ -12,8 +12,11 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
         private EventHandler<Models.Size>? _onResized;
         private DotNetObjectReference<ViewportRuler>? _selfReference;
         private readonly SemaphoreSlim _listenerGate = new(1, 1);
+        private readonly object _subscriptionGate = new();
+        private Task _listenerSynchronization = Task.CompletedTask;
+        private long? _listenerId;
         private bool _listenersAttached;
-        private bool _listenersRequested;
+        private bool _manualListenersRequested;
 
         private bool _disposed;
 
@@ -33,8 +36,11 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
 
         public async Task<Models.Size> GetViewportSize()
         {
+            if (_viewportSize is null)
+            {
+                await UpdateViewportSize();
+            }
 
-            await UpdateViewportSize();
             return _viewportSize!;
         }
 
@@ -126,34 +132,75 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
 
         private void Unsubscribe(EventHandler<Models.Size> value)
         {
-            _onResized -= value;
-
-            if (_onResized == null)
+            lock (_subscriptionGate)
             {
-                _listenersRequested = false;
-                _ = SynchronizeWindowEventListenersAsync();
+                _onResized -= value;
             }
+
+            RequestListenerSynchronization();
         }
 
         private void Subscribe(EventHandler<Models.Size> value)
         {
-            _onResized += value;
-            _listenersRequested = true;
+            lock (_subscriptionGate)
+            {
+                ObjectDisposedException.ThrowIf(_disposed, this);
+                _onResized += value;
+            }
 
-            _ = SynchronizeWindowEventListenersAsync();
+            RequestListenerSynchronization();
         }
 
         public async ValueTask<bool> AddWindowEventListeners()
         {
-            _listenersRequested = true;
+            lock (_subscriptionGate)
+            {
+                ObjectDisposedException.ThrowIf(_disposed, this);
+                _manualListenersRequested = true;
+            }
+
             await SynchronizeWindowEventListenersAsync();
             return _listenersAttached;
         }
 
         public async ValueTask RemoveWindowEventListeners()
         {
-            _listenersRequested = false;
+            lock (_subscriptionGate)
+            {
+                _manualListenersRequested = false;
+            }
+
             await SynchronizeWindowEventListenersAsync();
+        }
+
+        private void RequestListenerSynchronization()
+        {
+            _listenerSynchronization = SynchronizeWindowEventListenersAsync().AsTask();
+            _ = ObserveBackgroundSynchronizationAsync(_listenerSynchronization);
+        }
+
+        private static async Task ObserveBackgroundSynchronizationAsync(Task synchronization)
+        {
+            try
+            {
+                await synchronization.ConfigureAwait(false);
+            }
+            catch (JSDisconnectedException)
+            {
+                // A disconnected browser cannot retain a listener.
+            }
+            catch (ObjectDisposedException)
+            {
+                // The service may be disposed while an event subscription is being changed.
+            }
+        }
+
+        private bool ShouldListen()
+        {
+            lock (_subscriptionGate)
+            {
+                return _manualListenersRequested || _onResized is not null;
+            }
         }
 
         private async ValueTask SynchronizeWindowEventListenersAsync()
@@ -161,21 +208,22 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
             await _listenerGate.WaitAsync();
             try
             {
-                if (_listenersRequested && !_disposed && !_listenersAttached)
+                if (ShouldListen() && !_disposed && !_listenersAttached)
                 {
                     _selfReference ??= DotNetObjectReference.Create(this);
-                    _listenersAttached = await _jsRuntime.InvokeAsync<bool>("dnetoverlay.addWindowEventListeners", _selfReference);
+                    _listenerId = await _jsRuntime.InvokeAsync<long>("dnetoverlay.addWindowEventListeners", _selfReference);
+                    _listenersAttached = _listenerId is > 0;
                 }
 
                 // The desired state can change while the JavaScript registration is awaited.
                 // Re-evaluate it while holding the gate so a late registration is immediately removed.
-                if (!_listenersRequested || _disposed)
+                if (!ShouldListen() || _disposed)
                 {
-                    if (_listenersAttached && _selfReference is not null)
+                    if (_listenersAttached && _listenerId is long listenerId)
                     {
                         try
                         {
-                            await _jsRuntime.InvokeVoidAsync("dnetoverlay.removeWindowEventListeners", _selfReference);
+                            await _jsRuntime.InvokeVoidAsync("dnetoverlay.removeWindowEventListeners", listenerId);
                         }
                         catch (JSDisconnectedException)
                         {
@@ -184,6 +232,7 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
                     }
 
                     _listenersAttached = false;
+                    _listenerId = null;
                     _selfReference?.Dispose();
                     _selfReference = null;
                 }
@@ -201,10 +250,14 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
                 return;
             }
 
-            _disposed = true;
-            _listenersRequested = false;
-            _onResized = null;
-            _ = SynchronizeWindowEventListenersAsync();
+            lock (_subscriptionGate)
+            {
+                _disposed = true;
+                _manualListenersRequested = false;
+                _onResized = null;
+            }
+
+            RequestListenerSynchronization();
             GC.SuppressFinalize(this);
         }
 
@@ -215,9 +268,13 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Services
                 return;
             }
 
-            _onResized = null;
-            _disposed = true;
-            _listenersRequested = false;
+            lock (_subscriptionGate)
+            {
+                _onResized = null;
+                _disposed = true;
+                _manualListenersRequested = false;
+            }
+
             await SynchronizeWindowEventListenersAsync();
             GC.SuppressFinalize(this);
         }

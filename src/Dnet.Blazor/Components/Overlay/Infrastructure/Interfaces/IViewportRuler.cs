@@ -4,7 +4,7 @@ using Dnet.Blazor.Components.Overlay.Infrastructure.Models;
 
 namespace Dnet.Blazor.Components.Overlay.Infrastructure.Interfaces
 {
-    public interface IViewportRuler
+    public interface IViewportRuler : IAsyncDisposable
     {
         Task<Models.Size> GetViewportSize();
 
