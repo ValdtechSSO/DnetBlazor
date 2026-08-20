@@ -61,6 +61,11 @@
         const touchStartHandler = function (e) {
             if (touching || e.touches.length === 0) return;
 
+            // On narrow viewports the complete grid canvas owns horizontal
+            // scrolling and the desktop scrollbar is hidden. Let the browser
+            // handle that native gesture instead of forwarding it to Blazor.
+            if (scrollElementRef.clientWidth === 0 || getComputedStyle(scrollElementRef).display === 'none') return;
+
             startX = e.touches[0].clientX;
             startY = e.touches[0].clientY;
             scrollStartX = scrollElementRef.scrollLeft;

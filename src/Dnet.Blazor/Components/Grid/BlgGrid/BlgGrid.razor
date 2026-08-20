@@ -30,6 +30,10 @@
         var pinnedColumnsRight = layout.PinnedRightColumns;
         var leftSpacerWith = layout.PinnedLeftWidth;
         var rightSpacerWith = layout.PinnedRightWidth + GridOptions.ScrollWidth;
+        var responsiveCenterWidth = notPinnedColumns.Sum(column => column.Width)
+                                    + (GridOptions.CheckboxSelectionColumn ? 40 : 0)
+                                    + (_activeGroups > 0 ? Math.Max(GroupGridColumn.Width, 200) : 0);
+        var responsiveCanvasWidth = leftSpacerWith + responsiveCenterWidth + layout.PinnedRightWidth;
         var semanticColumnCount = notPinnedColumns.Count + (GridOptions.CheckboxSelectionColumn ? 1 : 0) + (_activeGroups > 0 ? 1 : 0);
         var semanticRowCount = GridOptions.UseVirtualization ? _itemCount : _rowNodes.Count;
 
@@ -64,7 +68,8 @@
                 </div>
             }
             <div class="blg-body-wrapper" style="height: calc(100% - @(GridOptions.SuppressPaginationPanel ? $"{GridOptions.ScrollWidth + 10}px" : $"{PaginatorHeight}px"));">
-                <div class="blg-root" style="height: calc(100% - 0px);">
+                <div class="blg-root"
+                     style="--_blg-horizontal-offset: @_transformX; --_blg-responsive-center-width: @(responsiveCenterWidth)px; --_blg-responsive-canvas-width: @(responsiveCanvasWidth)px; height: calc(100% - 0px);">
                     <div class="blg-header">
                         @if (pinnedColumnsLeft.Any())
                         {
@@ -118,7 +123,7 @@
                                      @onmousemove="MouseMove"
                                      class="blg-header-container"
                                      role="rowgroup"
-                                     style="display: grid; grid-template-rows:@gridTemplateRowsLeft2; grid-template-columns: @gridTemplateColumns1; transform: translateX(@_transformX)">
+                                     style="display: grid; grid-template-rows:@gridTemplateRowsLeft2; grid-template-columns: @gridTemplateColumns1">
                                     <BlgHeader @ref="_blgHeader"
                                                GridColumns="notPinnedColumns"
                                                GroupGridColumn="GroupGridColumn"
@@ -232,7 +237,7 @@
                                              aria-rowcount="@semanticRowCount"
                                              aria-colcount="@semanticColumnCount"
                                              aria-multiselectable="@(GridOptions.RowSelectionType == RowSelectionType.Multiple)"
-                                             style="transform: translateX(@_transformX); display: grid; grid-template-rows:@gridTemplateRows; grid-template-columns: @gridTemplateColumns">
+                                             style="display: grid; grid-template-rows:@gridTemplateRows; grid-template-columns: @gridTemplateColumns">
                                             <BlgBody @ref="_blgCenter"
                                                      GridColumns="notPinnedColumns"
                                                      GroupGridColumn="GroupGridColumn"
