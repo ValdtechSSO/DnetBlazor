@@ -357,8 +357,10 @@ body {
 }
 
 .dnet-menu-button {
+  --_foreground: var(--dnet-sys-on-surface);
   border: none;
   background-color: transparent;
+  color: var(--_foreground);
   cursor: pointer;
   font-size: 20px;
   padding: 10px;
