@@ -1,5 +1,13 @@
 # Changelog for Blazor Library
 
+## Version 6.0.2 (August 2026)
+
+- Fixed `BlgGrid` hover synchronization for `RowSpanFn` cells. A cell spanning
+  multiple rows now highlights correctly whichever covered visual row is hovered.
+- Added browser regression coverage for row-span hover behavior.
+- Simplified the PickList sample styling pipeline, removing the redundant
+  CSS-isolation preload emitted by the sample application.
+
 ## Version 6.0.1 (August 2026)
 
 - `DesktopLayout` structural dividers (header, footer and lateral columns) are

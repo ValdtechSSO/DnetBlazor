@@ -10,12 +10,13 @@
 		<Description>Set of Components for Blazor Framework</Description>
 		<Copyright>Datalnet</Copyright>
 		<PackageTags>Blazor-Components-Datalnet</PackageTags>
-		<PackageVersion>6.0.1</PackageVersion>
+		<PackageVersion>6.0.2</PackageVersion>
 		<PackageProjectUrl>https://datalnet.com/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ValdtechSSO/DnetBlazor</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
-			- DesktopLayout: Structural dividers are opt-in and can be configured through CSS tokens.
+			- Grid: Row-span cells now stay synchronized with the visual row hover state.
+			- Samples: Removed an unnecessary CSS-isolation preload warning.
 		</PackageReleaseNotes>
 	</PropertyGroup>
 

@@ -138,27 +138,38 @@
             const mouseLeaveHandler = function () {
                 dotnetClass.invokeMethodAsync('MouseLeave');
             };
-            let hoveredRowId = null;
+            let hoveredRowIndex = null;
+            let hoveredCells = [];
 
-            const setHoveredRow = function (rowId) {
-                if (hoveredRowId === rowId) return;
+            const setHoveredRow = function (rowIndex) {
+                const activeCellsAreCurrent = hoveredCells.length > 0
+                    && hoveredCells.every(cell => cell.isConnected);
+                if (hoveredRowIndex === rowIndex && activeCellsAreCurrent) return;
 
-                if (hoveredRowId !== null) {
-                    elementRef.querySelectorAll(`[data-blg-row-id="${hoveredRowId}"]`)
-                        .forEach(cell => cell.classList.remove('blg-hover-class'));
-                }
+                hoveredCells.forEach(cell => cell.classList.remove('blg-hover-class'));
+                hoveredCells = [];
+                hoveredRowIndex = rowIndex;
 
-                hoveredRowId = rowId;
-                if (hoveredRowId !== null) {
-                    elementRef.querySelectorAll(`[data-blg-row-id="${hoveredRowId}"]`)
-                        .forEach(cell => cell.classList.add('blg-hover-class'));
-                }
+                if (rowIndex === null) return;
+
+                const cellsStartingOnRow = elementRef.querySelectorAll(
+                    `[data-blg-row-index="${rowIndex}"]`);
+                const cellsSpanningRow = [...elementRef.querySelectorAll(
+                    '[data-blg-row-index][data-blg-row-span]:not([data-blg-row-span="1"])')]
+                    .filter(cell => {
+                        const start = Number(cell.dataset.blgRowIndex);
+                        const span = Number(cell.dataset.blgRowSpan);
+                        return start < rowIndex && rowIndex < start + span;
+                    });
+
+                hoveredCells = [...new Set([...cellsStartingOnRow, ...cellsSpanningRow])];
+                hoveredCells.forEach(cell => cell.classList.add('blg-hover-class'));
             };
 
             const mouseOverHandler = function (event) {
-                const cell = event.target.closest('[data-blg-row-id]');
+                const cell = event.target.closest('[data-blg-row-index]');
                 if (cell && elementRef.contains(cell)) {
-                    setHoveredRow(cell.dataset.blgRowId);
+                    setHoveredRow(Number(cell.dataset.blgRowIndex));
                 }
             };
 

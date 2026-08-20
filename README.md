@@ -3,7 +3,7 @@
 Blazor component library for .NET 10, compatible with Blazor WebAssembly and
 interactive server-side applications.
 
-**Current version:** 6.0.1. See the [changelog](Changelog.md) for release
+**Current version:** 6.0.2. See the [changelog](Changelog.md) for release
 details.
 
 ## Components
@@ -20,7 +20,7 @@ application is available at [datalnet.com](https://www.datalnet.com).
 Install the package:
 
 ```bash
-dotnet add package Dnet.Blazor --version 6.0.1
+dotnet add package Dnet.Blazor --version 6.0.2
 ```
 
 Register the services in `Program.cs`:
@@ -56,14 +56,13 @@ as dialogs, connected panels, floating panels, tooltips or toasts:
 `BaseZindex` establishes the starting z-index for library overlays; choose a
 value that fits the application's own stacking layers.
 
-## What's new in 5.0.5
+## What's new in 6.0.2
 
-- Added `PickList<TItem, TKey>`, a controlled, key-based multi-selector for
-  local collections and paged server-side data.
-- Added cancellable provider requests, retained selection across search and
-  pages, localization support and shared paginator styling for PickList.
-- Added unit and browser regression coverage for the sample application.
-- Added a trusted-publishing workflow for NuGet.org releases.
+- Fixed row-span hover synchronization in `BlgGrid`, so a cell spanning several
+  rows remains highlighted whichever covered row the pointer is over.
+- Added a browser regression test for row-span hover behavior.
+- Simplified the sample PickList styles to remove an unnecessary browser CSS
+  preload warning.
 
 ## Documentation
 

@@ -22,6 +22,8 @@
                 @(RowNode.IsSelected() ? "blg-row-selected" : null)"
          id="@($"Row{RowNode.RowNodeId}Cell0")"
          data-blg-row-id="@RowNode.RowNodeId"
+         data-blg-row-index="@RowId"
+         data-blg-row-span="1"
          style="flex:0 0 auto; width: 40px; height: 40px; grid-column: 1/1">
         @if (GetDisableRow() == false)
         {
@@ -42,6 +44,8 @@
                       @(RowNode.IsClicked() && !RowNode.IsSelected() ? "blg-row-clicked" : null)
                       @(RowNode.IsSelected() ? "blg-row-selected" : null)"
              data-blg-row-id="@RowNode.RowNodeId"
+             data-blg-row-index="@RowId"
+             data-blg-row-span="1"
              style="height: @height; width: @width;">
         </div>
     }
@@ -131,6 +135,8 @@
              role="gridcell"
              id="@($"Row{RowNode.RowNodeId}Cell{cellId}")"
              data-blg-row-id="@RowNode.RowNodeId"
+             data-blg-row-index="@RowId"
+             data-blg-row-span="@spanRowBy"
              aria-selected="@RowNode.IsSelected()"
              aria-disabled="@GetDisableRow()"
              aria-rowindex="@RowId"
@@ -182,6 +188,8 @@ else
                                 @(RowNode.IsClicked() && !RowNode.IsSelected() ? "blg-row-clicked" : null)
                                 @(RowNode.IsSelected() ? "blg-row-selected" : null)"
              data-blg-row-id="@RowNode.RowNodeId"
+             data-blg-row-index="@RowId"
+             data-blg-row-span="1"
              style="height: @height; grid-column: @(1 + checkboxCounter)/@(GridColumns.Count + 2 + checkboxCounter)">
             <span style="padding-left: @paddingLeft; width: 100%; display: flex">
                 <button type="button" @onclick="() => ChangeExpanded(RowNode.RowNodeId)" class="blg-icon-wrapper blg-tree-toggle" aria-label="@($"{(RowNode.Expanded ? "Contraer" : "Expandir")} grupo {RowNode.GroupValue}")" aria-expanded="@RowNode.Expanded">
@@ -201,7 +209,9 @@ else
                         @_rowCssClasses @(RowNode.IsHovered() ? "blg-hover-class" : null)
                         @(RowNode.IsClicked() && !RowNode.IsSelected() ? "blg-row-clicked" : null)
                         @(RowNode.IsSelected() ? "blg-row-selected" : null)"
-                 data-blg-row-id="@RowNode.RowNodeId">
+                 data-blg-row-id="@RowNode.RowNodeId"
+                 data-blg-row-index="@RowId"
+                 data-blg-row-span="1">
                 <span style="padding-left: @paddingLeft; width: 100%; display: flex">
                     <button type="button" @onclick="() => ChangeExpanded(RowNode.RowNodeId)" class="blg-icon-wrapper blg-tree-toggle" aria-label="@($"{(RowNode.Expanded ? "Contraer" : "Expandir")} grupo {RowNode.GroupValue}")" aria-expanded="@RowNode.Expanded"></button>
                 </span>
