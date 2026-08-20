@@ -29,11 +29,11 @@
 }
 
 .pick-list-demo-title {
-    color: #202124;
+    color: var(--dnet-sys-on-surface);
     font-size: .875rem;
 }
 
 .pick-list-demo-supporting {
-    color: #666;
+    color: var(--dnet-sys-on-surface-muted);
     font-size: .75rem;
 }
