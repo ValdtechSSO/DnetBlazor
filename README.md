@@ -3,7 +3,7 @@
 Blazor component library for .NET 10, compatible with Blazor WebAssembly and
 interactive server-side applications.
 
-**Current version:** 6.0.0. See the [changelog](Changelog.md) for release
+**Current version:** 6.0.1. See the [changelog](Changelog.md) for release
 details.
 
 ## Components
@@ -20,7 +20,7 @@ application is available at [datalnet.com](https://www.datalnet.com).
 Install the package:
 
 ```bash
-dotnet add package Dnet.Blazor --version 6.0.0
+dotnet add package Dnet.Blazor --version 6.0.1
 ```
 
 Register the services in `Program.cs`:

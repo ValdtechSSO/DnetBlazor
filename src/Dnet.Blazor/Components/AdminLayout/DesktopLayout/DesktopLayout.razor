@@ -14,7 +14,7 @@
 
 @implements IDisposable
 
-<div class="@("dnet-grid-container " +
+<div @attributes="AdditionalAttributes" class="@("dnet-grid-container " +
     (_isResponsiveMenu ? " responsive-menu" : "") +
     (_isMinified ? " minified" : "") +
     (_isFooterHidden && !_isHeaderHidden ? " hidden-footer" : "") +
@@ -36,6 +36,9 @@
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
 
     [Parameter]
     public bool IsHeaderFixed { get; set; }

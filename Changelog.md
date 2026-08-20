@@ -1,5 +1,14 @@
 # Changelog for Blazor Library
 
+## Version 6.0.1 (August 2026)
+
+- `DesktopLayout` structural dividers (header, footer and lateral columns) are
+  now disabled by default. Consumers can enable and customize them through
+  `--dnet-layout-divider-width`, `--dnet-layout-divider-style` and
+  `--dnet-layout-divider-color`, without targeting internal selectors.
+- `DesktopLayout` forwards unmatched HTML attributes, so its layout tokens can
+  also be scoped directly with its `style` attribute.
+
 ## Version 6.0.0 (August 2026)
 
 - Introduced runtime reference, semantic and component CSS token layers.

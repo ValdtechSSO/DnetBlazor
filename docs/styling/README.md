@@ -15,5 +15,6 @@ Load `_content/Dnet.Blazor/dnet-blazor-styles.css` once. Theme files are static
 web assets under `_content/Dnet.Blazor/styles/theme/` and are loaded after the
 base bundle.
 
-See [component-token-contract.md](component-token-contract.md) and
-[theming-guide.md](theming-guide.md).
+See [component-token-contract.md](component-token-contract.md),
+[theming-guide.md](theming-guide.md), and
+[layout-dividers.md](layout-dividers.md) for the `DesktopLayout` divider API.

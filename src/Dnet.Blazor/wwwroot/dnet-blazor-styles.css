@@ -309,7 +309,7 @@ body {
   background-color: var(--dnet-sys-surface);
   color: var(--_foreground);
   text-align: center;
-  border-top: 1px solid var(--dnet-footer-border-color, var(--dnet-sys-border-strong));
+  border-top: var(--_layout-divider-width) var(--_layout-divider-style) var(--dnet-footer-border-color, var(--dnet-layout-divider-color, var(--dnet-sys-border-strong)));
 }
 
 .dnet-footer-content {
@@ -340,7 +340,7 @@ body {
   grid-area: header;
   background-color: var(--dnet-sys-surface);
   text-align: center;
-  border-bottom: 1px solid var(--dnet-header-border-color, var(--dnet-sys-border-strong));
+  border-bottom: var(--_layout-divider-width) var(--_layout-divider-style) var(--dnet-header-border-color, var(--dnet-layout-divider-color, var(--dnet-sys-border-strong)));
 }
 
 .dnet-header-content-wrapper {
@@ -567,6 +567,8 @@ body {
   }
 }
 .dnet-grid-container {
+  --_layout-divider-width: var(--dnet-layout-divider-width, 0);
+  --_layout-divider-style: var(--dnet-layout-divider-style, solid);
   display: grid;
   grid-template-columns: minmax(var(--dnet-dash-left-column-width, 250px), auto) calc(100dvw - var(--dnet-dash-left-column-width, 250px) - var(--dnet-dash-right-column-width, 250px)) minmax(var(--dnet-dash-right-column-width, 250px), auto);
   /*grid-template-rows: var(--dnet-dash-header-height, 50px) calc(100dvh - var(--dnet-dash-header-height, 50px) - var(--dnet-dash-footer-height, 50px)) var(--dnet-dash-footer-height, 50px);*/
@@ -640,7 +642,7 @@ body {
 .dnet-left-column {
   grid-area: left;
   background-color: var(--dnet-sys-surface);
-  border-right: 1px solid var(--dnet-left-column-border-color, var(--dnet-sys-border-strong));
+  border-right: var(--_layout-divider-width) var(--_layout-divider-style) var(--dnet-left-column-border-color, var(--dnet-layout-divider-color, var(--dnet-sys-border-strong)));
 }
 
 .hidden-left-column .dnet-left-column {
@@ -1046,7 +1048,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 .dnet-right-column {
   grid-area: right;
   background-color: var(--dnet-sys-surface);
-  border-left: 1px solid var(--dnet-right-column-border-color, var(--dnet-sys-border-strong));
+  border-left: var(--_layout-divider-width) var(--_layout-divider-style) var(--dnet-right-column-border-color, var(--dnet-layout-divider-color, var(--dnet-sys-border-strong)));
 }
 
 .hidden-right-column .dnet-right-column {

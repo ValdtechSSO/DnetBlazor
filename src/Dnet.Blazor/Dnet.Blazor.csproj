@@ -10,12 +10,12 @@
 		<Description>Set of Components for Blazor Framework</Description>
 		<Copyright>Datalnet</Copyright>
 		<PackageTags>Blazor-Components-Datalnet</PackageTags>
-		<PackageVersion>6.0.0</PackageVersion>
+		<PackageVersion>6.0.1</PackageVersion>
 		<PackageProjectUrl>https://datalnet.com/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ValdtechSSO/DnetBlazor</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
-			- Overlay: Fix bug
+			- DesktopLayout: Structural dividers are opt-in and can be configured through CSS tokens.
 		</PackageReleaseNotes>
 	</PropertyGroup>
 
