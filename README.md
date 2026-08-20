@@ -56,6 +56,31 @@ as dialogs, connected panels, floating panels, tooltips or toasts:
 `BaseZindex` establishes the starting z-index for library overlays; choose a
 value that fits the application's own stacking layers.
 
+## Using Dnet.Blazor with an AI coding agent
+
+Each release ships a machine-readable reference: every component's parameters,
+every styling token, plus setup and theming guides. Plain markdown, so it works
+with Claude, Codex, Cursor, Gemini CLI or anything else that reads project docs.
+
+**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/latest/download/dnet-blazor-agent-reference-6.0.2.zip)**
+— attached to every release.
+
+```bash
+unzip dnet-blazor-agent-reference-6.0.2.zip -d docs/
+```
+
+Then point your agent at it. The archive's `AGENTS-snippet.md` has text you can
+paste into your own `AGENTS.md`, `CLAUDE.md` or `.cursorrules`.
+
+Prefer to browse it first, or pull it straight from source?
+
+```bash
+npx degit ValdtechSSO/DnetBlazor/docs/ai/reference docs/dnet-blazor
+```
+
+The reference is a snapshot of the version it ships with — grab the matching one
+when you upgrade the package.
+
 ## What's new in 6.0.2
 
 - Fixed row-span hover synchronization in `BlgGrid`, so a cell spanning several
@@ -69,6 +94,7 @@ value that fits the application's own stacking layers.
 - [PickList guide](docs/pick-list.md)
 - [Overlay guide](docs/overlay.md)
 - [Styling guide](docs/styling/README.md)
+- [AI agent reference](docs/ai/reference/README.md)
 - [NuGet publishing guide](docs/nuget-publishing.md)
 - [Changelog](Changelog.md)
 - [Sample application](samples/)

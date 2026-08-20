@@ -110,3 +110,6 @@ src/Dnet.Blazor/Components/Grid/.DS_Store
 
 # Playwright debug captures written next to goldens on comparison failure
 *.actual.png
+
+# Build artifacts
+artifacts/

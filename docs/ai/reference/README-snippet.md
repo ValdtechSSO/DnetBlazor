@@ -12,7 +12,7 @@ so it works with Claude, Codex, Cursor, Gemini CLI or anything else that reads
 project docs.
 
 **Download:**
-[`dnet-blazor-agent-reference-6.0.0.zip`](https://github.com/ValdtechSSO/DnetBlazor/releases/latest/download/dnet-blazor-agent-reference-6.0.0.zip)
+[`dnet-blazor-agent-reference-6.0.2.zip`](https://github.com/ValdtechSSO/DnetBlazor/releases/latest/download/dnet-blazor-agent-reference-6.0.2.zip)
 — attached to every release.
 
 Unzip it into your project and point your agent at it. The archive's
@@ -20,7 +20,7 @@ Unzip it into your project and point your agent at it. The archive's
 `CLAUDE.md` or `.cursorrules`.
 
 ```bash
-unzip dnet-blazor-agent-reference-6.0.0.zip -d docs/
+unzip dnet-blazor-agent-reference-6.0.2.zip -d docs/
 ```
 
 Prefer to browse it first, or pull it straight from source?

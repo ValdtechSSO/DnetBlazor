@@ -1,11 +1,11 @@
 # Component index
 
-Dnet.Blazor 6.0.0. One file per component under `references/components/`.
+Dnet.Blazor 6.0.2. One file per component under `references/components/`.
 Read only the one you need.
 
 | Component | Use in markup | Styling tokens |
 |---|---|---:|
-| [AdminLayout](components/AdminLayout.md) | `<DesktopFooter>`, `<DesktopHeader>`, `<DesktopLayout>`, `<DesktopLeftColumn>`, `<DesktopMinifyMenu>`, `<DesktopNavigation>`, `<DesktopNavigationMenu>`, `<DesktopRightColumn>`, `<MenuTree>`, `<MenuTreeLink>`, `<MenuTreeLinkHelper>` | 40 |
+| [AdminLayout](components/AdminLayout.md) | `<DesktopFooter>`, `<DesktopHeader>`, `<DesktopLayout>`, `<DesktopLeftColumn>`, `<DesktopMinifyMenu>`, `<DesktopNavigation>`, `<DesktopNavigationMenu>`, `<DesktopRightColumn>`, `<MenuTree>`, `<MenuTreeLink>`, `<MenuTreeLinkHelper>` | 44 |
 | [Autocomplete](components/Autocomplete.md) | `<DnetAutocomplete>` | 34 |
 | [Button](components/Button.md) | `<DnetButton>` | 18 |
 | [Checkbox](components/Checkbox.md) | — | 7 |
@@ -26,10 +26,10 @@ Read only the one you need.
 | [Paginator](components/Paginator.md) | `<DnetPaginator>` | 8 |
 | [PickList](components/PickList.md) | — | 26 |
 | [RadioButton](components/RadioButton.md) | — | 4 |
-| [Select](components/Select.md) | `<DnetSelect>` | 31 |
-| [Spinner](components/Spinner.md) | `<DnetSpinner>` | 1 |
+| [Select](components/Select.md) | `<DnetSelect>` | 35 |
+| [Spinner](components/Spinner.md) | `<DnetSpinner>` | 2 |
 | [Stepper](components/Stepper.md) | `<DnetStep>`, `<DnetStepper>` | 1 |
-| [Tabs](components/Tabs.md) | `<DnetTab>`, `<DnetTabBody>`, `<DnetTabGroup>` | 0 |
+| [Tabs](components/Tabs.md) | `<DnetTab>`, `<DnetTabBody>`, `<DnetTabGroup>` | 4 |
 | [Theme](components/Theme.md) | `<DnetThemeScope>` | 0 |
 | [Toast](components/Toast.md) | `<DnetToast>` | 6 |
 | [Tooltip](components/Tooltip.md) | — | 9 |

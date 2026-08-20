@@ -27,6 +27,11 @@ jobs:
           npm ci --ignore-scripts
           npm run lint:css
           npm run buildDnetBlazor
+      - name: Check agent reference is up to date
+        run: |
+          node tools/build-reference.mjs --no-zip
+          git diff --exit-code docs/ai/reference \
+            || (echo "::error::docs/ai/reference is stale. Run: node tools/build-reference.mjs" && exit 1)
       - name: Restore
         run: dotnet restore DnetBlazorComponents.sln
       - name: Build

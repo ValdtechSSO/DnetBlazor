@@ -50,3 +50,9 @@ del workflow, pero no vuelve a publicar el mismo paquete.
 
 Las versiones preliminares se publican igual, por ejemplo con la etiqueta
 `v5.0.5-rc.1`.
+
+## Lista de comprobación de release
+
+Antes de crear la etiqueta, ejecuta `node tools/build-reference.mjs` y confirma
+`docs/ai/reference/`. CI adjunta automáticamente el ZIP de referencia de agentes
+al release de GitHub; el archivo bajo `artifacts/` no se versiona.

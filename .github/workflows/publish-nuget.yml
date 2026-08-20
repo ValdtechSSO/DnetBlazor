@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: nuget
     permissions:
-      contents: read
+      contents: write
       id-token: write
 
     steps:
@@ -70,6 +70,22 @@ jobs:
 
       - name: Build frontend assets
         run: npm run buildDnetBlazor
+
+      - name: Build agent reference
+        run: node tools/build-reference.mjs
+
+      - name: Verify agent reference matches the release version
+        id: reference
+        shell: bash
+        run: |
+          EXPECTED="artifacts/dnet-blazor-agent-reference-${{ steps.version.outputs.value }}.zip"
+          if [[ ! -f "$EXPECTED" ]]; then
+            echo "::error::Expected $EXPECTED. Generator produced:"
+            ls -1 artifacts/*.zip || true
+            echo "::error::The version in README.md probably doesn't match the tag."
+            exit 1
+          fi
+          echo "path=$EXPECTED" >> "$GITHUB_OUTPUT"
 
       - name: Restore solution
         run: dotnet restore DnetBlazorComponents.sln
@@ -129,3 +145,10 @@ jobs:
           --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
           --source https://api.nuget.org/v3/index.json
           --skip-duplicate
+
+      - name: Attach agent reference to the release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.reference.outputs.path }}
+          fail_on_unmatched_files: true
