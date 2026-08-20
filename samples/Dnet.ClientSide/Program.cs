@@ -16,7 +16,7 @@ namespace Dnet.App.ClientSide
 
             builder.RootComponents.Add<App>("#app");
 
-            builder.Services.AddHttpClient("WebHostURL", client => client.BaseAddress = new Uri(builder.Configuration["WebHostURL"]));
+            builder.Services.AddHttpClient("WebHostURL", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
 
             builder.Services.AddDnetBlazor();
 

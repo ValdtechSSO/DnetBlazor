@@ -420,6 +420,34 @@ body {
   height: 100%;
 }
 
+.dnet-dashboard-theme-selector {
+  --_foreground: var(--dnet-sys-on-surface-muted);
+  --_surface: var(--dnet-sys-surface);
+  --_border: var(--dnet-sys-border);
+  --_focus: var(--dnet-sys-focus-ring);
+  display: flex;
+  align-items: center;
+  gap: var(--dnet-sys-space-2);
+  margin-right: var(--dnet-sys-space-4);
+  color: var(--_foreground);
+  font-size: var(--dnet-sys-text-sm);
+}
+
+.dnet-dashboard-theme-selector select {
+  min-height: 30px;
+  padding: 0 var(--dnet-sys-space-2);
+  border: var(--dnet-sys-border-width) solid var(--_border);
+  border-radius: var(--dnet-sys-radius-sm);
+  background: var(--_surface);
+  color: var(--_foreground);
+  font: inherit;
+}
+
+.dnet-dashboard-theme-selector select:focus-visible {
+  outline: 2px solid var(--_focus);
+  outline-offset: 2px;
+}
+
 .hidden-navigation #logo-group {
   padding-left: 45px;
 }

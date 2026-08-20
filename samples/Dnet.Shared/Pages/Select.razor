@@ -201,6 +201,16 @@
 
     protected override async Task OnInitializedAsync()
     {
+        _editContext = new EditContext(_right);
+        _editContext1 = new EditContext(_right1);
+        _editContext2 = new EditContext(_right2);
+        _editContext3 = new EditContext(person);
+
+        ConfigureEditContext(_editContext);
+        ConfigureEditContext(_editContext1);
+        ConfigureEditContext(_editContext2);
+        ConfigureEditContext(_editContext3);
+
         _items = await GetPersons();
 
         _selectedItems = _items.Take(3).ToList();
@@ -251,44 +261,13 @@
             }
         };
 
-        _editContext = new EditContext(_right);
+    }
 
-        _editContext.OnValidationRequested += (data, eventArgs) =>
-
-        {
-
-            messageStore?.Clear();
-
-
-
-            StateHasChanged();
-
-        };
-
-        _editContext1 = new EditContext(_right1);
-
-        _editContext1.OnValidationRequested += (data, eventArgs) =>
+    private void ConfigureEditContext(EditContext editContext)
+    {
+        editContext.OnValidationRequested += (_, _) =>
         {
             messageStore?.Clear();
-
-            StateHasChanged();
-        };
-
-        _editContext2 = new EditContext(_right2);
-
-        _editContext2.OnValidationRequested += (data, eventArgs) =>
-        {
-            messageStore?.Clear();
-
-            StateHasChanged();
-        };
-
-        _editContext3 = new EditContext(person);
-
-        _editContext3.OnValidationRequested += (data, eventArgs) =>
-        {
-            messageStore?.Clear();
-
             StateHasChanged();
         };
     }

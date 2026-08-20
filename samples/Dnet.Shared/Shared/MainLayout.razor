@@ -16,6 +16,7 @@
 @using Dnet.Blazor.Components.AdminLayout.Menu
 
 @inject IThemeMessageService<ThemeConfigData> ThemeMessageService
+@inject IJSRuntime JSRuntime
 
 <DnetOverlay BaseZindex="1100"></DnetOverlay>
 
@@ -48,6 +49,15 @@
             </div>
             <div class="dnet-desktop-header-right">
                 <div class="dnet-dashboard-right-container">
+                    <label class="dnet-dashboard-theme-selector">
+                        <span>Theme</span>
+                        <select value="@_theme" @onchange="ChangeTheme" aria-label="Application theme">
+                            <option value="">Light</option>
+                            <option value="dark">Dark</option>
+                            <option value="compact">Compact</option>
+                            <option value="high-contrast">High contrast</option>
+                        </select>
+                    </label>
                     <div class="dnet-dashboard-user-data">
                         <div style="display: flex;justify-content: flex-end;">
                             <span class="dnet-dashboard-person-name">PersonName</span>
@@ -95,6 +105,9 @@
 
 @code {
 
+    private const string ThemeStorageKey = "dnet.theme";
+    private string _theme = "dark";
+
     private List<NavigationMenu> Menus { get; set; }
 
     private string AppName { get; set; }
@@ -121,15 +134,37 @@
         BuildMenu();
     }
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (!firstRender)
         {
-            // SetupTheme();
-
-            StateHasChanged();
+            return;
         }
+
+        var persistedTheme = await JSRuntime.InvokeAsync<string?>("dnetinterop.get", ThemeStorageKey);
+        if (IsSupportedTheme(persistedTheme))
+        {
+            _theme = persistedTheme!;
+        }
+
+        await JSRuntime.InvokeVoidAsync("dnetinterop.setTheme", _theme);
+        StateHasChanged();
     }
+
+    private async Task ChangeTheme(ChangeEventArgs args)
+    {
+        var theme = args.Value?.ToString() ?? string.Empty;
+        if (!IsSupportedTheme(theme))
+        {
+            return;
+        }
+
+        _theme = theme;
+        await JSRuntime.InvokeVoidAsync("dnetinterop.setTheme", _theme);
+        await JSRuntime.InvokeVoidAsync("dnetinterop.set", ThemeStorageKey, _theme);
+    }
+
+    private static bool IsSupportedTheme(string? theme) => theme is "" or "dark" or "compact" or "high-contrast";
 
     private void SetupTheme()
     {

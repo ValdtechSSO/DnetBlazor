@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html data-dnet-theme="dark">
 
 <head>
     <meta charset="utf-8" />
@@ -20,10 +20,11 @@
     <script>
         (() => {
             try {
-                const theme = JSON.parse(localStorage.getItem("dnet.theme") ?? "null");
-                if (["", "dark", "compact", "high-contrast"].includes(theme)) {
-                    document.documentElement.dataset.dnetTheme = theme;
-                }
+                const persistedTheme = JSON.parse(localStorage.getItem("dnet.theme") ?? "null");
+                const theme = ["", "dark", "compact", "high-contrast"].includes(persistedTheme)
+                    ? persistedTheme
+                    : "dark";
+                document.documentElement.dataset.dnetTheme = theme;
             } catch {
                 // An invalid preference must not prevent the application from loading.
             }
