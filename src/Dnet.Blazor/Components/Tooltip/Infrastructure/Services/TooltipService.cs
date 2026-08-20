@@ -178,56 +178,68 @@ namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
                     OriginX = HorizontalConnectionPos.Start,
                     OriginY = VerticalConnectionPos.Center,
                     OverlayX = HorizontalConnectionPos.End,
-                    OverlayY = VerticalConnectionPos.Center
+                    OverlayY = VerticalConnectionPos.Center,
+                    OffsetX = -8
                 },
                 new ConnectedPosition
                 {
                     OriginX = HorizontalConnectionPos.End,
                     OriginY = VerticalConnectionPos.Center,
                     OverlayX = HorizontalConnectionPos.Start,
-                    OverlayY = VerticalConnectionPos.Center
+                    OverlayY = VerticalConnectionPos.Center,
+                    OffsetX = 8
                 },
                 new ConnectedPosition
                 {
                     OriginX = HorizontalConnectionPos.Center,
                     OriginY = VerticalConnectionPos.Top,
                     OverlayX = HorizontalConnectionPos.Center,
-                    OverlayY = VerticalConnectionPos.Bottom
+                    OverlayY = VerticalConnectionPos.Bottom,
+                    OffsetY = -8
                 },
                 new ConnectedPosition
                 {
                     OriginX = HorizontalConnectionPos.Center,
                     OriginY = VerticalConnectionPos.Bottom,
                     OverlayX = HorizontalConnectionPos.Center,
-                    OverlayY = VerticalConnectionPos.Top
+                    OverlayY = VerticalConnectionPos.Top,
+                    OffsetY = 8
                 },
                 new ConnectedPosition
                 {
                     OriginX = HorizontalConnectionPos.Start,
                     OriginY = VerticalConnectionPos.Bottom,
                     OverlayX = HorizontalConnectionPos.Start,
-                    OverlayY = VerticalConnectionPos.Top
+                    OverlayY = VerticalConnectionPos.Top,
+                    OffsetX = -8,
+                    OffsetY = 8
                 },
                 new ConnectedPosition
                 {
                     OriginX = HorizontalConnectionPos.Start,
                     OriginY = VerticalConnectionPos.Top,
                     OverlayX = HorizontalConnectionPos.Start,
-                    OverlayY = VerticalConnectionPos.Bottom
+                    OverlayY = VerticalConnectionPos.Bottom,
+                    OffsetX = -8,
+                    OffsetY = -8
                 },
                 new ConnectedPosition
                 {
                     OriginX = HorizontalConnectionPos.End,
                     OriginY = VerticalConnectionPos.Bottom,
                     OverlayX = HorizontalConnectionPos.Start,
-                    OverlayY = VerticalConnectionPos.Top
+                    OverlayY = VerticalConnectionPos.Top,
+                    OffsetX = 8,
+                    OffsetY = 8
                 },
                 new ConnectedPosition
                 {
                     OriginX = HorizontalConnectionPos.End,
                     OriginY = VerticalConnectionPos.Top,
                     OverlayX = HorizontalConnectionPos.Start,
-                    OverlayY = VerticalConnectionPos.Bottom
+                    OverlayY = VerticalConnectionPos.Bottom,
+                    OffsetX = 8,
+                    OffsetY = -8
                 }
             };
 

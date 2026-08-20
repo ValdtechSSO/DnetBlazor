@@ -223,7 +223,7 @@ select.mat-input-element::-ms-value {
 .dnet-form-field-plain-control-container {
   display: flex;
   align-items: stretch;
-  min-height: 34px;
+  min-height: var(--dnet-sys-text-input-min-height);
   max-height: 272px;
   margin-bottom: 3px;
   border: 1px solid var(--dnet-sys-border);
