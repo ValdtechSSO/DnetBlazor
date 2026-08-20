@@ -112,6 +112,42 @@ public sealed class OverlayServiceTests
         });
     }
 
+    [Fact]
+    public void Tooltip_show_is_idempotent_for_the_same_trigger()
+    {
+        var overlayService = new OverlayService();
+        var attachmentCount = 0;
+        overlayService.OnAttach += (_, _) => attachmentCount++;
+
+        using var tooltipService = new TooltipService(overlayService);
+        var trigger = new ElementReference("tooltip-trigger");
+        var first = tooltipService.Show(new TooltipConfig(), trigger);
+        var second = tooltipService.Show(new TooltipConfig(), trigger);
+
+        Assert.Equal(first.GetOverlayReferenceId(), second.GetOverlayReferenceId());
+        Assert.Equal(1, attachmentCount);
+    }
+
+    [Fact]
+    public async Task Tooltip_reentry_cancels_a_pending_hide()
+    {
+        var overlayService = new OverlayService();
+        var detachCount = 0;
+        overlayService.OnDetach += _ => detachCount++;
+
+        using var tooltipService = new TooltipService(overlayService);
+        var trigger = new ElementReference("tooltip-trigger");
+        var config = new TooltipConfig { HideDelay = 75 };
+        var first = tooltipService.Show(config, trigger);
+
+        tooltipService.Close(new OverlayResult { OverlayReferenceId = first.GetOverlayReferenceId() });
+        var second = tooltipService.Show(config, trigger);
+        await Task.Delay(150);
+
+        Assert.Equal(first.GetOverlayReferenceId(), second.GetOverlayReferenceId());
+        Assert.Equal(0, detachCount);
+    }
+
     private sealed class TestComponent : ComponentBase
     {
     }

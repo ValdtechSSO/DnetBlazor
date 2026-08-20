@@ -17,6 +17,8 @@ namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
         private readonly Dictionary<int, System.Threading.Timer> _hideTimers = new();
         private readonly Dictionary<int, TooltipConfig> _tooltipConfigs = new();
         private readonly Dictionary<int, int> _placeholderToRealIdMap = new(); // Mapeo de placeholder ID a overlay real ID
+        private readonly Dictionary<string, int> _tooltipIdsByTrigger = new();
+        private readonly Dictionary<int, string> _triggerKeysByTooltipId = new();
         private readonly object _lock = new object();
         private int _nextId;
 
@@ -39,31 +41,30 @@ namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
         {
             lock (_lock)
             {
-                // Generar un ID único para este tooltip
-                var placeholderId = GenerateUniqueId();
-                
-                // Crear una referencia placeholder que usaremos como retorno
-                var placeholderRef = new OverlayReference(placeholderId);
-                
-                // Guardar la configuración
-                _tooltipConfigs[placeholderId] = tooltipConfig;
-                
-                // Cancelar cualquier timer de hide pendiente
-                if (_hideTimers.TryGetValue(placeholderId, out var existingHideTimer))
+                var triggerKey = GetTriggerKey(elementReference);
+                if (triggerKey != null && _tooltipIdsByTrigger.TryGetValue(triggerKey, out var existingTooltipId))
                 {
-                    existingHideTimer?.Dispose();
-                    _hideTimers.Remove(placeholderId);
-                }
+                    var activeTooltipId = _placeholderToRealIdMap.TryGetValue(existingTooltipId, out var realId)
+                        ? realId
+                        : existingTooltipId;
 
-                // Cancelar cualquier timer de show pendiente
-                if (_showTimers.TryGetValue(placeholderId, out var existingShowTimer))
-                {
-                    existingShowTimer?.Dispose();
-                    _showTimers.Remove(placeholderId);
+                    if (_activeTooltips.TryGetValue(activeTooltipId, out var existingTooltip))
+                    {
+                        CancelHideTimer(activeTooltipId);
+                        return existingTooltip;
+                    }
+
+                    RemoveTriggerAssociation(existingTooltipId);
                 }
 
                 if (tooltipConfig.ShowDelay > 0)
                 {
+                    // Placeholder IDs are negative so they cannot collide with OverlayService IDs.
+                    var placeholderId = -GenerateUniqueId();
+                    var placeholderRef = new OverlayReference(placeholderId);
+                    _tooltipConfigs[placeholderId] = tooltipConfig;
+                    AssociateTrigger(triggerKey, placeholderId);
+
                     // Guardar el placeholder
                     _activeTooltips[placeholderId] = placeholderRef;
 
@@ -81,6 +82,7 @@ namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
                                 // Mapear placeholder ID a real ID
                                 _placeholderToRealIdMap[placeholderId] = realId;
                                 _activeTooltips[realId] = actualRef;
+                                TransferTriggerAssociation(placeholderId, realId);
                                 
                                 // Mover la configuración al ID real
                                 _tooltipConfigs[realId] = tooltipConfig;
@@ -100,11 +102,9 @@ namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
                 // Sin delay, crear inmediatamente
                 var result = Open(componentType, parameters, tooltipConfig, elementReference);
                 var resultId = result.GetOverlayReferenceId();
-                
-                _placeholderToRealIdMap[placeholderId] = resultId;
                 _activeTooltips[resultId] = result;
+                AssociateTrigger(triggerKey, resultId);
                 _tooltipConfigs[resultId] = tooltipConfig;
-                _tooltipConfigs.Remove(placeholderId);
                 
                 return result;
             }
@@ -115,6 +115,53 @@ namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
             // Keep IDs unique for the lifetime of the scoped service. Overflow is harmless because
             // the dictionary still protects against the only possible collision.
             return Interlocked.Increment(ref _nextId);
+        }
+
+        private static string? GetTriggerKey(ElementReference elementReference) =>
+            string.IsNullOrEmpty(elementReference.Id) ? null : elementReference.Id;
+
+        private void AssociateTrigger(string? triggerKey, int tooltipId)
+        {
+            if (triggerKey == null)
+            {
+                return;
+            }
+
+            _tooltipIdsByTrigger[triggerKey] = tooltipId;
+            _triggerKeysByTooltipId[tooltipId] = triggerKey;
+        }
+
+        private void TransferTriggerAssociation(int previousTooltipId, int nextTooltipId)
+        {
+            if (!_triggerKeysByTooltipId.Remove(previousTooltipId, out var triggerKey))
+            {
+                return;
+            }
+
+            _triggerKeysByTooltipId[nextTooltipId] = triggerKey;
+            _tooltipIdsByTrigger[triggerKey] = nextTooltipId;
+        }
+
+        private void RemoveTriggerAssociation(int tooltipId)
+        {
+            if (!_triggerKeysByTooltipId.Remove(tooltipId, out var triggerKey))
+            {
+                return;
+            }
+
+            if (_tooltipIdsByTrigger.TryGetValue(triggerKey, out var associatedTooltipId) && associatedTooltipId == tooltipId)
+            {
+                _tooltipIdsByTrigger.Remove(triggerKey);
+            }
+        }
+
+        private void CancelHideTimer(int tooltipId)
+        {
+            if (_hideTimers.TryGetValue(tooltipId, out var hideTimer))
+            {
+                hideTimer.Dispose();
+                _hideTimers.Remove(tooltipId);
+            }
         }
 
         private OverlayReference Open(Type? componentType, IDictionary<string, object>? parameters, TooltipConfig tooltipConfig, ElementReference elementReference)
@@ -214,10 +261,12 @@ namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
                 x.AddAttribute(1, "Text", tooltipConfig.Text);
                 x.AddAttribute(2, "TooltipClass", tooltipConfig.TooltipClass);
                 x.AddAttribute(3, "TooltipColor", tooltipConfig.TooltipColor);
-                x.AddAttribute(4, "MaxWidth", tooltipConfig.MaxWidth);
-                x.AddAttribute(5, "MaxHeight", tooltipConfig.MaxHeight);
-                x.AddAttribute(6, "ComponentType", componentType);
-                x.AddAttribute(7, "Parameters", parameters);
+                x.AddAttribute(4, "TooltipForeground", tooltipConfig.TooltipForeground);
+                x.AddAttribute(5, "MaxWidth", tooltipConfig.MaxWidth);
+                x.AddAttribute(6, "MaxHeight", tooltipConfig.MaxHeight);
+                x.AddAttribute(7, "ComponentType", componentType);
+                x.AddAttribute(8, "Parameters", parameters);
+                x.AddAttribute(9, "TriggerElement", elementReference);
                 x.CloseComponent();
             });
 
@@ -245,6 +294,7 @@ namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
                     _activeTooltips.Remove(requestedId);
                     _tooltipConfigs.Remove(requestedId);
                     _placeholderToRealIdMap.Remove(requestedId);
+                    RemoveTriggerAssociation(requestedId);
                     return; // Si aún no se mostró, solo cancelamos y salimos
                 }
 
@@ -301,11 +351,7 @@ namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
                 }
 
                 // Cancelar cualquier timer de hide pendiente
-                if (_hideTimers.TryGetValue(tooltipId, out var hideTimer))
-                {
-                    hideTimer?.Dispose();
-                    _hideTimers.Remove(tooltipId);
-                }
+                CancelHideTimer(tooltipId);
 
                 // Solo detach si el tooltip realmente existe
                 if (_activeTooltips.ContainsKey(tooltipId))
@@ -313,6 +359,7 @@ namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
                     _overlayService.Detach(overlayDataResult);
                     _activeTooltips.Remove(tooltipId);
                     _tooltipConfigs.Remove(tooltipId);
+                    RemoveTriggerAssociation(tooltipId);
                     
                     // Remover mapeo si existe
                     var placeholderId = _placeholderToRealIdMap.FirstOrDefault(x => x.Value == tooltipId).Key;
@@ -355,6 +402,8 @@ namespace Dnet.Blazor.Components.Tooltip.Infrastructure.Services
                 _activeTooltips.Clear();
                 _tooltipConfigs.Clear();
                 _placeholderToRealIdMap.Clear();
+                _tooltipIdsByTrigger.Clear();
+                _triggerKeysByTooltipId.Clear();
             }
         }
 

@@ -59,6 +59,29 @@
             document.documentElement.dataset.dnetTheme = theme;
         },
 
+        addAriaDescribedBy: function (elementRef, tooltipId) {
+            if (!elementRef || !tooltipId) {
+                return;
+            }
+
+            const describedBy = new Set((elementRef.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean));
+            describedBy.add(tooltipId);
+            elementRef.setAttribute("aria-describedby", [...describedBy].join(" "));
+        },
+
+        removeAriaDescribedBy: function (elementRef, tooltipId) {
+            if (!elementRef || !tooltipId) {
+                return;
+            }
+
+            const describedBy = (elementRef.getAttribute("aria-describedby") || "").split(/\s+/).filter(id => id && id !== tooltipId);
+            if (describedBy.length) {
+                elementRef.setAttribute("aria-describedby", describedBy.join(" "));
+            } else {
+                elementRef.removeAttribute("aria-describedby");
+            }
+        },
+
         copyText: async function (text) {
             await navigator.clipboard.writeText(text);
         }

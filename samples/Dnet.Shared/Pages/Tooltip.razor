@@ -20,8 +20,8 @@
     <div class="dnet-m-l-30 dnet-m-t-30">
         <h5>Tooltip sin delay</h5>
         <div @ref="_tooltipTarget" style="width: 100px; height: 100px; background-color: #4fc3f7; position: absolute; top: 50%; left: 45%; display: flex; align-items: center; justify-content:center"
-             @onmouseover="ShowTooltip"
-             @onmouseout="HideTooltip">
+             @onmouseenter="ShowTooltip"
+             @onmouseleave="HideTooltip">
             <span style="color: #FFFFFF">Show tooltip</span>
         </div>
     </div>
@@ -29,8 +29,8 @@
     <div class="dnet-m-l-30 dnet-m-t-30">
         <h5>Tooltip con delay de 500ms</h5>
         <div @ref="_tooltipDelayTarget" style="width: 120px; height: 100px; background-color: #66bb6a; position: absolute; top: 50%; left: 55%; display: flex; align-items: center; justify-content:center; text-align: center"
-             @onmouseover="ShowTooltipWithDelay"
-             @onmouseout="HideTooltipWithDelay">
+             @onmouseenter="ShowTooltipWithDelay"
+             @onmouseleave="HideTooltipWithDelay">
             <span style="color: #FFFFFF">Show tooltip with delay</span>
         </div>
     </div>
@@ -38,8 +38,8 @@
     <div class="dnet-m-l-30 dnet-m-t-30">
         <h5>Tooltip con componente</h5>
         <div @ref="_tooltipComponentTarget" style="width: 100px; height: 100px; background-color: #4fc3f7; position: absolute; top: 50%; left: 65%; display: flex; align-items: center; justify-content:center; text-align: center"
-             @onmouseover="ShowTooltipWithComponent"
-             @onmouseout="HideTooltipWithComponent">
+             @onmouseenter="ShowTooltipWithComponent"
+             @onmouseleave="HideTooltipWithComponent">
             <span style="color: #FFFFFF">Show tooltip with component</span>
         </div>
     </div>
@@ -128,6 +128,5 @@
         TooltipService.Close(new OverlayResult { OverlayReferenceId = _tooltipComponentReference.GetOverlayReferenceId() });
     }
 }
-
 
 

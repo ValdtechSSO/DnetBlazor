@@ -1,10 +1,13 @@
 ﻿@using Dnet.Blazor.Components.Tooltip.Infrastructure.Interfaces
 @using Dnet.Blazor.Infrastructure.Services.CssBuilder
 @using Microsoft.AspNetCore.Components.Web
-@inject ITooltipService TooltipPanelService
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@inject IJSRuntime JSRuntime
 
-<div role="tooltip" class="@_cssClasses" style="@_styles">
+<div id="@TooltipId" role="tooltip" class="@_cssClasses" style="@_styles">
         @Text
+        @ContentChild
         @if (ComponentType != null)
         {
             <DynamicComponent Type="@ComponentType" Parameters="@Parameters" />
@@ -30,7 +33,13 @@
     public string? TooltipColor { get; set; }
 
     [Parameter]
+    public string? TooltipForeground { get; set; }
+
+    [Parameter]
     public string? TooltipClass { get; set; }
+
+    [Parameter]
+    public ElementReference TriggerElement { get; set; }
 
     [Parameter]
     public string? MaxWidth { get; set; }
@@ -43,7 +52,7 @@
 
     private string? _styles { get; set; }
 
-    private string? _backgroundColor { get; set; }
+    private string TooltipId => $"dnet-tooltip-{OverlayReferenceId}";
 
 
     protected override void OnInitialized()
@@ -58,8 +67,6 @@
 
     private void UpdateStyles()
     {
-        _backgroundColor = TooltipColor;
-
         _cssClasses = GetCssClasses();
 
         _styles = GetStyles();
@@ -68,6 +75,7 @@
     private string GetCssClasses()
     {
         var classes = new CssBuilder("dnet-tooltip")
+            .AddClass(TooltipClass, !string.IsNullOrEmpty(TooltipClass))
             .Build();
 
         return classes;
@@ -78,9 +86,30 @@
         var styles = new StyleBuilder()
             .AddStyle("max-height", MaxHeight)
             .AddStyle("max-width", MaxWidth)
-            .AddStyle("background", _backgroundColor)
+            .AddStyle("background", TooltipColor)
+            .AddStyle("color", TooltipForeground)
             .Build();
 
         return styles;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("dnetinterop.addAriaDescribedBy", TriggerElement, TooltipId);
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("dnetinterop.removeAriaDescribedBy", TriggerElement, TooltipId);
+        }
+        catch (JSDisconnectedException)
+        {
+            // The browser session ended before the overlay could be detached.
+        }
     }
 }

@@ -12,6 +12,8 @@
   --_radius: var(--dnet-tooltip-border-radius, 0px);
   --_max-width: var(--dnet-tooltip-max-width, 250px);
   --_h-padding: var(--dnet-tooltip-horizontal-padding, var(--dnet-sys-space-2));
+  --_v-padding: var(--dnet-tooltip-vertical-padding, calc(var(--dnet-sys-space-unit) * 1.5));
+  --_font-size: var(--dnet-tooltip-font-size, var(--dnet-sys-text-xs));
 
   color: var(--_foreground);
   background: var(--_background);
@@ -22,16 +24,7 @@
   padding-right: var(--_h-padding);
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 10px;
-  padding-top: 6px;
-  padding-bottom: 6px;
-}
-
-.dnet-tooltip-handset {
-  --_handset-margin: var(--dnet-tooltip-handset-margin, 24px);
-  --_handset-h-padding: var(--dnet-tooltip-handset-horizontal-padding, var(--dnet-sys-space-4));
-
-  margin: var(--_handset-margin);
-  padding-left: var(--_handset-h-padding);
-  padding-right: var(--_handset-h-padding);
+  font-size: var(--_font-size);
+  padding-top: var(--_v-padding);
+  padding-bottom: var(--_v-padding);
 }

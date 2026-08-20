@@ -8,6 +8,8 @@
 
         public string? TooltipColor { get; set; }
 
+        public string? TooltipForeground { get; set; }
+
         public string? PanelStyle { get; set; }
 
         public string? ThemeScope { get; set; }
