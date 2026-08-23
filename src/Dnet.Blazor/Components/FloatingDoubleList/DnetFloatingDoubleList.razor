@@ -104,7 +104,7 @@
     /// <summary>Gets or sets the component width.</summary>
     [Parameter]
     public string? Width { get; set; }
-    
+
     /// <summary>Gets or sets the component height.</summary>
     [Parameter]
     public string? Height { get; set; } = "300px";
@@ -194,28 +194,9 @@
 
     private bool _hasErrors { get; set; }
 
-    private string? _placeHolder { get; set; }
-
     private RenderFragment? _clearButtonContent { get; set; }
 
-    private long _nextId { get; set; } = -1;
-
     private bool _isInitialized { get; set; }
-
-    private List<TItem> _items { get; set; } = new();
-
-    private string _inputTextClass =>
-        new CssBuilder("mat-input-element")
-            .AddClass("mat-form-field-autofill-control")
-            .AddClass("cdk-text-field-autofill-monitored")
-            .AddClass(CssClass)
-            .Build();
-
-    private string? _displayValueAsString { get; set; } = null;
-
-    private bool _hasInitializedParameters;
-
-    private TransferredItems<TItem> _transferredItems { get; set; } = new();
 
     private List<TItem> _itemsToshow { get; set; } = new();
 
@@ -237,12 +218,7 @@
 
         if (!DisabledClearButton) _clearButtonContent = CreateClearButtonContent();
 
-        if (!string.IsNullOrEmpty(_displayValueAsString))
-        {
-            _hasFocus = true;
-
-            if (_formEventService is not null) _formEventService.RaiseFocus(_hasFocus);
-        }
+        GetOrCreateService();
 
         if (_formEventService is not null) _formEventService.RaiseCurrentValue(CurrentValueAsString);
 
@@ -253,16 +229,10 @@
     {
         parameters.SetParameterProperties(this);
 
-        if (ListItemContent == null && RightListOptions.DisplayValueConverter == null)
+        if (DisplayValueConverter is null)
         {
             throw new InvalidOperationException(
-                        $"{nameof(DnetList<TItem>)} You must supply a value for ComponentType or for DisplayValueConverter.");
-        }
-
-        if (ListItemContent == null && LeftListOptions.DisplayValueConverter == null)
-        {
-            throw new InvalidOperationException(
-                        $"{nameof(DnetList<TItem>)} You must supply a value for ComponentType or for DisplayValueConverter.");
+                        $"{nameof(DnetFloatingDoubleList<TItem>)} You must supply a value for DisplayValueConverter.");
         }
 
         return base.SetParametersAsync(ParameterView.Empty);
@@ -296,21 +266,6 @@
                 _isInitialized = false;
             }
         }
-    }
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (!firstRender) return;
-
-        _floatingDoubleListService = new FloatingDoubleListService<TItem>();
-
-        _floatingDoubleListService.OnSelectionChange += SelectionChanged;
-
-        _floatingDoubleListService.OnSearchLeft += SearchLeft;
-
-        _floatingDoubleListService.OnSearchRight += SearchRight;
-
-        _floatingDoubleListService.OnClose += ClosenMenu;
     }
 
     private RenderFragment CreateClearButtonContent()
@@ -347,7 +302,7 @@
         _isOpen = true;
     }
 
-    private void ClosenMenu()
+    private void CloseMenu()
     {
         if (_isOpen)
         {
@@ -359,9 +314,9 @@
 
     private async Task SelectionChangedAsync(TransferredItems<TItem> transferredItems)
     {
-        var transfered = SideForSelections == ListToShow.Right ? transferredItems.RighItems : transferredItems.LeftItems;
+        var transfered = SideForSelections == ListToShow.Right ? transferredItems.RightItems : transferredItems.LeftItems;
 
-        _hasFocus = transfered.Any() ? true : false;
+        _hasFocus = transfered.Any();
 
         if (_formEventService is not null) _formEventService.RaiseFocus(_hasFocus);
 
@@ -377,8 +332,6 @@
     private async Task ClearInputAsync()
     {
         CurrentValueAsString = null;
-
-        _displayValueAsString = null;
 
         EditContext?.NotifyFieldChanged(FieldIdentifier);
 
@@ -437,7 +390,9 @@
         var flexibleConnectedPositionStrategyBuilder = new FlexibleConnectedPositionStrategyBuilder()
             .WithLockedPosition()
             .WithViewportMargin(8)
-            .SetOrigin(_formFieldCascadingValues.FormField)
+            .SetOrigin(_formFieldCascadingValues is not null
+                ? _formFieldCascadingValues.FormField
+                : _menuTrigger)
             .WithFlexibleDimensions(false)
             .WithPositions(positions);
 
@@ -465,7 +420,7 @@
             x.AddAttribute(2, "LeftItems", LeftItems);
             x.AddAttribute(9, "ItemHeight", ItemHeight);
             x.AddAttribute(10, "BorderRadius", BorderRadius);
-            x.AddAttribute(11, "FloatingDoubleListService", _floatingDoubleListService);
+            x.AddAttribute(11, "FloatingDoubleListService", GetOrCreateService());
             x.AddAttribute(12, "ItemPrefixContent", ItemPrefixContent);
             x.AddAttribute(13, "ItemSufixContent", ItemSufixContent);
             x.AddAttribute(14, "ChildContent", ItemChildContent);
@@ -534,7 +489,7 @@
             }
         }
 
-        _floatingDoubleListService.RefreshDataLeft(items);
+        GetOrCreateService().RefreshDataLeft(items);
     }
 
     public void RefreshDataRight(List<TItem> items)
@@ -556,7 +511,7 @@
             }
         }
 
-        _floatingDoubleListService.RefreshDataRight(items);
+        GetOrCreateService().RefreshDataRight(items);
     }
 
     private void HandleOnValidationStateChanged(object sender, FieldChangedEventArgs? args)
@@ -568,6 +523,28 @@
             if (_formEventService is not null) _formEventService.RaiseError(_hasErrors && EditContext.IsModified(FieldIdentifier));
         }
     }
+
+    private FloatingDoubleListService<TItem> GetOrCreateService()
+    {
+        if (_floatingDoubleListService is null)
+        {
+            _floatingDoubleListService = new FloatingDoubleListService<TItem>();
+
+            _floatingDoubleListService.OnSelectionChange += SelectionChanged;
+
+            _floatingDoubleListService.OnSearchLeft += SearchLeft;
+
+            _floatingDoubleListService.OnSearchRight += SearchRight;
+
+            _floatingDoubleListService.OnSort += HandleSort;
+
+            _floatingDoubleListService.OnClose += CloseMenu;
+        }
+
+        return _floatingDoubleListService;
+    }
+
+    private void HandleSort(SearchModel searchModel) => _ = InvokeAsync(() => OnSort.InvokeAsync(searchModel));
 
     public void Dispose()
     {
@@ -581,7 +558,9 @@
 
             _floatingDoubleListService.OnSearchRight -= SearchRight;
 
-            _floatingDoubleListService.OnClose -= ClosenMenu;
+            _floatingDoubleListService.OnSort -= HandleSort;
+
+            _floatingDoubleListService.OnClose -= CloseMenu;
         }
 
         DisposeInputBase();

@@ -1,5 +1,13 @@
 # Changelog for Blazor Library
 
+## Version 6.0.4 (August 2026)
+
+- Fixed the Grid selection checkbox column so it uses `GridOptions.RowHeight`
+  instead of a fixed 40 px height.
+- Improved `FloatingDoubleList` service initialization, sorting callbacks,
+  selection-state handling and overlay origin fallback.
+- Removed the obsolete bundled app-skills documentation artifacts.
+
 ## Version 6.0.3 (August 2026)
 
 - Added the Modern semantic theme, including its demo asset and persisted theme

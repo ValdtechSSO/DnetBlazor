@@ -10,13 +10,13 @@
 		<Description>Set of Components for Blazor Framework</Description>
 		<Copyright>Datalnet</Copyright>
 		<PackageTags>Blazor-Components-Datalnet</PackageTags>
-		<PackageVersion>6.0.3</PackageVersion>
+		<PackageVersion>6.0.4</PackageVersion>
 		<PackageProjectUrl>https://datalnet.com/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ValdtechSSO/DnetBlazor</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
-			- Themes: Added the Modern semantic theme and support in the sample selector.
-			- Documentation: Added XML summaries for component parameters and refreshed the agent reference.
+			- Grid: The selection checkbox column now follows GridOptions.RowHeight.
+			- FloatingDoubleList: Improved service initialization, sorting callbacks and selection handling.
 		</PackageReleaseNotes>
 	</PropertyGroup>
 

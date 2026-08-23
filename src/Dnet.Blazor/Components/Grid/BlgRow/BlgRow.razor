@@ -16,6 +16,8 @@
 
 @if (GridOptions.CheckboxSelectionColumn && CheckboxSelectionPinned)
 {
+    var checkboxHeight = GridOptions.RowHeight + "px";
+
     <div class="blg-cell blg-cell-value
                 @_rowCssClasses @(RowNode.IsHovered() ? "blg-hover-class" : null)
                 @(RowNode.IsClicked() && !RowNode.IsSelected() ? "blg-row-clicked" : null)
@@ -24,7 +26,7 @@
          data-blg-row-id="@RowNode.RowNodeId"
          data-blg-row-index="@RowId"
          data-blg-row-span="1"
-         style="flex:0 0 auto; width: 40px; height: 40px; grid-column: 1/1">
+         style="flex:0 0 auto; width: 40px; height: @checkboxHeight; grid-column: 1/1">
         @if (GetDisableRow() == false)
         {
             <input type="checkbox" checked="@RowNode.IsSelected()" @onchange="CheckboxClicked" class="blg-checkbox-no-label" aria-label="@($"Seleccionar fila {RowId}")">

@@ -11,13 +11,6 @@
   border-radius: var(--dnet-dialog-border-radius, var(--dnet-sys-radius-md));
 }
 
-.dnet-panel-footer-dl {
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
 .dnet-floating-doublelist-value-wrapper {
   display: flex;
   align-items: center;
@@ -89,9 +82,6 @@
     width: 100%;
     grid-template-columns: 1fr;
     height: calc(100% - 60px);
-  }
-  .dnet-content-split-container-dl {
-    display: grid;
   }
   .dnet-split-content-left-dl,
   .dnet-split-content-right-dl {

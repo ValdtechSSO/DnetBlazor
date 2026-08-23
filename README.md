@@ -3,7 +3,7 @@
 Blazor component library for .NET 10, compatible with Blazor WebAssembly and
 interactive server-side applications.
 
-**Current version:** 6.0.3. See the [changelog](Changelog.md) for release
+**Current version:** 6.0.4. See the [changelog](Changelog.md) for release
 details.
 
 ## Components
@@ -20,7 +20,7 @@ application is available at [datalnet.com](https://www.datalnet.com).
 Install the package:
 
 ```bash
-dotnet add package Dnet.Blazor --version 6.0.3
+dotnet add package Dnet.Blazor --version 6.0.4
 ```
 
 Register the services in `Program.cs`:
@@ -62,11 +62,11 @@ Each release ships a machine-readable reference: every component's parameters,
 every styling token, plus setup and theming guides. Plain markdown, so it works
 with Claude, Codex, Cursor, Gemini CLI or anything else that reads project docs.
 
-**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/latest/download/dnet-blazor-agent-reference-6.0.3.zip)**
+**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/latest/download/dnet-blazor-agent-reference-6.0.4.zip)**
 — attached to every release.
 
 ```bash
-unzip dnet-blazor-agent-reference-6.0.3.zip -d docs/
+unzip dnet-blazor-agent-reference-6.0.4.zip -d docs/
 ```
 
 Then point your agent at it. The archive's `AGENTS-snippet.md` has text you can
@@ -80,6 +80,12 @@ npx degit ValdtechSSO/DnetBlazor/docs/ai/reference docs/dnet-blazor
 
 The reference is a snapshot of the version it ships with — grab the matching one
 when you upgrade the package.
+
+## What's new in 6.0.4
+
+- Fixed the Grid selection checkbox column so it respects `GridOptions.RowHeight`.
+- Improved `FloatingDoubleList` service initialization, sorting callbacks and
+  selection state handling.
 
 ## What's new in 6.0.3
 

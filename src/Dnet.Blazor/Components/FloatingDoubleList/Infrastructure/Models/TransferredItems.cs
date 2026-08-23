@@ -2,7 +2,7 @@
 
 public class TransferredItems<TItem>
 {
-    public List<TItem> RighItems = new();
+    public List<TItem> RightItems = new();
 
     public List<TItem> RightAddedItems = new();
 

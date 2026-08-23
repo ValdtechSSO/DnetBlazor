@@ -27,7 +27,8 @@
                 <DnetList TItem="TItem" @ref="_leftComponent" Items="_leftItems"
                     OnSelectionChange="LeftSelectionChanged" OnDrop="LeftDrop" OnTransfer="LeftTransfer"
                     ListOptions="@_leftListOptions" ListItemContent="ListItemContent"
-                    ItemPrefixContent="ItemPrefixContent" ItemSufixContent="ItemSufixContent" OnSearch="SearchLeft">
+                    ItemPrefixContent="ItemPrefixContent" ItemSufixContent="ItemSufixContent" OnSearch="SearchLeft"
+                    PlaceHolder="@_leftPlaceHolder" Label="@_leftLabel" OnSort="SortLeft">
                 </DnetList>
             </div>
             <div class="dnet-double-list-controls-dl">
@@ -36,7 +37,8 @@
                 <DnetList TItem="TItem" @ref="_rightComponent" Items="_rightItems"
                     OnSelectionChange="RightSelectionChanged" OnDrop="RightDrop" OnTransfer="RightTransfer"
                     ListOptions="@_rightListOptions" ListItemContent="ListItemContent"
-                    ItemPrefixContent="ItemPrefixContent" ItemSufixContent="ItemSufixContent" OnSearch="SearchRight">
+                    ItemPrefixContent="ItemPrefixContent" ItemSufixContent="ItemSufixContent" OnSearch="SearchRight"
+                    PlaceHolder="@_rightPlaceHolder" Label="@_rightLabel" OnSort="SortRight">
                 </DnetList>
             </div>
         </div>
@@ -140,13 +142,9 @@
 
     private string? _leftPlaceHolder { get; set; }
 
-    private string? _leftHint { get; set; }
-
     private string? _leftLabel { get; set; }
 
     private string? _rightPlaceHolder { get; set; }
-
-    private string? _rightHint { get; set; }
 
     private string? _rightLabel { get; set; }
 
@@ -155,9 +153,11 @@
 
     protected override void OnInitialized()
     {
-        _leftItems = LeftItems;
+        var sourceLeft = new List<TItem>(LeftItems ?? Enumerable.Empty<TItem>());
 
-        _rightItems = RightItems;
+        _leftItems = new List<TItem>(sourceLeft);
+
+        _rightItems = new List<TItem>(RightItems ?? Enumerable.Empty<TItem>());
 
         for (int i = _leftItems.Count - 1; i >= 0; i--)
         {
@@ -167,15 +167,15 @@
             }
         }
 
-        _leftBkItems = new List<TItem>(LeftItems);
+        _leftBkItems = new List<TItem>(sourceLeft);
 
-        _rightBkItems = new List<TItem>(RightItems);
+        _rightBkItems = new List<TItem>(_rightItems);
 
-        _leftListOptions = LeftListOptions;
+        _leftListOptions = CloneListOptions(LeftListOptions);
         _leftListOptions.ContainerName = "LeftContainer";
         _leftListOptions.ConnectedTo = "RghtContainer";
 
-        _rightListOptions = RightListOptions;
+        _rightListOptions = CloneListOptions(RightListOptions);
         _rightListOptions.ContainerName = "RghtContainer";
         _rightListOptions.ConnectedTo = "LeftContainer";
 
@@ -185,19 +185,17 @@
 
             _leftLabel = SearchControlOptions.LeftLabel;
 
-            _leftHint = SearchControlOptions.LeftHint;
-
             _rightPlaceHolder = SearchControlOptions.RightPlaceHolder;
 
             _rightLabel = SearchControlOptions.RightLabel;
-
-            _rightHint = SearchControlOptions.RightHint;
         }
     }
 
     protected override void OnAfterRender(bool firstRender)
     {
         if (!firstRender) return;
+
+        if (FloatingDoubleListService is null) return;
 
         FloatingDoubleListService.OnRefreshDataRight += RefreshDataRight;
 
@@ -268,7 +266,7 @@
 
         var transferredItems = new TransferredItems<TItem>()
             {
-                RighItems = _rightItems,
+                RightItems = _rightItems,
                 RightAddedItems = _rightAddedItems,
                 RightRemovedItems = _rightRemovedItems,
                 LeftItems = _leftItems,
@@ -276,7 +274,7 @@
                 LeftRemovedItems = _leftRemovedItems
             };
 
-        FloatingDoubleListService.UpdateTransferredItems(transferredItems);
+        FloatingDoubleListService?.UpdateTransferredItems(transferredItems);
     }
 
     private void RightToLeft()
@@ -309,7 +307,7 @@
 
         var transferredItems = new TransferredItems<TItem>()
             {
-                RighItems = _rightItems,
+                RightItems = _rightItems,
                 RightAddedItems = _rightAddedItems,
                 RightRemovedItems = _rightRemovedItems,
                 LeftItems = _leftItems,
@@ -317,53 +315,55 @@
                 LeftRemovedItems = _leftRemovedItems
             };
 
-        FloatingDoubleListService.UpdateTransferredItems(transferredItems);
+        FloatingDoubleListService?.UpdateTransferredItems(transferredItems);
     }
 
     private void SearchLeft(SearchModel searchModel)
     {
-        FloatingDoubleListService.SearchLeft(searchModel);
+        FloatingDoubleListService?.SearchLeft(searchModel);
     }
 
     private void SearchRight(SearchModel searchModel)
     {
-        FloatingDoubleListService.SearchRight(searchModel);
+        FloatingDoubleListService?.SearchRight(searchModel);
+    }
+
+    private void SortLeft(SearchModel searchModel)
+    {
+        FloatingDoubleListService?.Sort(searchModel);
+    }
+
+    private void SortRight(SearchModel searchModel)
+    {
+        FloatingDoubleListService?.Sort(searchModel);
     }
 
     public void RefreshDataLeft(List<TItem> items)
     {
-        for (int i = items.Count - 1; i >= 0; i--)
-        {
-            if (_rightItems.Contains(items[i], EqualityComparer))
-            {
-                items.RemoveAt(i);
-            }
-        }
+        var filtered = items?
+            .Where(i => !_rightItems.Contains(i, EqualityComparer))
+            .ToList() ?? new();
 
-        _leftItems = items;
+        _leftItems = filtered;
 
-        _leftBkItems = new List<TItem>(items);
+        _leftBkItems = new List<TItem>(filtered);
 
-        _leftComponent.SetRowData(items);
+        _leftComponent.SetRowData(filtered);
 
         StateHasChanged();
     }
 
     public void RefreshDataRight(List<TItem> items)
     {
-        for (int i = items.Count - 1; i >= 0; i--)
-        {
-            if (_leftItems.Contains(items[i], EqualityComparer))
-            {
-                items.RemoveAt(i);
-            }
-        }
+        var filtered = items?
+            .Where(i => !_leftItems.Contains(i, EqualityComparer))
+            .ToList() ?? new();
 
-        _rightItems = items;
+        _rightItems = filtered;
 
-        _rightBkItems = new List<TItem>(items);
+        _rightBkItems = new List<TItem>(filtered);
 
-        _rightComponent.SetRowData(items);
+        _rightComponent.SetRowData(filtered);
 
         StateHasChanged();
     }
@@ -376,6 +376,42 @@
     private void ToggleListView()
     {
         isActive = !isActive;
+    }
+
+    private static ListOptions<TItem> CloneListOptions(ListOptions<TItem>? source)
+    {
+        var clone = new ListOptions<TItem>();
+
+        if (source is null) return clone;
+
+        clone.DisplayValueConverter = source.DisplayValueConverter;
+        clone.SupportTextValueConverter = source.SupportTextValueConverter;
+        clone.SortedData = source.SortedData;
+        clone.SearchValueConverter = source.SearchValueConverter;
+        clone.DisableItem = source.DisableItem;
+        clone.HeaderText = source.HeaderText;
+        clone.SearchInputPlaceHolder = source.SearchInputPlaceHolder;
+        clone.SearchInputLabel = source.SearchInputLabel;
+        clone.ItemSize = source.ItemSize;
+        clone.MultiSelect = source.MultiSelect;
+        clone.DebounceTime = source.DebounceTime;
+        clone.EnableServerSide = source.EnableServerSide;
+        clone.EnableSearching = source.EnableSearching;
+        clone.EnableSorting = source.EnableSorting;
+        clone.PageSize = source.PageSize;
+        clone.EnablePagingination = source.EnablePagingination;
+        clone.CheckboxSelectionColumn = source.CheckboxSelectionColumn;
+        clone.ShowHeader = source.ShowHeader;
+        clone.ShowFooter = source.ShowFooter;
+        clone.ContainerName = source.ContainerName;
+        clone.ConnectedTo = source.ConnectedTo;
+        clone.ServerSideSortColumn = source.ServerSideSortColumn;
+        clone.ServerSideSearchColumns = source.ServerSideSearchColumns is null
+            ? null
+            : new List<string>(source.ServerSideSearchColumns);
+        clone.ServerSideSortOrder = source.ServerSideSortOrder;
+
+        return clone;
     }
 
     public void Dispose()

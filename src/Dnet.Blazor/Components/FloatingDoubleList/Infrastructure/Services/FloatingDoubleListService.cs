@@ -1,4 +1,4 @@
-﻿using Dnet.Blazor.Components.FloatingDoubleList.Infrastructure.Models;
+using Dnet.Blazor.Components.FloatingDoubleList.Infrastructure.Models;
 using Dnet.Blazor.Infrastructure.Models.SearchModels;
 
 namespace Dnet.Blazor.Components.FloatingDoubleList.Infrastructure.Services;
@@ -10,6 +10,8 @@ public class FloatingDoubleListService<TItem>
     public event Action<SearchModel>? OnSearchLeft;
 
     public event Action<SearchModel>? OnSearchRight;
+
+    public event Action<SearchModel>? OnSort;
 
     public event Action<List<TItem>>? OnRefreshDataLeft;
 
@@ -30,6 +32,11 @@ public class FloatingDoubleListService<TItem>
     public void SearchRight(SearchModel searchModel)
     {
         OnSearchRight?.Invoke(searchModel);
+    }
+
+    public void Sort(SearchModel searchModel)
+    {
+        OnSort?.Invoke(searchModel);
     }
 
     public void RefreshDataLeft(List<TItem> items)
