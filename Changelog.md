@@ -1,5 +1,10 @@
 # Changelog for Blazor Library
 
+## Version 6.0.7 (August 2026)
+
+- Fixed grouped Grid rows and the grouping placeholder column so they respect
+  `GridOptions.RowHeight` instead of `GroupGridColumn.Height`.
+
 ## Version 6.0.6 (August 2026)
 
 - The grid row node exposes `FocusAsync` for accessible focus restoration. Consumers must supply a fallback when a virtualized, filtered, or deleted row is no longer rendered.

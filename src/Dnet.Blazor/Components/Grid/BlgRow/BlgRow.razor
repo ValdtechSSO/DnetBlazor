@@ -39,7 +39,7 @@
     @if (HasGrouping && GridColumns.Any() && Pinned == Pinned.None)
     {
         var width = GroupGridColumn.Width + "px";
-        var height = GroupGridColumn.Height + "px";
+        var height = GridOptions.RowHeight + "px";
 
         <div class="blg-cell blg-cell-value
                       @_rowCssClasses @(RowNode.IsHovered() ? "blg-hover-class" : null)
@@ -181,7 +181,7 @@ else
     @if (HasGrouping && GridColumns.Any() && Pinned == Pinned.None)
     {
         var width = GroupGridColumn.Width + "px";
-        var height = GroupGridColumn.Height + "px";
+        var height = GridOptions.RowHeight + "px";
         var paddingLeft = 30 * (RowNode.Level - 1) + "px";
         var iconClass = RowNode.Expanded ? "blg-icon-tree-open" : "blg-icon-tree-closed";
         var checkboxCounter = GridOptions.CheckboxSelectionColumn && CheckboxSelectionPinned ? 1 : 0;
