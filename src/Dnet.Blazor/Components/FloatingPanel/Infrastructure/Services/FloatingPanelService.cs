@@ -27,10 +27,9 @@ namespace Dnet.Blazor.Components.FloatingPanel.Infrastructure.Services
 
         private OverlayReference Open(Type componentType, IDictionary<string, object> parameters, FloatingPanelConfig floatingPanelConfig)
         {
-            if (!typeof(ComponentBase).IsAssignableFrom(componentType) && componentType != null)
-            {
-                throw new ArgumentException($"{componentType.FullName} must be a Blazor Component");
-            }
+            EnsureComponentType(componentType);
+
+            var content = new FloatingPanelContent(componentType, parameters);
 
             var globalPositionStrategy = new GlobalPositionStrategyBuilder();
 
@@ -108,6 +107,15 @@ namespace Dnet.Blazor.Components.FloatingPanel.Infrastructure.Services
                 CloseOnEscape = floatingPanelConfig.CloseOnEscape,
                 CloseOnOutsidePointer = !floatingPanelConfig.HasBackdrop && floatingPanelConfig.CloseOnOutsidePointer,
                 ScrollStrategy = OverlayScrollStrategy.Block,
+                Role = floatingPanelConfig.Role,
+                AriaLabel = floatingPanelConfig.AriaLabel,
+                AriaLabelledBy = floatingPanelConfig.AriaLabelledBy,
+                AriaDescribedBy = floatingPanelConfig.AriaDescribedBy,
+                AriaLive = floatingPanelConfig.AriaLive,
+                AriaAtomic = floatingPanelConfig.AriaAtomic,
+                TrapFocus = floatingPanelConfig.TrapFocus,
+                RestoreFocus = floatingPanelConfig.RestoreFocus,
+                InitialFocusSelector = floatingPanelConfig.InitialFocusSelector,
                 Width = floatingPanelConfig.Width == null ? "100vw" : floatingPanelConfig.Width + "px",
                 Height = floatingPanelConfig.Height == null ? "100vh" : floatingPanelConfig.Height + "px",
                 PanelClass = floatingPanelConfig.PanelClass,
@@ -120,15 +128,38 @@ namespace Dnet.Blazor.Components.FloatingPanel.Infrastructure.Services
             var floatingPanel = new RenderFragment(x =>
             {
                 x.OpenComponent(0, typeof(DnetFloatingPanel));
-                x.AddAttribute(1, "ComponentType", componentType);
-                x.AddAttribute(2, "Parameters", parameters);
+                x.AddAttribute(1, "ComponentType", content.ComponentType);
+                x.AddAttribute(2, "Parameters", content.Parameters);
                 x.AddAttribute(3, "FloatingPanelClass", floatingPanelConfig.FloatingPanelClass);
                 x.CloseComponent();
             });
 
             var overlayReference = _overlayService.Attach(floatingPanel, overlayConfig);
+            overlayReference.SetContentUpdater((updatedComponentType, updatedParameters) =>
+            {
+                EnsureComponentType(updatedComponentType);
+                content.ComponentType = updatedComponentType;
+                content.Parameters = updatedParameters;
+            });
 
             return overlayReference;
+        }
+
+        private static void EnsureComponentType(Type componentType)
+        {
+            if (!typeof(ComponentBase).IsAssignableFrom(componentType))
+            {
+                throw new ArgumentException($"{componentType.FullName} must be a Blazor Component");
+            }
+        }
+
+        private sealed class FloatingPanelContent(
+            Type componentType,
+            IDictionary<string, object> parameters)
+        {
+            public Type ComponentType { get; set; } = componentType;
+
+            public IDictionary<string, object> Parameters { get; set; } = parameters;
         }
 
         public void Close(OverlayResult overlayDataResult)

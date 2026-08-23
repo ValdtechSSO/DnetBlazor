@@ -43,6 +43,12 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Models
 
         public string? AriaDescribedBy { get; set; }
 
+        /// <summary>Optional live-region politeness applied to the overlay pane.</summary>
+        public string? AriaLive { get; set; }
+
+        /// <summary>Indicates whether live-region changes should be announced atomically.</summary>
+        public bool AriaAtomic { get; set; }
+
         public bool AriaModal { get; set; }
 
         public string? Direction { get; set; }

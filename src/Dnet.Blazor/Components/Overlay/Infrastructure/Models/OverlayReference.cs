@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Dnet.Blazor.Components.Overlay.Infrastructure.Enums;
 using Dnet.Blazor.Components.Overlay.Infrastructure.Services;
 
@@ -19,6 +20,8 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Models
         private readonly Action<int>? _requestPositionUpdate;
 
         private readonly Action<int>? _requestConfigurationUpdate;
+
+        private Action<Type, IDictionary<string, object>>? _updateContent;
 
         public bool IsAttached { get; private set; }
 
@@ -119,6 +122,31 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Models
             Config.MaxHeight = size.MaxHeight ?? Config.MaxHeight;
             _requestConfigurationUpdate?.Invoke(OverlayReferenceId);
         }
+
+        /// <summary>
+        /// Replaces the dynamic component and parameters rendered by an overlay that supports
+        /// live content updates. Returns <see langword="false"/> for other overlay types.
+        /// </summary>
+        public bool UpdateContent(
+            Type componentType,
+            IDictionary<string, object> parameters)
+        {
+            ArgumentNullException.ThrowIfNull(componentType);
+            ArgumentNullException.ThrowIfNull(parameters);
+
+            if (!IsAttached || _updateContent is null)
+            {
+                return false;
+            }
+
+            _updateContent(componentType, parameters);
+            _requestConfigurationUpdate?.Invoke(OverlayReferenceId);
+            return true;
+        }
+
+        internal void SetContentUpdater(
+            Action<Type, IDictionary<string, object>> updateContent) =>
+            _updateContent = updateContent ?? throw new ArgumentNullException(nameof(updateContent));
 
         public void Dispose() => Detach();
 

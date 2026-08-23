@@ -143,6 +143,44 @@ public sealed class OverlayServiceTests
     }
 
     [Fact]
+    public void Floating_panel_forwards_accessible_semantics_and_allows_live_content_updates()
+    {
+        var overlayService = new OverlayService();
+        OverlayConfig? attachedConfig = null;
+        var configurationUpdates = new List<int>();
+        overlayService.OnAttach += (_, config) => attachedConfig = config;
+        overlayService.OnConfigurationUpdate += configurationUpdates.Add;
+        var service = new FloatingPanelService(overlayService);
+
+        var reference = service.Show(
+            typeof(TestComponent),
+            new Dictionary<string, object> { ["Subject"] = "first" },
+            new FloatingPanelConfig
+            {
+                HasBackdrop = false,
+                Role = "complementary",
+                AriaLabelledBy = "user-drawer-title",
+                AriaLive = "polite",
+                AriaAtomic = true,
+                TrapFocus = false,
+                RestoreFocus = false
+            });
+
+        Assert.NotNull(attachedConfig);
+        Assert.False(attachedConfig!.HasBackdrop);
+        Assert.Equal("complementary", attachedConfig.Role);
+        Assert.Equal("user-drawer-title", attachedConfig.AriaLabelledBy);
+        Assert.Equal("polite", attachedConfig.AriaLive);
+        Assert.True(attachedConfig.AriaAtomic);
+        Assert.False(attachedConfig.TrapFocus);
+        Assert.False(attachedConfig.RestoreFocus);
+        Assert.True(reference.UpdateContent(
+            typeof(ReplacementComponent),
+            new Dictionary<string, object> { ["Subject"] = "second" }));
+        Assert.Equal(new[] { reference.GetOverlayReferenceId() }, configurationUpdates);
+    }
+
+    [Fact]
     public void Tooltip_show_is_idempotent_for_the_same_trigger()
     {
         var overlayService = new OverlayService();
@@ -179,6 +217,10 @@ public sealed class OverlayServiceTests
     }
 
     private sealed class TestComponent : ComponentBase
+    {
+    }
+
+    private sealed class ReplacementComponent : ComponentBase
     {
     }
 }

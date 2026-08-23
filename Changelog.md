@@ -1,7 +1,12 @@
 # Changelog for Blazor Library
 
-## Version 6.0.4 (August 2026)
+## Version 6.0.5 (August 2026)
 
+- `FloatingPanelConfig` now exposes accessible overlay semantics, live-region
+  announcements and focus-management options. Open floating panels can replace
+  their dynamic component and parameters through `OverlayReference.UpdateContent`.
+
+## Version 6.0.4 (August 2026)
 - Fixed the Grid selection checkbox column so it uses `GridOptions.RowHeight`
   instead of a fixed 40 px height.
 - Improved `FloatingDoubleList` service initialization, sorting callbacks,

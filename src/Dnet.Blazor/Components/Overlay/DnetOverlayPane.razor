@@ -15,7 +15,7 @@
 @implements IDisposable
 @implements IAsyncDisposable
 
-<div @ref="_paneReference" id="cdk-overlay-pane-@OverlayConfig.OverlayReferenceId" data-dnet-overlay-id="@OverlayConfig.OverlayReferenceId" role="@OverlayConfig.Role" aria-label="@OverlayConfig.AriaLabel" aria-labelledby="@OverlayConfig.AriaLabelledBy" aria-describedby="@OverlayConfig.AriaDescribedBy" aria-modal="@(OverlayConfig.AriaModal ? "true" : null)" dir="@OverlayConfig.Direction" tabindex="@(OverlayConfig.TrapFocus ? "-1" : null)" class="@_cssClasses" style="@(Convert.ToString(_styles, CultureInfo.InvariantCulture))">
+<div @ref="_paneReference" id="cdk-overlay-pane-@OverlayConfig.OverlayReferenceId" data-dnet-overlay-id="@OverlayConfig.OverlayReferenceId" role="@OverlayConfig.Role" aria-label="@OverlayConfig.AriaLabel" aria-labelledby="@OverlayConfig.AriaLabelledBy" aria-describedby="@OverlayConfig.AriaDescribedBy" aria-live="@OverlayConfig.AriaLive" aria-atomic="@(OverlayConfig.AriaAtomic ? "true" : null)" aria-modal="@(OverlayConfig.AriaModal ? "true" : null)" dir="@OverlayConfig.Direction" tabindex="@(OverlayConfig.TrapFocus ? "-1" : null)" class="@_cssClasses" style="@(Convert.ToString(_styles, CultureInfo.InvariantCulture))">
     <CascadingValue Value="OverlayReferenceId" IsFixed="true">
         @_contentChild
     </CascadingValue>
