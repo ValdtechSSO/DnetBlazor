@@ -144,6 +144,7 @@
              aria-rowindex="@RowId"
              aria-colindex="@cellId"
              tabindex="@(IsInitialFocusCell && cellId == 1 ? "0" : "-1")"
+             @ref="_focusElement"
              style="justify-content: @cell.AlingContent; grid-column-end: span @Math.Min(@columnSpanFn(cellParams), gridColumns.Count - i);
                                         grid-row-end: span @spanRowBy; @cellStyle"
              title="@data"
@@ -305,6 +306,8 @@ else
 
     private bool _disabledRow { get; set; }
 
+    private ElementReference _focusElement;
+
 
     public override Task SetParametersAsync(ParameterView parameters)
     {
@@ -390,6 +393,14 @@ else
     protected override void OnInitialized()
     {
         _rowCssClasses = GetRowCssClasses(RowNode, RowId);
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (RowNode is not null && !RowNode.IsGroup)
+        {
+            RowNode.SetFocusElement(_focusElement);
+        }
     }
 
     private RenderFragment CreateCellTemplateComponent(CellParams<TItem> cellParams, Type componeType) => builder =>

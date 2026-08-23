@@ -1,7 +1,11 @@
-﻿namespace Dnet.Blazor.Components.Grid.Infrastructure.Entities
+﻿using Microsoft.AspNetCore.Components;
+
+namespace Dnet.Blazor.Components.Grid.Infrastructure.Entities
 {
     public class RowNode<TItem>
     {
+        private ElementReference _focusElement;
+
         public long RowNodeId { get; set; }
 
         /// <summary>
@@ -78,9 +82,29 @@
 
         public bool First { get; set; }
 
+        /// <summary>
+        /// Gets whether the row is currently rendered and has a focusable grid cell.
+        /// </summary>
+        public bool HasFocusElement { get; private set; }
+
+        /// <summary>
+        /// Moves focus to the row's rendered grid cell.
+        /// </summary>
+        /// <remarks>
+        /// Callers must provide a fallback when the row may no longer be rendered,
+        /// such as after virtual scrolling, filtering, or deletion.
+        /// </remarks>
+        public ValueTask FocusAsync() => _focusElement.FocusAsync(preventScroll: false);
+
         public Dictionary<GridColumn<TItem>, uint>? FirstSpanRow { get; set; }
 
         public Dictionary<GridColumn<TItem>, object>? FirstSpanRowData { get; set; }
+
+        internal void SetFocusElement(ElementReference focusElement)
+        {
+            _focusElement = focusElement;
+            HasFocusElement = true;
+        }
 
        
         public bool IsSelected() {
