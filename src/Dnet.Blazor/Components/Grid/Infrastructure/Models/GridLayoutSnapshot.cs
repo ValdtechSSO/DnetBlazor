@@ -73,6 +73,44 @@ internal sealed class GridLayoutSnapshot<TItem>
         return string.Join(" ", templates);
     }
 
+    /// <summary>
+    /// Builds a shared, fixed-width template for the responsive header and
+    /// body. CSS Grid cannot infer a common content width from two independent
+    /// grid containers, so the template is calculated once from loaded rows.
+    /// </summary>
+    public string GetResponsiveContentTemplateColumns(
+        IEnumerable<RowNode<TItem>> rowNodes,
+        bool includeCheckbox,
+        bool includeGrouping,
+        int groupingColumnWidth,
+        int maximumColumnWidth,
+        out int totalWidth)
+    {
+        var templates = new List<string>(CenterColumns.Count + 2);
+        totalWidth = 0;
+
+        if (includeCheckbox)
+        {
+            templates.Add("40px");
+            totalWidth += 40;
+        }
+
+        if (includeGrouping)
+        {
+            templates.Add($"{groupingColumnWidth}px");
+            totalWidth += groupingColumnWidth;
+        }
+
+        foreach (var column in CenterColumns)
+        {
+            var width = GetResponsiveContentWidth(column, rowNodes, maximumColumnWidth);
+            templates.Add(column.CanGrow == 1 ? $"minmax({width}px, 1fr)" : $"{width}px");
+            totalWidth += width;
+        }
+
+        return string.Join(" ", templates);
+    }
+
     public static GridLayoutSnapshot<TItem> Create(List<GridColumn<TItem>> columns, GridOptions<TItem> options)
     {
         var ordered = columns.OrderBy(column => column.ColumnOrder).ToList();
@@ -115,5 +153,45 @@ internal sealed class GridLayoutSnapshot<TItem>
 
         templates.AddRange(columns.Select(column => $"{column.Width}px"));
         return string.Join(" ", templates);
+    }
+
+    private static int GetResponsiveContentWidth(
+        GridColumn<TItem> column,
+        IEnumerable<RowNode<TItem>> rowNodes,
+        int maximumColumnWidth)
+    {
+        var longestTextLength = GetHeaderTextLength(column);
+
+        foreach (var rowNode in rowNodes)
+        {
+            if (rowNode.IsGroup || rowNode.RowData is null || column.CellDataFn is null)
+            {
+                continue;
+            }
+
+            var cellParams = new CellParams<TItem>
+            {
+                RowData = rowNode.RowData,
+                GridColumn = column,
+                RowNode = rowNode
+            };
+
+            var value = column.CellDataFn(cellParams)?.ToString() ?? string.Empty;
+            longestTextLength = Math.Max(longestTextLength, value.Length);
+        }
+
+        const int cellHorizontalPadding = 24;
+        const int averageCharacterWidth = 8;
+        var requestedWidth = longestTextLength * averageCharacterWidth + cellHorizontalPadding;
+        var minimumWidth = Math.Max(column.Width, column.MinWidth ?? 0);
+        var maximumWidth = Math.Max(minimumWidth, Math.Min(maximumColumnWidth, column.MaxWidth ?? maximumColumnWidth));
+
+        return Math.Clamp(Math.Max(minimumWidth, requestedWidth), minimumWidth, maximumWidth);
+    }
+
+    private static int GetHeaderTextLength(GridColumn<TItem> column)
+    {
+        var sortAndFilterAffordanceLength = column.Sortable || column.EnableAdvancedFilter ? 4 : 0;
+        return (column.HeaderName?.Length ?? 0) + sortAndFilterAffordanceLength;
     }
 }

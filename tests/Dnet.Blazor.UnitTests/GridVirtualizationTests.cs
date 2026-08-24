@@ -8,6 +8,51 @@ namespace Dnet.Blazor.UnitTests;
 public sealed class GridVirtualizationTests
 {
     [Fact]
+    public void Responsive_content_template_uses_loaded_values_and_respects_column_caps()
+    {
+        var layoutType = typeof(BlgGrid<GridItem>).Assembly
+            .GetType("Dnet.Blazor.Components.Grid.Infrastructure.Models.GridLayoutSnapshot`1")!
+            .MakeGenericType(typeof(GridItem));
+        var columns = new List<GridColumn<GridItem>>
+        {
+            new()
+            {
+                ColumnId = 1,
+                ColumnOrder = 1,
+                HeaderName = "Name",
+                DataField = nameof(GridItem.Name),
+                Width = 100,
+                CellDataFn = parameters => parameters.RowData!.Name
+            },
+            new()
+            {
+                ColumnId = 2,
+                ColumnOrder = 2,
+                HeaderName = "Email",
+                DataField = nameof(GridItem.Email),
+                Width = 100,
+                MaxWidth = 150,
+                CellDataFn = parameters => parameters.RowData!.Email
+            }
+        };
+        var options = new GridOptions<GridItem>();
+        var layout = layoutType.GetMethod("Create", BindingFlags.Public | BindingFlags.Static)!
+            .Invoke(null, [columns, options])!;
+        var rows = new List<RowNode<GridItem>>
+        {
+            new() { RowData = new GridItem(Name: "Very long value", Email: "administrator@example.com") }
+        };
+        var arguments = new object?[] { rows, true, false, 0, 300, null };
+
+        var template = (string)layoutType
+            .GetMethod("GetResponsiveContentTemplateColumns", BindingFlags.Public | BindingFlags.Instance)!
+            .Invoke(layout, arguments)!;
+
+        Assert.Equal("40px minmax(144px, 1fr) minmax(150px, 1fr)", template);
+        Assert.Equal(334, arguments[5]);
+    }
+
+    [Fact]
     public void Default_overscan_matches_current_blazor_virtualize_default()
     {
         var options = new GridOptions<GridItem>();
@@ -114,5 +159,5 @@ public sealed class GridVirtualizationTests
     private static TResult InvokePrivateStatic<TResult>(Type type, string name, params object[] arguments) =>
         (TResult)type.GetMethod(name, BindingFlags.Static | BindingFlags.NonPublic)!.Invoke(null, arguments)!;
 
-    private sealed record GridItem(int Id);
+    private sealed record GridItem(int Id = 0, string Name = "", string Email = "");
 }

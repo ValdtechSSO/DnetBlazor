@@ -10,12 +10,12 @@
 		<Description>Set of Components for Blazor Framework</Description>
 		<Copyright>Datalnet</Copyright>
 		<PackageTags>Blazor-Components-Datalnet</PackageTags>
-		<PackageVersion>6.0.7</PackageVersion>
+		<PackageVersion>6.0.8</PackageVersion>
 		<PackageProjectUrl>https://datalnet.com/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ValdtechSSO/DnetBlazor</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
-			- Grid: Grouped rows and the grouping placeholder column now respect GridOptions.RowHeight.
+			- Grid: Mobile content-sized columns now share their widths with the header and can be capped through GridOptions.ResponsiveContentColumnMaxWidth.
 		</PackageReleaseNotes>
 	</PropertyGroup>
 

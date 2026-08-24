@@ -1,5 +1,11 @@
 # Changelog for Blazor Library
 
+## Version 6.0.8 (August 2026)
+
+- Added `GridOptions.ResponsiveContentColumnMaxWidth`. On responsive
+  viewports, it sizes unpinned columns from the loaded content, caps each width
+  at the configured value and keeps headers aligned with their cells.
+
 ## Version 6.0.7 (August 2026)
 
 - Fixed grouped Grid rows and the grouping placeholder column so they respect

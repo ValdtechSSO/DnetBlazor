@@ -30,10 +30,36 @@
         var pinnedColumnsRight = layout.PinnedRightColumns;
         var leftSpacerWith = layout.PinnedLeftWidth;
         var rightSpacerWith = layout.PinnedRightWidth + GridOptions.ScrollWidth;
+        if (_activeGroups > 0 && GroupGridColumn.Width <= 0)
+        {
+            GroupGridColumn.Width = 200;
+        }
+
+        var groupingColumnWidth = _activeGroups > 0 ? GroupGridColumn.Width : 0;
+        var centerTemplateColumns = layout.GetCenterTemplateColumns(
+            GridOptions.CheckboxSelectionColumn,
+            _activeGroups > 0,
+            groupingColumnWidth);
+        var responsiveContentCenterWidth = 0;
+        var responsiveContentTemplateColumns = GridOptions.ResponsiveContentColumnMaxWidth is > 0 and var maximumContentColumnWidth
+            ? layout.GetResponsiveContentTemplateColumns(
+                _rowNodes,
+                GridOptions.CheckboxSelectionColumn,
+                _activeGroups > 0,
+                groupingColumnWidth,
+                maximumContentColumnWidth,
+                out responsiveContentCenterWidth)
+            : null;
         var responsiveCenterWidth = notPinnedColumns.Sum(column => column.Width)
                                     + (GridOptions.CheckboxSelectionColumn ? 40 : 0)
-                                    + (_activeGroups > 0 ? Math.Max(GroupGridColumn.Width, 200) : 0);
+                                    + groupingColumnWidth;
+        responsiveCenterWidth = responsiveContentTemplateColumns is null
+            ? responsiveCenterWidth
+            : responsiveContentCenterWidth;
         var responsiveCanvasWidth = leftSpacerWith + responsiveCenterWidth + layout.PinnedRightWidth;
+        var effectiveCenterTemplateColumns = responsiveContentTemplateColumns is null
+            ? centerTemplateColumns
+            : responsiveContentTemplateColumns;
         var semanticColumnCount = notPinnedColumns.Count + (GridOptions.CheckboxSelectionColumn ? 1 : 0) + (_activeGroups > 0 ? 1 : 0);
         var semanticRowCount = GridOptions.UseVirtualization ? _itemCount : _rowNodes.Count;
 
@@ -103,14 +129,7 @@
                         }
                         <div class="blg-header-viewport" role="presentation">
                             @{
-                                if (_activeGroups > 0)
-                                {
-                                    if (GroupGridColumn.Width <= 0)
-                                    {
-                                        GroupGridColumn.Width = 200;
-                                    }
-                                }
-                                var gridTemplateColumns1 = layout.GetCenterTemplateColumns(GridOptions.CheckboxSelectionColumn, _activeGroups > 0, GroupGridColumn.Width);
+                                var gridTemplateColumns1 = effectiveCenterTemplateColumns;
 
                                 var gridTemplateRowsLeft2 = $"{GridOptions.HeaderHeight}px";
 
@@ -221,7 +240,7 @@
                             <div class="blg-center-cols-clipper" role="presentation">
                                 <div class="blg-center-cols-viewport" role="presentation" id="blg-table">
                                     @{
-                                        var gridTemplateColumns = layout.GetCenterTemplateColumns(GridOptions.CheckboxSelectionColumn, _activeGroups > 0, GroupGridColumn.Width);
+                                        var gridTemplateColumns = effectiveCenterTemplateColumns;
 
                                         if (GridOptions.UseVirtualization)
                                         {

@@ -62,6 +62,13 @@ namespace Dnet.Blazor.Components.Grid.Infrastructure.Entities
 
         public int? ColumnMaxWidth { get; set; }
 
+        /// <summary>
+        /// Enables content-based widths on responsive viewports and caps each
+        /// unpinned column at the specified number of pixels. The grid keeps
+        /// its normal flexible layout at wider viewport sizes.
+        /// </summary>
+        public int? ResponsiveContentColumnMaxWidth { get; set; }
+
         public RowSelectionType RowSelectionType { get; set; } = RowSelectionType.Single;
 
         public bool SuppressRowClickSelection { get; set; } = true;
