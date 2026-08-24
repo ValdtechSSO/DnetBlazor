@@ -1,5 +1,10 @@
 # Changelog for Blazor Library
 
+## Version 6.0.9 (August 2026)
+
+- Fixed `PickList` layouts that fill their parent height: items retain their
+  configured row height and the remaining space stays empty and scrollable.
+
 ## Version 6.0.8 (August 2026)
 
 - Added `GridOptions.ResponsiveContentColumnMaxWidth`. On responsive

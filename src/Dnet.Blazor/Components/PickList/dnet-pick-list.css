@@ -132,6 +132,7 @@
 }
 
 .dnet-pick-list-items {
+  align-content: start;
   box-sizing: border-box;
   display: grid;
   flex: 1 1 auto;

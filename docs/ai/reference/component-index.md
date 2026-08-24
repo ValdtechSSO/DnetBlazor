@@ -1,6 +1,6 @@
 # Component index
 
-Dnet.Blazor 6.0.8. One file per component under `components/`.
+Dnet.Blazor 6.0.9. One file per component under `components/`.
 Open only the one you need.
 
 | Component | Use in markup | Parameters | Styling tokens |
