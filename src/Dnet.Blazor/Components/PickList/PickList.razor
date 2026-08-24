@@ -58,7 +58,7 @@
                     <input @key="(key, _selectionRenderGeneration)"
                            type="checkbox"
                            class="dnet-pick-list-checkbox"
-                           disabled="@_isLoading"
+                           disabled="@(_isLoading || IsSelectionDisabled(item))"
                            checked="@selected"
                            @onchange="(ChangeEventArgs args) => SetSelectedAsync(key, args.Value is true)" />
                     <span class="dnet-pick-list-item-content">@ItemTemplate(item)</span>

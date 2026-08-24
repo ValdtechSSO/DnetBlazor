@@ -10,12 +10,12 @@
 		<Description>Set of Components for Blazor Framework</Description>
 		<Copyright>Datalnet</Copyright>
 		<PackageTags>Blazor-Components-Datalnet</PackageTags>
-		<PackageVersion>6.0.9</PackageVersion>
+		<PackageVersion>6.0.10</PackageVersion>
 		<PackageProjectUrl>https://datalnet.com/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ValdtechSSO/DnetBlazor</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
-			- PickList: Full-height layouts preserve the configured item height instead of stretching rows.
+			- PickList: Supports disabled items for inherited assignments that users cannot change.
 		</PackageReleaseNotes>
 	</PropertyGroup>
 

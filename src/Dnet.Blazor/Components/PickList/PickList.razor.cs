@@ -51,6 +51,10 @@ public partial class PickList<TItem, TKey> : ComponentBase, IDisposable
     [Parameter]
     public Func<TItem, string?>? SearchTextSelector { get; set; }
 
+    /// <summary>Gets or sets whether the user can change selection for an item.</summary>
+    [Parameter]
+    public Func<TItem, bool>? IsItemDisabled { get; set; }
+
     /// <summary>Gets or sets the globally selected keys.</summary>
     [Parameter]
     public IReadOnlySet<TKey> SelectedKeys { get; set; } = new HashSet<TKey>();
@@ -91,7 +95,7 @@ public partial class PickList<TItem, TKey> : ComponentBase, IDisposable
 
     private bool HasKnownPages => _filteredCount is not null;
 
-    private bool CanSelectVisible => !_isLoading && _visibleItems.Count > 0;
+    private bool CanSelectVisible => !_isLoading && _visibleItems.Any(item => !IsSelectionDisabled(item));
 
     protected override async Task OnParametersSetAsync()
     {
@@ -386,7 +390,10 @@ public partial class PickList<TItem, TKey> : ComponentBase, IDisposable
         var next = new HashSet<TKey>(SelectedKeys);
         foreach (var item in _visibleItems)
         {
-            next.Add(ItemKey(item));
+            if (!IsSelectionDisabled(item))
+            {
+                next.Add(ItemKey(item));
+            }
         }
 
         await SelectedKeysChanged.InvokeAsync(next);
@@ -395,9 +402,14 @@ public partial class PickList<TItem, TKey> : ComponentBase, IDisposable
 
     private async Task ClearSelectionAsync()
     {
-        await SelectedKeysChanged.InvokeAsync(new HashSet<TKey>());
+        var retainedDisabledKeys = (Items ?? _visibleItems)
+            .Where(IsSelectionDisabled)
+            .Select(ItemKey);
+        await SelectedKeysChanged.InvokeAsync(new HashSet<TKey>(retainedDisabledKeys));
         await InvokeAsync(StateHasChanged);
     }
+
+    private bool IsSelectionDisabled(TItem item) => IsItemDisabled?.Invoke(item) is true;
 
     private async Task SetSearchTextAsync(ChangeEventArgs args)
     {

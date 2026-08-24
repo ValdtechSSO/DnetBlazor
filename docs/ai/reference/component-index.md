@@ -1,6 +1,6 @@
 # Component index
 
-Dnet.Blazor 6.0.9. One file per component under `components/`.
+Dnet.Blazor 6.0.10. One file per component under `components/`.
 Open only the one you need.
 
 | Component | Use in markup | Parameters | Styling tokens |
@@ -25,7 +25,7 @@ Open only the one you need.
 | [List](components/List.md) | `<DnetList>` | 16 | 17 |
 | [Overlay](components/Overlay.md) | `<DnetOverlay>` | 1 | — |
 | [Paginator](components/Paginator.md) | `<DnetPaginator>` | 22 | 8 |
-| [PickList](components/PickList.md) | `<PickList>` | 11 | 18 |
+| [PickList](components/PickList.md) | `<PickList>` | 12 | 18 |
 | [RadioButton](components/RadioButton.md) | `<DnetInputRadioButton>`, `<DnetInputRadioGroup>` | 8 | 4 |
 | [Select](components/Select.md) | `<DnetSelect>` | 32 | 19 |
 | [Spinner](components/Spinner.md) | `<DnetSpinner>` | 4 | 2 |

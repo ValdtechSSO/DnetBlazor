@@ -16,6 +16,7 @@ A key-based, paged multi-selection component. Selection is controlled by Selecte
 | `ItemKey` | `Func<TItem, TKey>` | `default!` | Gets or sets the stable key selector for an item. |
 | `ItemTemplate` | `RenderFragment<TItem>` | `default!` | Gets or sets the visual content of an item. |
 | `SearchTextSelector` | `Func<TItem, string?>?` | — | Gets or sets the local-search text selector. It is required in local mode. |
+| `IsItemDisabled` | `Func<TItem, bool>?` | — | Gets or sets whether the user can change selection for an item. |
 | `SelectedKeys` | `IReadOnlySet<TKey>` | `new HashSet<TKey>()` | Gets or sets the globally selected keys. |
 | `SelectedKeysChanged` | `EventCallback<IReadOnlySet<TKey>>` | — | Raised with a new selected-key set when the user changes selection. |
 | `SearchText` | `string?` | — | Gets or sets the externally controlled search text. |

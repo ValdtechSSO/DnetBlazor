@@ -1,5 +1,10 @@
 # Changelog for Blazor Library
 
+## Version 6.0.10 (August 2026)
+
+- Added `PickList.IsItemDisabled` so callers can render inherited assignments
+  as selected but unavailable for modification.
+
 ## Version 6.0.9 (August 2026)
 
 - Fixed `PickList` layouts that fill their parent height: items retain their
