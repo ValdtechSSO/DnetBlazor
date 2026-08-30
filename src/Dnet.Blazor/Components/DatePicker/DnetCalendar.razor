@@ -1,0 +1,461 @@
+@using System.Globalization
+@using Dnet.Blazor.Components.DatePicker.Infrastructure.Enums
+@using Dnet.Blazor.Components.DatePicker.Infrastructure.Interfaces
+@using Dnet.Blazor.Components.DatePicker.Infrastructure.Models
+@using Dnet.Blazor.Components.DatePicker.Infrastructure.Services
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.JSInterop
+
+@inject IJSRuntime JSRuntime
+
+<div class="dnet-calendar @(Disabled ? "dnet-calendar-disabled" : null)" aria-label="@Labels.Calendar">
+    @if (HeaderContent is not null)
+    {
+        @HeaderContent(HeaderContext)
+    }
+    else
+    {
+        <div class="dnet-calendar-header">
+            <div class="dnet-calendar-controls">
+                <button type="button"
+                        class="dnet-calendar-period-button dnet-button"
+                        aria-label="@Labels.ChooseMonthAndYear"
+                        @onclick="ChangeViewAsync">
+                    <span class="dnet-button-wrapper">@PeriodLabel</span>
+                    <span class="dnet-calendar-arrow @(_view == DnetCalendarView.Month ? "dnet-calendar-arrow-down" : "dnet-calendar-arrow-up")"></span>
+                </button>
+                <div class="dnet-calendar-spacer"></div>
+                <button type="button"
+                        class="dnet-calendar-previous-button dnet-focus-indicator"
+                        aria-label="@Labels.PreviousPeriod"
+                        disabled="@PreviousDisabled"
+                        @onclick="PreviousAsync"></button>
+                <button type="button"
+                        class="dnet-calendar-next-button dnet-focus-indicator"
+                        aria-label="@Labels.NextPeriod"
+                        disabled="@NextDisabled"
+                        @onclick="NextAsync"></button>
+            </div>
+        </div>
+    }
+
+    @if (_view == DnetCalendarView.Month)
+    {
+        <div class="dnet-calendar-content">
+            <div class="dnet-calendar-content-header" role="row">
+                @foreach (var caption in WeekdayCaptions)
+                {
+                    <div class="dnet-calendar-content-header-item" role="columnheader" aria-label="@caption.Full">@caption.Short</div>
+                }
+            </div>
+            <div class="dnet-calendar-content-body" role="grid" aria-label="@PeriodLabel">
+                @foreach (var week in VisibleDates.Chunk(7))
+                {
+                    <div class="dnet-calendar-row" role="row">
+                        @foreach (var date in week)
+                        {
+                            var context = CreateCellContext(date);
+                            <div class="@DayContainerClass(context)" role="presentation">
+                                <button id="@CellId(date)"
+                                        type="button"
+                                        role="gridcell"
+                                        class="@DayButtonClass(context)"
+                                        tabindex="@(date == _activeDate ? 0 : -1)"
+                                        disabled="@context.IsDisabled"
+                                        aria-label="@date.ToDateTime(TimeOnly.MinValue).ToString("D", EffectiveCulture)"
+                                        aria-selected="@(context.IsSelected || context.IsInRange ? "true" : "false")"
+                                        @onclick="(() => SelectDateAsync(date))"
+                                        @onfocus="(() => _activeDate = date)"
+                                        @onpointerenter="(() => PreviewDateAsync(date))"
+                                @onkeydown="(args => HandleDateKeyDownAsync(args, date))">
+                                    @if (DayContent is not null)
+                                    {
+                                        @DayContent(context)
+                                    }
+                                    else
+                                    {
+                                        @date.Day
+                                    }
+                                </button>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else if (_view == DnetCalendarView.MultiYear)
+    {
+        <div class="dnet-calendar-content">
+            <div class="dnet-calendar-content-body-year" role="grid" aria-label="@PeriodLabel">
+                @foreach (var year in VisibleYears)
+                {
+                    <button id="@YearCellId(year)"
+                            type="button"
+                            role="gridcell"
+                            class="dnet-calendar-year-content @(year == _displayMonth.Year ? "dnet-calendar-year-selected" : null)"
+                            tabindex="@(year == _displayMonth.Year ? 0 : -1)"
+                            disabled="@IsYearDisabled(year)"
+                            @onkeydown="(args => HandleYearKeyDownAsync(args, year))"
+                            @onclick="(() => SelectYearAsync(year))">@year</button>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="dnet-calendar-content">
+            <div class="dnet-calendar-content-body-month" role="grid" aria-label="@PeriodLabel">
+                @for (var month = 1; month <= 12; month++)
+                {
+                    var monthValue = month;
+                    <button id="@MonthCellId(monthValue)"
+                            type="button"
+                            role="gridcell"
+                            class="dnet-calendar-month-content @(monthValue == _displayMonth.Month ? "dnet-calendar-month-selected" : null)"
+                            tabindex="@(monthValue == _displayMonth.Month ? 0 : -1)"
+                            disabled="@IsMonthDisabled(_displayMonth.Year, monthValue)"
+                            @onkeydown="(args => HandleMonthKeyDownAsync(args, monthValue))"
+                            @onclick="(() => SelectMonthAsync(monthValue))">
+                        @EffectiveCulture.DateTimeFormat.GetAbbreviatedMonthName(monthValue)
+                    </button>
+                }
+            </div>
+        </div>
+    }
+
+    @if (FooterContent is not null)
+    {
+        <div class="dnet-calendar-footer">@FooterContent</div>
+    }
+</div>
+
+@code {
+    private readonly string _id = $"dnet-calendar-{Guid.NewGuid():N}";
+    private readonly IDnetDateRangeSelectionStrategy _defaultStrategy = new DefaultDateRangeSelectionStrategy();
+    private DateOnly _displayMonth;
+    private DateOnly _activeDate;
+    private DnetCalendarView _view;
+    private bool _initialized;
+
+    [Parameter] public DateOnly? Value { get; set; }
+    [Parameter] public DnetDateRange? Range { get; set; }
+    [Parameter] public DnetDateRange? PreviewRange { get; set; }
+    [Parameter] public DnetDateRange? ComparisonRange { get; set; }
+    [Parameter] public bool RangeSelection { get; set; }
+    [Parameter] public DateOnly? Min { get; set; }
+    [Parameter] public DateOnly? Max { get; set; }
+    [Parameter] public DateOnly? StartAt { get; set; }
+    [Parameter] public DnetCalendarView StartView { get; set; } = DnetCalendarView.Month;
+    [Parameter] public DayOfWeek? FirstDayOfWeek { get; set; }
+    [Parameter] public CultureInfo? Culture { get; set; }
+    [Parameter] public Func<DateOnly, bool>? IsDateEnabled { get; set; }
+    [Parameter] public Func<DateOnly, string?>? DateClass { get; set; }
+    [Parameter] public IDnetDateRangeSelectionStrategy? RangeSelectionStrategy { get; set; }
+    [Parameter] public DnetDatePickerLabels Labels { get; set; } = new();
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public bool AutoFocus { get; set; }
+    [Parameter] public RenderFragment<DnetCalendarCellContext>? DayContent { get; set; }
+    [Parameter] public RenderFragment<DnetCalendarHeaderContext>? HeaderContent { get; set; }
+    [Parameter] public RenderFragment? FooterContent { get; set; }
+    [Parameter] public EventCallback<DateOnly?> ValueChanged { get; set; }
+    [Parameter] public EventCallback<DateOnly> DateSelected { get; set; }
+    [Parameter] public EventCallback<DnetDateRange> RangeChanged { get; set; }
+    [Parameter] public EventCallback<DnetDateRange> PreviewRangeChanged { get; set; }
+    [Parameter] public EventCallback<int> YearSelected { get; set; }
+    [Parameter] public EventCallback<DateOnly> MonthSelected { get; set; }
+    [Parameter] public EventCallback<DnetCalendarView> ViewChanged { get; set; }
+    [Parameter] public EventCallback EscapePressed { get; set; }
+
+    private CultureInfo EffectiveCulture => Culture ?? CultureInfo.CurrentCulture;
+    private DayOfWeek EffectiveFirstDay => FirstDayOfWeek ?? EffectiveCulture.DateTimeFormat.FirstDayOfWeek;
+    private IDnetDateRangeSelectionStrategy EffectiveStrategy => RangeSelectionStrategy ?? _defaultStrategy;
+    private int PageStartYear => _displayMonth.Year - ((_displayMonth.Year - 1) % 24);
+    private IReadOnlyList<int> VisibleYears => Enumerable.Range(PageStartYear, 24).ToArray();
+    private string PeriodLabel => _view switch
+    {
+        DnetCalendarView.Month => _displayMonth.ToDateTime(TimeOnly.MinValue).ToString("Y", EffectiveCulture),
+        DnetCalendarView.Year => _displayMonth.Year.ToString(EffectiveCulture),
+        _ => $"{PageStartYear} – {PageStartYear + 23}"
+    };
+
+    private DnetCalendarHeaderContext HeaderContext => new(
+        PeriodLabel, _view, PreviousDisabled, NextDisabled, PreviousAsync, NextAsync, ChangeViewAsync);
+
+    private bool PreviousDisabled => Disabled || _view switch
+    {
+        DnetCalendarView.Month => Min.HasValue && EndOfMonth(_displayMonth.AddMonths(-1)) < Min,
+        DnetCalendarView.Year => Min.HasValue && _displayMonth.Year - 1 < Min.Value.Year,
+        _ => Min.HasValue && PageStartYear - 24 + 23 < Min.Value.Year
+    };
+
+    private bool NextDisabled => Disabled || _view switch
+    {
+        DnetCalendarView.Month => Max.HasValue && StartOfMonth(_displayMonth.AddMonths(1)) > Max,
+        DnetCalendarView.Year => Max.HasValue && _displayMonth.Year + 1 > Max.Value.Year,
+        _ => Max.HasValue && PageStartYear + 24 > Max.Value.Year
+    };
+
+    private IReadOnlyList<(string Short, string Full)> WeekdayCaptions
+    {
+        get
+        {
+            var result = new List<(string, string)>(7);
+            for (var offset = 0; offset < 7; offset++)
+            {
+                var day = (DayOfWeek)(((int)EffectiveFirstDay + offset) % 7);
+                result.Add((EffectiveCulture.DateTimeFormat.GetShortestDayName(day), EffectiveCulture.DateTimeFormat.GetDayName(day)));
+            }
+
+            return result;
+        }
+    }
+
+    private IReadOnlyList<DateOnly> VisibleDates
+    {
+        get
+        {
+            var first = StartOfMonth(_displayMonth);
+            var leading = ((int)first.DayOfWeek - (int)EffectiveFirstDay + 7) % 7;
+            var start = first.AddDays(-leading);
+            return Enumerable.Range(0, 42).Select(start.AddDays).ToArray();
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (Min.HasValue && Max.HasValue && Min > Max)
+        {
+            throw new ArgumentException("Calendar Min cannot be later than Max.");
+        }
+
+        if (!_initialized)
+        {
+            var initial = StartAt ?? Value ?? Range?.Start ?? DateOnly.FromDateTime(DateTime.Today);
+            _displayMonth = StartOfMonth(Clamp(initial));
+            _activeDate = Clamp(Value ?? Range?.End ?? Range?.Start ?? initial);
+            _view = StartView;
+            _initialized = true;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && AutoFocus)
+        {
+            await FocusActiveAsync();
+        }
+    }
+
+    private DnetCalendarCellContext CreateCellContext(DateOnly date)
+    {
+        var range = Range?.Normalize() ?? new DnetDateRange();
+        var preview = PreviewRange?.Normalize() ?? new DnetDateRange();
+        var comparison = ComparisonRange?.Normalize() ?? new DnetDateRange();
+        return new DnetCalendarCellContext(
+            date,
+            IsDisabled(date),
+            date == DateOnly.FromDateTime(DateTime.Today),
+            Value == date,
+            range.Start == date,
+            range.End == date,
+            range.Contains(date),
+            preview.Contains(date),
+            comparison.Contains(date));
+    }
+
+    private string DayContainerClass(DnetCalendarCellContext context)
+    {
+        var classes = new List<string> { "dnet-calendar-day" };
+        if (context.Date.Month != _displayMonth.Month) classes.Add("dnet-calendar-day-outside");
+        if (context.IsInRange) classes.Add("dnet-calendar-day-in-range");
+        if (context.IsInPreview) classes.Add("dnet-calendar-day-in-preview");
+        if (context.IsInComparisonRange) classes.Add("dnet-calendar-day-in-comparison");
+        if (context.IsInRange && context.IsInComparisonRange) classes.Add("dnet-calendar-day-in-overlap");
+        if (context.IsRangeStart) classes.Add("dnet-calendar-day-range-start");
+        if (context.IsRangeEnd) classes.Add("dnet-calendar-day-range-end");
+        return string.Join(" ", classes);
+    }
+
+    private string DayButtonClass(DnetCalendarCellContext context)
+    {
+        var classes = new List<string> { "dnet-calendar-day-content" };
+        if (context.IsToday) classes.Add("dnet-calendar-day-today");
+        if (context.IsSelected || context.IsRangeStart || context.IsRangeEnd) classes.Add("dnet-calendar-day-selected");
+        if (context.IsDisabled) classes.Add("disabled");
+        var custom = DateClass?.Invoke(context.Date);
+        if (!string.IsNullOrWhiteSpace(custom)) classes.Add(custom);
+        return string.Join(" ", classes);
+    }
+
+    private async Task SelectDateAsync(DateOnly date)
+    {
+        if (IsDisabled(date)) return;
+        _activeDate = date;
+        if (RangeSelection)
+        {
+            await RangeChanged.InvokeAsync(EffectiveStrategy.SelectionFinished(date, Range ?? new DnetDateRange()));
+            await PreviewRangeChanged.InvokeAsync(new DnetDateRange());
+        }
+        else
+        {
+            await ValueChanged.InvokeAsync(date);
+            await DateSelected.InvokeAsync(date);
+        }
+    }
+
+    private async Task PreviewDateAsync(DateOnly date)
+    {
+        if (!RangeSelection || IsDisabled(date)) return;
+        await PreviewRangeChanged.InvokeAsync(EffectiveStrategy.CreatePreview(date, Range ?? new DnetDateRange()));
+    }
+
+    private async Task HandleDateKeyDownAsync(KeyboardEventArgs args, DateOnly date)
+    {
+        var target = date;
+        switch (args.Key)
+        {
+            case "ArrowLeft": target = date.AddDays(EffectiveCulture.TextInfo.IsRightToLeft ? 1 : -1); break;
+            case "ArrowRight": target = date.AddDays(EffectiveCulture.TextInfo.IsRightToLeft ? -1 : 1); break;
+            case "ArrowUp": target = date.AddDays(-7); break;
+            case "ArrowDown": target = date.AddDays(7); break;
+            case "Home": target = date.AddDays(-(((int)date.DayOfWeek - (int)EffectiveFirstDay + 7) % 7)); break;
+            case "End": target = date.AddDays(6 - (((int)date.DayOfWeek - (int)EffectiveFirstDay + 7) % 7)); break;
+            case "PageUp": target = args.AltKey ? date.AddYears(-1) : date.AddMonths(-1); break;
+            case "PageDown": target = args.AltKey ? date.AddYears(1) : date.AddMonths(1); break;
+            case "Enter":
+            case " ": await SelectDateAsync(date); return;
+            case "Escape": await EscapePressed.InvokeAsync(); return;
+            default: return;
+        }
+
+        target = Clamp(target);
+        _activeDate = target;
+        _displayMonth = StartOfMonth(target);
+        await InvokeAsync(StateHasChanged);
+        await FocusActiveAsync();
+    }
+
+    private async Task PreviousAsync()
+    {
+        if (PreviousDisabled) return;
+        _displayMonth = _view switch
+        {
+            DnetCalendarView.Month => _displayMonth.AddMonths(-1),
+            DnetCalendarView.Year => _displayMonth.AddYears(-1),
+            _ => _displayMonth.AddYears(-24)
+        };
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task NextAsync()
+    {
+        if (NextDisabled) return;
+        _displayMonth = _view switch
+        {
+            DnetCalendarView.Month => _displayMonth.AddMonths(1),
+            DnetCalendarView.Year => _displayMonth.AddYears(1),
+            _ => _displayMonth.AddYears(24)
+        };
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task ChangeViewAsync()
+    {
+        _view = _view switch
+        {
+            DnetCalendarView.Month => DnetCalendarView.MultiYear,
+            DnetCalendarView.MultiYear => DnetCalendarView.Month,
+            _ => DnetCalendarView.MultiYear
+        };
+        await ViewChanged.InvokeAsync(_view);
+    }
+
+    private async Task SelectYearAsync(int year)
+    {
+        _displayMonth = new DateOnly(year, Math.Min(_displayMonth.Month, 12), 1);
+        await YearSelected.InvokeAsync(year);
+        _view = DnetCalendarView.Year;
+        await ViewChanged.InvokeAsync(_view);
+    }
+
+    private async Task SelectMonthAsync(int month)
+    {
+        _displayMonth = new DateOnly(_displayMonth.Year, month, 1);
+        await MonthSelected.InvokeAsync(_displayMonth);
+        _view = DnetCalendarView.Month;
+        await ViewChanged.InvokeAsync(_view);
+    }
+
+    private async Task HandleYearKeyDownAsync(KeyboardEventArgs args, int year)
+    {
+        var target = args.Key switch
+        {
+            "ArrowLeft" => year + (EffectiveCulture.TextInfo.IsRightToLeft ? 1 : -1),
+            "ArrowRight" => year + (EffectiveCulture.TextInfo.IsRightToLeft ? -1 : 1),
+            "ArrowUp" => year - 4,
+            "ArrowDown" => year + 4,
+            "Home" => PageStartYear,
+            "End" => PageStartYear + 23,
+            "PageUp" => year - 24,
+            "PageDown" => year + 24,
+            "Escape" => year,
+            _ => int.MinValue
+        };
+        if (args.Key == "Escape") { await EscapePressed.InvokeAsync(); return; }
+        if (target == int.MinValue) return;
+        target = Math.Clamp(target, Min?.Year ?? 1, Max?.Year ?? 9999);
+        _displayMonth = new DateOnly(target, _displayMonth.Month, 1);
+        await InvokeAsync(StateHasChanged);
+        await JSRuntime.InvokeVoidAsync("dnetinterop.focusElementById", YearCellId(target));
+    }
+
+    private async Task HandleMonthKeyDownAsync(KeyboardEventArgs args, int month)
+    {
+        var delta = args.Key switch
+        {
+            "ArrowLeft" => EffectiveCulture.TextInfo.IsRightToLeft ? 1 : -1,
+            "ArrowRight" => EffectiveCulture.TextInfo.IsRightToLeft ? -1 : 1,
+            "ArrowUp" => -4,
+            "ArrowDown" => 4,
+            "Home" => 1 - month,
+            "End" => 12 - month,
+            _ => 0
+        };
+        if (args.Key == "Escape") { await EscapePressed.InvokeAsync(); return; }
+        if (delta == 0) return;
+        var targetMonth = Math.Clamp(month + delta, 1, 12);
+        var targetDate = StartOfMonth(Clamp(new DateOnly(_displayMonth.Year, targetMonth, 1)));
+        _displayMonth = targetDate;
+        await InvokeAsync(StateHasChanged);
+        await JSRuntime.InvokeVoidAsync("dnetinterop.focusElementById", MonthCellId(targetDate.Month));
+    }
+
+    private bool IsDisabled(DateOnly date) => Disabled ||
+        (Min.HasValue && date < Min) ||
+        (Max.HasValue && date > Max) ||
+        (IsDateEnabled is not null && !IsDateEnabled(date));
+
+    private bool IsYearDisabled(int year) =>
+        (Min.HasValue && year < Min.Value.Year) || (Max.HasValue && year > Max.Value.Year);
+
+    private bool IsMonthDisabled(int year, int month)
+    {
+        var first = new DateOnly(year, month, 1);
+        return (Min.HasValue && EndOfMonth(first) < Min) || (Max.HasValue && first > Max);
+    }
+
+    private DateOnly Clamp(DateOnly date)
+    {
+        if (Min.HasValue && date < Min) return Min.Value;
+        if (Max.HasValue && date > Max) return Max.Value;
+        return date;
+    }
+
+    private string CellId(DateOnly date) => $"{_id}-{date:yyyyMMdd}";
+    private string YearCellId(int year) => $"{_id}-year-{year}";
+    private string MonthCellId(int month) => $"{_id}-month-{month}";
+    private ValueTask FocusActiveAsync() => JSRuntime.InvokeVoidAsync("dnetinterop.focusElementById", CellId(_activeDate));
+    private static DateOnly StartOfMonth(DateOnly date) => new(date.Year, date.Month, 1);
+    private static DateOnly EndOfMonth(DateOnly date) => new(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month));
+}

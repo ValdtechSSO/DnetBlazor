@@ -1,0 +1,458 @@
+@using System.Diagnostics.CodeAnalysis
+@using System.Globalization
+@using Dnet.Blazor.Components.DatePicker.Infrastructure.Enums
+@using Dnet.Blazor.Components.DatePicker.Infrastructure.Interfaces
+@using Dnet.Blazor.Components.DatePicker.Infrastructure.Models
+@using Dnet.Blazor.Components.DatePicker.Infrastructure.Services
+@using Dnet.Blazor.Components.Form
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Enums
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Interfaces
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Models
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Services
+@using Dnet.Blazor.Infrastructure.Forms
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Rendering
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.JSInterop
+
+@inherits Dnet.Blazor.Infrastructure.Forms.DnetInputBase<DnetDateRange?>
+@implements IDisposable
+
+@inject IOverlayService OverlayService
+@inject IJSRuntime JSRuntime
+
+<div @attributes="AdditionalAttributes"
+     class="dnet-date-range-inputs @CssClass"
+     role="group"
+     aria-label="@Labels.Calendar">
+    <input @ref="StartElement"
+           class="mat-input-element dnet-date-range-start"
+           type="text"
+           autocomplete="off"
+           value="@_startText"
+           placeholder="@StartPlaceholder"
+           aria-label="@Labels.StartDate"
+           aria-haspopup="dialog"
+           aria-expanded="@(IsOpen ? "true" : "false")"
+           disabled="@Disabled"
+           readonly="@ReadOnly"
+           required="@Required"
+           @onfocusin="OpenOnFocusAsync"
+           @onclick="HandleInputClickAsync"
+           @onfocus="HandleFocus"
+           @onblur="HandleBlur"
+           @oninput="HandleStartInputAsync"
+           @onkeydown="HandleKeyDownAsync" />
+    <span class="dnet-date-range-separator" aria-hidden="true">–</span>
+    <input @ref="EndElement"
+           class="mat-input-element dnet-date-range-end"
+           type="text"
+           autocomplete="off"
+           value="@_endText"
+           placeholder="@EndPlaceholder"
+           aria-label="@Labels.EndDate"
+           aria-haspopup="dialog"
+           aria-expanded="@(IsOpen ? "true" : "false")"
+           disabled="@Disabled"
+           readonly="@ReadOnly"
+           required="@Required"
+           @onfocusin="OpenOnFocusAsync"
+           @onclick="HandleInputClickAsync"
+           @onfocus="HandleFocus"
+           @onblur="HandleBlur"
+           @oninput="HandleEndInputAsync"
+           @onkeydown="HandleKeyDownAsync" />
+</div>
+
+@code {
+    private const char Separator = '|';
+    private readonly IDnetDateRangeSelectionStrategy _defaultStrategy = new DefaultDateRangeSelectionStrategy();
+    private OverlayReference? _menuReference;
+    private IFormEventService? _formEventService;
+    private DnetDateRange _pendingRange = new();
+    private DnetDateRange _previewRange = new();
+    private DnetDateRange? _lastValue;
+    private string _startText = string.Empty;
+    private string _endText = string.Empty;
+    private bool _previousDisabled;
+    private bool _overlayUsesTouch;
+    private bool _hasInputFocus;
+    private DateTime _suppressFocusOpenUntilUtc;
+
+    [CascadingParameter] private FormFieldCascadingValues? FormFieldValues { get; set; }
+    [CascadingParameter(Name = "DnetThemeScope")] private string? ThemeScope { get; set; }
+
+    public ElementReference StartElement { get; private set; }
+    public ElementReference EndElement { get; private set; }
+    public bool IsOpen { get; private set; }
+
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public bool ReadOnly { get; set; }
+    [Parameter] public bool Required { get; set; }
+    [Parameter] public bool CalendarDisabled { get; set; }
+    [Parameter] public bool ToggleDisabled { get; set; }
+    [Parameter] public bool OpenOnFocus { get; set; } = true;
+    [Parameter] public string Format { get; set; } = "yyyy/MM/dd";
+    [Parameter] public IReadOnlyList<string>? Formats { get; set; }
+    [Parameter] public CultureInfo? Culture { get; set; }
+    [Parameter] public DateOnly? Min { get; set; }
+    [Parameter] public DateOnly? Max { get; set; }
+    [Parameter] public DateOnly? StartAt { get; set; }
+    [Parameter] public Func<DateOnly, bool>? IsDateEnabled { get; set; }
+    [Parameter] public DnetDateRange? ComparisonRange { get; set; }
+    [Parameter] public IDnetDateRangeSelectionStrategy? SelectionStrategy { get; set; }
+    [Parameter] public DnetCalendarView StartView { get; set; } = DnetCalendarView.Month;
+    [Parameter] public DayOfWeek? FirstDayOfWeek { get; set; }
+    [Parameter] public Func<DateOnly, string?>? DateClass { get; set; }
+    [Parameter] public RenderFragment<DnetCalendarCellContext>? DayContent { get; set; }
+    [Parameter] public RenderFragment<DnetCalendarHeaderContext>? HeaderContent { get; set; }
+    [Parameter] public RenderFragment? FooterContent { get; set; }
+    [Parameter] public string? StartPlaceholder { get; set; }
+    [Parameter] public string? EndPlaceholder { get; set; }
+    [Parameter] public DnetDatePickerLabels Labels { get; set; } = new();
+    [Parameter] public bool ShowActions { get; set; } = true;
+    [Parameter] public bool TouchUi { get; set; }
+    [Parameter] public bool Responsive { get; set; } = true;
+    [Parameter] public int ResponsiveBreakpoint { get; set; } = 600;
+    [Parameter] public bool RestoreFocus { get; set; } = true;
+    [Parameter] public string? PanelClass { get; set; }
+    [Parameter] public string? PanelStyle { get; set; }
+    [Parameter] public EventCallback<DnetDateRange?> OnRangeInput { get; set; }
+    [Parameter] public EventCallback<DnetDateRange?> OnRangeChange { get; set; }
+    [Parameter] public EventCallback<DateOnly?> OnStartDateChange { get; set; }
+    [Parameter] public EventCallback<DateOnly?> OnEndDateChange { get; set; }
+    [Parameter] public EventCallback<int> OnYearSelected { get; set; }
+    [Parameter] public EventCallback<DateOnly> OnMonthSelected { get; set; }
+    [Parameter] public EventCallback<DnetCalendarView> OnViewChanged { get; set; }
+    [Parameter] public EventCallback OnOpened { get; set; }
+    [Parameter] public EventCallback OnClosed { get; set; }
+    [Parameter] public EventCallback<string> OnError { get; set; }
+
+    private CultureInfo EffectiveCulture => Culture ?? CultureInfo.CurrentCulture;
+    private string[] AcceptedFormats => new[] { Format }.Concat(Formats ?? []).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct(StringComparer.Ordinal).ToArray();
+
+    protected override void OnInitialized()
+    {
+        _formEventService = FormFieldValues?.FormEventService;
+        _formEventService?.RaiseCurrentValue(FormatValueAsString(CurrentValue));
+        _formEventService?.RaiseDisabledEvent(Disabled);
+        if (_formEventService is not null)
+        {
+            _formEventService.OnClearContent += ClearInput;
+            _formEventService.OnSufixContentClicked += HandleSuffixClicked;
+        }
+        if (EditContext is not null) EditContext.OnFieldChanged += HandleFieldChanged;
+        _previousDisabled = Disabled;
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (string.IsNullOrWhiteSpace(Format)) throw new ArgumentException("DateRangePicker Format cannot be empty.", nameof(Format));
+        if (Min.HasValue && Max.HasValue && Min > Max) throw new ArgumentException("DateRangePicker Min cannot be later than Max.");
+        if (ResponsiveBreakpoint < 1) throw new ArgumentOutOfRangeException(nameof(ResponsiveBreakpoint));
+        if (!Equals(_lastValue, Value))
+        {
+            _lastValue = Value;
+            _startText = FormatDate(Value?.Start);
+            _endText = FormatDate(Value?.End);
+        }
+        if (_previousDisabled != Disabled)
+        {
+            _previousDisabled = Disabled;
+            _formEventService?.RaiseDisabledEvent(Disabled);
+            if (Disabled) DetachMenu();
+        }
+    }
+
+    protected override string? FormatValueAsString(DnetDateRange? value) => value is null
+        ? string.Empty
+        : $"{FormatDate(value.Start)}{Separator}{FormatDate(value.End)}";
+
+    protected override bool TryParseValueFromString(string? value, out DnetDateRange? result, [NotNullWhen(false)] out string? validationErrorMessage)
+    {
+        var parts = (value ?? string.Empty).Split(Separator, 2);
+        var startText = parts.ElementAtOrDefault(0) ?? string.Empty;
+        var endText = parts.ElementAtOrDefault(1) ?? string.Empty;
+        if (!TryParseOptionalDate(startText, out var start, out validationErrorMessage) ||
+            !TryParseOptionalDate(endText, out var end, out validationErrorMessage))
+        {
+            result = null;
+            return false;
+        }
+        if (start.HasValue && end.HasValue && start > end)
+        {
+            result = null;
+            validationErrorMessage = "The end date cannot be earlier than the start date.";
+            return false;
+        }
+        result = new DnetDateRange(start, end);
+        validationErrorMessage = null;
+        return true;
+    }
+
+    public async Task OpenAsync()
+    {
+        if (IsOpen || Disabled || ToggleDisabled) return;
+        var touch = TouchUi || (Responsive && await JSRuntime.InvokeAsync<bool>("dnetinterop.matchesMedia", $"(max-width: {ResponsiveBreakpoint}px)"));
+        _overlayUsesTouch = touch;
+        _pendingRange = Value ?? new DnetDateRange();
+        _previewRange = new DnetDateRange();
+        var config = CreateOverlayConfig(touch);
+        _menuReference = OverlayService.Attach(builder => BuildPanel(builder, touch), config);
+        _menuReference.Close += HandleOverlayClosed;
+        IsOpen = true;
+        await OnOpened.InvokeAsync();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public Task CloseAsync() { DetachMenu(); return Task.CompletedTask; }
+    public Task ToggleAsync() => IsOpen ? CloseAsync() : OpenAsync();
+
+    private OverlayConfig CreateOverlayConfig(bool touch)
+    {
+        var panelClass = string.Join(" ", new[] { "dnet-datepicker-overlay dnet-date-range-overlay", touch ? "dnet-datepicker-overlay-touch" : null, PanelClass }.Where(x => !string.IsNullOrWhiteSpace(x)));
+        if (touch)
+        {
+            return new OverlayConfig
+            {
+                HasBackdrop = true, ScrollStrategy = OverlayScrollStrategy.Block, CloseOnEscape = true,
+                Role = "dialog", AriaModal = true, AriaLabel = Labels.Calendar, TrapFocus = true,
+                Direction = EffectiveCulture.TextInfo.IsRightToLeft ? "rtl" : "ltr",
+                RestoreFocus = RestoreFocus, InitialFocusSelector = "[role='gridcell'][tabindex='0']",
+                PositionStrategy = PositionStrategy.Global,
+                GlobalPositionStrategy = new GlobalPositionStrategyBuilder().CenterHorizontally("0").CenterVertically("0"),
+                Width = "min(100% - 24px, 360px)", MaxHeight = "calc(100dvh - 24px)",
+                PanelClass = panelClass, PanelStyle = PanelStyle, ComponentType = ComponentType.DatePicker, ThemeScope = ThemeScope
+            };
+        }
+        var origin = FormFieldValues?.FormField ?? StartElement;
+        var positions = new List<ConnectedPosition>
+        {
+            new() { OriginX = HorizontalConnectionPos.Start, OriginY = VerticalConnectionPos.Bottom, OverlayX = HorizontalConnectionPos.Start, OverlayY = VerticalConnectionPos.Top, OffsetY = 6 },
+            new() { OriginX = HorizontalConnectionPos.Start, OriginY = VerticalConnectionPos.Top, OverlayX = HorizontalConnectionPos.Start, OverlayY = VerticalConnectionPos.Bottom, OffsetY = -6 },
+            new() { OriginX = HorizontalConnectionPos.End, OriginY = VerticalConnectionPos.Bottom, OverlayX = HorizontalConnectionPos.End, OverlayY = VerticalConnectionPos.Top, OffsetY = 6 }
+        };
+        return new OverlayConfig
+        {
+            HasBackdrop = true, HasTransparentBackdrop = true, CloseOnEscape = true,
+            ScrollStrategy = OverlayScrollStrategy.Reposition, Role = "dialog", AriaLabel = Labels.Calendar,
+            Direction = EffectiveCulture.TextInfo.IsRightToLeft ? "rtl" : "ltr",
+            RestoreFocus = RestoreFocus, PositionStrategy = PositionStrategy.FlexibleConnectedTo,
+            FlexibleConnectedPositionStrategyBuilder = new FlexibleConnectedPositionStrategyBuilder().WithLockedPosition().WithViewportMargin(8).SetOrigin(origin).WithFlexibleDimensions(false).WithPositions(positions),
+            Width = "var(--dnet-datepicker-panel-width, 296px)", MaxHeight = "calc(100vh - 16px)",
+            PanelClass = panelClass, PanelStyle = PanelStyle, ComponentType = ComponentType.DatePicker, ThemeScope = ThemeScope
+        };
+    }
+
+    private void BuildPanel(RenderTreeBuilder builder, bool touch)
+    {
+        var sequence = 0;
+        builder.OpenComponent<DnetDatePickerPanel>(sequence++);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.Range), _pendingRange);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.PreviewRange), _previewRange);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.ComparisonRange), ComparisonRange);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.RangeSelection), true);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.Min), Min);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.Max), Max);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.StartAt), StartAt);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.StartView), StartView);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.FirstDayOfWeek), FirstDayOfWeek);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.Culture), EffectiveCulture);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.IsDateEnabled), IsDateEnabled);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.DateClass), DateClass);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.RangeSelectionStrategy), SelectionStrategy ?? _defaultStrategy);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.Labels), Labels);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.Disabled), CalendarDisabled);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.TouchUi), touch);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.ShowActions), ShowActions || touch);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.ShowReset), false);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.DayContent), DayContent);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.HeaderContent), HeaderContent);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.FooterContent), FooterContent);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.RangeChanged), EventCallback.Factory.Create<DnetDateRange>(this, HandleRangeSelectedAsync));
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.PreviewRangeChanged), EventCallback.Factory.Create<DnetDateRange>(this, HandlePreviewChanged));
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.YearSelected), OnYearSelected);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.MonthSelected), OnMonthSelected);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.ViewChanged), OnViewChanged);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.RangeApplied), EventCallback.Factory.Create<DnetDateRange>(this, ApplyRangeAsync));
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.Cancel), EventCallback.Factory.Create(this, CloseAsync));
+        builder.CloseComponent();
+    }
+
+    private async Task HandleRangeSelectedAsync(DnetDateRange range)
+    {
+        _pendingRange = range;
+        _previewRange = new DnetDateRange();
+        if (range.IsComplete && !ShowActions && !_overlayUsesTouch)
+        {
+            await CommitRangeAsync(range);
+            DetachMenu(CloseReason.Ok);
+        }
+    }
+
+    private void HandlePreviewChanged(DnetDateRange range)
+    {
+        _previewRange = range;
+    }
+
+    private async Task ApplyPendingAsync()
+    {
+        if (!_pendingRange.IsComplete)
+        {
+            await RaiseErrorAsync("Select both a start and an end date.");
+            return;
+        }
+        await CommitRangeAsync(_pendingRange.Normalize());
+        DetachMenu(CloseReason.Ok);
+    }
+
+    private async Task ApplyRangeAsync(DnetDateRange range)
+    {
+        _pendingRange = range;
+        await ApplyPendingAsync();
+    }
+
+    private async Task CommitRangeAsync(DnetDateRange range)
+    {
+        CurrentValue = range;
+        _lastValue = range;
+        _startText = FormatDate(range.Start);
+        _endText = FormatDate(range.End);
+        _formEventService?.RaiseCurrentValue(FormatValueAsString(range));
+        await OnStartDateChange.InvokeAsync(range.Start);
+        await OnEndDateChange.InvokeAsync(range.End);
+        await OnRangeChange.InvokeAsync(range);
+        UpdateErrorState();
+    }
+
+    private async Task HandleStartInputAsync(ChangeEventArgs args)
+    {
+        if (Disabled || ReadOnly) return;
+        _startText = args.Value?.ToString() ?? string.Empty;
+        await ParseTypedRangeAsync();
+    }
+
+    private async Task HandleEndInputAsync(ChangeEventArgs args)
+    {
+        if (Disabled || ReadOnly) return;
+        _endText = args.Value?.ToString() ?? string.Empty;
+        await ParseTypedRangeAsync();
+    }
+
+    private async Task ParseTypedRangeAsync()
+    {
+        var combined = $"{_startText}{Separator}{_endText}";
+        CurrentValueAsString = combined;
+        _formEventService?.RaiseCurrentValue(combined);
+        if (TryParseValueFromString(combined, out var range, out var error))
+        {
+            _lastValue = range;
+            await OnRangeInput.InvokeAsync(range);
+        }
+        else
+        {
+            await RaiseErrorAsync(error!);
+        }
+        UpdateErrorState();
+    }
+
+    private async Task HandleKeyDownAsync(KeyboardEventArgs args)
+    {
+        if (args.Key == "ArrowDown" && !IsOpen) await OpenAsync();
+        else if (args.Key == "Escape" && IsOpen) await CloseAsync();
+        else if (args.Key == "Enter" && TryParseValueFromString($"{_startText}{Separator}{_endText}", out var range, out _) && range is not null)
+        {
+            await CommitRangeAsync(range);
+            if (range.IsComplete) DetachMenu(CloseReason.Ok);
+        }
+    }
+
+    private async Task OpenOnFocusAsync()
+    {
+        if (!OpenOnFocus) return;
+        if (DateTime.UtcNow < _suppressFocusOpenUntilUtc) return;
+        await Task.Delay(50);
+        if (DateTime.UtcNow < _suppressFocusOpenUntilUtc) return;
+        if (_hasInputFocus && !IsOpen) await OpenAsync();
+    }
+    private Task HandleInputClickAsync() => OpenOnFocus ? OpenAsync() : Task.CompletedTask;
+    private void HandleFocus()
+    {
+        _hasInputFocus = true;
+        _formEventService?.RaiseFocus(true);
+    }
+    private void HandleBlur()
+    {
+        _hasInputFocus = false;
+        _formEventService?.RaiseFocus(!string.IsNullOrWhiteSpace(_startText) || !string.IsNullOrWhiteSpace(_endText));
+        UpdateErrorState();
+    }
+    private void HandleSuffixClicked() { if (!Disabled && !ToggleDisabled) _ = InvokeAsync(ToggleAsync); }
+    private void ClearInput() => _ = InvokeAsync(ResetAsync);
+
+    private async Task ResetAsync()
+    {
+        CurrentValue = null;
+        _lastValue = null;
+        _pendingRange = new DnetDateRange();
+        _startText = _endText = string.Empty;
+        _formEventService?.RaiseCurrentValue(string.Empty);
+        _formEventService?.RaiseFocus(false);
+        await OnRangeChange.InvokeAsync(null);
+        DetachMenu(CloseReason.Ok);
+        StateHasChanged();
+    }
+
+    private bool TryParseOptionalDate(string text, out DateOnly? result, out string? error)
+    {
+        if (string.IsNullOrWhiteSpace(text)) { result = null; error = null; return true; }
+        if (!DateOnly.TryParseExact(text, AcceptedFormats, EffectiveCulture, DateTimeStyles.AllowWhiteSpaces, out var date) &&
+            !DateOnly.TryParse(text, EffectiveCulture, DateTimeStyles.AllowWhiteSpaces, out date))
+        {
+            result = null; error = $"Enter a valid date using {string.Join(", ", AcceptedFormats)}."; return false;
+        }
+        if (Min.HasValue && date < Min) { result = null; error = $"Date must be on or after {FormatDate(Min)}."; return false; }
+        if (Max.HasValue && date > Max) { result = null; error = $"Date must be on or before {FormatDate(Max)}."; return false; }
+        if (IsDateEnabled is not null && !IsDateEnabled(date)) { result = null; error = "This date is not available."; return false; }
+        result = date; error = null; return true;
+    }
+
+    private string FormatDate(DateOnly? date) => date?.ToDateTime(TimeOnly.MinValue).ToString(Format, EffectiveCulture) ?? string.Empty;
+    private async Task RaiseErrorAsync(string message) { if (OnError.HasDelegate) await OnError.InvokeAsync(message); }
+    private void HandleFieldChanged(object? sender, FieldChangedEventArgs args) { if (args.FieldIdentifier.Equals(FieldIdentifier)) UpdateErrorState(); }
+    private void UpdateErrorState()
+    {
+        if (EditContext is null) return;
+        _formEventService?.RaiseError(EditContext.GetValidationMessages(FieldIdentifier).Any() && EditContext.IsModified(FieldIdentifier));
+    }
+    private void HandleOverlayClosed(OverlayResult result)
+    {
+        SuppressFocusReopen();
+        IsOpen = false;
+        if (_menuReference is not null) { _menuReference.Close -= HandleOverlayClosed; _menuReference = null; }
+        _ = InvokeAsync(async () => { await OnClosed.InvokeAsync(); StateHasChanged(); });
+    }
+    private void DetachMenu(CloseReason reason = CloseReason.Cancel)
+    {
+        if (_menuReference is null) { IsOpen = false; return; }
+        SuppressFocusReopen();
+        var reference = _menuReference;
+        reference.Close -= HandleOverlayClosed;
+        _menuReference = null;
+        IsOpen = false;
+        reference.Detach(reason);
+        _ = InvokeAsync(async () => { await OnClosed.InvokeAsync(); StateHasChanged(); });
+    }
+    private void SuppressFocusReopen() => _suppressFocusOpenUntilUtc = DateTime.UtcNow.AddMilliseconds(300);
+    public void Dispose()
+    {
+        if (_menuReference is not null) { _menuReference.Close -= HandleOverlayClosed; _menuReference.Detach(); }
+        if (EditContext is not null) EditContext.OnFieldChanged -= HandleFieldChanged;
+        if (_formEventService is not null)
+        {
+            _formEventService.OnClearContent -= ClearInput;
+            _formEventService.OnSufixContentClicked -= HandleSuffixClicked;
+        }
+        DisposeInputBase();
+    }
+}

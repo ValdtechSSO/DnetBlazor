@@ -6,7 +6,7 @@
 @using Microsoft.AspNetCore.Components.Web
 
 <div class="dnet-datepickerweek-content">
-    <div class="dnet-calendar" style="height: 290px; width: 226px;">
+    <div class="dnet-calendar dnet-datepickerweek-calendar">
         <div class="dnet-datepickerweekca-header">
             <div class="dnet-datepickerweekca-controls">
                 <button type="button" class="dnet-datepickerweekca-period-button dnet-button" @onclick="ChangeView">
@@ -27,16 +27,8 @@
                     <div class="dnet-datepickerweekca-arrow @(_activeView == 1 ? "dnet-datepickerweekca-arrow-up" : "dnet-datepickerweekca-arrow-down")"></div>
                 </button>
                 <div class="dnet-datepickerweekca-spacer"></div>
-                <button type="button" class="dnet-datepickerweekca-previous-button dnet-focus-indicator dnet-icon-button" @onclick="CalendarPrevious" disabled="@(_activeView == 3)">
-                    <span class="dnet-button-wrapper"></span>
-                    <div class="dnet-ripple dnet-button-ripple dnet-button-ripple-round"></div>
-                    <div class="dnet-button-focus-overlay"></div>
-                </button>
-                <button type="button" class="dnet-datepickerweekca-next-button dnet-focus-indicator dnet-icon-button" @onclick="CalendarNext" disabled="@(_activeView == 3)">
-                    <span class="dnet-button-wrapper"></span>
-                    <div class="dnet-ripple dnet-button-ripple dnet-button-ripple-round"></div>
-                    <div class="dnet-button-focus-overlay"></div>
-                </button>
+                <button type="button" class="dnet-datepickerweekca-previous-button dnet-focus-indicator" @onclick="CalendarPrevious" disabled="@(_activeView == 3)"></button>
+                <button type="button" class="dnet-datepickerweekca-next-button dnet-focus-indicator" @onclick="CalendarNext" disabled="@(_activeView == 3)"></button>
             </div>
         </div>
         @switch (_activeView)

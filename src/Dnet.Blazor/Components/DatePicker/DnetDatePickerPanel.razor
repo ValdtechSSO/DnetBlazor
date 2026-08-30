@@ -1,465 +1,195 @@
-﻿@using System.Globalization
+@using System.Globalization
+@using Microsoft.AspNetCore.Components.Web
 @using Dnet.Blazor.Components.DatePicker.Infrastructure.Enums
+@using Dnet.Blazor.Components.DatePicker.Infrastructure.Interfaces
 @using Dnet.Blazor.Components.DatePicker.Infrastructure.Models
 @using Dnet.Blazor.Components.DatePicker.Infrastructure.Services
-@using Microsoft.AspNetCore.Components.Forms
-@using Microsoft.AspNetCore.Components.Web
 
-<div class="dnet-datepicker-content" style="border-radius:@BorderRadius;">
-    <div class="dnet-calendar" style="height: 354px; width: 296px;">
-        <div class="dnet-calendar-header">
-            <div class="dnet-calendar-controls">
-                <button type="button" class="dnet-calendar-period-button dnet-button" @onclick="ChangeView">
-                    <span class="dnet-button-wrapper">
-                        @switch (_activeView)
-                        {
-                            case 1:
-                                <span>@_workingMonthName @_workingYear</span>
-                                break;
-                            case 2:
-                                @_yearRange
-                                break;
-                            case 3:
-                                @_yearLabelInMonths
-                                break;
-                        }
-                    </span>
-                    <div class="dnet-calendar-arrow @(_activeView == 1 ? "dnet-calendar-arrow-up" : "dnet-calendar-arrow-down")"></div>
-                </button>
-                <div class="dnet-calendar-spacer"></div>
-                <button type="button" class="dnet-calendar-previous-button dnet-focus-indicator dnet-icon-button" @onclick="CalendarPrevious" disabled="@(_activeView == 3)">
-                    <span class="dnet-button-wrapper"></span>
-                    <div class="dnet-ripple dnet-button-ripple dnet-button-ripple-round"></div>
-                    <div class="dnet-button-focus-overlay"></div>
-                </button>
-                <button type="button" class="dnet-calendar-next-button dnet-focus-indicator dnet-icon-button" @onclick="CalendarNext" disabled="@(_activeView == 3)">
-                    <span class="dnet-button-wrapper"></span>
-                    <div class="dnet-ripple dnet-button-ripple dnet-button-ripple-round"></div>
-                    <div class="dnet-button-focus-overlay"></div>
-                </button>
-            </div>
+<div class="dnet-datepicker-content @(TouchUi ? "dnet-datepicker-touch" : null)">
+    <DnetCalendar Value="_localValue"
+                  Range="_localRange"
+                  PreviewRange="_localPreviewRange"
+                  ComparisonRange="ComparisonRange"
+                  RangeSelection="RangeSelection"
+                  Min="Min"
+                  Max="Max"
+                  StartAt="StartAt"
+                  StartView="StartView"
+                  FirstDayOfWeek="FirstDayOfWeek"
+                  Culture="Culture"
+                  IsDateEnabled="EffectiveDateFilter"
+                  DateClass="DateClass"
+                  RangeSelectionStrategy="RangeSelectionStrategy"
+                  Labels="Labels"
+                  Disabled="Disabled"
+                  AutoFocus="AutoFocus"
+                  DayContent="DayContent"
+                  HeaderContent="HeaderContent"
+                  DateSelected="HandleDateSelectedAsync"
+                  RangeChanged="HandleRangeChangedAsync"
+                  PreviewRangeChanged="HandlePreviewChangedAsync"
+                  YearSelected="YearSelected"
+                  MonthSelected="MonthSelected"
+                  ViewChanged="ViewChanged"
+                  EscapePressed="Cancel">
+        <FooterContent>
+            @if (FooterContent is not null)
+            {
+                @FooterContent
+            }
+        </FooterContent>
+    </DnetCalendar>
+
+    @if (ShowActions)
+    {
+        <div class="dnet-datepicker-actions">
+            <button type="button" class="dnet-datepicker-action dnet-datepicker-action-secondary" @onclick="HandleCancelAsync">@Labels.Cancel</button>
+            <button type="button" class="dnet-datepicker-action dnet-datepicker-action-primary" @onclick="HandleApplyClickAsync">@Labels.Apply</button>
         </div>
-        @switch (_activeView)
-        {
-            case 1:
-                <div class="dnet-calendar-content">
-                    <div class="dnet-calendar-content-header">
-                        @foreach (var caption in _dayNameCaptionsLarge)
-                        {
-                            <div class="dnet-calendar-content-header-item">@caption</div>
-                        }
-                    </div>
-                    <div class="dnet-calendar-content-body">
-                        @if (_dayColumnSpan > 0)
-                        {
-                            <div style="grid-column: 1/@_dayColumnSpan"></div>
-                        }
-                        @foreach (var day in _days)
-                        {
-                            <div class="dnet-calendar-day" @onclick="(() => SelectDay(day))">
-                                <span class="dnet-calendar-day-content @(day.IsToday ? "dnet-calendar-day-today" : null)
-                                                                       @(day.IsSelected ? "dnet-calendar-day-selected" : null)
-                                                                       @(EvaluateMinMaxDates(day) ? "disabled" : null)">
-                                    @day.DayNumber
-                                </span>
-                            </div>
-                        }
-                    </div>
-                </div>
-                break;
-            case 2:
-                <div class="dnet-calendar-content">
-                    <div class="dnet-calendar-content-body-year">
-                        @foreach (var year in _years)
-                        {
-                            <div class="dnet-calendar-year" @onclick="(() => SelectYear(year))">
-                                <span class="dnet-calendar-year-content @(year == _workingYear ? "dnet-calendar-year-today" : null)
-                                                                        @(year == _tempWorkingYear ? "dnet-calendar-year-selected" : null)
-                                                                        @(((_minCalendarDay != null && year < _minCalendarDay.Year) || (_maxCalendarDay != null && year > _maxCalendarDay.Year))  ? "disabled" : null)">
-                                    @year
-                                </span>
-                            </div>
-                        }
-                    </div>
-                </div>
-                break;
-            case 3:
-                <div class="dnet-calendar-content">
-                    <div class="dnet-calendar-content-body-month">
-                        @foreach (var month in _months)
-                        {
-                            var key = month.Key;
-                            var value = month.Value;
-
-                            <div class="dnet-calendar-month" @onclick="(() => SelectMonth(key))">
-                                <span class="dnet-calendar-month-content @(EvaluateMinMaxMonths(key, _tempWorkingYear)  ? "disabled" : null)">@month.Value</span>
-                            </div>
-                        }
-                    </div>
-                </div>
-                break;
-        }
+    }
+    else if (ShowReset)
+    {
         <div class="dnet-calendar-header-footer">
-            <div class="dnet-datepicker-reset-button-wrapper" @onclick="ResetCalendar">
-                <div class="dnet-datepicker-reset-image-wrapper">
-                    <span class="dnet-datepicker-icon dnet-datepicker-reset-button" unselectable="on"></span>
-                </div>
-                <span class="dnet-datepicker-reset-test">Reset</span>
-            </div>
+            <button type="button" class="dnet-datepicker-reset-button-wrapper" @onclick="ResetAsync">
+                <span class="dnet-datepicker-icon dnet-datepicker-reset-button" aria-hidden="true"></span>
+                <span>@Labels.Reset</span>
+            </button>
         </div>
-    </div>
+    }
 </div>
 
 @code {
+    private DateOnly? _localValue;
+    private DnetDateRange _localRange = new();
+    private DnetDateRange _localPreviewRange = new();
+    private bool _initialized;
 
-    /// <summary>Gets or sets the date picker service used by this component.</summary>
-    [Parameter]
-    public DatePickerService? DatePickerService { get; set; }
+    [Parameter] public DateOnly? Value { get; set; }
+    [Parameter] public DnetDateRange? Range { get; set; }
+    [Parameter] public DnetDateRange? PreviewRange { get; set; }
+    [Parameter] public DnetDateRange? ComparisonRange { get; set; }
+    [Parameter] public bool RangeSelection { get; set; }
+    [Parameter] public DateOnly? Min { get; set; }
+    [Parameter] public DateOnly? Max { get; set; }
+    [Parameter] public DateOnly? StartAt { get; set; }
+    [Parameter] public DnetCalendarView StartView { get; set; }
+    [Parameter] public DayOfWeek? FirstDayOfWeek { get; set; }
+    [Parameter] public CultureInfo? Culture { get; set; }
+    [Parameter] public Func<DateOnly, bool>? IsDateEnabled { get; set; }
+    [Parameter] public Func<DateOnly, string?>? DateClass { get; set; }
+    [Parameter] public IDnetDateRangeSelectionStrategy? RangeSelectionStrategy { get; set; }
+    [Parameter] public DnetDatePickerLabels Labels { get; set; } = new();
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public bool AutoFocus { get; set; } = true;
+    [Parameter] public bool TouchUi { get; set; }
+    [Parameter] public bool ShowActions { get; set; }
+    [Parameter] public bool ShowReset { get; set; } = true;
+    [Parameter] public RenderFragment<DnetCalendarCellContext>? DayContent { get; set; }
+    [Parameter] public RenderFragment<DnetCalendarHeaderContext>? HeaderContent { get; set; }
+    [Parameter] public RenderFragment? FooterContent { get; set; }
+    [Parameter] public EventCallback<DateOnly> DateSelected { get; set; }
+    [Parameter] public EventCallback<DnetDateRange> RangeChanged { get; set; }
+    [Parameter] public EventCallback<DnetDateRange> PreviewRangeChanged { get; set; }
+    [Parameter] public EventCallback<int> YearSelected { get; set; }
+    [Parameter] public EventCallback<DateOnly> MonthSelected { get; set; }
+    [Parameter] public EventCallback<DnetCalendarView> ViewChanged { get; set; }
+    [Parameter] public EventCallback<DateOnly?> DateApplied { get; set; }
+    [Parameter] public EventCallback<DnetDateRange> RangeApplied { get; set; }
+    [Parameter] public EventCallback Apply { get; set; }
+    [Parameter] public EventCallback Cancel { get; set; }
+    [Parameter] public EventCallback Reset { get; set; }
 
-    /// <summary>Gets or sets the selected day used by this component.</summary>
-    [Parameter]
-    public CalendarDay? SelectedDay { get; set; }
+    // Legacy panel parameters retained for source compatibility.
+    [Parameter] public DatePickerService? DatePickerService { get; set; }
+    [Parameter] public CalendarDay? SelectedDay { get; set; }
+    [Parameter] public DateTime? MaxDayValue { get; set; }
+    [Parameter] public DateTime? MinDayValue { get; set; }
+    [Parameter] public DateTime? FirstDayToShow { get; set; }
+    [Parameter] public Func<CalendarDay, bool>? DatepickerFilter { get; set; }
+    [Parameter] public string? BorderRadius { get; set; }
 
-    /// <summary>Gets or sets the max day value used by this component.</summary>
-    [Parameter]
-    public DateTime? MaxDayValue { get; set; }
-
-    /// <summary>Gets or sets the min day value used by this component.</summary>
-    [Parameter]
-    public DateTime? MinDayValue { get; set; }
-
-    /// <summary>Gets or sets the first day to show used by this component.</summary>
-    [Parameter]
-    public DateTime? FirstDayToShow { get; set; }
-
-    /// <summary>Gets or sets the datepicker filter used by this component.</summary>
-    [Parameter]
-    public Func<CalendarDay, bool>? DatepickerFilter { get; set; }
-
-    /// <summary>Gets or sets the border radius used by this component.</summary>
-    [Parameter]
-    public string BorderRadius { get; set; } = "0px";
-
-
-    public List<CalendarDay> _days { get; set; } = new List<CalendarDay>();
-
-    private int _dayColumnSpan = 0;
-
-    private List<string> _dayNameCaptionsShort = new List<string> { "S", "M", "T", "W", "T", "F", "S" };
-
-    private List<string> _dayNameCaptionsLarge = new List<string> { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-
-    private int _workingYear { get; set; }
-
-    private int _tempWorkingYear { get; set; }
-
-    private int _workingMonth { get; set; }
-
-    private string? _workingMonthName { get; set; }
-
-    private List<int> _years { get; set; } = new();
-
-    private Dictionary<int, string> _months { get; set; } = new();
-
-    private int _activeView { get; set; } = (int)ActiveViewType.Day;
-
-    private string? _yearRange { get; set; }
-
-    private int _yearLabelInMonths { get; set; }
-
-    private CalendarDay? _minCalendarDay { get; set; }
-
-    private CalendarDay? _maxCalendarDay { get; set; }
-
-
-    protected override void OnInitialized()
+    private Func<DateOnly, bool> EffectiveDateFilter => date =>
     {
-        var today = FirstDayToShow ?? DateTime.Now;
+        if (IsDateEnabled is not null && !IsDateEnabled(date)) return false;
+        if (DatepickerFilter is null) return true;
+        return !DatepickerFilter(ToCalendarDay(date));
+    };
 
-        if (MinDayValue != null) _minCalendarDay = GetCalendarDay((DateTime)MinDayValue);
-
-        if (MaxDayValue != null) _maxCalendarDay = GetCalendarDay((DateTime)MaxDayValue);
-
-        if (SelectedDay.DayNumber < 1)
+    protected override void OnParametersSet()
+    {
+        Value ??= SelectedDay is { DayNumber: > 0 }
+            ? new DateOnly(SelectedDay.Year, SelectedDay.Month, SelectedDay.DayNumber)
+            : null;
+        Min ??= MinDayValue.HasValue ? DateOnly.FromDateTime(MinDayValue.Value) : null;
+        Max ??= MaxDayValue.HasValue ? DateOnly.FromDateTime(MaxDayValue.Value) : null;
+        StartAt ??= FirstDayToShow.HasValue ? DateOnly.FromDateTime(FirstDayToShow.Value) : null;
+        if (!_initialized)
         {
-            _workingYear = today.Year;
+            _localValue = Value;
+            _localRange = Range ?? new DnetDateRange();
+            _localPreviewRange = PreviewRange ?? new DnetDateRange();
+            _initialized = true;
+        }
+    }
 
-            _workingMonth = today.Month;
+    private async Task HandleDateSelectedAsync(DateOnly date)
+    {
+        _localValue = date;
+        DatePickerService?.UpdateSelectedDay(ToCalendarDay(date));
+        if (!ShowActions)
+        {
+            await DateSelected.InvokeAsync(date);
+        }
+    }
+
+    private async Task HandleRangeChangedAsync(DnetDateRange range)
+    {
+        _localRange = range;
+        _localPreviewRange = new DnetDateRange();
+        if (!ShowActions && range.IsComplete)
+        {
+            await RangeChanged.InvokeAsync(range);
+        }
+    }
+
+    private Task HandlePreviewChangedAsync(DnetDateRange range)
+    {
+        _localPreviewRange = range;
+        return Task.CompletedTask;
+    }
+
+    private async Task ResetAsync()
+    {
+        DatePickerService?.UpdateSelectedDay(new CalendarDay());
+        await Reset.InvokeAsync();
+    }
+
+    private async Task ApplySelectionAsync()
+    {
+        if (RangeSelection)
+        {
+            await RangeApplied.InvokeAsync(_localRange);
         }
         else
         {
-            _workingYear = SelectedDay.Year;
-
-            _workingMonth = SelectedDay.Month;
+            await DateApplied.InvokeAsync(_localValue);
         }
 
-        SetCalendar(_workingYear, _workingMonth);
-
-        SetYears(_workingYear);
-
-        SetMonths(_workingYear);
+        await Apply.InvokeAsync();
     }
 
-    private void SelectDay(CalendarDay selectedDay)
+    private Task HandleApplyClickAsync(MouseEventArgs _) => ApplySelectionAsync();
+
+    private Task HandleCancelAsync(MouseEventArgs _) => Cancel.InvokeAsync();
+
+    private static CalendarDay ToCalendarDay(DateOnly date) => new()
     {
-        if (EvaluateMinMaxDates(selectedDay)) return;
-
-        var day = _days.FirstOrDefault(p => p.DayNumber == selectedDay.DayNumber);
-
-        if (day != null) day.IsSelected = true;
-
-        DatePickerService.UpdateSelectedDay(day);
-
-        StateHasChanged();
-    }
-
-    private void SetCalendar(int workingYear, int workingMonth)
-    {
-        _days = new List<CalendarDay>();
-
-        var today = DateTime.Now;
-
-        var workingDay = SelectedDay.DayNumber > 0 ? SelectedDay.DayNumber : today.Day;
-
-        _workingMonthName = new DateTime(workingYear, workingMonth, 1).ToString("MMM", CultureInfo.InvariantCulture).ToUpper();
-
-        var numberOfDays = DateTime.DaysInMonth(workingYear, workingMonth);
-
-        var week = 1;
-
-        for (var i = 1; i <= numberOfDays; i++)
-        {
-            var day = new DateTime(workingYear, workingMonth, i);
-
-            var dayOfWeek = day.DayOfWeek;
-
-            _days.Add(new CalendarDay
-                {
-                    DayNumber = i,
-                    DayName = dayOfWeek.ToString(),
-                    DayWeek = week,
-                    DayIndex = (int)dayOfWeek,
-                    IsToday = i == today.Day && workingMonth == today.Month && workingYear == today.Year,
-                    Year = workingYear,
-                    Month = workingMonth,
-                    IsSelected = SelectedDay.Year == workingYear && SelectedDay.Month == workingMonth && SelectedDay.DayNumber == i
-                });
-
-            if ((int)dayOfWeek == 6) week++;
-        }
-
-        var firtsDayOfMoth = _days.First();
-
-        _dayColumnSpan = firtsDayOfMoth.DayIndex > 0 ? _dayColumnSpan = firtsDayOfMoth.DayIndex + 1 : 0;
-    }
-
-    private void CalendarPrevious()
-    {
-        switch (_activeView)
-        {
-            case (int)ActiveViewType.Day:
-                var currenDaytime = new DateTime(_workingYear, _workingMonth, 1);
-
-                var previousDayTime = currenDaytime.AddMonths(-1);
-
-                _workingYear = previousDayTime.Year;
-
-                _workingMonth = previousDayTime.Month;
-
-                SetCalendar(_workingYear, _workingMonth);
-                break;
-
-            case (int)ActiveViewType.Year:
-                SetYears(_years.First() - 24);
-                break;
-
-            case (int)ActiveViewType.Month:
-                SetMonths(_workingYear);
-                break;
-        }
-
-        StateHasChanged();
-    }
-
-    private void CalendarNext()
-    {
-        switch (_activeView)
-        {
-            case (int)ActiveViewType.Day:
-                var currenDaytime = new DateTime(_workingYear, _workingMonth, 1);
-
-                var nextDayTime = currenDaytime.AddMonths(1);
-
-                _workingYear = nextDayTime.Year;
-
-                _workingMonth = nextDayTime.Month;
-
-                SetCalendar(_workingYear, _workingMonth);
-                break;
-
-            case (int)ActiveViewType.Year:
-                SetYears(_years.Last() + 1);
-                break;
-
-            case (int)ActiveViewType.Month:
-                SetMonths(_workingYear);
-                break;
-        }
-
-        StateHasChanged();
-    }
-
-    private void SetYears(int workingYear)
-    {
-        _years = new List<int> { workingYear };
-
-        for (var i = 1; i < 24; i++)
-        {
-            _years.Add(workingYear + i);
-        }
-
-        _yearRange = $"{_years.First()} - {_years.Last()}";
-    }
-
-    private void SelectYear(int yearSelected)
-    {
-        if ((_minCalendarDay != null && yearSelected < _minCalendarDay.Year) || (_maxCalendarDay != null && yearSelected > _maxCalendarDay.Year)) return;
-
-        _tempWorkingYear = yearSelected;
-
-        _activeView = (int)ActiveViewType.Month;
-
-        SetActiveView(_activeView);
-
-        StateHasChanged();
-    }
-
-    private void SetMonths(int workingYear)
-    {
-        var monthNames = new DateTime(workingYear).ToString("MMM", CultureInfo.InvariantCulture).ToUpper();
-
-        _months = new Dictionary<int, string>();
-
-        for (var i = 1; i <= 12; i++)
-        {
-            var month = new DateTime(workingYear, i, 1).ToString("MMM", CultureInfo.InvariantCulture).ToUpper();
-
-            _months.Add(i, month);
-        }
-
-        _yearLabelInMonths = workingYear;
-    }
-
-    private void SelectMonth(int monthNumber)
-    {
-        if (EvaluateMinMaxMonths(monthNumber, _tempWorkingYear)) return;
-
-        _activeView = (int)ActiveViewType.Day;
-
-        if (_tempWorkingYear > 0) _workingYear = _tempWorkingYear;
-
-        _workingMonth = monthNumber;
-
-        SetActiveView(_activeView);
-
-        StateHasChanged();
-    }
-
-    private void ChangeView()
-    {
-        if (_activeView == (int)ActiveViewType.Day)
-        {
-            _activeView = (int)ActiveViewType.Year;
-            SetActiveView(_activeView);
-            StateHasChanged();
-            return;
-        }
-
-        if (_activeView > (int)ActiveViewType.Day)
-        {
-            _activeView = _activeView - 1;
-
-            if (_activeView == (int)ActiveViewType.Day) _tempWorkingYear = 0;
-
-            SetActiveView(_activeView);
-            StateHasChanged();
-        }
-    }
-
-    private void SetActiveView(int activeView)
-    {
-        switch (_activeView)
-        {
-            case (int)ActiveViewType.Day:
-                SetCalendar(_workingYear, _workingMonth);
-                break;
-
-            case (int)ActiveViewType.Year:
-                SetYears(_workingYear);
-                break;
-
-            case (int)ActiveViewType.Month:
-                SetMonths(_tempWorkingYear);
-                break;
-        }
-    }
-
-    private void ResetCalendar()
-    {
-        var day = new CalendarDay();
-
-        DatePickerService.UpdateSelectedDay(day);
-
-        StateHasChanged();
-    }
-
-    private CalendarDay GetCalendarDay(DateTime date)
-    {
-        var calendarDay = new CalendarDay
-            {
-                DayNumber = date.Day,
-                DayName = date.DayOfWeek.ToString(),
-                Year = date.Year,
-                Month = date.Month
-            };
-
-        return calendarDay;
-    }
-
-    private bool EvaluateMinMaxDates(CalendarDay day)
-    {
-
-        var minEvaluation = false;
-        var maxEvaluation = false;
-        var filterEvaluation = false;
-
-        if (_minCalendarDay != null)
-            minEvaluation = (day.DayNumber < _minCalendarDay.DayNumber && day.Year == _minCalendarDay.Year && day.Month == _minCalendarDay.Month) ||
-                                 day.Year < _minCalendarDay.Year ||
-                                (day.Month < _minCalendarDay.Month && day.Year == _minCalendarDay.Year);
-
-        if (_maxCalendarDay != null)
-            maxEvaluation = (day.DayNumber > _maxCalendarDay.DayNumber && day.Year == _maxCalendarDay.Year && day.Month == _maxCalendarDay.Month) ||
-                                 day.Year > _maxCalendarDay.Year ||
-                                (day.Month > _maxCalendarDay.Month && day.Year == _maxCalendarDay.Year);
-
-        if (DatepickerFilter != null)
-            filterEvaluation = DatepickerFilter(day);
-
-        return minEvaluation || maxEvaluation || filterEvaluation;
-    }
-
-    private bool EvaluateMinMaxMonths(int month, int year)
-    {
-        var minEvaluation = false;
-        var maxEvaluation = false;
-
-        if (_minCalendarDay != null)
-            minEvaluation = (month < _minCalendarDay.Month && year == _minCalendarDay.Year);
-
-        if (_maxCalendarDay != null)
-            maxEvaluation = (month > _maxCalendarDay.Month && year == _maxCalendarDay.Year);
-
-        return minEvaluation || maxEvaluation;
-    }
+        Date = date.ToDateTime(TimeOnly.MinValue),
+        Year = date.Year,
+        Month = date.Month,
+        DayNumber = date.Day,
+        DayName = date.DayOfWeek.ToString(),
+        DayIndex = (int)date.DayOfWeek,
+        IsToday = date == DateOnly.FromDateTime(DateTime.Today)
+    };
 }

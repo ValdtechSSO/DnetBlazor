@@ -5,7 +5,7 @@
 @using Microsoft.AspNetCore.Components.Web
 
 <div class="dnet-datepickerweek-raw-content">
-    <div class="dnet-calendar" style="height: 290px; width: 226px;">
+    <div class="dnet-calendar dnet-datepickerweek-raw-calendar">
         <div class="dnet-datepickerweekca-raw-header">
             <div class="dnet-datepickerweekca-raw-controls">
                 <button type="button" class="dnet-datepickerweekca-raw-period-button dnet-button" @onclick="ChangeView">
@@ -26,16 +26,8 @@
                     <div class="dnet-datepickerweekca-raw-arrow @(_activeView == 1 ? "dnet-datepickerweekca-raw-arrow-up" : "dnet-datepickerweekca-raw-arrow-down")"></div>
                 </button>
                 <div class="dnet-datepickerweekca-raw-spacer"></div>
-                <button type="button" class="dnet-datepickerweekca-raw-previous-button dnet-focus-indicator dnet-icon-button" @onclick="CalendarPrevious" disabled="@(_activeView == 3)">
-                    <span class="dnet-button-wrapper"></span>
-                    <div class="dnet-ripple dnet-button-ripple dnet-button-ripple-round"></div>
-                    <div class="dnet-button-focus-overlay"></div>
-                </button>
-                <button type="button" class="dnet-datepickerweekca-raw-next-button dnet-focus-indicator dnet-icon-button" @onclick="CalendarNext" disabled="@(_activeView == 3)">
-                    <span class="dnet-button-wrapper"></span>
-                    <div class="dnet-ripple dnet-button-ripple dnet-button-ripple-round"></div>
-                    <div class="dnet-button-focus-overlay"></div>
-                </button>
+                <button type="button" class="dnet-datepickerweekca-raw-previous-button dnet-focus-indicator" @onclick="CalendarPrevious" disabled="@(_activeView == 3)"></button>
+                <button type="button" class="dnet-datepickerweekca-raw-next-button dnet-focus-indicator" @onclick="CalendarNext" disabled="@(_activeView == 3)"></button>
             </div>
         </div>
         @switch (_activeView)

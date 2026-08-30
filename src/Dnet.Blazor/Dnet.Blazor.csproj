@@ -15,6 +15,7 @@
 		<RepositoryUrl>https://github.com/ValdtechSSO/DnetBlazor</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
+			- DatePicker: Added ranges, inline calendar, advanced APIs and adaptive touch presentation while preserving the string API.
 			- PickList: Supports disabled items for inherited assignments that users cannot change.
 		</PackageReleaseNotes>
 	</PropertyGroup>

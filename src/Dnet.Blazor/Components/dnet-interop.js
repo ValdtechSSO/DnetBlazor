@@ -89,6 +89,17 @@
             }
         },
 
+        focusElementById: function (elementId) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.focus({ preventScroll: true });
+            }
+        },
+
+        matchesMedia: function (query) {
+            return window.matchMedia(query).matches;
+        },
+
         copyText: async function (text) {
             await navigator.clipboard.writeText(text);
         }

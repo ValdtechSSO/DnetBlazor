@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Expanded `DnetDatePicker` without breaking its string-based binding API: it
+  now shares a localized, accessible calendar with configurable views,
+  constraints, actions, customization hooks, lifecycle events and an adaptive
+  touch dialog. Added the inline `DnetCalendar` and typed
+  `DnetDateRangePicker`, including previews, comparison ranges, custom range
+  strategies and responsive presentation.
 - Added `DnetTimePicker`, a `TimeOnly?` control integrated with `DnetFormField`,
   with typed input, generated or explicit time options, min/max constraints,
   keyboard navigation and an accessible, responsive overlay listbox.

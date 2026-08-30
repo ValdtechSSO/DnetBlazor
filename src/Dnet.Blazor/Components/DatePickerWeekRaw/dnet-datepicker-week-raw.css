@@ -1,23 +1,36 @@
 /*! Sass DatePickerWeekRaw (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 .dnet-datepickerweek-raw-content {
+  --_week-raw-day-size: var(--dnet-datepickerweekca-raw-day-height, var(--dnet-calendar-day-height, 40px));
+
+  width: 100%;
   box-shadow: none;
   background: var(--dnet-sys-surface);
   color: var(--dnet-sys-on-surface-emphasis);
 }
 
+.dnet-datepickerweek-raw-calendar {
+  height: auto;
+}
+
 .dnet-datepickerweekca-raw-header {
-  padding: 0 8px 0 8px;
+  padding: 0 4px;
 }
 
 .dnet-datepickerweekca-raw-controls {
   display: flex;
-  margin: 5% calc(4.7142857143% - 16px);
+  align-items: center;
+  min-height: 44px;
+  gap: 2px;
 }
 
 .dnet-datepickerweekca-raw-period-button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
   min-width: 0;
+  padding: 0 10px;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
 }
 .dnet-datepickerweekca-raw-period-button:focus {
   outline: none;
@@ -48,30 +61,31 @@
 }
 
 .dnet-datepickerweekca-raw-previous-button, .dnet-datepickerweekca-raw-next-button {
+  box-sizing: border-box;
+  appearance: none;
   position: relative;
+  min-width: 36px;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--dnet-sys-on-surface-subtle);
+  cursor: pointer;
 }
 .dnet-datepickerweekca-raw-previous-button:hover:not(button[disabled]), .dnet-datepickerweekca-raw-next-button:hover:not(button[disabled]) {
-  padding: 0;
-  min-width: 0;
-  width: 40px;
-  height: 40px;
-  flex-shrink: 0;
-  line-height: 40px;
-  border-radius: 50%;
   background-color: var(--dnet-sys-state-hover);
 }
 
 .dnet-datepickerweekca-raw-previous-button::after, .dnet-datepickerweekca-raw-next-button::after {
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 12px;
   position: absolute;
   content: "";
-  margin: 15.5px;
+  margin: 0;
   border: 0 solid currentColor;
   border-top-width: 2px;
-  color: var(--dnet-sys-on-surface-subtle);
   outline: none;
 }
 
@@ -99,12 +113,12 @@ button[disabled].dnet-datepickerweekca-raw-next-button::after {
 }
 
 .dnet-datepickerweekca-raw-content {
-  padding: 0 8px 4px 8px;
+  padding: 2px 0 4px;
   outline: none;
 }
 
 .dnet-datepickerweekca-raw-body {
-  min-width: 224px;
+  min-width: 0;
   font-size: 13px;
 }
 
@@ -114,28 +128,27 @@ button[disabled].dnet-datepickerweekca-raw-next-button::after {
 }
 
 .dnet-datepickerweekca-raw-content-header {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   color: color-mix(in srgb, var(--dnet-sys-on-surface) 60.5%, transparent);
-  padding: 0px 0px 0 0px;
 }
 
 .dnet-datepickerweekca-raw-content-header-item {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 0 0px 0;
   font-size: 11px;
   font-weight: 400;
   color: color-mix(in srgb, var(--dnet-sys-on-surface) 60.5%, transparent);
-  height: 21px;
-  width: var(--dnet-datepickerweekca-raw-day-height, 30px);
+  height: 24px;
+  min-width: 0;
 }
 
 .dnet-datepickerweekca-raw-content-body {
   display: grid;
-  grid-template-columns: repeat(7, var(--dnet-datepickerweekca-raw-day-height, 30px));
-  grid-template-rows: repeat(6, var(--dnet-datepickerweekca-raw-day-height, 30px));
-  min-width: 224px;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-rows: repeat(6, var(--_week-raw-day-size));
+  min-width: 0;
   font-size: 13px;
 }
 
@@ -143,8 +156,8 @@ button[disabled].dnet-datepickerweekca-raw-next-button::after {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 30px;
-  width: 30px;
+  min-width: 0;
+  height: var(--_week-raw-day-size);
 }
 
 .dnet-datepickerweekca-raw-day-content {
@@ -156,7 +169,7 @@ button[disabled].dnet-datepickerweekca-raw-next-button::after {
   justify-content: center;
   box-sizing: border-box;
   width: 100%;
-  height: 90%;
+  height: calc(100% - 8px);
   line-height: 1;
   border-width: 1px;
   border-style: solid;
@@ -197,8 +210,11 @@ button[disabled].dnet-datepickerweekca-raw-next-button::after {
 
 .dnet-datepickerweekca-raw-content-body-year {
   display: grid;
-  grid-template-columns: repeat(3, 70px);
-  min-width: 224px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px 4px;
+  min-width: 0;
+  min-height: 240px;
+  align-content: center;
   font-size: 13px;
 }
 
@@ -206,8 +222,8 @@ button[disabled].dnet-datepickerweekca-raw-next-button::after {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 30px;
-  width: 70px;
+  min-width: 0;
+  min-height: 36px;
 }
 
 .dnet-datepickerweekca-raw-year-content {
@@ -256,8 +272,11 @@ button[disabled].dnet-datepickerweekca-raw-next-button::after {
 
 .dnet-datepickerweekca-raw-content-body-month {
   display: grid;
-  grid-template-columns: repeat(3, 70px);
-  min-width: 224px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px 4px;
+  min-width: 0;
+  min-height: 240px;
+  align-content: center;
   font-size: 13px;
 }
 
@@ -265,8 +284,8 @@ button[disabled].dnet-datepickerweekca-raw-next-button::after {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 30px;
-  width: 70px;
+  min-width: 0;
+  min-height: 36px;
 }
 
 .dnet-datepickerweekca-raw-month-content {
@@ -314,7 +333,8 @@ button[disabled].dnet-datepickerweekca-raw-next-button::after {
 
 .dnet-datepickerweekca-raw-header-footer {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
-  padding: 0 16px 0 8px;
-  height: 20px;
+  min-height: 48px;
+  padding: 4px 12px 10px;
 }

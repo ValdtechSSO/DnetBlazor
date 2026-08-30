@@ -1,367 +1,380 @@
-/*! DatePicker — migrado a tokens (6.0). Generado una vez; se edita a mano.
-   Las tintas Material (negro al p%) se derivan de on-surface con color-mix
-   al porcentaje equivalente sobre blanco, por lo que el render es idéntico
-   y el tema oscuro los adapta solo. */
+.dnet-datepicker-content,
+.dnet-calendar {
+  --_day-size: var(--dnet-calendar-day-height, 40px);
+  --_background: var(--dnet-calendar-background, var(--dnet-sys-surface));
+  --_foreground: var(--dnet-sys-on-surface-emphasis);
+  --_subtle: var(--dnet-sys-on-surface-subtle);
+  --_disabled: var(--dnet-calendar-day-disabled-color, var(--dnet-sys-state-disabled-fg));
+  --_selected-bg: var(--dnet-calendar-selected-bg-color, var(--dnet-sys-primary));
+  --_selected-fg: var(--dnet-sys-on-primary);
+  --_today-bg: var(--dnet-calendar-today-bg-color, var(--dnet-sys-state-selected));
+  --_range-bg: var(--dnet-calendar-range-bg-color, color-mix(in srgb, var(--dnet-sys-primary) 18%, transparent));
+  --_preview-bg: var(--dnet-calendar-preview-bg-color, color-mix(in srgb, var(--dnet-sys-primary) 10%, transparent));
+  --_comparison: var(--dnet-calendar-comparison-color, var(--dnet-sys-tertiary, var(--dnet-sys-primary)));
+  --_radius: var(--dnet-sys-radius-lg);
+}
 
 .dnet-datepicker-content {
-  --_day-height: var(--dnet-calendar-day-height, 40px);
-  --_tint-04: color-mix(in srgb, var(--dnet-sys-on-surface) 6.4%, transparent);
-  --_tint-38: color-mix(in srgb, var(--dnet-sys-on-surface) 60.5%, transparent);
-  --_tint-45: color-mix(in srgb, var(--dnet-sys-on-surface) 45%, transparent);
-  --_day-disabled: var(--dnet-calendar-day-disabled-color, var(--_tint-38));
-  --_selected-bg: var(--dnet-calendar-selected-bg-color, var(--dnet-sys-primary));
-  --_today-bg: var(--dnet-calendar-today-bg-color,
-    color-mix(in srgb, var(--dnet-sys-on-surface) 15.9%, transparent));
-  --_background: var(--dnet-calendar-background, var(--dnet-sys-surface));
-  --_icon-color: var(--dnet-sys-on-surface);
-  --_icon-disabled: var(--dnet-sys-state-disabled-fg);
-
-  box-shadow: var(--dnet-sys-elevation-1);
+  box-sizing: border-box;
+  width: 100%;
+  overflow: hidden;
+  border: var(--dnet-sys-border-width) solid var(--dnet-sys-border);
+  border-radius: var(--_radius);
+  box-shadow: var(--dnet-sys-elevation-2);
   background: var(--_background);
-  color: var(--dnet-sys-on-surface-emphasis);
+  color: var(--_foreground);
+}
+
+.dnet-calendar {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 280px;
+  padding: 8px;
+  border: var(--dnet-sys-border-width) solid var(--dnet-sys-border);
+  border-radius: var(--_radius);
+  background: var(--_background);
+  color: var(--_foreground);
+  font-size: var(--dnet-sys-text-sm);
+}
+
+.dnet-datepicker-content > .dnet-calendar {
+  border: 0;
+  border-radius: 0;
+}
+
+.dnet-calendar-disabled {
+  opacity: 0.6;
 }
 
 .dnet-calendar-header {
-  padding: 0 8px 0 8px;
+  padding: 0 4px;
 }
 
 .dnet-calendar-controls {
   display: flex;
-  margin: 5% calc(4.7142857143% - 16px);
-}
-
-.dnet-calendar-period-button {
-  min-width: 0;
-  font-size: var(--dnet-sys-text-md);
-  font-weight: 500;
-}
-.dnet-calendar-period-button:focus {
-  outline: none;
-}
-.dnet-calendar-period-button:hover {
-  background-color: var(--dnet-sys-state-hover);
-}
-
-.dnet-calendar-arrow {
-  display: inline-block;
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  margin: 0 0 0 5px;
-  vertical-align: middle;
-  border-top-color: var(--dnet-sys-on-surface-subtle);
-}
-
-.dnet-calendar-arrow-down {
-  border-bottom-width: 5px;
-  border-bottom-style: solid;
-}
-
-.dnet-calendar-arrow-up {
-  border-top-width: 5px;
-  border-top-style: solid;
-}
-
-.dnet-calendar-previous-button, .dnet-calendar-next-button {
-  position: relative;
-}
-.dnet-calendar-previous-button:hover:not(button[disabled]), .dnet-calendar-next-button:hover:not(button[disabled]) {
-  padding: 0;
-  min-width: 0;
-  width: 40px;
-  height: 40px;
-  flex-shrink: 0;
-  line-height: 40px;
-  border-radius: 50%;
-  background-color: var(--dnet-sys-state-hover);
-}
-
-.dnet-calendar-previous-button::after, .dnet-calendar-next-button::after {
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  position: absolute;
-  content: "";
-  margin: 15.5px;
-  border: 0 solid currentColor;
-  border-top-width: 2px;
-  color: var(--dnet-sys-on-surface-subtle);
-  outline: none;
-}
-
-button:disabled.dnet-calendar-previous-button::after,
-button[disabled].dnet-calendar-previous-button::after {
-  color: var(--_tint-45);
-}
-button:disabled.dnet-calendar-next-button::after,
-button[disabled].dnet-calendar-next-button::after {
-  color: var(--_tint-45);
-}
-
-.dnet-calendar-previous-button::after {
-  border-left-width: 2px;
-  transform: translateX(2px) rotate(-45deg);
-}
-
-.dnet-calendar-next-button::after {
-  border-right-width: 2px;
-  transform: translateX(-2px) rotate(45deg);
+  align-items: center;
+  min-height: 44px;
+  gap: 2px;
 }
 
 .dnet-calendar-spacer {
   flex: 1 1 auto;
 }
 
+.dnet-calendar-period-button,
+.dnet-calendar-previous-button,
+.dnet-calendar-next-button,
+.dnet-calendar-day-content,
+.dnet-calendar-year-content,
+.dnet-calendar-month-content,
+.dnet-datepicker-action,
+.dnet-datepicker-reset-button-wrapper {
+  appearance: none;
+  border: 0;
+  font: inherit;
+}
+
+.dnet-calendar-period-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 36px;
+  padding: 0 10px;
+  border-radius: var(--dnet-sys-radius-md);
+  background: transparent;
+  color: var(--_foreground);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.dnet-calendar-period-button:hover,
+.dnet-calendar-previous-button:hover:not(:disabled),
+.dnet-calendar-next-button:hover:not(:disabled) {
+  background: var(--dnet-sys-state-hover);
+}
+
+.dnet-calendar-period-button:focus-visible,
+.dnet-calendar-previous-button:focus-visible,
+.dnet-calendar-next-button:focus-visible,
+.dnet-calendar-day-content:focus-visible,
+.dnet-calendar-year-content:focus-visible,
+.dnet-calendar-month-content:focus-visible,
+.dnet-datepicker-action:focus-visible,
+.dnet-datepicker-reset-button-wrapper:focus-visible {
+  outline: 2px solid var(--dnet-sys-primary);
+  outline-offset: 2px;
+}
+
+.dnet-calendar-arrow {
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+}
+
+.dnet-calendar-arrow-down {
+  transform: translateY(-2px) rotate(45deg);
+}
+
+.dnet-calendar-arrow-up {
+  transform: translateY(2px) rotate(225deg);
+}
+
+.dnet-calendar-previous-button,
+.dnet-calendar-next-button {
+  box-sizing: border-box;
+  appearance: none;
+  position: relative;
+  min-width: 36px;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--_subtle);
+  cursor: pointer;
+}
+
+.dnet-calendar-previous-button:disabled,
+.dnet-calendar-next-button:disabled {
+  color: var(--_disabled);
+  cursor: default;
+}
+
+.dnet-calendar-previous-button::after,
+.dnet-calendar-next-button::after {
+  position: absolute;
+  inset: 12px;
+  content: "";
+  border-top: 2px solid currentColor;
+}
+
+.dnet-calendar-previous-button::after {
+  border-left: 2px solid currentColor;
+  transform: translateX(2px) rotate(-45deg);
+}
+
+.dnet-calendar-next-button::after {
+  border-right: 2px solid currentColor;
+  transform: translateX(-2px) rotate(45deg);
+}
+
 .dnet-calendar-content {
-  padding: 0 8px 4px 8px;
-  outline: none;
+  padding: 2px 0 4px;
 }
 
-.dnet-calendar-body {
-  min-width: 224px;
-  font-size: 13px;
+.dnet-calendar-content-header,
+.dnet-calendar-content-body {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
 }
 
-.dnet-calendar-body-label, .dnet-calendar-period-button {
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.dnet-calendar-content-header {
-  display: flex;
-  color: var(--_tint-38);
-  padding: 0px 0px 0 0px;
+.dnet-calendar-row {
+  display: contents;
 }
 
 .dnet-calendar-content-header-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 0 0px 0;
-  font-size: 11px;
-  font-weight: 400;
-  color: var(--_tint-38);
-  height: 21px;
-  width: var(--_day-height);
-}
-
-.dnet-calendar-content-body {
   display: grid;
-  grid-template-columns: repeat(7, var(--_day-height));
-  grid-template-rows: repeat(6, var(--_day-height));
-  min-width: 224px;
-  font-size: 13px;
+  place-items: center;
+  height: 24px;
+  color: var(--_subtle);
+  font-size: var(--dnet-sys-text-xs);
 }
 
 .dnet-calendar-day {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: var(--_day-height);
-  width: var(--_day-height);
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  height: var(--_day-size);
+}
+
+.dnet-calendar-day-in-range::before,
+.dnet-calendar-day-in-preview::before {
+  position: absolute;
+  inset: 4px 0;
+  content: "";
+  background: var(--_range-bg);
+}
+
+.dnet-calendar-day-in-preview::before {
+  background: var(--_preview-bg);
+  border-block: 1px dashed var(--dnet-sys-primary);
+}
+
+.dnet-calendar-day-range-start::before {
+  border-radius: 999px 0 0 999px;
+}
+
+.dnet-calendar-day-range-end::before {
+  border-radius: 0 999px 999px 0;
+}
+
+.dnet-calendar-day-range-start.dnet-calendar-day-range-end::before {
+  border-radius: 999px;
+}
+
+.dnet-calendar-day-in-comparison::after {
+  position: absolute;
+  inset: 5px 1px;
+  content: "";
+  border-block: 2px solid var(--_comparison);
+  pointer-events: none;
+}
+
+.dnet-calendar-day-in-overlap::after {
+  border-block-color: color-mix(in srgb, var(--_comparison) 55%, var(--dnet-sys-primary));
+  background: color-mix(in srgb, var(--_comparison) 12%, transparent);
 }
 
 .dnet-calendar-day-content {
-  top: 5%;
-  left: 5%;
+  position: relative;
   z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  width: 90%;
-  height: 90%;
-  line-height: 1;
-  border-width: 1px;
-  border-style: solid;
+  display: grid;
+  place-items: center;
+  width: calc(var(--_day-size) - 8px);
+  height: calc(var(--_day-size) - 8px);
+  padding: 0;
   border-radius: 999px;
-  color: var(--dnet-sys-on-surface-emphasis);
-  border-color: transparent;
+  background: transparent;
+  color: var(--_foreground);
   cursor: pointer;
 }
-.dnet-calendar-day-content:hover:not(.dnet-calendar-day-selected) {
-  background-color: var(--_tint-04);
-  cursor: pointer;
+
+.dnet-calendar-day-content:hover:not(:disabled):not(.dnet-calendar-day-selected) {
+  background: var(--dnet-sys-state-hover);
 }
-.dnet-calendar-day-content:hover:not(.dnet-calendar-day-selected).disabled {
-  background-color: var(--_background);
+
+.dnet-calendar-day-content:disabled,
+.dnet-calendar-day-outside .dnet-calendar-day-content {
+  color: var(--_disabled);
+}
+
+.dnet-calendar-day-content:disabled {
   cursor: default;
-}
-.dnet-calendar-day-content.disabled {
-  color: var(--_day-disabled);
 }
 
 .dnet-calendar-day-selected {
-  color: var(--dnet-sys-on-primary);
-  background-color: var(--_selected-bg);
+  background: var(--_selected-bg);
+  color: var(--_selected-fg);
 }
 
 .dnet-calendar-day-today:not(.dnet-calendar-day-selected) {
-  box-shadow: inset 0 0 0 1px var(--dnet-sys-surface);
-  background-color: var(--_today-bg);
+  box-shadow: inset 0 0 0 1px var(--dnet-sys-primary);
+  background: var(--_today-bg);
 }
 
-.dnet-calendar-day-selected.dnet-calendar-day-today {
-  box-shadow: inset 0 0 0 1px var(--dnet-sys-surface);
-}
-
-.dnet-calendar-content-body-year {
-  display: grid;
-  grid-template-columns: repeat(4, 70px);
-  min-width: 224px;
-  font-size: 13px;
-}
-
-.dnet-calendar-year {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 40px;
-  width: 70px;
-}
-
-.dnet-calendar-year-content {
-  top: 5%;
-  left: 5%;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  width: 90%;
-  height: 90%;
-  line-height: 1;
-  border-width: 1px;
-  border-style: solid;
-  border-radius: 999px;
-  color: var(--dnet-sys-on-surface-emphasis);
-  border-color: transparent;
-  cursor: pointer;
-}
-.dnet-calendar-year-content:hover:not(.dnet-calendar-year-selected) {
-  background-color: var(--_tint-04);
-  cursor: pointer;
-}
-.dnet-calendar-year-content:hover:not(.dnet-calendar-year-selected).disabled {
-  background-color: var(--_background);
-  cursor: default;
-}
-.dnet-calendar-year-content.disabled {
-  color: var(--_day-disabled);
-}
-
-.dnet-calendar-year-selected {
-  color: var(--dnet-sys-on-primary);
-  background-color: var(--_selected-bg);
-}
-
-.dnet-calendar-year-today:not(.dnet-calendar-year-selected) {
-  box-shadow: inset 0 0 0 1px var(--dnet-sys-surface);
-  background-color: var(--_today-bg);
-}
-
-.dnet-calendar-year-selected.dnet-calendar-year-today {
-  box-shadow: inset 0 0 0 1px var(--dnet-sys-surface);
-}
-
+.dnet-calendar-content-body-year,
 .dnet-calendar-content-body-month {
   display: grid;
-  grid-template-columns: repeat(4, 70px);
-  min-width: 224px;
-  font-size: 13px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px 4px;
+  min-height: 240px;
+  align-content: center;
 }
 
-.dnet-calendar-month {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 40px;
-  width: 70px;
-}
-
+.dnet-calendar-year-content,
 .dnet-calendar-month-content {
-  top: 5%;
-  left: 5%;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  width: 90%;
-  height: 90%;
-  line-height: 1;
-  border-width: 1px;
-  border-style: solid;
+  min-width: 0;
+  min-height: 36px;
+  padding: 0 6px;
   border-radius: 999px;
-  color: var(--dnet-sys-on-surface-emphasis);
-  border-color: transparent;
-}
-.dnet-calendar-month-content:hover {
-  background-color: var(--_tint-04);
+  background: transparent;
+  color: var(--_foreground);
   cursor: pointer;
 }
-.dnet-calendar-month-content:hover.disabled {
-  background-color: var(--_background);
+
+.dnet-calendar-year-content:hover:not(:disabled),
+.dnet-calendar-month-content:hover:not(:disabled) {
+  background: var(--dnet-sys-state-hover);
+}
+
+.dnet-calendar-year-content:disabled,
+.dnet-calendar-month-content:disabled {
+  color: var(--_disabled);
   cursor: default;
 }
-.dnet-calendar-month-content.disabled {
-  color: var(--_day-disabled);
-}
 
+.dnet-calendar-year-selected,
 .dnet-calendar-month-selected {
-  color: var(--dnet-sys-on-primary);
-  background-color: var(--_selected-bg);
+  background: var(--_selected-bg);
+  color: var(--_selected-fg);
 }
 
-.dnet-calendar-month-today:not(.dnet-calendar-month-selected) {
-  box-shadow: inset 0 0 0 1px var(--dnet-sys-surface);
-  background-color: var(--_today-bg);
+.dnet-calendar-footer {
+  padding-top: 8px;
 }
 
-.dnet-calendar-month-selected.dnet-calendar-month-today {
-  box-shadow: inset 0 0 0 1px var(--dnet-sys-surface);
-}
-
-.dnet-calendar-header-footer {
-  display: flex;
-  justify-content: flex-end;
-  padding: 0 16px 0 8px;
-  height: 20px;
-}
-
-.dnet-datepicker-reset-button-wrapper {
+.dnet-calendar-header-footer,
+.dnet-datepicker-actions {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  min-height: 48px;
+  padding: 4px 12px 10px;
+  gap: 6px;
+}
+
+.dnet-datepicker-reset-button-wrapper,
+.dnet-datepicker-action {
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: var(--dnet-sys-radius-md);
+  background: transparent;
+  color: var(--dnet-sys-primary);
+  font-weight: 600;
   cursor: pointer;
 }
 
-.dnet-datepicker-reset-image-wrapper {
+.dnet-datepicker-reset-button-wrapper:hover,
+.dnet-datepicker-action-secondary:hover {
+  background: var(--dnet-sys-state-hover);
+}
+
+.dnet-datepicker-action-primary {
+  background: var(--dnet-sys-primary);
+  color: var(--dnet-sys-on-primary);
+}
+
+.dnet-datepicker-action-primary:hover {
+  background: color-mix(in srgb, var(--dnet-sys-primary) 88%, var(--dnet-sys-on-primary));
+}
+
+.dnet-datepicker-touch {
+  border-radius: var(--dnet-sys-radius-lg);
+}
+
+.dnet-datepicker-touch .dnet-calendar {
+  padding: 12px;
+}
+
+.dnet-date-range-inputs {
   display: flex;
   align-items: center;
-  justify-content: center;
-  height: 1.2em;
-  width: 1.2em;
-  padding-top: 2px;
+  width: 100%;
+  min-width: 0;
+  gap: 8px;
 }
 
-/* Icono funcional monocromo (R9): mask-image + background-color. */
-.dnet-datepicker-reset-button {
-  background-color: var(--_icon-color);
-  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z'/></svg>");
-  -webkit-mask-position: center;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-size: 1em 1em;
-  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z'/></svg>");
-  mask-position: center;
-  mask-repeat: no-repeat;
-  mask-size: 1em 1em;
+.dnet-date-range-inputs .mat-input-element {
+  width: 0;
+  min-width: 0;
+  flex: 1 1 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: inherit;
 }
 
-.dnet-datepicker-reset-test {
-  font-size: var(--dnet-sys-text-xs);
+.dnet-date-range-separator {
+  flex: 0 0 auto;
+  color: var(--dnet-sys-on-surface-subtle);
 }
 
 .dnet-datepicker-icon-wrapper {
@@ -371,32 +384,38 @@ button[disabled].dnet-calendar-next-button::after {
   cursor: pointer;
 }
 
-/* Icono funcional monocromo (R9): mask-image + background-color. */
 .dnet-datepicker-icon {
   --_icon-color: var(--dnet-sys-on-surface);
   display: block;
-  background-color: var(--_icon-color);
-  height: 1em;
   width: 1em;
+  height: 1em;
+  background-color: var(--_icon-color);
   cursor: pointer;
-  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1zm1-3a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M3.5 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5zm9 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5z'/></svg>");
-  -webkit-mask-position: center;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-size: 1em 1em;
-  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1zm1-3a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M3.5 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5zm9 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5z'/></svg>");
-  mask-position: center;
-  mask-repeat: no-repeat;
-  mask-size: 1em 1em;
+  -webkit-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1zm1-3a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M3.5 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5zm9 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5z'/></svg>") center / 1em 1em no-repeat;
+  mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1zm1-3a2 2 0 0 0-2 2v11a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M3.5 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5zm9 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5z'/></svg>") center / 1em 1em no-repeat;
 }
 
-/* Evita que hojas de estilos heredadas reemplacen el icono tokenizado por un SVG negro. */
-.dnet-datepicker-icon-wrapper .dnet-datepicker-icon.dnet-datepicker-icon-default {
-  background-image: none;
+.dnet-datepicker-reset-button {
+  width: 1em;
+  height: 1em;
+  margin-inline-end: 6px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M4.65 4.65a.5.5 0 0 1 .7 0L8 7.29l2.65-2.64a.5.5 0 1 1 .7.7L8.71 8l2.64 2.65a.5.5 0 0 1-.7.7L8 8.71l-2.65 2.64a.5.5 0 0 1-.7-.7L7.29 8 4.65 5.35a.5.5 0 0 1 0-.7z'/></svg>") center / 1em no-repeat;
+  mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M4.65 4.65a.5.5 0 0 1 .7 0L8 7.29l2.65-2.64a.5.5 0 1 1 .7.7L8.71 8l2.64 2.65a.5.5 0 0 1-.7.7L8 8.71l-2.65 2.64a.5.5 0 0 1-.7-.7L7.29 8 4.65 5.35a.5.5 0 0 1 0-.7z'/></svg>") center / 1em no-repeat;
 }
 
-.dnet-datepicker-disable .dnet-datepicker-icon-default {
-  background-color: var(--_icon-disabled);
+.dnet-datepicker-disable .dnet-datepicker-icon {
+  --_icon-color: var(--dnet-sys-state-disabled-fg);
 }
-.dnet-datepicker-disable .dnet-datepicker-icon-wrapper {
-  background-color: var(--dnet-sys-surface-hover);
+
+@media (max-width: 600px) {
+  .dnet-datepicker-overlay-touch .dnet-calendar {
+    --_day-size: min(44px, calc((100vw - 56px) / 7));
+    min-width: 0;
+  }
+
+  .dnet-datepicker-overlay-touch .dnet-calendar-content-body-year,
+  .dnet-datepicker-overlay-touch .dnet-calendar-content-body-month {
+    min-height: min(50vh, 320px);
+  }
 }
