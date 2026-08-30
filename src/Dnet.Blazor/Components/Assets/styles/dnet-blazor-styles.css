@@ -3,6 +3,7 @@
 @import "./base/shared.css";
 @import "../../AdminLayout/dnet-admin-layout.css";
 @import "../../Autocomplete/dnet-autocomplete.css";
+@import "../../Badge/dnet-badge.css";
 @import "../../Checkbox/dnet-checkbox.css";
 @import "../../Chips/dnet-chip-list.css";
 @import "../../ConnectedPanel/dnet-connected-panel.css";

@@ -1,0 +1,103 @@
+@using System.Globalization
+@using Dnet.Blazor.Infrastructure.Services.CssBuilder
+@namespace Dnet.Blazor.Components.Badge
+
+<span @attributes="ForwardedAttributes"
+      class="@RootClass"
+      aria-disabled="@(Disabled ? "true" : null)">
+    @ChildContent
+
+    @if (ShouldShowBadge)
+    {
+        <span class="dnet-badge-indicator" aria-hidden="true">@DisplayContent</span>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Description))
+    {
+        <span class="dnet-badge-description">@Description</span>
+    }
+</span>
+
+@code {
+    /// <summary>Gets or sets the content decorated by the badge.</summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Gets or sets the short text or number displayed inside the badge.</summary>
+    [Parameter]
+    public object? Content { get; set; }
+
+    /// <summary>Gets or sets the badge position. The default is above and after.</summary>
+    [Parameter]
+    public DnetBadgePosition Position { get; set; } = DnetBadgePosition.AboveAfter;
+
+    /// <summary>Gets or sets the visual badge size.</summary>
+    [Parameter]
+    public DnetBadgeSize Size { get; set; } = DnetBadgeSize.Medium;
+
+    /// <summary>Gets or sets the semantic badge color.</summary>
+    [Parameter]
+    public DnetBadgeColor Color { get; set; } = DnetBadgeColor.Primary;
+
+    /// <summary>Gets or sets whether the badge overlaps the decorated content.</summary>
+    [Parameter]
+    public bool Overlap { get; set; } = true;
+
+    /// <summary>Gets or sets whether the badge is visually disabled.</summary>
+    [Parameter]
+    public bool Disabled { get; set; }
+
+    /// <summary>Gets or sets whether the visual badge is hidden.</summary>
+    [Parameter]
+    public bool Hidden { get; set; }
+
+    /// <summary>
+    /// Gets or sets an accessible description for the badge state. The visual
+    /// indicator is hidden from assistive technologies to avoid duplicate output.
+    /// </summary>
+    [Parameter]
+    public string? Description { get; set; }
+
+    /// <summary>Gets or sets additional attributes applied to the badge host.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string DisplayContent => Convert.ToString(Content, CultureInfo.CurrentCulture) ?? string.Empty;
+
+    private bool ShouldShowBadge => !Hidden && !string.IsNullOrWhiteSpace(DisplayContent);
+
+    private string RootClass
+    {
+        get
+        {
+            var (vertical, horizontal) = ResolvePosition(Position);
+
+            return new CssBuilder("dnet-badge")
+                .AddClass($"dnet-badge-{vertical}")
+                .AddClass($"dnet-badge-{horizontal}")
+                .AddClass($"dnet-badge-size-{Size.ToString().ToLowerInvariant()}")
+                .AddClass($"dnet-badge-color-{Color.ToString().ToLowerInvariant()}")
+                .AddClass("dnet-badge-no-overlap", !Overlap)
+                .AddClass("dnet-badge-disabled", Disabled)
+                .AddClass("dnet-badge-hidden", !ShouldShowBadge)
+                .AddClassFromAttributes(AdditionalAttributes!)
+                .Build();
+        }
+    }
+
+    private IReadOnlyDictionary<string, object>? ForwardedAttributes
+        => AdditionalAttributes?
+            .Where(attribute =>
+                !string.Equals(attribute.Key, "class", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(attribute.Key, "aria-disabled", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(attribute => attribute.Key, attribute => attribute.Value);
+
+    private static (string Vertical, string Horizontal) ResolvePosition(DnetBadgePosition position)
+        => position switch
+        {
+            DnetBadgePosition.AboveBefore or DnetBadgePosition.Before => ("above", "before"),
+            DnetBadgePosition.BelowBefore => ("below", "before"),
+            DnetBadgePosition.BelowAfter or DnetBadgePosition.Below => ("below", "after"),
+            _ => ("above", "after")
+        };
+}

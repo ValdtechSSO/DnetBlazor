@@ -1,0 +1,257 @@
+@page "/Badge"
+
+@using Dnet.Blazor.Components.Badge
+@using Dnet.Blazor.Components.SlideToggle
+
+<div class="container-fluid badge-page">
+    <div class="d-flex dnet-m-l-30 dnet-m-t-20">
+        <span class="dnet-m-r-10 dnet-app-comp-name">Badge</span>
+    </div>
+
+    <div class="badge-demo-grid dnet-m-l-30 dnet-m-t-30">
+        <section class="badge-demo-section">
+            <h2>Content and state</h2>
+            <p>Use a short number or label. Give meaningful states an accessible description.</p>
+            <div class="badge-demo-row">
+                <DnetBadge Content="@_notifications"
+                           Description="@($"{_notifications} unread messages")">
+                    <button class="badge-icon-button" type="button" aria-label="Open messages">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z" />
+                        </svg>
+                    </button>
+                </DnetBadge>
+
+                <DnetBadge Content="@("NEW")" Color="DnetBadgeColor.Success" Description="New feature">
+                    <span class="badge-demo-label">Reports</span>
+                </DnetBadge>
+
+                <DnetBadge Content="@("!")" Color="DnetBadgeColor.Danger" Description="Action required">
+                    <span class="badge-demo-label">Billing</span>
+                </DnetBadge>
+            </div>
+            <div class="badge-demo-controls">
+                <button type="button" @onclick="Decrement">−</button>
+                <span>Notifications: @_notifications</span>
+                <button type="button" @onclick="Increment">+</button>
+                <DnetSlideToggle @bind-Value="_hidden">Hidden</DnetSlideToggle>
+            </div>
+            <DnetBadge Content="@_notifications" Hidden="_hidden" Description="Optional counter">
+                <span class="badge-demo-label">Controlled badge</span>
+            </DnetBadge>
+        </section>
+
+        <section class="badge-demo-section">
+            <h2>Sizes and colors</h2>
+            <div class="badge-demo-row badge-demo-row-spacious">
+                <DnetBadge Content="@("3")" Size="DnetBadgeSize.Small"><span class="badge-swatch">Small</span></DnetBadge>
+                <DnetBadge Content="@("12")" Color="DnetBadgeColor.Neutral"><span class="badge-swatch">Medium</span></DnetBadge>
+                <DnetBadge Content="@("99+")" Size="DnetBadgeSize.Large" Color="DnetBadgeColor.Warning"><span class="badge-swatch">Large</span></DnetBadge>
+                <DnetBadge Content="@("8")" Color="DnetBadgeColor.Danger" Disabled="true"><span class="badge-swatch">Disabled</span></DnetBadge>
+            </div>
+        </section>
+
+        <section class="badge-demo-section">
+            <h2>Positions</h2>
+            <div class="badge-position-grid">
+                @foreach (var item in _positions)
+                {
+                    <div class="badge-position-item">
+                    <DnetBadge Content="@("1")" Position="item.Position" Overlap="_overlap">
+                            <span class="badge-position-anchor"></span>
+                        </DnetBadge>
+                        <span>@item.Label</span>
+                    </div>
+                }
+            </div>
+            <DnetSlideToggle @bind-Value="_overlap">Overlap</DnetSlideToggle>
+        </section>
+
+        <section class="badge-demo-section">
+            <h2>Logical direction</h2>
+            <p>The same <code>After</code> position follows the document direction.</p>
+            <div class="badge-demo-row badge-demo-row-spacious">
+                <div class="badge-direction-example" dir="ltr">
+                    <span>LTR</span>
+                    <DnetBadge Content="@("2")" Position="DnetBadgePosition.After">
+                        <span class="badge-position-anchor"></span>
+                    </DnetBadge>
+                </div>
+                <div class="badge-direction-example" dir="rtl">
+                    <span>RTL</span>
+                    <DnetBadge Content="@("2")" Position="DnetBadgePosition.After">
+                        <span class="badge-position-anchor"></span>
+                    </DnetBadge>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<style>
+    .badge-page {
+        padding-top: 10px;
+    }
+
+    .badge-demo-grid {
+        display: grid;
+        gap: 20px;
+        max-width: 920px;
+        padding-bottom: 40px;
+        padding-right: 30px;
+    }
+
+    .badge-demo-section {
+        background: var(--dnet-sys-surface-raised);
+        border: 1px solid var(--dnet-sys-border);
+        border-radius: var(--dnet-sys-radius-lg);
+        color: var(--dnet-sys-on-surface);
+        padding: 24px;
+    }
+
+    .badge-demo-section h2 {
+        color: var(--dnet-sys-on-surface-emphasis);
+        font-size: var(--dnet-sys-text-lg);
+        margin: 0 0 8px;
+    }
+
+    .badge-demo-section p {
+        color: var(--dnet-sys-on-surface-muted);
+        font-size: var(--dnet-sys-text-sm);
+        margin: 0 0 24px;
+    }
+
+    .badge-demo-row {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 32px;
+        margin: 18px 0 28px;
+    }
+
+    .badge-demo-row-spacious {
+        gap: 48px;
+    }
+
+    .badge-icon-button,
+    .badge-demo-controls button {
+        align-items: center;
+        background: var(--dnet-sys-surface);
+        border: 1px solid var(--dnet-sys-border-strong);
+        border-radius: var(--dnet-sys-radius-pill);
+        color: var(--dnet-sys-on-surface);
+        cursor: pointer;
+        display: inline-flex;
+        justify-content: center;
+    }
+
+    .badge-icon-button {
+        height: 44px;
+        width: 44px;
+    }
+
+    .badge-icon-button svg {
+        fill: currentColor;
+        height: 22px;
+        width: 22px;
+    }
+
+    .badge-icon-button:focus-visible,
+    .badge-demo-controls button:focus-visible {
+        outline: 2px solid var(--dnet-sys-focus-ring);
+        outline-offset: 2px;
+    }
+
+    .badge-demo-label,
+    .badge-swatch {
+        background: var(--dnet-sys-surface);
+        border: 1px solid var(--dnet-sys-border);
+        border-radius: var(--dnet-sys-radius-md);
+        display: inline-block;
+        font-size: var(--dnet-sys-text-md);
+        padding: 10px 16px;
+    }
+
+    .badge-demo-controls {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+
+    .badge-demo-controls button {
+        font-size: 18px;
+        height: 30px;
+        width: 30px;
+    }
+
+    .badge-demo-controls .dnet-slide-toggle {
+        margin-left: 12px;
+    }
+
+    .badge-position-grid {
+        display: grid;
+        gap: 28px 40px;
+        grid-template-columns: repeat(4, minmax(100px, 1fr));
+        margin: 32px 14px;
+    }
+
+    .badge-position-item,
+    .badge-direction-example {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        font-size: var(--dnet-sys-text-sm);
+        gap: 14px;
+    }
+
+    .badge-position-anchor {
+        background: var(--dnet-sys-surface-hover);
+        border: 1px solid var(--dnet-sys-border-strong);
+        border-radius: var(--dnet-sys-radius-md);
+        display: block;
+        height: 48px;
+        width: 72px;
+    }
+
+    .badge-direction-example {
+        border: 1px dashed var(--dnet-sys-border-strong);
+        border-radius: var(--dnet-sys-radius-md);
+        min-width: 140px;
+        padding: 18px;
+    }
+
+    @@media (max-width: 640px) {
+        .badge-demo-grid {
+            margin-left: 14px !important;
+            padding-right: 14px;
+        }
+
+        .badge-demo-section {
+            padding: 18px;
+        }
+
+        .badge-position-grid {
+            grid-template-columns: repeat(2, minmax(100px, 1fr));
+        }
+    }
+</style>
+
+@code {
+    private int _notifications = 5;
+    private bool _hidden;
+    private bool _overlap = true;
+
+    private readonly (string Label, DnetBadgePosition Position)[] _positions =
+    [
+        ("Above before", DnetBadgePosition.AboveBefore),
+        ("Above after", DnetBadgePosition.AboveAfter),
+        ("Below before", DnetBadgePosition.BelowBefore),
+        ("Below after", DnetBadgePosition.BelowAfter)
+    ];
+
+    private void Increment() => _notifications++;
+
+    private void Decrement() => _notifications = Math.Max(0, _notifications - 1);
+}

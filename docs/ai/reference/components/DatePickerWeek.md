@@ -32,9 +32,18 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-datepickerweek-input-container-border` | `1px solid var(--dnet-sys-border)` |
 | `--dnet-datepickerweek-input-height` | `28px` |
 | `--dnet-datepickerweekca-day-disabled-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 60.5%, transparent)` |
-| `--dnet-datepickerweekca-day-height` | `30px` |
+| `--dnet-datepickerweekca-day-height` | `40px` |
 | `--dnet-datepickerweekca-selected-bg-color` | `#42b0d5` <br><sub>via `--dnet-sys-primary-strong`</sub> |
 | `--dnet-datepickerweekca-today-bg-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 15.9%, transparent)` |
+
+<details><summary>Legacy token names still honoured</summary>
+
+Kept as intermediate links in the fallback chains so 5.x overrides keep
+working. Prefer the names above for new code; these go away in 7.0.
+
+`--dnet-calendar-day-height`
+
+</details>
 
 ```css
 :root { --dnet-datepickerweekca-day-disabled-color: /* your value */; }

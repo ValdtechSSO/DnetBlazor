@@ -1,0 +1,161 @@
+/*! Badge — compact status indicator for arbitrary content. */
+
+.dnet-badge {
+  --_background: var(--dnet-badge-background, var(--dnet-sys-primary-strong));
+  --_foreground: var(--dnet-badge-foreground, var(--dnet-sys-on-primary));
+  --_outline: var(--dnet-badge-outline-color, var(--dnet-sys-surface));
+  --_disabled-opacity: var(--dnet-badge-disabled-opacity, 0.38);
+  --_size: 22px;
+  --_font-size: var(--dnet-sys-text-xs);
+  --_translate-x: 0;
+  --_translate-y: 0;
+
+  display: inline-block;
+  position: relative;
+}
+
+.dnet-badge-indicator {
+  align-items: center;
+  background: var(--_background);
+  border: 2px solid var(--_outline);
+  border-radius: var(--dnet-sys-radius-pill);
+  box-sizing: border-box;
+  color: var(--_foreground);
+  display: inline-flex;
+  font-family: var(--dnet-sys-font);
+  font-size: var(--_font-size);
+  font-weight: 700;
+  height: var(--_size);
+  justify-content: center;
+  line-height: 1;
+  min-width: var(--_size);
+  padding-inline: 4px;
+  pointer-events: none;
+  position: absolute;
+  transform: translate(var(--_translate-x), var(--_translate-y));
+  transition:
+    background-color var(--dnet-sys-motion-fast) var(--dnet-sys-motion-ease),
+    color var(--dnet-sys-motion-fast) var(--dnet-sys-motion-ease),
+    opacity var(--dnet-sys-motion-fast) var(--dnet-sys-motion-ease);
+  white-space: nowrap;
+  z-index: 1;
+}
+
+.dnet-badge-above {
+  --_translate-y: -50%;
+}
+
+.dnet-badge-above .dnet-badge-indicator {
+  top: 0;
+}
+
+.dnet-badge-below {
+  --_translate-y: 50%;
+}
+
+.dnet-badge-below .dnet-badge-indicator {
+  bottom: 0;
+}
+
+.dnet-badge-after {
+  --_translate-x: 50%;
+}
+
+.dnet-badge-after .dnet-badge-indicator {
+  inset-inline-end: 0;
+}
+
+.dnet-badge-before {
+  --_translate-x: -50%;
+}
+
+.dnet-badge-before .dnet-badge-indicator {
+  inset-inline-start: 0;
+}
+
+.dnet-badge-no-overlap.dnet-badge-above {
+  --_translate-y: -100%;
+}
+
+.dnet-badge-no-overlap.dnet-badge-below {
+  --_translate-y: 100%;
+}
+
+.dnet-badge-no-overlap.dnet-badge-after {
+  --_translate-x: 100%;
+}
+
+.dnet-badge-no-overlap.dnet-badge-before {
+  --_translate-x: -100%;
+}
+
+.dnet-badge-size-small {
+  --_font-size: 0.5625rem;
+  --_size: 16px;
+}
+
+.dnet-badge-size-large {
+  --_font-size: var(--dnet-sys-text-sm);
+  --_size: 28px;
+}
+
+.dnet-badge-color-neutral {
+  --_background: var(--dnet-badge-background, var(--dnet-sys-surface-variant));
+  --_foreground: var(--dnet-badge-foreground, var(--dnet-sys-on-surface-emphasis));
+}
+
+.dnet-badge-color-success {
+  --_background: var(--dnet-badge-background, var(--dnet-sys-success));
+}
+
+.dnet-badge-color-warning {
+  --_background: var(--dnet-badge-background, var(--dnet-sys-warning));
+  --_foreground: var(--dnet-badge-foreground, var(--dnet-sys-on-surface-emphasis));
+}
+
+.dnet-badge-color-danger {
+  --_background: var(--dnet-badge-background, var(--dnet-sys-danger));
+}
+
+.dnet-badge-disabled .dnet-badge-indicator {
+  opacity: var(--_disabled-opacity);
+}
+
+.dnet-badge-description {
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+[dir="rtl"] .dnet-badge-after,
+[dir="rtl"].dnet-badge-after {
+  --_translate-x: -50%;
+}
+
+[dir="rtl"] .dnet-badge-before,
+[dir="rtl"].dnet-badge-before {
+  --_translate-x: 50%;
+}
+
+[dir="rtl"] .dnet-badge-no-overlap.dnet-badge-after,
+[dir="rtl"].dnet-badge-no-overlap.dnet-badge-after {
+  --_translate-x: -100%;
+}
+
+[dir="rtl"] .dnet-badge-no-overlap.dnet-badge-before,
+[dir="rtl"].dnet-badge-no-overlap.dnet-badge-before {
+  --_translate-x: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dnet-badge-indicator {
+    transition: none;
+  }
+}

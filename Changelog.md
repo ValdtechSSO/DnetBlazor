@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added `DnetBadge`, a token-driven status indicator for arbitrary content with
+  logical positions, three sizes, semantic colors, overlap, hidden and disabled
+  states, RTL support and accessible descriptions.
 - Expanded `DnetDatePicker` without breaking its string-based binding API: it
   now shares a localized, accessible calendar with configurable views,
   constraints, actions, customization hooks, lifecycle events and an adaptive
