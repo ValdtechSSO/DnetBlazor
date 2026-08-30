@@ -87,7 +87,7 @@ Darwin ni se permiten capturas faltantes.
 
 Cubiertos: Button, PickList, Chips (migrados) y AdminLayout, Autocomplete,
 Select, Checkbox, RadioButton, DatePicker, Tabs, Stepper, DynamicStepper,
-ExpansionPanel, FloatingPanel, ConnectedPanel, FloatingDoubleList, Spinner,
+SlideToggle, ExpansionPanel, FloatingPanel, ConnectedPanel, FloatingDoubleList, Spinner,
 List, Toast, Tooltip, Tree, Grid, Forms (sin migrar).
 
 Exclusiones deliberadas (documentadas, no olvidadas):

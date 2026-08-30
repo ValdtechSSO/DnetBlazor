@@ -17,7 +17,7 @@
     --dnet-sys-elevation-5: 0 18px 36px rgb(0 0 0 / .6);
 
     /* PickList: quiet black resting rows with a clear, cool selected state. */
-    --dnet-picklist-item-background: #121316;
+    --dnet-picklist-item-background: transparent;
     --dnet-picklist-item-hover: #22262c;
-    --dnet-picklist-item-selected: color-mix(in srgb, var(--dnet-sys-primary) 38%, var(--dnet-sys-surface));
+    --dnet-picklist-item-selected: transparent;
 }

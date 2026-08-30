@@ -28,6 +28,7 @@ Open only the one you need.
 | [PickList](components/PickList.md) | `<PickList>` | 12 | 18 |
 | [RadioButton](components/RadioButton.md) | `<DnetInputRadioButton>`, `<DnetInputRadioGroup>` | 8 | 4 |
 | [Select](components/Select.md) | `<DnetSelect>` | 32 | 19 |
+| [SlideToggle](components/SlideToggle.md) | `<DnetSlideToggle>` | 5 | 11 |
 | [Spinner](components/Spinner.md) | `<DnetSpinner>` | 4 | 2 |
 | [Stepper](components/Stepper.md) | `<DnetStep>`, `<DnetStepper>` | 13 | 1 |
 | [Tabs](components/Tabs.md) | `<DnetTab>`, `<DnetTabBody>`, `<DnetTabGroup>` | 12 | 4 |

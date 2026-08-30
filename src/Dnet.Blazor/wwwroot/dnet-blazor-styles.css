@@ -4002,8 +4002,9 @@ button[disabled].dnet-calendar-next-button::after {
   --_hover: var(--dnet-picklist-item-hover, var(--pick-list-item-hover, var(--dnet-list-hover-background-color, var(--dnet-sys-surface-hover))));
   --_background: var(--dnet-picklist-background, var(--pick-list-background, var(--dnet-sys-surface)));
   --_foreground: var(--dnet-picklist-foreground, var(--pick-list-foreground, var(--dnet-sys-on-surface)));
-  --_item-background: var(--dnet-picklist-item-background, var(--pick-list-item-background, var(--dnet-sys-surface-raised)));
-  --_selected: var(--dnet-picklist-item-selected, var(--pick-list-item-selected, var(--dnet-sys-state-selected)));
+  --_item-background: var(--dnet-picklist-item-background, var(--pick-list-item-background, var(--dnet-sys-transparent)));
+  --_selected: var(--dnet-picklist-item-selected, var(--pick-list-item-selected, var(--dnet-sys-transparent)));
+  --_input-background: var(--dnet-sys-surface-raised);
   --_primary: var(--dnet-picklist-primary, var(--pick-list-primary, var(--dnet-sys-primary)));
   --_scrollbar: var(--dnet-picklist-scrollbar, var(--pick-list-scrollbar, var(--dnet-sys-border-strong)));
   background: var(--_background);
@@ -4058,7 +4059,7 @@ button[disabled].dnet-calendar-next-button::after {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
-  background: var(--_item-background);
+  background: var(--_input-background);
   border: 1px solid var(--_border);
   border-radius: var(--dnet-picklist-search-radius, var(--dnet-sys-radius-pill));
   box-sizing: border-box;
@@ -4163,38 +4164,51 @@ button[disabled].dnet-calendar-next-button::after {
   border-radius: var(--dnet-picklist-item-radius, var(--dnet-list-hover-border-radius, var(--dnet-sys-radius-lg)));
   box-sizing: border-box;
   cursor: pointer;
-  display: grid;
+  display: block;
   font-weight: 400;
-  gap: 8px;
-  grid-template-columns: var(--dnet-picklist-check-width, var(--dnet-list-check-width, 24px)) minmax(0, 1fr);
   min-height: var(--_row-height);
   margin: 0;
-  padding: 5px 4px 5px 15px;
   transition: background-color var(--dnet-sys-motion-fast) var(--dnet-sys-motion-ease);
+}
+
+.dnet-pick-list-item > .dnet-slide-toggle,
+.dnet-pick-list-item > .dnet-slide-toggle > .dnet-slide-toggle-layout {
+  width: 100%;
+}
+
+.dnet-pick-list-item > .dnet-slide-toggle > .dnet-slide-toggle-layout {
+  box-sizing: border-box;
+  display: grid;
+  gap: 8px;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(var(--dnet-picklist-check-width, var(--dnet-list-check-width, 24px)), max-content);
+  min-height: var(--_row-height);
+  padding: 5px 15px;
+}
+
+.dnet-pick-list-item .dnet-slide-toggle-control {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
 }
 
 .dnet-pick-list-item:hover {
   background: var(--_hover);
 }
 
-.dnet-pick-list-item:has(.dnet-pick-list-checkbox:checked) {
+.dnet-pick-list-item-selected {
   background: var(--_selected);
 }
 
-.dnet-pick-list-item:has(.dnet-pick-list-checkbox:disabled) {
+.dnet-pick-list-item:has(.dnet-slide-toggle-disabled) {
   cursor: wait;
   opacity: 0.65;
 }
 
-.dnet-pick-list-checkbox {
-  accent-color: var(--_primary);
-  height: 16px;
-  justify-self: center;
-  margin: 0;
-  width: 16px;
-}
-
 .dnet-pick-list-item-content {
+  grid-column: 1;
+  grid-row: 1;
   min-width: 0;
   overflow: hidden;
 }
@@ -4218,7 +4232,6 @@ button[disabled].dnet-calendar-next-button::after {
   text-align: center;
 }
 
-.dnet-pick-list-checkbox:focus-visible,
 .dnet-pick-list-search input:focus-visible,
 .dnet-pick-list button:focus-visible {
   outline: 2px solid var(--_primary);
@@ -6716,6 +6729,173 @@ select.mat-input-element::-ms-value {
   margin-right: 5px;
   text-overflow: ellipsis;
   overflow: hidden;
+}
+
+/*! SlideToggle — accessible, token-driven on/off control. */
+
+.dnet-slide-toggle {
+  --_track-width: var(--dnet-slide-toggle-track-width, 52px);
+  --_track-height: var(--dnet-slide-toggle-track-height, 32px);
+  --_handle-size: var(--dnet-slide-toggle-handle-size, 24px);
+  --_track: var(--dnet-slide-toggle-track-background, var(--dnet-sys-border-strong));
+  --_track-checked: var(--dnet-slide-toggle-track-background-checked, var(--dnet-sys-primary-strong));
+  --_handle: var(--dnet-slide-toggle-handle-background, var(--dnet-sys-on-surface-muted));
+  --_handle-checked: var(--dnet-slide-toggle-handle-background-checked, var(--dnet-sys-on-primary));
+  --_handle-icon: var(--dnet-sys-surface);
+  --_track-border: var(--dnet-sys-on-surface-subtle);
+  --_label: var(--dnet-slide-toggle-label-color, var(--dnet-sys-on-surface));
+  --_font-size: var(--dnet-slide-toggle-font-size, var(--dnet-sys-text-md));
+  --_gap: var(--dnet-slide-toggle-gap, var(--dnet-sys-space-3));
+  --_focus-ring: var(--dnet-slide-toggle-focus-ring, var(--dnet-sys-focus-ring));
+  --_handle-inset: calc((var(--_track-height) - var(--_handle-size)) / 2);
+  --_handle-travel: calc(var(--_track-width) - var(--_handle-size) - (2 * var(--_handle-inset)));
+
+  color: var(--_label);
+  display: inline-block;
+  font-size: var(--_font-size);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dnet-slide-toggle-layout {
+  align-items: center;
+  cursor: pointer;
+  display: inline-flex;
+  gap: var(--_gap);
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+
+.dnet-slide-toggle-layout.text-before {
+  flex-direction: row-reverse;
+}
+
+.dnet-slide-toggle-full-width,
+.dnet-slide-toggle-full-width .dnet-slide-toggle-layout {
+  width: 100%;
+}
+
+.dnet-slide-toggle-full-width .dnet-slide-toggle-layout {
+  justify-content: space-between;
+}
+
+.dnet-slide-toggle-control {
+  display: inline-block;
+  flex: 0 0 auto;
+  height: var(--_track-height);
+  position: relative;
+  width: var(--_track-width);
+}
+
+.dnet-slide-toggle-input {
+  cursor: inherit;
+  height: 48px;
+  left: 0;
+  margin: 0;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  z-index: 2;
+}
+
+.dnet-slide-toggle-track {
+  background: var(--_track);
+  border: 2px solid var(--_track-border);
+  border-radius: var(--dnet-sys-radius-pill);
+  box-sizing: border-box;
+  inset: 0;
+  position: absolute;
+  transition: background-color var(--dnet-sys-motion-normal) var(--dnet-sys-motion-ease);
+}
+
+.dnet-slide-toggle-handle {
+  align-items: center;
+  background: var(--_handle);
+  border-radius: 50%;
+  box-shadow: var(--dnet-sys-elevation-1);
+  color: var(--_handle-icon);
+  display: flex;
+  height: var(--_handle-size);
+  justify-content: center;
+  left: var(--_handle-inset);
+  pointer-events: none;
+  position: absolute;
+  top: var(--_handle-inset);
+  transition:
+    background-color var(--dnet-sys-motion-normal) var(--dnet-sys-motion-ease),
+    box-shadow var(--dnet-sys-motion-fast) var(--dnet-sys-motion-ease),
+    color var(--dnet-sys-motion-normal) var(--dnet-sys-motion-ease),
+    transform var(--dnet-sys-motion-normal) var(--dnet-sys-motion-ease);
+  width: var(--_handle-size);
+}
+
+.dnet-slide-toggle-icon {
+  fill: currentColor;
+  height: 16px;
+  width: 16px;
+}
+
+.dnet-slide-toggle-icon-on {
+  display: none;
+}
+
+.dnet-slide-toggle-checked .dnet-slide-toggle-track {
+  background: var(--_track-checked);
+  border-color: var(--_track-checked);
+}
+
+.dnet-slide-toggle-checked .dnet-slide-toggle-handle {
+  background: var(--_handle-checked);
+  color: var(--_track-checked);
+  transform: translateX(var(--_handle-travel));
+}
+
+.dnet-slide-toggle-checked .dnet-slide-toggle-icon-on {
+  display: block;
+}
+
+.dnet-slide-toggle-checked .dnet-slide-toggle-icon-off {
+  display: none;
+}
+
+.dnet-slide-toggle:not(.dnet-slide-toggle-disabled) .dnet-slide-toggle-layout:hover .dnet-slide-toggle-handle {
+  box-shadow: var(--dnet-sys-elevation-1), 0 0 0 8px var(--dnet-sys-state-hover);
+}
+
+.dnet-slide-toggle-input:focus-visible ~ .dnet-slide-toggle-handle {
+  box-shadow:
+    var(--dnet-sys-elevation-1),
+    0 0 0 8px color-mix(in srgb, var(--_focus-ring) 24%, transparent);
+}
+
+.dnet-slide-toggle-disabled {
+  opacity: 0.38;
+}
+
+.dnet-slide-toggle-disabled .dnet-slide-toggle-layout {
+  cursor: default;
+}
+
+.dnet-slide-toggle-label {
+  line-height: 1.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dnet-slide-toggle-track,
+  .dnet-slide-toggle-handle {
+    transition: none;
+  }
+}
+
+[dir="rtl"] .dnet-slide-toggle-handle {
+  left: auto;
+  right: var(--_handle-inset);
+}
+
+[dir="rtl"] .dnet-slide-toggle-checked .dnet-slide-toggle-handle {
+  transform: translateX(calc(-1 * var(--_handle-travel)));
 }
 
 /*! Button (recorte por offset; editado a mano en 6.0) — generado una vez; a partir de aquí se edita a mano. */

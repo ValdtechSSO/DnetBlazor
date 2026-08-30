@@ -20,6 +20,8 @@ public sealed class PickListTests : BunitContext
         Assert.Contains("Bilbao", cut.Markup);
         Assert.NotNull(cut.Find(".dnet-paginator"));
         Assert.Empty(cut.FindAll(".dnet-pick-list-pager"));
+        Assert.All(cut.FindAll("input[type=checkbox]"), input =>
+            Assert.Equal("switch", input.GetAttribute("role")));
 
         await cut.Find("input[type=search]").InputAsync("burgos");
 

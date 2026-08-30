@@ -7,8 +7,9 @@
   --_hover: var(--dnet-picklist-item-hover, var(--pick-list-item-hover, var(--dnet-list-hover-background-color, var(--dnet-sys-surface-hover))));
   --_background: var(--dnet-picklist-background, var(--pick-list-background, var(--dnet-sys-surface)));
   --_foreground: var(--dnet-picklist-foreground, var(--pick-list-foreground, var(--dnet-sys-on-surface)));
-  --_item-background: var(--dnet-picklist-item-background, var(--pick-list-item-background, var(--dnet-sys-surface-raised)));
-  --_selected: var(--dnet-picklist-item-selected, var(--pick-list-item-selected, var(--dnet-sys-state-selected)));
+  --_item-background: var(--dnet-picklist-item-background, var(--pick-list-item-background, var(--dnet-sys-transparent)));
+  --_selected: var(--dnet-picklist-item-selected, var(--pick-list-item-selected, var(--dnet-sys-transparent)));
+  --_input-background: var(--dnet-sys-surface-raised);
   --_primary: var(--dnet-picklist-primary, var(--pick-list-primary, var(--dnet-sys-primary)));
   --_scrollbar: var(--dnet-picklist-scrollbar, var(--pick-list-scrollbar, var(--dnet-sys-border-strong)));
   background: var(--_background);
@@ -61,7 +62,7 @@
 
 .dnet-pick-list-search input {
   appearance: none;
-  background: var(--_item-background);
+  background: var(--_input-background);
   border: 1px solid var(--_border);
   border-radius: var(--dnet-picklist-search-radius, var(--dnet-sys-radius-pill));
   box-sizing: border-box;
@@ -161,38 +162,51 @@
   border-radius: var(--dnet-picklist-item-radius, var(--dnet-list-hover-border-radius, var(--dnet-sys-radius-lg)));
   box-sizing: border-box;
   cursor: pointer;
-  display: grid;
+  display: block;
   font-weight: 400;
-  gap: 8px;
-  grid-template-columns: var(--dnet-picklist-check-width, var(--dnet-list-check-width, 24px)) minmax(0, 1fr);
   min-height: var(--_row-height);
   margin: 0;
-  padding: 5px 4px 5px 15px;
   transition: background-color var(--dnet-sys-motion-fast) var(--dnet-sys-motion-ease);
+}
+
+.dnet-pick-list-item > .dnet-slide-toggle,
+.dnet-pick-list-item > .dnet-slide-toggle > .dnet-slide-toggle-layout {
+  width: 100%;
+}
+
+.dnet-pick-list-item > .dnet-slide-toggle > .dnet-slide-toggle-layout {
+  box-sizing: border-box;
+  display: grid;
+  gap: 8px;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(var(--dnet-picklist-check-width, var(--dnet-list-check-width, 24px)), max-content);
+  min-height: var(--_row-height);
+  padding: 5px 15px;
+}
+
+.dnet-pick-list-item .dnet-slide-toggle-control {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
 }
 
 .dnet-pick-list-item:hover {
   background: var(--_hover);
 }
 
-.dnet-pick-list-item:has(.dnet-pick-list-checkbox:checked) {
+.dnet-pick-list-item-selected {
   background: var(--_selected);
 }
 
-.dnet-pick-list-item:has(.dnet-pick-list-checkbox:disabled) {
+.dnet-pick-list-item:has(.dnet-slide-toggle-disabled) {
   cursor: wait;
   opacity: 0.65;
 }
 
-.dnet-pick-list-checkbox {
-  accent-color: var(--_primary);
-  height: 16px;
-  justify-self: center;
-  margin: 0;
-  width: 16px;
-}
-
 .dnet-pick-list-item-content {
+  grid-column: 1;
+  grid-row: 1;
   min-width: 0;
   overflow: hidden;
 }
@@ -216,7 +230,6 @@
   text-align: center;
 }
 
-.dnet-pick-list-checkbox:focus-visible,
 .dnet-pick-list-search input:focus-visible,
 .dnet-pick-list button:focus-visible {
   outline: 2px solid var(--_primary);

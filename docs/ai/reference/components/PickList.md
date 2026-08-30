@@ -37,11 +37,11 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-picklist-footer-height` | `50px` <br><sub>via `--dnet-sys-control-height`</sub> |
 | `--dnet-picklist-foreground` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
 | `--dnet-picklist-header-height` | `50px` <br><sub>via `--dnet-sys-control-height`</sub> |
-| `--dnet-picklist-item-background` | `#ffffff` <br><sub>via `--dnet-sys-surface-raised`</sub> |
+| `--dnet-picklist-item-background` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
 | `--dnet-picklist-item-height` | `50px` <br><sub>via `--dnet-sys-control-height`</sub> |
 | `--dnet-picklist-item-hover` | `#f2f2f2` <br><sub>via `--dnet-sys-surface-hover`</sub> |
 | `--dnet-picklist-item-radius` | `10px` <br><sub>via `--dnet-sys-radius-lg`</sub> |
-| `--dnet-picklist-item-selected` | `color-mix(in srgb, var(--dnet-sys-primary) 12%, transparent)` <br><sub>via `--dnet-sys-state-selected`</sub> |
+| `--dnet-picklist-item-selected` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
 | `--dnet-picklist-items-max-height` | `250px` |
 | `--dnet-picklist-muted` | `#666666` <br><sub>via `--dnet-sys-on-surface-muted`</sub> |
 | `--dnet-picklist-primary` | `#4fc3f7` <br><sub>via `--dnet-sys-primary`</sub> |

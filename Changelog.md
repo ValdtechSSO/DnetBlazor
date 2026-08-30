@@ -1,5 +1,14 @@
 # Changelog for Blazor Library
 
+## Unreleased
+
+- Added `DnetSlideToggle`, an accessible, form-aware on/off switch with native
+  keyboard behavior, label placement, disabled/required and full-width modes,
+  and a token-based styling API.
+- PickList item selection now uses a right-aligned `DnetSlideToggle` with
+  transparent row backgrounds, while preserving controlled selection, disabled
+  items and accessible item labels.
+
 ## Version 6.0.10 (August 2026)
 
 - Added `PickList.IsItemDisabled` so callers can render inherited assignments

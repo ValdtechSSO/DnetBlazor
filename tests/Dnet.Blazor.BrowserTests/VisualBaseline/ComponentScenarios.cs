@@ -135,6 +135,18 @@ public static class ComponentScenarios
             SelectedPreconfigured: true),
 
         new(
+            "slide-toggle",
+            "/SlideToggle",
+            ".dnet-slide-toggle:not(.dnet-slide-toggle-disabled):not(.dnet-slide-toggle-checked)",
+            [VisualState.Default, VisualState.Hover, VisualState.Focus, VisualState.Selected],
+            SelectedSelector: ".dnet-slide-toggle.dnet-slide-toggle-checked",
+            SelectedCaptureSelector: ".dnet-slide-toggle.dnet-slide-toggle-checked",
+            FocusSelector: ".dnet-slide-toggle:not(.dnet-slide-toggle-disabled) .dnet-slide-toggle-input",
+            StateAssertion: "() => document.querySelector('.dnet-slide-toggle.dnet-slide-toggle-checked') !== null",
+            SelectedPreconfigured: true,
+            Variants: [new("full-width", ".dnet-slide-toggle-full-width")]),
+
+        new(
             "datepicker",
             "/DatePicker",
             "input.mat-input-element",

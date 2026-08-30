@@ -1,6 +1,7 @@
 @namespace Dnet.Blazor.Components.PickList
 @using Microsoft.AspNetCore.Components.Web
 @using Dnet.Blazor.Components.Paginator
+@using Dnet.Blazor.Components.SlideToggle
 @typeparam TItem
 @typeparam TKey where TKey : notnull
 
@@ -54,15 +55,17 @@
                 var key = ItemKey(item);
                 var selected = SelectedKeys.Contains(key);
 
-                <label class="dnet-pick-list-item">
-                    <input @key="(key, _selectionRenderGeneration)"
-                           type="checkbox"
-                           class="dnet-pick-list-checkbox"
-                           disabled="@(_isLoading || IsSelectionDisabled(item))"
-                           checked="@selected"
-                           @onchange="(ChangeEventArgs args) => SetSelectedAsync(key, args.Value is true)" />
-                    <span class="dnet-pick-list-item-content">@ItemTemplate(item)</span>
-                </label>
+                <div class="dnet-pick-list-item @(selected ? "dnet-pick-list-item-selected" : null)">
+                    <DnetSlideToggle @key="(key, _selectionRenderGeneration)"
+                                     Value="@selected"
+                                     ValueExpression="@(() => selected)"
+                                     ValueChanged="(bool value) => SetSelectedAsync(key, value)"
+                                     Disabled="@(_isLoading || IsSelectionDisabled(item))"
+                                     TextPlacedBefore="true"
+                                     FullWidth="true">
+                        <span class="dnet-pick-list-item-content">@ItemTemplate(item)</span>
+                    </DnetSlideToggle>
+                </div>
             }
         }
     </div>
