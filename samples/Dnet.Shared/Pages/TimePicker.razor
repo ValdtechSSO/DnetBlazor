@@ -1,0 +1,102 @@
+@page "/TimePicker"
+
+@using Dnet.Blazor.Components.Form
+@using Dnet.Blazor.Components.TimePicker
+
+<div class="container-fluid" style="padding-top: 10px;">
+    <div class="dnet-m-l-30 dnet-m-t-20" style="max-width: 760px;">
+        <span class="dnet-app-comp-name">Time Picker</span>
+        <p style="margin: 8px 0 28px; color: var(--dnet-sys-on-surface-muted);">
+            Type a time or choose one from the accessible options panel.
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px 36px; align-items: start;">
+            <DnetFormField Label="Meeting time" UseClearButton="true">
+                <ChildContent>
+                    <DnetTimePicker @bind-Value="_meetingTime"
+                                    aria-label="Meeting time"
+                                    Placeholder="HH:mm" />
+                </ChildContent>
+                <SufixContent>
+                    <button class="dnet-timepicker-icon-wrapper" aria-label="Open time picker" type="button">
+                        <span class="dnet-timepicker-icon" aria-hidden="true"></span>
+                    </button>
+                </SufixContent>
+            </DnetFormField>
+
+            <DnetFormField Label="Business hours · 15 minute steps" UseClearButton="true">
+                <ChildContent>
+                    <DnetTimePicker @bind-Value="_businessTime"
+                                    aria-label="Business time"
+                                    Min="@(new TimeOnly(8, 0))"
+                                    Max="@(new TimeOnly(18, 0))"
+                                    Interval="@TimeSpan.FromMinutes(15)" />
+                </ChildContent>
+                <SufixContent>
+                    <button class="dnet-timepicker-icon-wrapper" aria-label="Open time picker" type="button">
+                        <span class="dnet-timepicker-icon" aria-hidden="true"></span>
+                    </button>
+                </SufixContent>
+            </DnetFormField>
+
+            <DnetFormField Label="Suggested departures" UseClearButton="true">
+                <ChildContent>
+                    <DnetTimePicker @bind-Value="_departureTime"
+                                    aria-label="Departure time"
+                                    TimeOptions="@_departureOptions" />
+                </ChildContent>
+                <SufixContent>
+                    <button class="dnet-timepicker-icon-wrapper" aria-label="Open time picker" type="button">
+                        <span class="dnet-timepicker-icon" aria-hidden="true"></span>
+                    </button>
+                </SufixContent>
+            </DnetFormField>
+
+            <DnetFormField Label="12-hour format" UseClearButton="true">
+                <ChildContent>
+                    <DnetTimePicker @bind-Value="_lunchTime"
+                                    aria-label="Lunch time"
+                                    Format="h:mm tt"
+                                    Formats="@_twelveHourFormats"
+                                    Interval="@TimeSpan.FromMinutes(30)" />
+                </ChildContent>
+                <SufixContent>
+                    <button class="dnet-timepicker-icon-wrapper" aria-label="Open time picker" type="button">
+                        <span class="dnet-timepicker-icon" aria-hidden="true"></span>
+                    </button>
+                </SufixContent>
+            </DnetFormField>
+
+            <DnetFormField Label="Unavailable">
+                <ChildContent>
+                    <DnetTimePicker @bind-Value="_unavailableTime"
+                                    aria-label="Unavailable time"
+                                    Disabled="true" />
+                </ChildContent>
+                <SufixContent>
+                    <button class="dnet-timepicker-icon-wrapper" aria-label="Open time picker" type="button" disabled>
+                        <span class="dnet-timepicker-icon" aria-hidden="true"></span>
+                    </button>
+                </SufixContent>
+            </DnetFormField>
+        </div>
+    </div>
+</div>
+
+@code {
+    private TimeOnly? _meetingTime = new(10, 30);
+    private TimeOnly? _businessTime = new(9, 15);
+    private TimeOnly? _departureTime = new(14, 20);
+    private TimeOnly? _lunchTime = new(13, 0);
+    private TimeOnly? _unavailableTime = new(17, 30);
+
+    private readonly TimeOnly[] _departureOptions =
+    [
+        new(8, 10),
+        new(10, 40),
+        new(14, 20),
+        new(18, 50)
+    ];
+
+    private readonly string[] _twelveHourFormats = ["h:mm tt", "hh:mm tt"];
+}

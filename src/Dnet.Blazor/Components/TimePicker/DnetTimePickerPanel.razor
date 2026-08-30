@@ -1,0 +1,85 @@
+@using System.Globalization
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.JSInterop
+
+@inject IJSRuntime JSRuntime
+
+<div class="dnet-timepicker-panel">
+    @for (var index = 0; index < Options.Count; index++)
+    {
+        var optionIndex = index;
+        var option = Options[index];
+        var selected = Selected == option;
+        var active = ActiveIndex == optionIndex;
+
+        <button id="@($"{OptionIdPrefix}-{optionIndex}")"
+                class="@OptionClass(selected, active)"
+                type="button"
+                role="option"
+                tabindex="-1"
+                aria-selected="@(selected ? "true" : "false")"
+                @onclick="() => OptionSelected.InvokeAsync(option)">
+            <span>@option.ToString(Format, Culture)</span>
+            @if (selected)
+            {
+                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                    <path d="m9 16.2-3.5-3.5L4.1 14.1 9 19 20.3 7.7l-1.4-1.4L9 16.2Z" />
+                </svg>
+            }
+        </button>
+    }
+</div>
+
+@code {
+    /// <summary>Gets or sets the selectable time values.</summary>
+    [Parameter, EditorRequired]
+    public IReadOnlyList<TimeOnly> Options { get; set; } = Array.Empty<TimeOnly>();
+
+    /// <summary>Gets or sets the currently selected value.</summary>
+    [Parameter]
+    public TimeOnly? Selected { get; set; }
+
+    /// <summary>Gets or sets the option highlighted by keyboard navigation.</summary>
+    [Parameter]
+    public int ActiveIndex { get; set; } = -1;
+
+    /// <summary>Gets or sets the display format.</summary>
+    [Parameter]
+    public string Format { get; set; } = "HH:mm";
+
+    /// <summary>Gets or sets the display culture.</summary>
+    [Parameter]
+    public CultureInfo Culture { get; set; } = CultureInfo.CurrentCulture;
+
+    /// <summary>Gets or sets the stable prefix used for accessible option identifiers.</summary>
+    [Parameter, EditorRequired]
+    public string OptionIdPrefix { get; set; } = "dnet-timepicker-option";
+
+    /// <summary>Raised when the user chooses an option.</summary>
+    [Parameter]
+    public EventCallback<TimeOnly> OptionSelected { get; set; }
+
+    private static string OptionClass(bool selected, bool active) => string.Join(
+        " ",
+        new[]
+        {
+            "dnet-timepicker-option",
+            selected ? "dnet-timepicker-option-selected" : null,
+            active ? "dnet-timepicker-option-active" : null
+        }.Where(value => value is not null));
+
+    private int _lastScrolledIndex = -1;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (ActiveIndex < 0 || ActiveIndex == _lastScrolledIndex)
+        {
+            return;
+        }
+
+        _lastScrolledIndex = ActiveIndex;
+        await JSRuntime.InvokeVoidAsync(
+            "dnetinterop.scrollElementIntoViewById",
+            $"{OptionIdPrefix}-{ActiveIndex}");
+    }
+}

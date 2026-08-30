@@ -242,14 +242,15 @@ window.dnetoverlay = (function () {
                 });
             };
 
-            subscription.onScroll = function () {
+            subscription.onScroll = function (event) {
                 if (subscription.disposed || subscription.scrollFrameId) {
                     return;
                 }
 
+                var sourceOverlayId = findOverlayId(event);
                 subscription.scrollFrameId = window.requestAnimationFrame(function () {
                     subscription.scrollFrameId = 0;
-                    invoke('OnDocumentScrolled', { SourceOverlayId: findOverlayId(event) });
+                    invoke('OnDocumentScrolled', { SourceOverlayId: sourceOverlayId });
                 });
             };
 

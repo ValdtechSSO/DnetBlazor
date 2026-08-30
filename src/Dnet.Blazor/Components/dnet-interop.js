@@ -82,6 +82,13 @@
             }
         },
 
+        scrollElementIntoViewById: function (elementId) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.scrollIntoView({ block: "nearest" });
+            }
+        },
+
         copyText: async function (text) {
             await navigator.clipboard.writeText(text);
         }

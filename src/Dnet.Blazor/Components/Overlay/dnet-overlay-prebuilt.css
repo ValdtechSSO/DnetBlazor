@@ -82,7 +82,7 @@
     align-self: flex-start;
     padding-top: 50px;
   }
-  .cdk-overlay-pane.dnet-select-mobile, .cdk-overlay-pane.dnet-dialog-mobile, .cdk-overlay-pane.dnet-floatingdoubleList-mobile, .cdk-overlay-pane.dnet-connectedpanel-mobile, .cdk-overlay-pane.dnet-datepicker-mobile, .cdk-overlay-pane.dnet-datepickerWeek-mobile {
+  .cdk-overlay-pane.dnet-select-mobile, .cdk-overlay-pane.dnet-dialog-mobile, .cdk-overlay-pane.dnet-floatingdoubleList-mobile, .cdk-overlay-pane.dnet-connectedpanel-mobile, .cdk-overlay-pane.dnet-datepicker-mobile, .cdk-overlay-pane.dnet-datepickerWeek-mobile, .cdk-overlay-pane.dnet-timepicker-mobile {
     align-items: center;
     justify-content: center;
   }

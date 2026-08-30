@@ -12,4 +12,5 @@ public enum ComponentType
     FloatingPanel = 8,
     ToolTip = 9,
     Toast = 10,
+    TimePicker = 11,
 }

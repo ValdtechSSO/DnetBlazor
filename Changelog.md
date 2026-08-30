@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added `DnetTimePicker`, a `TimeOnly?` control integrated with `DnetFormField`,
+  with typed input, generated or explicit time options, min/max constraints,
+  keyboard navigation and an accessible, responsive overlay listbox.
 - Added `DnetSlideToggle`, an accessible, form-aware on/off switch with native
   keyboard behavior, label placement, disabled/required and full-width modes,
   and a token-based styling API.

@@ -1,0 +1,108 @@
+/*! TimePicker — input for DnetFormField and accessible overlay listbox. */
+
+.dnet-timepicker-input {
+  appearance: none;
+  cursor: text;
+}
+
+.dnet-timepicker-input[readonly],
+.dnet-timepicker-input:disabled {
+  cursor: default;
+}
+
+.dnet-timepicker-icon-wrapper {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  display: flex;
+  font: inherit;
+  height: 100%;
+  justify-content: center;
+  padding: 0;
+  width: 100%;
+}
+
+.dnet-timepicker-icon-wrapper:disabled {
+  cursor: default;
+}
+
+/* Functional monochrome icon (R9): mask-image + background-color. */
+.dnet-timepicker-icon {
+  --_icon-color: var(--dnet-sys-on-surface);
+
+  background-color: var(--_icon-color);
+  display: block;
+  height: 1em;
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm-1 2v7l5.2 3.1 1-1.7-4.2-2.5V6h-2Z'/></svg>");
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 1em 1em;
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm-1 2v7l5.2 3.1 1-1.7-4.2-2.5V6h-2Z'/></svg>");
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: 1em 1em;
+  width: 1em;
+}
+
+.dnet-timepicker-overlay {
+  border-radius: var(--dnet-sys-radius-lg);
+  box-shadow: var(--dnet-sys-elevation-3);
+  overflow: hidden;
+}
+
+.dnet-timepicker-panel {
+  --_panel-background: var(--dnet-timepicker-panel-background, var(--dnet-sys-surface-raised));
+  --_option-foreground: var(--dnet-timepicker-foreground, var(--dnet-sys-on-surface));
+  --_selected: var(--dnet-timepicker-option-selected-background, var(--dnet-sys-state-selected));
+  --_active: var(--dnet-timepicker-option-active-background, var(--dnet-sys-state-hover));
+  --_accent: var(--dnet-timepicker-accent-color, var(--dnet-sys-primary-strong));
+
+  background: var(--_panel-background);
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  max-height: 304px;
+  overflow-y: auto;
+  padding: var(--dnet-sys-space-2);
+  scrollbar-color: var(--dnet-sys-border-strong) transparent;
+  width: 100%;
+}
+
+.dnet-timepicker-option {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: var(--dnet-sys-radius-md);
+  color: var(--_option-foreground);
+  cursor: pointer;
+  display: flex;
+  font: inherit;
+  font-size: var(--dnet-sys-text-md);
+  height: 44px;
+  justify-content: space-between;
+  padding: 0 var(--dnet-sys-space-3);
+  text-align: start;
+  width: 100%;
+}
+
+.dnet-timepicker-option:hover,
+.dnet-timepicker-option-active {
+  background: var(--_active);
+}
+
+.dnet-timepicker-option-selected {
+  background: var(--_selected);
+  color: var(--_accent);
+  font-weight: 600;
+}
+
+.dnet-timepicker-option-selected:hover,
+.dnet-timepicker-option-selected.dnet-timepicker-option-active {
+  background: color-mix(in srgb, var(--_accent) 18%, var(--_panel-background));
+}
+
+.dnet-timepicker-option svg {
+  fill: currentColor;
+  height: 18px;
+  width: 18px;
+}

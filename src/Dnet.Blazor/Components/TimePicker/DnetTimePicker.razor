@@ -1,0 +1,615 @@
+@using System.Diagnostics.CodeAnalysis
+@using System.Globalization
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Enums
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Interfaces
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Models
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Services
+@using Dnet.Blazor.Components.Form
+@using Dnet.Blazor.Infrastructure.Forms
+@using Dnet.Blazor.Infrastructure.Services.CssBuilder
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
+
+@inherits DnetInputBase<TimeOnly?>
+@implements IDisposable
+
+@inject IOverlayService OverlayService
+
+<input @ref="Element"
+       @attributes="AdditionalAttributes"
+       class="@InputClass"
+       type="text"
+       inputmode="numeric"
+       autocomplete="off"
+       value="@CurrentValueAsString"
+       placeholder="@Placeholder"
+       disabled="@Disabled"
+       readonly="@ReadOnly"
+       required="@Required"
+       role="combobox"
+       aria-autocomplete="list"
+       aria-haspopup="listbox"
+       aria-expanded="@(_isOpen ? "true" : "false")"
+       aria-controls="@ListboxId"
+       aria-activedescendant="@ActiveOptionId"
+       aria-required="@(Required ? "true" : null)"
+       @onfocusin="@(() => OpenAsync())"
+       @onfocus="HandleFocus"
+       @onblur="HandleBlur"
+       @oninput="HandleInput"
+       @onkeydown="HandleKeyDown" />
+
+@code {
+    private readonly string _optionIdPrefix = $"dnet-timepicker-option-{Guid.NewGuid():N}";
+    private IReadOnlyList<TimeOnly> _resolvedOptions = Array.Empty<TimeOnly>();
+    private OverlayReference? _menuReference;
+    private int _activeIndex = -1;
+    private bool _isOpen;
+    private bool _hasFocus;
+    private bool _previousDisabled;
+    private IFormEventService? _formEventService;
+
+    [CascadingParameter]
+    private FormFieldCascadingValues? _formFieldCascadingValues { get; set; }
+
+    /// <summary>Gets the underlying text input element.</summary>
+    [DisallowNull]
+    public ElementReference? Element { get; protected set; }
+
+    /// <summary>Gets or sets whether user interaction with the picker is disabled.</summary>
+    [Parameter]
+    public bool Disabled { get; set; }
+
+    /// <summary>Gets or sets whether the time can be viewed but not changed.</summary>
+    [Parameter]
+    public bool ReadOnly { get; set; }
+
+    /// <summary>Gets or sets whether the underlying form control is required.</summary>
+    [Parameter]
+    public bool Required { get; set; }
+
+    /// <summary>Gets or sets the placeholder displayed while the input is empty.</summary>
+    [Parameter]
+    public string? Placeholder { get; set; }
+
+    /// <summary>Gets or sets the format used to display and parse time values.</summary>
+    [Parameter]
+    public string Format { get; set; } = "HH:mm";
+
+    /// <summary>Gets or sets additional accepted input formats.</summary>
+    [Parameter]
+    public IReadOnlyList<string>? Formats { get; set; }
+
+    /// <summary>Gets or sets the culture used to display and parse time values.</summary>
+    [Parameter]
+    public CultureInfo? Culture { get; set; }
+
+    /// <summary>Gets or sets the earliest selectable time.</summary>
+    [Parameter]
+    public TimeOnly? Min { get; set; }
+
+    /// <summary>Gets or sets the latest selectable time.</summary>
+    [Parameter]
+    public TimeOnly? Max { get; set; }
+
+    /// <summary>Gets or sets the interval used to generate options when <see cref="TimeOptions"/> is not supplied.</summary>
+    [Parameter]
+    public TimeSpan Interval { get; set; } = TimeSpan.FromMinutes(30);
+
+    /// <summary>
+    /// Gets or sets an explicit set of selectable times. When supplied, these options take precedence over
+    /// <see cref="Interval"/> and are filtered by <see cref="Min"/> and <see cref="Max"/>.
+    /// </summary>
+    [Parameter]
+    public IReadOnlyList<TimeOnly>? TimeOptions { get; set; }
+
+    /// <summary>Gets or sets the accessible label announced for the options list.</summary>
+    [Parameter]
+    public string OptionsAriaLabel { get; set; } = "Choose a time";
+
+    /// <summary>Gets or sets an additional CSS class applied to the overlay panel.</summary>
+    [Parameter]
+    public string? PanelClass { get; set; }
+
+    /// <summary>Gets or sets instance-level styles applied to the overlay panel.</summary>
+    [Parameter]
+    public string? PanelStyle { get; set; }
+
+    [CascadingParameter(Name = "DnetThemeScope")]
+    private string? ThemeScope { get; set; }
+
+    private CultureInfo EffectiveCulture => Culture ?? CultureInfo.CurrentCulture;
+
+    private string? InstanceStyle => AdditionalAttributes?.TryGetValue("style", out var style) == true
+        ? Convert.ToString(style, CultureInfo.InvariantCulture)
+        : null;
+
+    private string InputClass => new CssBuilder("mat-input-element dnet-timepicker-input")
+        .AddClass(CssClass)
+        .Build();
+
+    private string? ResolvedPanelStyle
+    {
+        get
+        {
+            var overlayTokens = InstanceStyle?
+                .Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Where(declaration => declaration.StartsWith("--dnet-timepicker-", StringComparison.OrdinalIgnoreCase));
+
+            var styles = new[]
+            {
+                overlayTokens is null ? null : string.Join("; ", overlayTokens),
+                PanelStyle
+            };
+
+            var result = string.Join("; ", styles.Where(style => !string.IsNullOrWhiteSpace(style)));
+            return string.IsNullOrWhiteSpace(result) ? null : result;
+        }
+    }
+
+    private string? ListboxId => _menuReference is null
+        ? null
+        : $"cdk-overlay-pane-{_menuReference.GetOverlayReferenceId()}";
+
+    private string? ActiveOptionId => _isOpen && _activeIndex >= 0
+        ? $"{_optionIdPrefix}-{_activeIndex}"
+        : null;
+
+    protected override void OnInitialized()
+    {
+        _formEventService = _formFieldCascadingValues?.FormEventService;
+
+        if (CurrentValue is not null)
+        {
+            UpdateFocusState(true);
+        }
+
+        if (_formEventService is not null)
+        {
+            _formEventService.RaiseCurrentValue(CurrentValueAsString);
+            _formEventService.OnClearContent += ClearInput;
+            _formEventService.OnSufixContentClicked += HandleSuffixClicked;
+            _formEventService.RaiseDisabledEvent(Disabled);
+        }
+
+        _previousDisabled = Disabled;
+
+        if (EditContext is not null)
+        {
+            EditContext.OnFieldChanged += HandleFieldChanged;
+            UpdateErrorState();
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (string.IsNullOrWhiteSpace(Format))
+        {
+            throw new ArgumentException("TimePicker Format cannot be empty.", nameof(Format));
+        }
+
+        if (Min is not null && Max is not null && Min > Max)
+        {
+            throw new ArgumentException("TimePicker Min cannot be later than Max.", nameof(Min));
+        }
+
+        if (TimeOptions is null && (Interval < TimeSpan.FromMinutes(1) || Interval > TimeSpan.FromDays(1)))
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(Interval),
+                "TimePicker Interval must be between one minute and one day.");
+        }
+
+        _resolvedOptions = ResolveOptions();
+
+        if (_isOpen && _resolvedOptions.Count == 0)
+        {
+            DetachMenu();
+        }
+
+        if (_previousDisabled != Disabled)
+        {
+            _previousDisabled = Disabled;
+            _formEventService?.RaiseDisabledEvent(Disabled);
+        }
+    }
+
+    protected override string? FormatValueAsString(TimeOnly? value) =>
+        value?.ToString(Format, EffectiveCulture);
+
+    protected override bool TryParseValueFromString(
+        string? value,
+        out TimeOnly? result,
+        [NotNullWhen(false)] out string? validationErrorMessage)
+    {
+        var acceptedFormats = new[] { Format }
+            .Concat(Formats ?? Array.Empty<string>())
+            .Where(candidate => !string.IsNullOrWhiteSpace(candidate))
+            .Distinct(StringComparer.Ordinal)
+            .ToArray();
+
+        if (!TimeOnly.TryParseExact(
+                value,
+                acceptedFormats,
+                EffectiveCulture,
+                DateTimeStyles.AllowWhiteSpaces,
+                out var parsed) &&
+            !TimeOnly.TryParse(value, EffectiveCulture, DateTimeStyles.AllowWhiteSpaces, out parsed))
+        {
+            result = null;
+            validationErrorMessage = $"Enter a valid time using the format {Format}.";
+            return false;
+        }
+
+        if (Min is not null && parsed < Min)
+        {
+            result = null;
+            validationErrorMessage = $"Time must be at or after {Min.Value.ToString(Format, EffectiveCulture)}.";
+            return false;
+        }
+
+        if (Max is not null && parsed > Max)
+        {
+            result = null;
+            validationErrorMessage = $"Time must be at or before {Max.Value.ToString(Format, EffectiveCulture)}.";
+            return false;
+        }
+
+        result = parsed;
+        validationErrorMessage = null;
+        return true;
+    }
+
+    private void HandleInput(ChangeEventArgs args)
+    {
+        if (!Disabled && !ReadOnly)
+        {
+            CurrentValueAsString = args.Value?.ToString();
+            _formEventService?.RaiseCurrentValue(CurrentValueAsString);
+            UpdateErrorState();
+        }
+    }
+
+    private void HandleFocus()
+    {
+        UpdateFocusState(true);
+    }
+
+    private void HandleBlur()
+    {
+        if (string.IsNullOrEmpty(CurrentValueAsString))
+        {
+            UpdateFocusState(false);
+        }
+
+        UpdateErrorState();
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs args)
+    {
+        if (Disabled || ReadOnly)
+        {
+            return;
+        }
+
+        switch (args.Key)
+        {
+            case "ArrowDown":
+                if (!_isOpen)
+                {
+                    await OpenAsync();
+                }
+                else
+                {
+                    MoveActive(1);
+                }
+                break;
+            case "ArrowUp":
+                if (!_isOpen)
+                {
+                    await OpenAsync(preferLast: true);
+                }
+                else
+                {
+                    MoveActive(-1);
+                }
+                break;
+            case "Home" when _isOpen:
+                SetActive(0);
+                break;
+            case "End" when _isOpen:
+                SetActive(_resolvedOptions.Count - 1);
+                break;
+            case "Enter" when _isOpen && _activeIndex >= 0:
+                await SelectTimeAsync(_resolvedOptions[_activeIndex]);
+                break;
+            case "Escape" when _isOpen:
+                DetachMenu();
+                break;
+        }
+    }
+
+    private Task OpenAsync(bool preferLast = false)
+    {
+        if (_isOpen || Disabled || ReadOnly || _resolvedOptions.Count == 0)
+        {
+            return Task.CompletedTask;
+        }
+
+        var selectedIndex = CurrentValue is null ? -1 : IndexOf(CurrentValue.Value);
+        _activeIndex = selectedIndex >= 0
+            ? selectedIndex
+            : preferLast ? _resolvedOptions.Count - 1 : 0;
+
+        var positions = new List<ConnectedPosition>
+        {
+            new()
+            {
+                OriginX = HorizontalConnectionPos.Start,
+                OriginY = VerticalConnectionPos.Bottom,
+                OverlayX = HorizontalConnectionPos.Start,
+                OverlayY = VerticalConnectionPos.Top,
+                OffsetY = 6
+            },
+            new()
+            {
+                OriginX = HorizontalConnectionPos.Start,
+                OriginY = VerticalConnectionPos.Top,
+                OverlayX = HorizontalConnectionPos.Start,
+                OverlayY = VerticalConnectionPos.Bottom,
+                OffsetY = -6
+            },
+            new()
+            {
+                OriginX = HorizontalConnectionPos.End,
+                OriginY = VerticalConnectionPos.Bottom,
+                OverlayX = HorizontalConnectionPos.End,
+                OverlayY = VerticalConnectionPos.Top,
+                OffsetY = 6
+            }
+        };
+
+        var origin = _formFieldCascadingValues?.FormField ?? Element!.Value;
+        var positionStrategy = new FlexibleConnectedPositionStrategyBuilder()
+            .WithLockedPosition()
+            .WithViewportMargin(8)
+            .SetOrigin(origin)
+            .WithFlexibleDimensions(false)
+            .WithPositions(positions);
+
+        var config = new OverlayConfig
+        {
+            HasBackdrop = true,
+            HasTransparentBackdrop = true,
+            CloseOnEscape = true,
+            ScrollStrategy = OverlayScrollStrategy.Reposition,
+            Role = "listbox",
+            AriaLabel = OptionsAriaLabel,
+            PositionStrategy = PositionStrategy.FlexibleConnectedTo,
+            FlexibleConnectedPositionStrategyBuilder = positionStrategy,
+            Width = "var(--dnet-timepicker-panel-width, 280px)",
+            MaxHeight = "min(320px, calc(100vh - 16px))",
+            PanelClass = string.Join(" ", new[] { "dnet-timepicker-overlay", PanelClass }.Where(value => !string.IsNullOrWhiteSpace(value))),
+            PanelStyle = ResolvedPanelStyle,
+            ComponentType = ComponentType.TimePicker,
+            ThemeScope = ThemeScope
+        };
+
+        RenderFragment content = builder =>
+        {
+            builder.OpenComponent<DnetTimePickerPanel>(0);
+            builder.AddAttribute(1, nameof(DnetTimePickerPanel.Options), _resolvedOptions);
+            builder.AddAttribute(2, nameof(DnetTimePickerPanel.Selected), CurrentValue);
+            builder.AddAttribute(3, nameof(DnetTimePickerPanel.ActiveIndex), _activeIndex);
+            builder.AddAttribute(4, nameof(DnetTimePickerPanel.Format), Format);
+            builder.AddAttribute(5, nameof(DnetTimePickerPanel.Culture), EffectiveCulture);
+            builder.AddAttribute(6, nameof(DnetTimePickerPanel.OptionIdPrefix), _optionIdPrefix);
+            builder.AddAttribute(
+                7,
+                nameof(DnetTimePickerPanel.OptionSelected),
+                EventCallback.Factory.Create<TimeOnly>(this, SelectTimeAsync));
+            builder.CloseComponent();
+        };
+
+        _menuReference = OverlayService.Attach(content, config);
+        _menuReference.Close += HandleOverlayClosed;
+        _isOpen = true;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    private async Task SelectTimeAsync(TimeOnly time)
+    {
+        CurrentValue = time;
+        _activeIndex = IndexOf(time);
+        UpdateFocusState(true);
+        UpdateErrorState();
+        _formEventService?.RaiseCurrentValue(CurrentValueAsString);
+        DetachMenu(CloseReason.Ok);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void ClearInput() => _ = InvokeAsync(() =>
+    {
+        CurrentValue = null;
+        _activeIndex = -1;
+        UpdateFocusState(false);
+        UpdateErrorState();
+        _formEventService?.RaiseCurrentValue(CurrentValueAsString);
+        DetachMenu();
+        StateHasChanged();
+    });
+
+    private void HandleSuffixClicked()
+    {
+        if (Disabled || ReadOnly)
+        {
+            return;
+        }
+
+        _ = InvokeAsync(() => _isOpen ? CloseMenuAsync() : OpenAsync());
+    }
+
+    private Task CloseMenuAsync()
+    {
+        DetachMenu();
+        return Task.CompletedTask;
+    }
+
+    private void HandleFieldChanged(object? sender, FieldChangedEventArgs args)
+    {
+        if (args.FieldIdentifier.Equals(FieldIdentifier))
+        {
+            UpdateErrorState();
+        }
+    }
+
+    private void UpdateErrorState()
+    {
+        if (EditContext is null)
+        {
+            return;
+        }
+
+        var hasErrors = EditContext.GetValidationMessages(FieldIdentifier).Any();
+        _formEventService?.RaiseError(hasErrors && EditContext.IsModified(FieldIdentifier));
+    }
+
+    private void UpdateFocusState(bool hasFocus)
+    {
+        _hasFocus = hasFocus;
+        _formEventService?.RaiseFocus(_hasFocus);
+    }
+
+    private void MoveActive(int delta)
+    {
+        if (_resolvedOptions.Count == 0)
+        {
+            return;
+        }
+
+        var next = _activeIndex + delta;
+        if (next < 0)
+        {
+            next = _resolvedOptions.Count - 1;
+        }
+        else if (next >= _resolvedOptions.Count)
+        {
+            next = 0;
+        }
+
+        SetActive(next);
+    }
+
+    private void SetActive(int index)
+    {
+        if (index < 0 || index >= _resolvedOptions.Count)
+        {
+            return;
+        }
+
+        _activeIndex = index;
+        _menuReference?.RequestPositionUpdate();
+        StateHasChanged();
+    }
+
+    private void HandleOverlayClosed(OverlayResult result)
+    {
+        _isOpen = false;
+        if (_menuReference is not null)
+        {
+            _menuReference.Close -= HandleOverlayClosed;
+            _menuReference = null;
+        }
+
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    private void DetachMenu(CloseReason reason = CloseReason.Cancel)
+    {
+        if (_menuReference is null)
+        {
+            _isOpen = false;
+            return;
+        }
+
+        var reference = _menuReference;
+        reference.Close -= HandleOverlayClosed;
+        _menuReference = null;
+        _isOpen = false;
+        reference.Detach(reason);
+        StateHasChanged();
+    }
+
+    private IReadOnlyList<TimeOnly> ResolveOptions()
+    {
+        IEnumerable<TimeOnly> options;
+
+        if (TimeOptions is not null)
+        {
+            options = TimeOptions;
+        }
+        else
+        {
+            var start = Min ?? TimeOnly.MinValue;
+            var end = Max ?? new TimeOnly(23, 59, 59);
+            var stepTicks = Interval.Ticks;
+            var generated = new List<TimeOnly>();
+
+            for (var ticks = start.Ticks; ticks <= end.Ticks; ticks += stepTicks)
+            {
+                generated.Add(new TimeOnly(ticks));
+                if (long.MaxValue - ticks < stepTicks)
+                {
+                    break;
+                }
+            }
+
+            options = generated;
+        }
+
+        return options
+            .Where(option => Min is null || option >= Min)
+            .Where(option => Max is null || option <= Max)
+            .Distinct()
+            .Order()
+            .ToArray();
+    }
+
+    private int IndexOf(TimeOnly time)
+    {
+        for (var index = 0; index < _resolvedOptions.Count; index++)
+        {
+            if (_resolvedOptions[index] == time)
+            {
+                return index;
+            }
+        }
+
+        return -1;
+    }
+
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        if (_menuReference is not null)
+        {
+            _menuReference.Close -= HandleOverlayClosed;
+            _menuReference.Detach();
+            _menuReference = null;
+        }
+
+        if (EditContext is not null)
+        {
+            EditContext.OnFieldChanged -= HandleFieldChanged;
+        }
+
+        if (_formEventService is not null)
+        {
+            _formEventService.OnClearContent -= ClearInput;
+            _formEventService.OnSufixContentClicked -= HandleSuffixClicked;
+        }
+
+        DisposeInputBase();
+    }
+}
