@@ -966,8 +966,13 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #BDBDBD;
+  background: var(--dnet-dash-scrollbar-foreground-color, color-mix(in srgb, var(--dnet-sys-on-surface) 40%, var(--dnet-sys-surface)));
+  border-radius: var(--dnet-sys-radius-pill);
   cursor: pointer;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--dnet-sys-on-surface) 52%, var(--dnet-sys-surface));
 }
 
 ::-webkit-scrollbar-track {
@@ -975,7 +980,8 @@ body {
 }
 
 body {
-  scrollbar-face-color: #BDBDBD;
+  scrollbar-color: var(--dnet-dash-scrollbar-foreground-color, color-mix(in srgb, var(--dnet-sys-on-surface) 40%, var(--dnet-sys-surface))) rgba(0, 0, 0, 0);
+  scrollbar-face-color: var(--dnet-dash-scrollbar-foreground-color, color-mix(in srgb, var(--dnet-sys-on-surface) 40%, var(--dnet-sys-surface)));
   scrollbar-track-color: rgba(0, 0, 0, 0);
 }
 

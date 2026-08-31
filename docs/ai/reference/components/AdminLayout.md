@@ -181,7 +181,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-dash-red` | `#b80012` <br><sub>via `--dnet-sys-danger`</sub> |
 | `--dnet-dash-right-column-width` | `250px` |
 | `--dnet-dash-scrollbar-background-color` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
-| `--dnet-dash-scrollbar-foreground-color` | `#ebebeb` <br><sub>via `--dnet-sys-border`</sub> |
+| `--dnet-dash-scrollbar-foreground-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 40%, var(--dnet-sys-surface))` |
 | `--dnet-dash-scrollbar-size` | `.4rem` |
 | `--dnet-footer-border-color` | `#e1e3e1` <br><sub>via `--dnet-sys-border-strong`</sub> |
 | `--dnet-header-border-color` | `#e1e3e1` <br><sub>via `--dnet-sys-border-strong`</sub> |

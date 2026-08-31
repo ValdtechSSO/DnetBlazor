@@ -10,15 +10,13 @@
 		<Description>Set of Components for Blazor Framework</Description>
 		<Copyright>Datalnet</Copyright>
 		<PackageTags>Blazor-Components-Datalnet</PackageTags>
-		<PackageVersion>6.0.13</PackageVersion>
+		<PackageVersion>6.0.14</PackageVersion>
 		<PackageProjectUrl>https://datalnet.com/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ValdtechSSO/DnetBlazor</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
-			- Toast: Redesigned notifications with theme-aware elevated surfaces, accessible stacking, actions and progress timing.
-			- Toast: Fixed automatic dismissal at the end of the progress duration, including hover and focus pauses.
-			- Grid: Aligned group expand arrows and labels consistently.
-			- AdminLayout: Updated the minifier surface to follow the active theme.
+			- Toast: Increased title and message typography for improved readability.
+			- AdminLayout: Replaced the fixed light scrollbar thumb with theme-derived normal and hover colors.
 		</PackageReleaseNotes>
 	</PropertyGroup>
 

@@ -1,5 +1,12 @@
 # Changelog for Blazor Library
 
+## Version 6.0.14 (August 2026)
+
+- Increased Toast title typography from 12px to 14px and message typography
+  from 10px to 12px while preserving their visual hierarchy.
+- Replaced the fixed light scrollbar color with theme-derived thumb and hover
+  colors that remain visible without overpowering dark surfaces.
+
 ## Version 6.0.13 (August 2026)
 
 - Redesigned Toast around an accessible, theme-aware stack with elevated

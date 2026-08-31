@@ -143,6 +143,9 @@
 
 /*! AdminLayout (recorte por offset; editado a mano en 6.0) — generado una vez; a partir de aquí se edita a mano. */
 html {
+  --_scrollbar-thumb: var(--dnet-dash-scrollbar-foreground-color, color-mix(in srgb, var(--dnet-sys-on-surface) 40%, var(--dnet-sys-surface)));
+  --_scrollbar-thumb-hover: color-mix(in srgb, var(--dnet-sys-on-surface) 52%, var(--dnet-sys-surface));
+
   margin: 0;
   padding: 0;
   min-height: 100%;
@@ -256,8 +259,13 @@ button {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--dnet-dash-scrollbar-foreground-color, var(--dnet-sys-border));
+  background: var(--_scrollbar-thumb);
+  border-radius: var(--dnet-sys-radius-pill);
   cursor: pointer;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--_scrollbar-thumb-hover);
 }
 
 ::-webkit-scrollbar-track {
@@ -266,7 +274,8 @@ button {
 
 /* // For Internet Explorer */
 body {
-  scrollbar-face-color: var(--dnet-dash-scrollbar-foreground-color, var(--dnet-sys-border));
+  scrollbar-color: var(--_scrollbar-thumb) var(--dnet-dash-scrollbar-background-color, var(--dnet-sys-transparent));
+  scrollbar-face-color: var(--_scrollbar-thumb);
   scrollbar-track-color: var(--dnet-dash-scrollbar-background-color, var(--dnet-sys-transparent));
 }
 
@@ -5251,7 +5260,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-toast__title {
-  font-size: var(--dnet-sys-text-sm);
+  font-size: var(--dnet-sys-text-md);
   font-weight: 600;
   line-height: 1.35;
   margin: 0;
@@ -5260,7 +5269,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 
 .dnet-toast__message {
   color: var(--_fg-muted);
-  font-size: var(--dnet-sys-text-xs);
+  font-size: var(--dnet-sys-text-sm);
   line-height: 1.5;
   margin: 0;
   overflow-wrap: anywhere;

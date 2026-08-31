@@ -1,5 +1,8 @@
 /*! AdminLayout (recorte por offset; editado a mano en 6.0) — generado una vez; a partir de aquí se edita a mano. */
 html {
+  --_scrollbar-thumb: var(--dnet-dash-scrollbar-foreground-color, color-mix(in srgb, var(--dnet-sys-on-surface) 40%, var(--dnet-sys-surface)));
+  --_scrollbar-thumb-hover: color-mix(in srgb, var(--dnet-sys-on-surface) 52%, var(--dnet-sys-surface));
+
   margin: 0;
   padding: 0;
   min-height: 100%;
@@ -113,8 +116,13 @@ button {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--dnet-dash-scrollbar-foreground-color, var(--dnet-sys-border));
+  background: var(--_scrollbar-thumb);
+  border-radius: var(--dnet-sys-radius-pill);
   cursor: pointer;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--_scrollbar-thumb-hover);
 }
 
 ::-webkit-scrollbar-track {
@@ -123,7 +131,8 @@ button {
 
 /* // For Internet Explorer */
 body {
-  scrollbar-face-color: var(--dnet-dash-scrollbar-foreground-color, var(--dnet-sys-border));
+  scrollbar-color: var(--_scrollbar-thumb) var(--dnet-dash-scrollbar-background-color, var(--dnet-sys-transparent));
+  scrollbar-face-color: var(--_scrollbar-thumb);
   scrollbar-track-color: var(--dnet-dash-scrollbar-background-color, var(--dnet-sys-transparent));
 }
 
