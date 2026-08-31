@@ -1,6 +1,6 @@
 # Component index
 
-Dnet.Blazor 6.0.12. One file per component under `components/`.
+Dnet.Blazor 6.0.13. One file per component under `components/`.
 Open only the one you need.
 
 | Component | Use in markup | Parameters | Styling tokens |
@@ -36,7 +36,7 @@ Open only the one you need.
 | [Tabs](components/Tabs.md) | `<DnetTab>`, `<DnetTabBody>`, `<DnetTabGroup>` | 12 | 4 |
 | [Theme](components/Theme.md) | `<DnetThemeScope>` | 3 | — |
 | [TimePicker](components/TimePicker.md) | `<DnetTimePicker>` | 19 | 5 |
-| [Toast](components/Toast.md) | `<DnetToast>` | 13 | 6 |
+| [Toast](components/Toast.md) | `<DnetToast>`, `<DnetToastStack>` | 21 | 15 |
 | [Tooltip](components/Tooltip.md) | `<DnetTooltipPanel>` | 10 | 9 |
 | [Tree](components/Tree.md) | `<DnetTree>`, `<DnetTreeNode>` | 20 | 2 |
 | [Virtualize](components/Virtualize.md) | `<Virtualize>` | 7 | — |

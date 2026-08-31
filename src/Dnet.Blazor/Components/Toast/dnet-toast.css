@@ -1,111 +1,271 @@
-/*! Toast — migrado a tokens (6.0). Generado una vez; se edita a mano. */
+/*! Toast — superficie elevada, estados por acento y progreso accesible. */
 
-.dnet-toast-container {
-  --_radius: var(--dnet-toast-border-radius, var(--dnet-sys-radius-sm));
-  --_margin: var(--dnet-toast-margin, 5px 5px 5px 5px);
-  --_success-bg: var(--dnet-toast-bg-success, var(--dnet-sys-success));
-  --_info-bg: var(--dnet-toast-bg-info, var(--dnet-sys-primary-strong));
-  --_warning-bg: var(--dnet-toast-bg-warning, var(--dnet-sys-warning));
-  --_danger-bg: var(--dnet-toast-bg-danger, var(--dnet-sys-danger));
+.dnet-toast-stack {
+  --_stack-gap: var(--dnet-toast-stack-gap, var(--dnet-sys-space-3));
+  --_stack-inset: var(--dnet-toast-stack-inset, var(--dnet-sys-space-5));
+  --_stack-z: var(--dnet-toast-stack-z, 1000);
+  --_stack-width: var(--dnet-toast-width, 392px);
 
-  display: flex;
-  flex-direction: row;
   box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-  color: var(--dnet-sys-on-primary);
-  margin: var(--_margin);
+  display: flex;
+  flex-direction: column;
+  gap: var(--_stack-gap);
+  max-height: calc(100dvh - var(--_stack-inset) * 2);
+  max-width: calc(100vw - var(--_stack-inset) * 2);
+  pointer-events: none;
+  width: var(--_stack-width);
+  z-index: var(--_stack-z);
+}
+
+.dnet-toast-stack[data-position^="top"] {
+  flex-direction: column-reverse;
+}
+
+.dnet-toast-region {
+  display: contents;
+}
+
+.dnet-toast {
+  --_bg: var(--dnet-toast-bg-info, var(--dnet-toast-bg, var(--dnet-sys-surface-raised)));
+  --_fg: var(--dnet-toast-fg, var(--dnet-sys-on-surface));
+  --_fg-muted: var(--dnet-toast-fg-muted, var(--dnet-sys-on-surface-muted));
+  --_border: var(--dnet-toast-border, var(--dnet-sys-border));
+  --_radius: var(--dnet-toast-radius, var(--dnet-toast-border-radius, var(--dnet-sys-radius-lg)));
+  --_shadow: var(--dnet-toast-shadow, var(--dnet-sys-elevation-3));
+  --_accent: var(--dnet-toast-accent, var(--dnet-toast-bg-info, var(--dnet-sys-primary)));
+  --_icon-bg: var(--dnet-toast-icon-bg, color-mix(in srgb, var(--_accent) 13%, var(--dnet-sys-transparent)));
+  --_icon-size: var(--dnet-toast-icon-size, 32px);
+  --_pad: var(--dnet-toast-padding, var(--dnet-sys-space-4));
+  --_width: var(--dnet-toast-width, 392px);
+  --_bar-h: var(--dnet-toast-progress-height, 2px);
+  --_margin: var(--dnet-toast-margin, 0);
+  --_duration: 5000ms;
+
+  align-items: flex-start;
+  background: var(--_bg);
+  border: var(--dnet-sys-border-width) solid var(--_border);
   border-radius: var(--_radius);
-}
-.dnet-toast-container.success {
-  background-color: var(--_success-bg);
-  color: var(--dnet-sys-on-primary);
-}
-.dnet-toast-container.info {
-  background-color: var(--_info-bg);
-  color: var(--dnet-sys-on-primary);
-}
-.dnet-toast-container.warning {
-  background-color: var(--_warning-bg);
-  color: var(--dnet-sys-on-surface-emphasis);
-}
-.dnet-toast-container.danger {
-  background-color: var(--_danger-bg);
-  color: var(--dnet-sys-on-primary);
-}
-
-.dnet-toast-title {
-  font-size: 0.75rem;
-  font-weight: 700;
-  margin: 5px 0 0 0;
-}
-
-.dnet-toast-text {
-  font-size: 0.75rem;
-}
-
-.dnet-toast-center-column {
+  box-shadow: var(--_shadow);
+  box-sizing: border-box;
+  color: var(--_fg);
   display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-  padding: 5px 0 10px 0;
+  font-family: var(--dnet-sys-font);
+  gap: var(--dnet-sys-space-3);
+  margin: var(--_margin);
+  max-width: 100%;
+  overflow: hidden;
+  padding: var(--_pad);
+  pointer-events: auto;
+  position: relative;
+  width: var(--_width);
 }
 
-.dnet-toast-right-column {
-  padding: 5px 0 5px 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+.dnet-toast[data-severity="success"] {
+  --_accent: var(--dnet-toast-accent, var(--dnet-toast-bg-success, var(--dnet-sys-success)));
+  --_bg: var(--dnet-toast-bg-success, var(--dnet-toast-bg, var(--dnet-sys-surface-raised)));
+}
+
+.dnet-toast[data-severity="warning"] {
+  --_accent: var(--dnet-toast-accent, var(--dnet-toast-bg-warning, var(--dnet-sys-warning)));
+  --_bg: var(--dnet-toast-bg-warning, var(--dnet-toast-bg, var(--dnet-sys-surface-raised)));
+}
+
+.dnet-toast[data-severity="error"] {
+  --_accent: var(--dnet-toast-accent, var(--dnet-toast-bg-danger, var(--dnet-sys-danger)));
+  --_bg: var(--dnet-toast-bg-danger, var(--dnet-toast-bg, var(--dnet-sys-surface-raised)));
+}
+
+.dnet-toast[data-compact] {
+  --_icon-size: 24px;
+
   align-items: center;
-  width: 30px;
+  min-width: 260px;
+  padding-block: var(--dnet-sys-space-3);
+  width: auto;
 }
 
-.dnet-toast-counter {
-  font-weight: 300;
-  font-size: 0.75rem;
-}
-
-.dnet-toast-left-column {
-  display: flex;
+.dnet-toast__icon {
   align-items: center;
+  background: var(--_icon-bg);
+  border-radius: var(--dnet-sys-radius-md);
+  color: var(--_accent);
+  display: flex;
+  flex: 0 0 auto;
+  height: var(--_icon-size);
   justify-content: center;
-  width: 60px;
+  width: var(--_icon-size);
 }
 
-.dnet-toast-icon-wrapper {
+.dnet-toast__body {
   display: flex;
-  align-items: center;
-  cursor: pointer;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--dnet-sys-space-1);
+  min-width: 0;
 }
 
-button.dnet-toast-icon-wrapper {
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  appearance: none;
-  -webkit-appearance: none;
+.dnet-toast__title {
+  font-size: var(--dnet-sys-text-sm);
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 0;
+  overflow-wrap: anywhere;
 }
-button.dnet-toast-icon-wrapper:focus-visible {
-  outline: 2px solid currentColor;
+
+.dnet-toast__message {
+  color: var(--_fg-muted);
+  font-size: var(--dnet-sys-text-xs);
+  line-height: 1.5;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.dnet-toast__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dnet-sys-space-4);
+  margin-top: var(--dnet-sys-space-2);
+}
+
+.dnet-toast__action {
+  appearance: none;
+  background: none;
+  border: 0;
+  color: var(--_accent);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--dnet-sys-text-xs);
+  font-weight: 600;
+  padding: 0;
+}
+
+.dnet-toast__action[data-quiet] {
+  color: var(--_fg-muted);
+}
+
+.dnet-toast__action:hover {
+  text-decoration: underline;
+}
+
+.dnet-toast__action:focus-visible,
+.dnet-toast__close:focus-visible,
+.dnet-toast:focus-visible {
+  outline: 2px solid var(--dnet-sys-focus-ring);
   outline-offset: 2px;
 }
 
-/* Iconos funcionales monocromos (R9): mask-image + background-color
-   currentColor; el color sigue al texto del estado (blanco en success/info/
-   danger, casi negro en warning), igual que los fills originales. */
-.dnet-toast-icon {
-  display: block;
-  background-color: currentColor;
-  height: 24px;
-  width: 24px;
+.dnet-toast__close {
+  align-items: center;
+  align-self: flex-start;
+  appearance: none;
+  background: none;
+  border: 0;
+  border-radius: var(--dnet-sys-radius-sm);
+  color: var(--_fg-muted);
   cursor: pointer;
-  -webkit-mask-position: center;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-size: 24px 24px;
+  display: flex;
+  flex: 0 0 auto;
+  height: 26px;
+  justify-content: center;
+  padding: 0;
+  width: 26px;
+}
+
+.dnet-toast__close:hover {
+  background: color-mix(in srgb, var(--_fg) 7%, var(--dnet-sys-transparent));
+  color: var(--_fg);
+}
+
+.dnet-toast-icon {
+  background-color: currentColor;
+  cursor: pointer;
+  display: block;
+  height: 18px;
   mask-position: center;
   mask-repeat: no-repeat;
-  mask-size: 24px 24px;
+  mask-size: 18px 18px;
+  width: 18px;
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 18px 18px;
+}
+
+.dnet-toast__close .dnet-toast-icon {
+  height: 16px;
+  mask-size: 16px 16px;
+  width: 16px;
+  -webkit-mask-size: 16px 16px;
+}
+
+.dnet-toast__progress {
+  background: color-mix(in srgb, var(--_accent) 16%, var(--dnet-sys-transparent));
+  bottom: 0;
+  height: var(--_bar-h);
+  left: 0;
+  position: absolute;
+  right: 0;
+}
+
+.dnet-toast__progress-bar {
+  animation: dnet-toast-progress var(--_duration, 5000ms) linear forwards;
+  background: var(--_accent);
+  display: block;
+  height: 100%;
+  transform-origin: left center;
+  width: 100%;
+}
+
+.dnet-toast:hover .dnet-toast__progress-bar,
+.dnet-toast:focus-within .dnet-toast__progress-bar {
+  animation-play-state: paused;
+}
+
+.dnet-toast[data-state="open"] {
+  animation: dnet-toast-in var(--dnet-sys-motion-normal) var(--dnet-sys-motion-ease) both;
+}
+
+.dnet-toast[data-state="closing"] {
+  animation: dnet-toast-out var(--dnet-sys-motion-fast) var(--dnet-sys-motion-ease) both;
+}
+
+@keyframes dnet-toast-progress {
+  from {
+    transform: scaleX(1);
+  }
+
+  to {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes dnet-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes dnet-toast-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(4px) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dnet-toast[data-state] {
+    animation: none;
+  }
 }
 
 .dnet-toast-close-icon {

@@ -46,6 +46,7 @@
     </div>
     <div class="dnet-m-l-30 dnet-m-t-30">
         <DnetButton OnClick="ShowToast" InitialFocus="true" class="dnet-m-r-10">Show Toast</DnetButton>
+        <DnetButton OnClick="ShowToastStack">Show toast stack</DnetButton>
     </div>
 </div>
 
@@ -68,15 +69,18 @@
     {
         var toastConfig = new ToastConfig
             {
-                Title = "Toast title 12:",
-                Text = "Data save in 10 seconds",
+                Title = "Settings saved",
+                Text = "The grid columns have been updated successfully.",
                 HasBackdrop = false,
                 HasTransparentBackdrop = false,
                 ToastType = _formData1.Key,
                 ToastPostion = ToastPostion.BottomRight,
-                ExcutionTime = 5,
-                ShowExcutionTime = true,
-                Height = 80
+                Duration = 8000,
+                Actions =
+                [
+                    new ToastAction { Label = "Undo", OnClick = () => Task.CompletedTask },
+                    new ToastAction { Label = "View details", Quiet = true, OnClick = () => Task.CompletedTask }
+                ]
             };
 
         RenderFragment userContent = x =>
@@ -89,6 +93,32 @@
 
         //ToastService.Show(toastConfig, null, null, userContent);
         ToastService.Show(toastConfig);
+    }
+
+    void ShowToastStack()
+    {
+        foreach (var type in Enum.GetValues<ToastType>())
+        {
+            ToastService.Show(new ToastConfig
+            {
+                Title = $"{type} notification",
+                Text = "This example shares one accessible stack with the other notifications.",
+                ToastType = type,
+                ToastPostion = ToastPostion.BottomRight,
+                Duration = 12000,
+                MaxVisible = 4
+            });
+        }
+
+        ToastService.Show(new ToastConfig
+        {
+            Title = "Queued notification",
+            Text = "This toast appears when one of the first four is dismissed.",
+            ToastType = ToastType.Information,
+            ToastPostion = ToastPostion.BottomRight,
+            Duration = 12000,
+            MaxVisible = 4
+        });
     }
 
     private void MyValueChangeHandler(string item)
@@ -114,6 +144,5 @@
         return keyValueModels;
     }
 }
-
 
 

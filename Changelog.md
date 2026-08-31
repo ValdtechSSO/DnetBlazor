@@ -1,5 +1,19 @@
 # Changelog for Blazor Library
 
+## Version 6.0.13 (August 2026)
+
+- Redesigned Toast around an accessible, theme-aware stack with elevated
+  surfaces, severity accents, progress timing, hover/focus pause, optional
+  actions, persistent notifications, Escape dismissal and a four-item queue.
+- Preserved the existing toast service, severity, timing and customization API;
+  added nullable millisecond duration, localized close text and per-stack
+  visibility limits.
+- Fixed Toast automatic dismissal so the notification closes reliably when its
+  progress duration ends while remaining synchronized with hover and focus.
+- Aligned Grid group expand arrows with their labels and applied the same
+  spacing used by Tree nodes.
+- Updated the AdminLayout minifier surface to derive from the active theme.
+
 ## Version 6.0.12 (August 2026)
 
 - Fixed Grid selection checkboxes on responsive browsers by removing the native

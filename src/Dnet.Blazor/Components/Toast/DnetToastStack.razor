@@ -1,0 +1,94 @@
+@using Dnet.Blazor.Components.Toast.Infrastructure.Enums
+@using Dnet.Blazor.Components.Toast.Infrastructure.Models
+@using Dnet.Blazor.Components.Toast.Infrastructure.Services
+
+@implements IDisposable
+
+<div class="dnet-toast-stack" data-position="@PositionName" style="@StackStyle">
+    <div class="dnet-toast-region" role="status" aria-live="polite">
+        @foreach (var entry in VisibleEntries.Where(IsPolite))
+        {
+            @RenderToast(entry)
+        }
+    </div>
+    <div class="dnet-toast-region" role="alert" aria-live="assertive">
+        @foreach (var entry in VisibleEntries.Where(entry => !IsPolite(entry)))
+        {
+            @RenderToast(entry)
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public ToastService Service { get; set; } = default!;
+
+    [Parameter]
+    public ToastPostion Position { get; set; } = ToastPostion.BottomRight;
+
+    [Parameter]
+    public string? ThemeScope { get; set; }
+
+    [Parameter]
+    public int Width { get; set; } = 392;
+
+    private ToastStackKey StackKey => new(Position, ThemeScope);
+
+    private string StackStyle => Width > 0 ? $"--dnet-toast-width:{Width}px" : string.Empty;
+
+    private IReadOnlyList<ToastEntry> VisibleEntries => Service.GetVisibleEntries(StackKey);
+
+    private string PositionName => Position switch
+    {
+        ToastPostion.TopRight => "top-end",
+        ToastPostion.TopCenter => "top-center",
+        ToastPostion.TopLeft => "top-start",
+        ToastPostion.BottomCenter => "bottom-center",
+        ToastPostion.BottomLeft => "bottom-start",
+        ToastPostion.LeftCenter => "left-center",
+        ToastPostion.RightCenter => "right-center",
+        _ => "bottom-end"
+    };
+
+    protected override void OnInitialized()
+    {
+        Service.StackChanged += HandleStackChanged;
+    }
+
+    private RenderFragment RenderToast(ToastEntry entry) => builder =>
+    {
+        builder.OpenComponent<DnetToast>(0);
+        builder.SetKey(entry.Id);
+        builder.AddAttribute(1, nameof(DnetToast.Title), entry.Title);
+        builder.AddAttribute(2, nameof(DnetToast.Text), entry.Text);
+        builder.AddAttribute(3, nameof(DnetToast.ToastType), entry.ToastType);
+        builder.AddAttribute(4, nameof(DnetToast.TypeIconClass), entry.TypeIconClass);
+        builder.AddAttribute(5, nameof(DnetToast.CloseIconClass), entry.CloseIconClass);
+        builder.AddAttribute(6, nameof(DnetToast.ToastTypeColor), entry.ToastTypeColor);
+        builder.AddAttribute(7, nameof(DnetToast.ToastClass), entry.ToastClass);
+        builder.AddAttribute(8, nameof(DnetToast.DurationMilliseconds), entry.DurationMilliseconds);
+        builder.AddAttribute(9, nameof(DnetToast.Actions), entry.Actions);
+        builder.AddAttribute(10, nameof(DnetToast.Strings), entry.Strings);
+        builder.AddAttribute(11, nameof(DnetToast.ComponentType), entry.ComponentType);
+        builder.AddAttribute(12, nameof(DnetToast.Parameters), entry.Parameters);
+        builder.AddAttribute(13, nameof(DnetToast.ContentChild), entry.ContentChild);
+        builder.AddAttribute(14, nameof(DnetToast.Dismissed), EventCallback.Factory.Create(this, () => Service.CompleteClose(StackKey, entry.Id)));
+        builder.CloseComponent();
+    };
+
+    private static bool IsPolite(ToastEntry entry) =>
+        entry.ToastType is ToastType.Information or ToastType.Success;
+
+    private void HandleStackChanged(ToastStackKey stackKey)
+    {
+        if (stackKey == StackKey)
+        {
+            _ = InvokeAsync(StateHasChanged);
+        }
+    }
+
+    public void Dispose()
+    {
+        Service.StackChanged -= HandleStackChanged;
+    }
+}

@@ -522,8 +522,10 @@ body {
   }
 }
 .desktop-minify-menu {
+  --_minifier-background: var(--dnet-dash-minifyme-bg-color, var(--dnet-sys-surface));
+
   flex: 0 0 50px;
-  background-color: var(--dnet-dash-minifyme-bg-color, var(--dnet-sys-border));
+  background-color: var(--_minifier-background);
 }
 
 .hidden-minifier .desktop-minify-menu {

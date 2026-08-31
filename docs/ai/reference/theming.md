@@ -98,6 +98,33 @@ to the overlay host:
 Arbitrary token overrides do **not** cross into an overlay. To style one overlay
 instance, pass custom properties through `OverlayConfig.PanelStyle`.
 
+### Toast tokens
+
+Toast uses the same component tokens in light and dark themes; their defaults
+resolve through the active semantic surface, text, border, elevation and status
+colors. No theme-specific Toast selector is required.
+
+| Token | Effect |
+|---|---|
+| `--dnet-toast-bg` | Elevated notification surface |
+| `--dnet-toast-fg` | Title and primary text |
+| `--dnet-toast-fg-muted` | Message, quiet action and close icon |
+| `--dnet-toast-border` | Outline color |
+| `--dnet-toast-radius` | Notification corner radius |
+| `--dnet-toast-shadow` | Notification elevation |
+| `--dnet-toast-accent` | Shared icon, action and progress accent |
+| `--dnet-toast-icon-bg` | Tinted severity-icon background |
+| `--dnet-toast-icon-size` | Severity-icon container size |
+| `--dnet-toast-padding` | Internal notification padding |
+| `--dnet-toast-width` | Preferred notification width |
+| `--dnet-toast-progress-height` | Timer progress-bar thickness |
+| `--dnet-toast-stack-gap` | Space between visible notifications |
+| `--dnet-toast-stack-inset` | Responsive viewport inset |
+| `--dnet-toast-stack-z` | Stack layer inside the overlay portal |
+
+The legacy `--dnet-toast-bg-*`, `--dnet-toast-border-radius` and
+`--dnet-toast-margin` names remain in the fallback chain for compatibility.
+
 ## Dark mode
 
 The library ships `dark.css`, `compact.css` and `high-contrast.css` under

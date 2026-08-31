@@ -1,52 +1,90 @@
 ﻿@using Dnet.Blazor.Components.Overlay.Infrastructure.Services
 @using Dnet.Blazor.Components.Toast.Infrastructure.Enums
 @using Dnet.Blazor.Components.Toast.Infrastructure.Interfaces
+@using Dnet.Blazor.Components.Toast.Infrastructure.Models
 @using Dnet.Blazor.Infrastructure.Services.CssBuilder
 @using Microsoft.AspNetCore.Components.Web
 
 @inject IToastService ToastService
+@inject IServiceProvider Services
 
 @implements IAsyncDisposable
 
-<div class="@_toastCssClasses" style="@_style" role="status" aria-live="polite">
-    <div class="dnet-toast-left-column">
-        <span class="dnet-toast-icon-wrapper">
-            <span class="dnet-toast-icon @_typeIconClass" unselectable="on"></span>
+<div class="@_toastCssClasses"
+     data-severity="@SeverityName"
+     data-state="@_state"
+     data-compact="@(_isCompact ? "true" : null)"
+     data-show-execution-time="@(ShowExcutionTime ? "true" : null)"
+     style="@_style"
+     role="@StandaloneRole"
+     aria-live="@StandaloneAriaLive"
+     aria-atomic="@(Dismissed.HasDelegate ? null : "true")"
+     tabindex="@(HasActions ? "0" : null)"
+     @onmouseenter="HandleMouseEnter"
+     @onmouseleave="HandleMouseLeave"
+     @onfocusin="HandleFocusIn"
+     @onfocusout="HandleFocusOut"
+     @onkeydown="HandleKeyDownAsync">
+    <span class="dnet-toast__icon" aria-hidden="true">
+        <span class="dnet-toast-icon @_typeIconClass" unselectable="on"></span>
+    </span>
+
+    <div class="dnet-toast__body">
+        @if (!string.IsNullOrWhiteSpace(Title))
+        {
+            <p class="dnet-toast__title">@Title</p>
+        }
+
+        @if (ComponentType is not null)
+        {
+            <div class="dnet-toast__message">
+                <CascadingValue Value="OverlayReferenceId" IsFixed="true">
+                    <DynamicComponent Type="@ComponentType" Parameters="@Parameters" />
+                </CascadingValue>
+            </div>
+        }
+        else if (ContentChild is not null)
+        {
+            <div class="dnet-toast__message">@ContentChild</div>
+        }
+        else if (!string.IsNullOrWhiteSpace(Text))
+        {
+            <p class="dnet-toast__message">@Text</p>
+        }
+
+        @if (HasActions)
+        {
+            <div class="dnet-toast__actions">
+                @foreach (var action in VisibleActions)
+                {
+                    <button type="button"
+                            class="dnet-toast__action"
+                            data-quiet="@(action.Quiet ? "true" : null)"
+                            @onclick="() => HandleActionAsync(action)">
+                        @action.Label
+                    </button>
+                }
+            </div>
+        }
+    </div>
+
+    <button type="button" class="dnet-toast__close" @onclick="BeginClosingAsync" aria-label="@EffectiveStrings.CloseLabel">
+        <span class="dnet-toast-icon @_closeIconClass" aria-hidden="true" unselectable="on"></span>
+    </button>
+
+    @if (EffectiveDurationMilliseconds is > 0)
+    {
+        <span class="dnet-toast__progress" aria-hidden="true">
+            <span class="dnet-toast__progress-bar"
+                  @onanimationend="BeginClosingAsync"
+                  @onanimationend:stopPropagation="true"></span>
         </span>
-    </div>
-    <div class="dnet-toast-center-column">
-        <span class="dnet-toast-title">@Title</span>
-        @if (ComponentType != null)
-        {
-            <CascadingValue Value="OverlayReferenceId" IsFixed="true">
-                <DynamicComponent Type="@ComponentType" Parameters="@Parameters" />
-            </CascadingValue>
-        }
-        else if (ContentChild != null)
-        {
-            @ContentChild
-        }
-        else
-        {
-            <span class="dnet-toast-text">@Text</span>
-        }
-    </div>
-    <div class="dnet-toast-right-column">
-        <button type="button" @onclick="CloseToast" class="dnet-toast-icon-wrapper" aria-label="Close notification">
-            <span class="dnet-toast-icon @_closeIconClass" unselectable="on"></span>
-        </button>
-        @if (ShowExcutionTime)
-        {
-            <span class="dnet-toast-counter">
-                @_excutionTime
-            </span>
-        }
-    </div>
+    }
 </div>
 
 @code {
-
-    [CascadingParameter] private int OverlayReferenceId { get; set; }
+    [CascadingParameter]
+    private int OverlayReferenceId { get; set; }
 
     /// <summary>Gets or sets the component type rendered dynamically.</summary>
     [Parameter]
@@ -70,13 +108,13 @@
 
     /// <summary>Gets or sets the toast type used by this component.</summary>
     [Parameter]
-    public ToastType ToastType { get; set; }
+    public ToastType ToastType { get; set; } = ToastType.Information;
 
     /// <summary>Gets or sets the type icon class used by this component.</summary>
     [Parameter]
     public string? TypeIconClass { get; set; }
 
-    /// <summary>Gets or sets the toast type icon class used by this component.</summary>
+    /// <summary>Gets or sets the legacy toast type icon class.</summary>
     [Parameter]
     public string? ToastTypeIconClass { get; set; }
 
@@ -84,111 +122,304 @@
     [Parameter]
     public string? CloseIconClass { get; set; }
 
-    /// <summary>Gets or sets the toast type color used by this component.</summary>
+    /// <summary>Gets or sets an optional accent color used by this component.</summary>
     [Parameter]
     public string? ToastTypeColor { get; set; }
 
-    /// <summary>Gets or sets the toast class used by this component.</summary>
+    /// <summary>Gets or sets additional classes applied to this component.</summary>
     [Parameter]
     public string? ToastClass { get; set; }
 
-    /// <summary>Gets or sets the excution time used by this component.</summary>
+    /// <summary>Gets or sets the legacy visible duration in seconds.</summary>
     [Parameter]
     public int ExcutionTime { get; set; }
 
-    /// <summary>Gets or sets whether the component show excution time.</summary>
+    /// <summary>Gets or sets whether the legacy execution-time state is exposed.</summary>
     [Parameter]
     public bool ShowExcutionTime { get; set; }
 
+    /// <summary>Gets or sets the visible duration in milliseconds.</summary>
+    [Parameter]
+    public int? DurationMilliseconds { get; set; }
 
-    private string? _toastCssClasses { get; set; }
+    /// <summary>Gets or sets up to two actions displayed by this toast.</summary>
+    [Parameter]
+    public IReadOnlyList<ToastAction>? Actions { get; set; }
 
-    private string? _typeIconClass { get; set; }
+    /// <summary>Gets or sets localized strings for this toast.</summary>
+    [Parameter]
+    public ToastStrings? Strings { get; set; }
 
-    private string? _closeIconClass { get; set; }
+    /// <summary>Raised after the closing transition has completed.</summary>
+    [Parameter]
+    public EventCallback Dismissed { get; set; }
 
+    private string? _toastCssClasses;
+    private string? _typeIconClass;
+    private string? _closeIconClass;
     private string? _style;
+    private string _state = "open";
+    private bool _isCompact;
+    private bool _dismissed;
+    private bool _isHovered;
+    private bool _hasFocusWithin;
+    private bool _durationCountdownStarted;
+    private TimeSpan _remainingDuration;
+    private long _durationCountdownStartedAt;
+    private CancellationTokenSource? _durationCountdownCancellation;
+    private CancellationTokenSource? _closeFallbackCancellation;
 
-    private int _excutionTime = 0;
-    private CancellationTokenSource? _timerCancellation;
-    private Task? _timerTask;
+    private ToastStrings EffectiveStrings =>
+        Strings ?? Services.GetService(typeof(ToastStrings)) as ToastStrings ?? ToastStrings.Default;
 
+    private IReadOnlyList<ToastAction> VisibleActions =>
+        Actions?.Where(action => !string.IsNullOrWhiteSpace(action.Label)).Take(2).ToArray()
+        ?? Array.Empty<ToastAction>();
+
+    private bool HasActions => VisibleActions.Count > 0;
+
+    private int? EffectiveDurationMilliseconds =>
+        DurationMilliseconds is > 0
+            ? DurationMilliseconds
+            : ExcutionTime > 0
+                ? checked(ExcutionTime * 1000)
+                : null;
+
+    private string SeverityName => ToastType switch
+    {
+        ToastType.Success => "success",
+        ToastType.Warning => "warning",
+        ToastType.Danger => "error",
+        _ => "info"
+    };
+
+    private string? StandaloneRole => Dismissed.HasDelegate
+        ? null
+        : ToastType is ToastType.Warning or ToastType.Danger ? "alert" : "status";
+
+    private string? StandaloneAriaLive => Dismissed.HasDelegate
+        ? null
+        : ToastType is ToastType.Warning or ToastType.Danger ? "assertive" : "polite";
 
     protected override void OnInitialized()
     {
-        _excutionTime = ExcutionTime;
-
-        _toastCssClasses = GetCssClasses();
-
-        _typeIconClass = ToastType switch
+#if DEBUG
+        if (Actions?.Count > 2)
         {
-            ToastType.Success => "dnet-toast-success-icon",
-            ToastType.Information => "dnet-toast-info-icon",
-            ToastType.Warning => "dnet-toast-warning-icon",
-            ToastType.Danger => "dnet-toast-danger-icon",
-            _ => _typeIconClass
-        };
-
-        _closeIconClass = !string.IsNullOrEmpty(CloseIconClass) ? CloseIconClass : "dnet-toast-close-icon";
-
-        if (!string.IsNullOrEmpty(TypeIconClass)) _typeIconClass = TypeIconClass;
-
-        _style = string.IsNullOrWhiteSpace(ToastTypeColor) ? null : $"background-color: {ToastTypeColor}";
-
-        if (ExcutionTime > 0)
-        {
-            _timerCancellation = new CancellationTokenSource();
-            _timerTask = RunTimerAsync(_timerCancellation.Token);
+            System.Diagnostics.Debug.WriteLine("DnetToast supports a maximum of two actions; additional actions were ignored.");
         }
+#endif
     }
 
-    private string GetCssClasses()
+    protected override void OnParametersSet()
     {
-
-        var classes = new CssBuilder("dnet-toast-container")
+        _toastCssClasses = new CssBuilder("dnet-toast dnet-toast-container")
             .AddClass(ToastClass, when: !string.IsNullOrWhiteSpace(ToastClass))
-            .AddClass("success", when: ToastType == ToastType.Success)
-            .AddClass("info", when: ToastType == ToastType.Information)
-            .AddClass("warning", when: ToastType == ToastType.Warning)
-            .AddClass("danger", when: ToastType == ToastType.Danger)
             .Build();
 
-        return classes;
+        _typeIconClass = !string.IsNullOrWhiteSpace(TypeIconClass)
+            ? TypeIconClass
+            : !string.IsNullOrWhiteSpace(ToastTypeIconClass)
+                ? ToastTypeIconClass
+                : ToastType switch
+                {
+                    ToastType.Success => "dnet-toast-success-icon",
+                    ToastType.Warning => "dnet-toast-warning-icon",
+                    ToastType.Danger => "dnet-toast-danger-icon",
+                    _ => "dnet-toast-info-icon"
+                };
+
+        _closeIconClass = !string.IsNullOrWhiteSpace(CloseIconClass)
+            ? CloseIconClass
+            : "dnet-toast-close-icon";
+
+        _isCompact = string.IsNullOrWhiteSpace(Text)
+            && ComponentType is null
+            && ContentChild is null
+            && !HasActions;
+
+        var styles = new List<string>();
+        if (EffectiveDurationMilliseconds is { } duration)
+        {
+            styles.Add($"--_duration:{duration}ms");
+        }
+
+        if (!string.IsNullOrWhiteSpace(ToastTypeColor))
+        {
+            styles.Add($"--_accent:{ToastTypeColor}");
+        }
+
+        _style = styles.Count > 0 ? string.Join(';', styles) : null;
     }
 
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && EffectiveDurationMilliseconds is > 0)
+        {
+            _remainingDuration = TimeSpan.FromMilliseconds(EffectiveDurationMilliseconds.Value);
+            _durationCountdownStarted = true;
+            StartDurationCountdown();
+        }
+
+        return Task.CompletedTask;
+    }
+
+    /// <summary>Starts closing this toast.</summary>
     public void CloseToast()
     {
-        _timerCancellation?.Cancel();
-        ToastService.Close(new OverlayResult { OverlayReferenceId = OverlayReferenceId });
+        _ = BeginClosingAsync();
     }
 
-    private async Task RunTimerAsync(CancellationToken cancellationToken)
+    private async Task BeginClosingAsync()
+    {
+        if (_state == "closing" || _dismissed)
+        {
+            return;
+        }
+
+        _state = "closing";
+        CancelDurationCountdown();
+        await InvokeAsync(StateHasChanged);
+
+        _closeFallbackCancellation?.Cancel();
+        _closeFallbackCancellation?.Dispose();
+        _closeFallbackCancellation = new CancellationTokenSource();
+        _ = CompleteAfterFallbackAsync(_closeFallbackCancellation.Token);
+    }
+
+    private async Task CompleteAfterFallbackAsync(CancellationToken cancellationToken)
     {
         try
         {
-            while (_excutionTime > 0)
-            {
-                await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
-                _excutionTime--;
-                await InvokeAsync(StateHasChanged);
-            }
-
-            await InvokeAsync(() => ToastService.Close(new OverlayResult { OverlayReferenceId = OverlayReferenceId }));
+            await Task.Delay(TimeSpan.FromMilliseconds(300), cancellationToken);
+            await InvokeAsync(CompleteDismissAsync);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
         }
     }
 
-    public ValueTask DisposeAsync()
+    private async Task HandleKeyDownAsync(KeyboardEventArgs args)
     {
-        if (_timerCancellation is null)
+        if (args.Key == "Escape")
         {
-            return ValueTask.CompletedTask;
+            await BeginClosingAsync();
+        }
+    }
+
+    private void HandleMouseEnter()
+    {
+        _isHovered = true;
+        PauseDurationCountdown();
+    }
+
+    private void HandleMouseLeave()
+    {
+        _isHovered = false;
+        ResumeDurationCountdownIfNeeded();
+    }
+
+    private void HandleFocusIn()
+    {
+        _hasFocusWithin = true;
+        PauseDurationCountdown();
+    }
+
+    private void HandleFocusOut()
+    {
+        _hasFocusWithin = false;
+        ResumeDurationCountdownIfNeeded();
+    }
+
+    private void StartDurationCountdown()
+    {
+        if (!_durationCountdownStarted || _remainingDuration <= TimeSpan.Zero || _state == "closing" || _dismissed)
+        {
+            return;
         }
 
-        _timerCancellation.Cancel();
-        _timerCancellation.Dispose();
+        CancelDurationCountdown();
+        _durationCountdownCancellation = new CancellationTokenSource();
+        _durationCountdownStartedAt = System.Diagnostics.Stopwatch.GetTimestamp();
+        _ = WaitForDurationAsync(_remainingDuration, _durationCountdownCancellation.Token);
+    }
+
+    private async Task WaitForDurationAsync(TimeSpan delay, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await Task.Delay(delay, cancellationToken);
+            await InvokeAsync(BeginClosingAsync);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+        }
+    }
+
+    private void PauseDurationCountdown()
+    {
+        if (!_durationCountdownStarted || _durationCountdownCancellation is null)
+        {
+            return;
+        }
+
+        var elapsed = System.Diagnostics.Stopwatch.GetElapsedTime(_durationCountdownStartedAt);
+        _remainingDuration = elapsed >= _remainingDuration
+            ? TimeSpan.Zero
+            : _remainingDuration - elapsed;
+        CancelDurationCountdown();
+    }
+
+    private void ResumeDurationCountdownIfNeeded()
+    {
+        if (!_isHovered && !_hasFocusWithin)
+        {
+            StartDurationCountdown();
+        }
+    }
+
+    private void CancelDurationCountdown()
+    {
+        _durationCountdownCancellation?.Cancel();
+        _durationCountdownCancellation?.Dispose();
+        _durationCountdownCancellation = null;
+    }
+
+    private async Task HandleActionAsync(ToastAction action)
+    {
+        if (action.OnClick is not null)
+        {
+            await action.OnClick();
+        }
+
+        await BeginClosingAsync();
+    }
+
+    private async Task CompleteDismissAsync()
+    {
+        if (_dismissed)
+        {
+            return;
+        }
+
+        _dismissed = true;
+        _closeFallbackCancellation?.Cancel();
+
+        if (Dismissed.HasDelegate)
+        {
+            await Dismissed.InvokeAsync();
+        }
+        else
+        {
+            ToastService.Close(new OverlayResult { OverlayReferenceId = OverlayReferenceId });
+        }
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        CancelDurationCountdown();
+        _closeFallbackCancellation?.Cancel();
+        _closeFallbackCancellation?.Dispose();
         return ValueTask.CompletedTask;
     }
 }

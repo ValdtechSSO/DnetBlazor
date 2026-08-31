@@ -587,6 +587,14 @@
   cursor: pointer;
 }
 
+.blg-tree-group-content {
+  --_group-toggle-gap: var(--dnet-sys-space-2);
+
+  align-items: center;
+  display: flex;
+  gap: var(--_group-toggle-gap);
+}
+
 .blg-icon {
   display: block;
   background-color: currentColor;

@@ -194,7 +194,7 @@ else
              data-blg-row-index="@RowId"
              data-blg-row-span="1"
              style="height: @height; grid-column: @(1 + checkboxCounter)/@(GridColumns.Count + 2 + checkboxCounter)">
-            <span style="padding-left: @paddingLeft; width: 100%; display: flex">
+            <span class="blg-tree-group-content" style="padding-left: @paddingLeft; width: 100%; display: flex">
                 <button type="button" @onclick="() => ChangeExpanded(RowNode.RowNodeId)" class="blg-icon-wrapper blg-tree-toggle" aria-label="@($"{(RowNode.Expanded ? "Contraer" : "Expandir")} grupo {RowNode.GroupValue}")" aria-expanded="@RowNode.Expanded">
                     <span class="blg-icon @iconClass" unselectable="on"></span>
                 </button>

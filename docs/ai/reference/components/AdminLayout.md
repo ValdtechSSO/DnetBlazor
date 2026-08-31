@@ -172,7 +172,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-dash-menu-left-padding-second-level` | `2em` |
 | `--dnet-dash-menu-left-padding-third-level` | `4em` |
 | `--dnet-dash-menu-text-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
-| `--dnet-dash-minifyme-bg-color` | `#ebebeb` <br><sub>via `--dnet-sys-border`</sub> |
+| `--dnet-dash-minifyme-bg-color` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
 | `--dnet-dash-minifyme-foreground` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
 | `--dnet-dash-navbar-height` | `38px` |
 | `--dnet-dash-positioning-helper-color` | `color-mix(in srgb, var(--dnet-ref-neutral-1000) 87%, transparent)` <br><sub>via `--dnet-sys-on-surface-emphasis`</sub> |
