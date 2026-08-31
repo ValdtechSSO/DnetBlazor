@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added `DnetSlider`, a form-aware native range control with single and dual-thumb
+  modes, discrete formatted value labels, tick marks, semantic colors, RTL,
+  drag lifecycle events and token-based styling.
 - Added `DnetBadge`, a token-driven status indicator for arbitrary content with
   logical positions, three sizes, semantic colors, overlap, hidden and disabled
   states, RTL support and accessible descriptions.

@@ -15,6 +15,7 @@
 		<RepositoryUrl>https://github.com/ValdtechSSO/DnetBlazor</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
+			- Slider: Added single and range sliders with discrete labels, ticks, semantic states and accessible native inputs.
 			- Badge: Added positioned, sized and semantic status badges for arbitrary content.
 			- DatePicker: Added ranges, inline calendar, advanced APIs and adaptive touch presentation while preserving the string API.
 			- PickList: Supports disabled items for inherited assignments that users cannot change.

@@ -1,0 +1,101 @@
+@namespace Dnet.Blazor.Components.Slider
+@using Microsoft.AspNetCore.Components.Web
+
+<div @attributes="RootAttributes" class="@RootClass" style="@RootStyle">
+    @if (ChildContent is not null)
+    {
+        <span id="@_labelId" class="dnet-slider-label">@ChildContent</span>
+    }
+
+    <div class="dnet-slider-control">
+        <span class="dnet-slider-track" aria-hidden="true">
+            <span class="dnet-slider-track-active"></span>
+            @if (ShowTickMarks)
+            {
+                @foreach (var tick in TickMarks)
+                {
+                    <span class="@TickClass(tick)" style="inset-inline-start: @(FormatPercent(tick.Percent))%;"></span>
+                }
+            }
+        </span>
+
+        @if (Range)
+        {
+            <input @attributes="FilteredStartInputAttributes"
+                   @ref="_startElement"
+                   class="@InputClass(DnetSliderThumb.Start, StartInputAttributes)"
+                   type="range"
+                   min="@FormatNumber(Min)"
+                   max="@FormatNumber(SafeEndValue)"
+                   step="@FormatNumber(Step)"
+                   value="@FormatNumber(SafeStartValue)"
+                   name="@StartName"
+                   disabled="@Disabled"
+                   required="@Required"
+                   aria-label="@ResolveAriaLabel(StartAriaLabel, StartInputAttributes)"
+                   aria-labelledby="@ResolveLabelledBy(StartAriaLabel, StartInputAttributes)"
+                   aria-valuetext="@FormatValue(SafeStartValue)"
+                   aria-invalid="@AriaInvalid(DnetSliderThumb.Start)"
+                   @oninput="@((ChangeEventArgs eventArgs) => HandleInputAsync(eventArgs, DnetSliderThumb.Start))"
+                   @onchange="@((ChangeEventArgs eventArgs) => HandleChangeAsync(eventArgs, DnetSliderThumb.Start))"
+                   @onpointerdown="@(() => HandleDragStartAsync(DnetSliderThumb.Start))"
+                   @onpointerup="@(() => HandleDragEndAsync(DnetSliderThumb.Start))"
+                   @onpointercancel="@(() => HandleDragEndAsync(DnetSliderThumb.Start))" />
+
+            <input @attributes="FilteredEndInputAttributes"
+                   @ref="_endElement"
+                   class="@InputClass(DnetSliderThumb.End, EndInputAttributes)"
+                   type="range"
+                   min="@FormatNumber(SafeStartValue)"
+                   max="@FormatNumber(Max)"
+                   step="@FormatNumber(Step)"
+                   value="@FormatNumber(SafeEndValue)"
+                   name="@EndName"
+                   disabled="@Disabled"
+                   required="@Required"
+                   aria-label="@ResolveAriaLabel(EndAriaLabel, EndInputAttributes)"
+                   aria-labelledby="@ResolveLabelledBy(EndAriaLabel, EndInputAttributes)"
+                   aria-valuetext="@FormatValue(SafeEndValue)"
+                   aria-invalid="@AriaInvalid(DnetSliderThumb.End)"
+                   @oninput="@((ChangeEventArgs eventArgs) => HandleInputAsync(eventArgs, DnetSliderThumb.End))"
+                   @onchange="@((ChangeEventArgs eventArgs) => HandleChangeAsync(eventArgs, DnetSliderThumb.End))"
+                   @onpointerdown="@(() => HandleDragStartAsync(DnetSliderThumb.End))"
+                   @onpointerup="@(() => HandleDragEndAsync(DnetSliderThumb.End))"
+                   @onpointercancel="@(() => HandleDragEndAsync(DnetSliderThumb.End))" />
+
+            @if (Discrete)
+            {
+                <span class="dnet-slider-value-indicator dnet-slider-value-indicator-start" aria-hidden="true">@FormatValue(SafeStartValue)</span>
+                <span class="dnet-slider-value-indicator dnet-slider-value-indicator-end" aria-hidden="true">@FormatValue(SafeEndValue)</span>
+            }
+        }
+        else
+        {
+            <input @attributes="FilteredInputAttributes"
+                   @ref="_singleElement"
+                   class="@InputClass(DnetSliderThumb.Single, InputAttributes)"
+                   type="range"
+                   min="@FormatNumber(Min)"
+                   max="@FormatNumber(Max)"
+                   step="@FormatNumber(Step)"
+                   value="@FormatNumber(SafeValue)"
+                   name="@Name"
+                   disabled="@Disabled"
+                   required="@Required"
+                   aria-label="@ResolveAriaLabel(AriaLabel, InputAttributes)"
+                   aria-labelledby="@ResolveLabelledBy(AriaLabel, InputAttributes)"
+                   aria-valuetext="@FormatValue(SafeValue)"
+                   aria-invalid="@AriaInvalid(DnetSliderThumb.Single)"
+                   @oninput="@((ChangeEventArgs eventArgs) => HandleInputAsync(eventArgs, DnetSliderThumb.Single))"
+                   @onchange="@((ChangeEventArgs eventArgs) => HandleChangeAsync(eventArgs, DnetSliderThumb.Single))"
+                   @onpointerdown="@(() => HandleDragStartAsync(DnetSliderThumb.Single))"
+                   @onpointerup="@(() => HandleDragEndAsync(DnetSliderThumb.Single))"
+                   @onpointercancel="@(() => HandleDragEndAsync(DnetSliderThumb.Single))" />
+
+            @if (Discrete)
+            {
+                <span class="dnet-slider-value-indicator dnet-slider-value-indicator-end" aria-hidden="true">@FormatValue(SafeValue)</span>
+            }
+        }
+    </div>
+</div>

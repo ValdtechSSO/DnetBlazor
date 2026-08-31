@@ -1,0 +1,241 @@
+@page "/Slider"
+
+@using Dnet.Blazor.Components.Slider
+@using Dnet.Blazor.Components.SlideToggle
+
+<div class="container-fluid slider-page">
+    <div class="d-flex dnet-m-l-30 dnet-m-t-20">
+        <span class="dnet-m-r-10 dnet-app-comp-name">Slider</span>
+    </div>
+
+    <div class="slider-demo-grid dnet-m-l-30 dnet-m-t-30">
+        <section class="slider-demo-card">
+            <div class="slider-demo-heading">
+                <div>
+                    <h2>Basic slider</h2>
+                    <p>Native keyboard behavior with continuous two-way binding.</p>
+                </div>
+                <output>@_volume%</output>
+            </div>
+            <DnetSlider @bind-Value="_volume"
+                        Min="0"
+                        Max="100"
+                        Step="1"
+                        AriaLabel="Volume"
+                        DisplayWith="FormatPercent">
+                Volume
+            </DnetSlider>
+        </section>
+
+        <section class="slider-demo-card">
+            <div class="slider-demo-heading">
+                <div>
+                    <h2>Range slider</h2>
+                    <p>Two constrained thumbs select a minimum and maximum.</p>
+                </div>
+                <output>@($"€{_minimumPrice} – €{_maximumPrice}")</output>
+            </div>
+            <DnetSlider Range="true"
+                        @bind-StartValue="_minimumPrice"
+                        @bind-EndValue="_maximumPrice"
+                        Min="0"
+                        Max="500"
+                        Step="10"
+                        StartAriaLabel="Minimum price"
+                        EndAriaLabel="Maximum price"
+                        DisplayWith="FormatCurrency">
+                Price range
+            </DnetSlider>
+        </section>
+
+        <section class="slider-demo-card">
+            <div class="slider-demo-heading">
+                <div>
+                    <h2>Discrete and tick marks</h2>
+                    <p>The value bubble appears while the thumb is focused or dragged.</p>
+                </div>
+                <output>@_quality / 10</output>
+            </div>
+            <DnetSlider @bind-Value="_quality"
+                        Min="0"
+                        Max="10"
+                        Step="1"
+                        Discrete="true"
+                        ShowTickMarks="true"
+                        Color="DnetSliderColor.Success"
+                        AriaLabel="Quality">
+                Quality
+            </DnetSlider>
+        </section>
+
+        <section class="slider-demo-card">
+            <div class="slider-demo-heading">
+                <div>
+                    <h2>Configurable states</h2>
+                    <p>Semantic colors, disabled state and public tokens use the Dnet theme.</p>
+                </div>
+            </div>
+            <div class="slider-demo-options">
+                <DnetSlideToggle @bind-Value="_disabled">Disabled</DnetSlideToggle>
+                <DnetSlideToggle @bind-Value="_showTicks">Show tick marks</DnetSlideToggle>
+            </div>
+            <DnetSlider @bind-Value="_risk"
+                        Min="0"
+                        Max="100"
+                        Step="10"
+                        Disabled="_disabled"
+                        ShowTickMarks="_showTicks"
+                        Discrete="true"
+                        Color="DnetSliderColor.Danger"
+                        AriaLabel="Risk">
+                Risk
+            </DnetSlider>
+        </section>
+
+        <section class="slider-demo-card">
+            <h2>Semantic colors</h2>
+            <div class="slider-color-list">
+                @foreach (var item in _colors)
+                {
+                    <DnetSlider Value="item.Value"
+                                Min="0"
+                                Max="100"
+                                Color="item.Color"
+                                AriaLabel="@item.Label">
+                        @item.Label
+                    </DnetSlider>
+                }
+            </div>
+        </section>
+
+        <section class="slider-demo-card" dir="rtl">
+            <div class="slider-demo-heading">
+                <div>
+                    <h2>RTL</h2>
+                    <p>The active track, native keyboard direction and labels follow the document direction.</p>
+                </div>
+                <output>@_rtlValue</output>
+            </div>
+            <DnetSlider @bind-Value="_rtlValue"
+                        Min="0"
+                        Max="100"
+                        Step="10"
+                        Discrete="true"
+                        ShowTickMarks="true"
+                        AriaLabel="RTL value" />
+        </section>
+    </div>
+</div>
+
+<style>
+    .slider-page {
+        padding-top: 10px;
+    }
+
+    .slider-demo-grid {
+        display: grid;
+        gap: 20px;
+        max-width: 920px;
+        padding-bottom: 40px;
+        padding-right: 30px;
+    }
+
+    .slider-demo-card {
+        background: var(--dnet-sys-surface-raised);
+        border: 1px solid var(--dnet-sys-border);
+        border-radius: var(--dnet-sys-radius-lg);
+        color: var(--dnet-sys-on-surface);
+        padding: 24px 28px;
+    }
+
+    .slider-demo-card h2 {
+        color: var(--dnet-sys-on-surface-emphasis);
+        font-size: var(--dnet-sys-text-lg);
+        margin: 0 0 6px;
+    }
+
+    .slider-demo-card p {
+        color: var(--dnet-sys-on-surface-muted);
+        font-size: var(--dnet-sys-text-sm);
+        margin: 0;
+    }
+
+    .slider-demo-heading {
+        align-items: start;
+        display: flex;
+        gap: 24px;
+        justify-content: space-between;
+        margin-bottom: 18px;
+    }
+
+    .slider-demo-heading output {
+        background: var(--dnet-sys-surface-hover);
+        border-radius: var(--dnet-sys-radius-md);
+        color: var(--dnet-sys-on-surface-emphasis);
+        flex: 0 0 auto;
+        font-size: var(--dnet-sys-text-sm);
+        font-weight: 700;
+        padding: 7px 10px;
+    }
+
+    .slider-demo-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 28px;
+        margin: 16px 0 20px;
+    }
+
+    .slider-color-list {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        margin-top: 20px;
+    }
+
+    @@media (max-width: 640px) {
+        .slider-demo-grid {
+            margin-left: 14px !important;
+            padding-right: 14px;
+        }
+
+        .slider-demo-card {
+            padding: 20px;
+        }
+
+        .slider-demo-heading {
+            align-items: stretch;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .slider-demo-heading output {
+            align-self: flex-start;
+        }
+
+        .slider-color-list {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+@code {
+    private double _volume = 35;
+    private double _minimumPrice = 100;
+    private double _maximumPrice = 380;
+    private double _quality = 7;
+    private double _risk = 60;
+    private double _rtlValue = 40;
+    private bool _disabled;
+    private bool _showTicks = true;
+
+    private readonly (string Label, DnetSliderColor Color, double Value)[] _colors =
+    [
+        ("Primary", DnetSliderColor.Primary, 65),
+        ("Neutral", DnetSliderColor.Neutral, 45),
+        ("Success", DnetSliderColor.Success, 75),
+        ("Warning", DnetSliderColor.Warning, 55)
+    ];
+
+    private static string FormatPercent(double value) => $"{value:0}%";
+    private static string FormatCurrency(double value) => $"€{value:0}";
+}
