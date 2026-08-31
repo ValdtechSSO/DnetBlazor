@@ -10,15 +10,15 @@
 		<Description>Set of Components for Blazor Framework</Description>
 		<Copyright>Datalnet</Copyright>
 		<PackageTags>Blazor-Components-Datalnet</PackageTags>
-		<PackageVersion>6.0.11</PackageVersion>
+		<PackageVersion>6.0.12</PackageVersion>
 		<PackageProjectUrl>https://datalnet.com/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ValdtechSSO/DnetBlazor</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
-			- Slider: Added single and range sliders with discrete labels, ticks, semantic states and accessible native inputs.
-			- Badge: Added positioned, sized and semantic status badges for arbitrary content.
-			- DatePicker: Added ranges, inline calendar, advanced APIs and adaptive touch presentation while preserving the string API.
-			- PickList: Supports disabled items for inherited assignments that users cannot change.
+			- TimePicker: Added an adaptive modal presentation with a fixed header, explicit cancel action and reliable focus restoration.
+			- Grid: Fixed responsive selection checkbox rendering and alignment.
+			- FloatingPanel: Placed the internal scrollbar flush with the panel edge.
+			- Tree: Aligned expand controls, checkboxes and labels consistently.
 		</PackageReleaseNotes>
 	</PropertyGroup>
 

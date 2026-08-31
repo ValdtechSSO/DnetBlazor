@@ -7,7 +7,16 @@ ul[role=tree] li ul {
 .dnet-tree-parent-node {
   display: flex;
   align-items: center;
+  gap: var(--dnet-sys-space-2);
   margin-bottom: 5px;
+}
+
+.dnet-tree-parent-node > .dnet-checkbox {
+  flex: 0 0 auto;
+}
+
+.dnet-tree-parent-node > .dnet-checkbox .dnet-checkbox-layout {
+  margin: 0;
 }
 
 .dnet-tree-node-selector {
@@ -15,7 +24,10 @@ ul[role=tree] li ul {
 }
 
 .dnet-tree-content {
+  align-items: center;
+  display: flex;
   font-size: var(--dnet-tree-font-size, var(--dnet-sys-text-md));
+  min-height: var(--dnet-tree-icon-width, 25px);
 }
 
 .dnet-tree-node-outlet {

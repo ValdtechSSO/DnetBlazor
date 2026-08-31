@@ -9,11 +9,13 @@
 @using Dnet.Blazor.Infrastructure.Services.CssBuilder
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Web
+@using Microsoft.JSInterop
 
 @inherits DnetInputBase<TimeOnly?>
 @implements IDisposable
 
 @inject IOverlayService OverlayService
+@inject IJSRuntime JSRuntime
 
 <input @ref="Element"
        @attributes="AdditionalAttributes"
@@ -33,7 +35,7 @@
        aria-controls="@ListboxId"
        aria-activedescendant="@ActiveOptionId"
        aria-required="@(Required ? "true" : null)"
-       @onfocusin="@(() => OpenAsync())"
+       @onfocusin="HandleFocusInAsync"
        @onfocus="HandleFocus"
        @onblur="HandleBlur"
        @oninput="HandleInput"
@@ -47,6 +49,7 @@
     private bool _isOpen;
     private bool _hasFocus;
     private bool _previousDisabled;
+    private DateTime _suppressFocusOpenUntilUtc;
     private IFormEventService? _formEventService;
 
     [CascadingParameter]
@@ -107,6 +110,10 @@
     [Parameter]
     public string OptionsAriaLabel { get; set; } = "Choose a time";
 
+    /// <summary>Gets or sets the label of the responsive dialog cancel action.</summary>
+    [Parameter]
+    public string CancelLabel { get; set; } = "Cancel";
+
     /// <summary>Gets or sets an additional CSS class applied to the overlay panel.</summary>
     [Parameter]
     public string? PanelClass { get; set; }
@@ -114,6 +121,22 @@
     /// <summary>Gets or sets instance-level styles applied to the overlay panel.</summary>
     [Parameter]
     public string? PanelStyle { get; set; }
+
+    /// <summary>Gets or sets whether the picker always uses its touch-friendly modal presentation.</summary>
+    [Parameter]
+    public bool TouchUi { get; set; }
+
+    /// <summary>Gets or sets whether the picker automatically switches to its touch presentation on small viewports.</summary>
+    [Parameter]
+    public bool Responsive { get; set; } = true;
+
+    /// <summary>Gets or sets the viewport width at which the responsive touch presentation is used.</summary>
+    [Parameter]
+    public int ResponsiveBreakpoint { get; set; } = 600;
+
+    /// <summary>Gets or sets whether focus returns to the element that opened the touch overlay after it closes.</summary>
+    [Parameter]
+    public bool RestoreFocus { get; set; } = true;
 
     [CascadingParameter(Name = "DnetThemeScope")]
     private string? ThemeScope { get; set; }
@@ -200,6 +223,11 @@
                 "TimePicker Interval must be between one minute and one day.");
         }
 
+        if (ResponsiveBreakpoint < 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(ResponsiveBreakpoint));
+        }
+
         _resolvedOptions = ResolveOptions();
 
         if (_isOpen && _resolvedOptions.Count == 0)
@@ -275,6 +303,10 @@
         UpdateFocusState(true);
     }
 
+    private Task HandleFocusInAsync() => DateTime.UtcNow < _suppressFocusOpenUntilUtc
+        ? Task.CompletedTask
+        : OpenAsync();
+
     private void HandleBlur()
     {
         if (string.IsNullOrEmpty(CurrentValueAsString))
@@ -329,17 +361,89 @@
         }
     }
 
-    private Task OpenAsync(bool preferLast = false)
+    private async Task OpenAsync(bool preferLast = false)
     {
         if (_isOpen || Disabled || ReadOnly || _resolvedOptions.Count == 0)
         {
-            return Task.CompletedTask;
+            return;
         }
 
         var selectedIndex = CurrentValue is null ? -1 : IndexOf(CurrentValue.Value);
         _activeIndex = selectedIndex >= 0
             ? selectedIndex
             : preferLast ? _resolvedOptions.Count - 1 : 0;
+
+        var touch = TouchUi || (Responsive && await JSRuntime.InvokeAsync<bool>(
+            "dnetinterop.matchesMedia",
+            $"(max-width: {ResponsiveBreakpoint}px)"));
+        var config = CreateOverlayConfig(touch);
+
+        RenderFragment content = builder =>
+        {
+            builder.OpenComponent<DnetTimePickerPanel>(0);
+            builder.AddAttribute(1, nameof(DnetTimePickerPanel.Options), _resolvedOptions);
+            builder.AddAttribute(2, nameof(DnetTimePickerPanel.Selected), CurrentValue);
+            builder.AddAttribute(3, nameof(DnetTimePickerPanel.ActiveIndex), _activeIndex);
+            builder.AddAttribute(4, nameof(DnetTimePickerPanel.Format), Format);
+            builder.AddAttribute(5, nameof(DnetTimePickerPanel.Culture), EffectiveCulture);
+            builder.AddAttribute(6, nameof(DnetTimePickerPanel.OptionIdPrefix), _optionIdPrefix);
+            builder.AddAttribute(7, nameof(DnetTimePickerPanel.OptionsAriaLabel), OptionsAriaLabel);
+            builder.AddAttribute(8, nameof(DnetTimePickerPanel.TouchUi), touch);
+            builder.AddAttribute(9, nameof(DnetTimePickerPanel.CancelLabel), CancelLabel);
+            builder.AddAttribute(
+                10,
+                nameof(DnetTimePickerPanel.Cancel),
+                EventCallback.Factory.Create(this, () => DetachMenu()));
+            builder.AddAttribute(
+                11,
+                nameof(DnetTimePickerPanel.OptionSelected),
+                EventCallback.Factory.Create<TimeOnly>(this, SelectTimeAsync));
+            builder.CloseComponent();
+        };
+
+        _menuReference = OverlayService.Attach(content, config);
+        _menuReference.Close += HandleOverlayClosed;
+        _isOpen = true;
+        StateHasChanged();
+    }
+
+    private OverlayConfig CreateOverlayConfig(bool touch)
+    {
+        var panelClass = string.Join(
+            " ",
+            new[]
+            {
+                "dnet-timepicker-overlay",
+                touch ? "dnet-timepicker-overlay-touch" : null,
+                PanelClass
+            }.Where(value => !string.IsNullOrWhiteSpace(value)));
+
+        if (touch)
+        {
+            return new OverlayConfig
+            {
+                HasBackdrop = true,
+                CloseOnEscape = true,
+                ScrollStrategy = OverlayScrollStrategy.Block,
+                Role = "dialog",
+                AriaModal = true,
+                AriaLabel = OptionsAriaLabel,
+                Direction = EffectiveCulture.TextInfo.IsRightToLeft ? "rtl" : "ltr",
+                TrapFocus = true,
+                RestoreFocus = RestoreFocus,
+                InitialFocusSelector = ".dnet-timepicker-option-active, .dnet-timepicker-option-selected, .dnet-timepicker-option",
+                PositionStrategy = PositionStrategy.Global,
+                GlobalPositionStrategy = new GlobalPositionStrategyBuilder()
+                    .CenterHorizontally("0")
+                    .CenterVertically("0"),
+                Width = "min(100% - 24px, 360px)",
+                MaxHeight = "calc(100dvh - 24px)",
+                PanelClass = panelClass,
+                PanelStyle = ResolvedPanelStyle,
+                ComponentType = ComponentType.TimePicker,
+                ThemeScope = ThemeScope
+            };
+        }
 
         var positions = new List<ConnectedPosition>
         {
@@ -377,7 +481,7 @@
             .WithFlexibleDimensions(false)
             .WithPositions(positions);
 
-        var config = new OverlayConfig
+        return new OverlayConfig
         {
             HasBackdrop = true,
             HasTransparentBackdrop = true,
@@ -385,37 +489,17 @@
             ScrollStrategy = OverlayScrollStrategy.Reposition,
             Role = "listbox",
             AriaLabel = OptionsAriaLabel,
+            Direction = EffectiveCulture.TextInfo.IsRightToLeft ? "rtl" : "ltr",
+            RestoreFocus = RestoreFocus,
             PositionStrategy = PositionStrategy.FlexibleConnectedTo,
             FlexibleConnectedPositionStrategyBuilder = positionStrategy,
             Width = "var(--dnet-timepicker-panel-width, 280px)",
             MaxHeight = "min(320px, calc(100vh - 16px))",
-            PanelClass = string.Join(" ", new[] { "dnet-timepicker-overlay", PanelClass }.Where(value => !string.IsNullOrWhiteSpace(value))),
+            PanelClass = panelClass,
             PanelStyle = ResolvedPanelStyle,
             ComponentType = ComponentType.TimePicker,
             ThemeScope = ThemeScope
         };
-
-        RenderFragment content = builder =>
-        {
-            builder.OpenComponent<DnetTimePickerPanel>(0);
-            builder.AddAttribute(1, nameof(DnetTimePickerPanel.Options), _resolvedOptions);
-            builder.AddAttribute(2, nameof(DnetTimePickerPanel.Selected), CurrentValue);
-            builder.AddAttribute(3, nameof(DnetTimePickerPanel.ActiveIndex), _activeIndex);
-            builder.AddAttribute(4, nameof(DnetTimePickerPanel.Format), Format);
-            builder.AddAttribute(5, nameof(DnetTimePickerPanel.Culture), EffectiveCulture);
-            builder.AddAttribute(6, nameof(DnetTimePickerPanel.OptionIdPrefix), _optionIdPrefix);
-            builder.AddAttribute(
-                7,
-                nameof(DnetTimePickerPanel.OptionSelected),
-                EventCallback.Factory.Create<TimeOnly>(this, SelectTimeAsync));
-            builder.CloseComponent();
-        };
-
-        _menuReference = OverlayService.Attach(content, config);
-        _menuReference.Close += HandleOverlayClosed;
-        _isOpen = true;
-        StateHasChanged();
-        return Task.CompletedTask;
     }
 
     private async Task SelectTimeAsync(TimeOnly time)
@@ -515,6 +599,7 @@
 
     private void HandleOverlayClosed(OverlayResult result)
     {
+        SuppressFocusReopen();
         _isOpen = false;
         if (_menuReference is not null)
         {
@@ -533,6 +618,7 @@
             return;
         }
 
+        SuppressFocusReopen();
         var reference = _menuReference;
         reference.Close -= HandleOverlayClosed;
         _menuReference = null;
@@ -540,6 +626,9 @@
         reference.Detach(reason);
         StateHasChanged();
     }
+
+    private void SuppressFocusReopen() =>
+        _suppressFocusOpenUntilUtc = DateTime.UtcNow.AddMilliseconds(300);
 
     private IReadOnlyList<TimeOnly> ResolveOptions()
     {

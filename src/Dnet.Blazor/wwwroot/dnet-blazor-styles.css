@@ -2517,7 +2517,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   padding: 0 15px 15px 15px;
 }
 .dnet-panel.in-floating-panel {
-  padding: 0 15px 0 20px;
+  padding: 0 0 0 20px;
 }
 
 .dnet-panel-header {
@@ -2531,6 +2531,14 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   overflow: scroll;
   padding-right: 5px;
   height: calc(100% - 0px);
+}
+
+.dnet-panel.in-floating-panel .dnet-panel-content {
+  padding-right: 20px;
+}
+
+.dnet-panel.in-floating-panel .dnet-panel-footer {
+  padding-right: 15px;
 }
 
 .dnet-panel-footer {
@@ -2809,76 +2817,70 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   height: 100%;
 }
 
-/* Base for label styling */
-[type=checkbox].blg-checkbox-no-label:checked, [type=checkbox].blg-checkbox-no-label:not(:checked),
-[type=checkbox].blg-checkbox-no-label:checked,
-[type=checkbox].blg-checkbox-no-label:not(:checked) {
-  position: relative;
-  padding-left: 1.95em;
-  cursor: pointer;
+.blg-selection-checkbox-wrapper {
+  justify-content: center;
 }
 
-/* checkbox aspect */
-[type=checkbox].blg-checkbox-no-label:checked:before, [type=checkbox].blg-checkbox-no-label:not(:checked):before,
-[type=checkbox].blg-checkbox-no-label:checked:before,
-[type=checkbox].blg-checkbox-no-label:not(:checked):before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 0.9rem;
-  height: 0.9rem;
-  border: 1px solid var(--dnet-sys-border-strong);
+[type="checkbox"].blg-checkbox-no-label {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
   background: var(--dnet-sys-surface);
+  border: 1px solid var(--dnet-sys-border-strong);
   border-radius: 0;
   box-shadow: none;
-}
-[type=checkbox].blg-checkbox-no-label.negative:checked:before, [type=checkbox].blg-checkbox-no-label.negative:not(:checked):before,
-[type=checkbox].blg-checkbox-no-label.negative:checked:before,
-[type=checkbox].blg-checkbox-no-label.negative:not(:checked):before {
-  content: "";
-  border: 1px solid var(--dnet-sys-on-surface-emphasis);
-  background: var(--dnet-sys-surface);
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-grid;
+  flex: 0 0 auto;
+  height: 0.875rem;
+  margin: 0;
+  padding: 0;
+  place-content: center;
+  position: relative;
+  width: 0.875rem;
 }
 
-/* checked mark aspect */
-[type=checkbox].blg-checkbox-no-label:checked::after, [type=checkbox].blg-checkbox-no-label:not(:checked)::after,
-[type=checkbox].blg-checkbox-no-label:checked::after,
-[type=checkbox].blg-checkbox-no-label:not(:checked)::after {
-  font-weight: 900;
-  position: absolute;
-  top: 0.18rem;
-  left: 0.15rem;
-  font-size: 0.625rem;
-  line-height: 0.8;
-  color: var(--dnet-sys-on-surface-emphasis);
-  transition: all 0.2s;
+[type="checkbox"].blg-checkbox-no-label.negative {
+  border-color: var(--dnet-sys-on-surface-emphasis);
+}
+
+[type="checkbox"].blg-checkbox-no-label:checked {
+  background: var(--dnet-sys-primary);
+  border-color: var(--dnet-sys-primary);
+}
+
+[type="checkbox"].blg-checkbox-no-label::after {
+  background-color: var(--dnet-sys-surface);
   content: "";
-  background-color: currentColor;
+  height: 0.625rem;
   -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/></svg>");
   -webkit-mask-repeat: no-repeat;
-  -webkit-mask-size: 0.625rem 0.625rem;
+  -webkit-mask-size: contain;
   mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/></svg>");
   mask-repeat: no-repeat;
-  mask-size: 0.625rem 0.625rem;
-  width: 12px;
-  height: 12px;
-}
-[type=checkbox].blg-checkbox-no-label.negative:checked:after, [type=checkbox].blg-checkbox-no-label.negative:not(:checked):after,
-[type=checkbox].blg-checkbox-no-label.negative:checked:after,
-[type=checkbox].blg-checkbox-no-label.negative:not(:checked):after {
-  color: var(--dnet-sys-on-surface-emphasis);
-}
-
-/* checked mark aspect changes */
-[type=checkbox].blg-checkbox-no-label:not(:checked):after {
+  mask-size: contain;
   opacity: 0;
-  transform: scale(0);
+  transform: scale(0.65);
+  transition:
+    opacity 90ms ease,
+    transform 90ms ease;
+  width: 0.625rem;
 }
 
-[type=checkbox].blg-checkbox-no-label:checked:after.blg-checkbox-no-label:checked:after {
+[type="checkbox"].blg-checkbox-no-label:checked::after {
   opacity: 1;
   transform: scale(1);
+}
+
+[type="checkbox"].blg-checkbox-no-label:focus-visible {
+  outline: 2px solid var(--dnet-sys-primary);
+  outline-offset: 2px;
+}
+
+[type="checkbox"].blg-checkbox-no-label:disabled {
+  cursor: default;
+  opacity: 0.38;
 }
 
 /* Responsive styles for small screens */
@@ -5404,7 +5406,16 @@ ul[role=tree] li ul {
 .dnet-tree-parent-node {
   display: flex;
   align-items: center;
+  gap: var(--dnet-sys-space-2);
   margin-bottom: 5px;
+}
+
+.dnet-tree-parent-node > .dnet-checkbox {
+  flex: 0 0 auto;
+}
+
+.dnet-tree-parent-node > .dnet-checkbox .dnet-checkbox-layout {
+  margin: 0;
 }
 
 .dnet-tree-node-selector {
@@ -5412,7 +5423,10 @@ ul[role=tree] li ul {
 }
 
 .dnet-tree-content {
+  align-items: center;
+  display: flex;
   font-size: var(--dnet-tree-font-size, var(--dnet-sys-text-md));
+  min-height: var(--dnet-tree-icon-width, 25px);
 }
 
 .dnet-tree-node-outlet {
@@ -7498,12 +7512,70 @@ select.mat-input-element::-ms-value {
 
   background: var(--_panel-background);
   box-sizing: border-box;
+  display: flex;
   flex: 1 1 auto;
+  flex-direction: column;
   max-height: 304px;
+  min-height: 0;
+  overflow: hidden;
+  width: 100%;
+}
+
+.dnet-timepicker-overlay-touch .dnet-timepicker-panel {
+  max-height: min(70dvh, 520px);
+}
+
+.dnet-timepicker-options {
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
   padding: var(--dnet-sys-space-2);
   scrollbar-color: var(--dnet-sys-border-strong) transparent;
   width: 100%;
+}
+
+.dnet-timepicker-panel-touch .dnet-timepicker-options {
+  overscroll-behavior: contain;
+  padding: 0 var(--dnet-sys-space-3) var(--dnet-sys-space-3);
+}
+
+.dnet-timepicker-panel-header {
+  align-items: center;
+  background: var(--_panel-background);
+  color: var(--_option-foreground);
+  display: flex;
+  font-size: var(--dnet-sys-text-md);
+  font-weight: 600;
+  min-height: 48px;
+  padding: var(--dnet-sys-space-3) var(--dnet-sys-space-3) var(--dnet-sys-space-2);
+}
+
+.dnet-timepicker-actions {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: flex-end;
+  min-height: 48px;
+  padding: var(--dnet-sys-space-2) var(--dnet-sys-space-3) var(--dnet-sys-space-3);
+}
+
+.dnet-timepicker-action {
+  background: transparent;
+  border: 0;
+  border-radius: var(--dnet-sys-radius-md);
+  color: var(--dnet-sys-primary-strong);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  min-height: 36px;
+  padding: 0 var(--dnet-sys-space-3);
+}
+
+.dnet-timepicker-action:hover,
+.dnet-timepicker-action:focus-visible {
+  background: var(--dnet-sys-state-hover);
+  outline: 0;
 }
 
 .dnet-timepicker-option {
@@ -7543,6 +7615,10 @@ select.mat-input-element::-ms-value {
   fill: currentColor;
   height: 18px;
   width: 18px;
+}
+
+.dnet-timepicker-panel-touch .dnet-timepicker-option {
+  min-height: 48px;
 }
 
 /*! Button (recorte por offset; editado a mano en 6.0) — generado una vez; a partir de aquí se edita a mano. */

@@ -1,5 +1,23 @@
 # Changelog for Blazor Library
 
+## Version 6.0.12 (August 2026)
+
+- Fixed Grid selection checkboxes on responsive browsers by removing the native
+  control chrome and centering the token-styled indicator in its column.
+- Placed FloatingPanel scrollbars flush with the side edge while preserving the
+  content and footer spacing.
+- Added a responsive TimePicker presentation that opens as a centered,
+  focus-trapped modal on small viewports while retaining the connected desktop
+  overlay.
+- Prevented TimePicker options from showing through the space above its sticky
+  responsive header while scrolling to the selected time.
+- Added an explicit, localizable cancel action to the responsive TimePicker
+  dialog.
+- Prevented the responsive TimePicker from reopening immediately after canceling
+  or selecting a time when focus is restored to its input.
+- Aligned Tree expand arrows, selection checkboxes and node labels on one
+  vertical center line, with consistent spacing between controls.
+
 ## Version 6.0.11 (August 2026)
 
 - Added `DnetSlider`, a form-aware native range control with single and dual-thumb

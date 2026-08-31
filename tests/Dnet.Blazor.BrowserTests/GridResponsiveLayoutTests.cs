@@ -47,6 +47,34 @@ public sealed class GridResponsiveLayoutTests
         await page.WaitForFunctionAsync(
             "() => document.querySelectorAll('.blg-center-cols-container [data-blg-row-id]').length > 0");
 
+        var checkboxAppearance = await page.EvaluateAsync<CheckboxAppearance>(
+            """
+            () => {
+                const checkbox = document.querySelector('.blg-center-cols-container .blg-checkbox-no-label');
+                const cell = checkbox.closest('.blg-cell');
+                const checkboxRect = checkbox.getBoundingClientRect();
+                const cellRect = cell.getBoundingClientRect();
+                const style = getComputedStyle(checkbox);
+                return {
+                    appearance: style.appearance,
+                    boxShadow: style.boxShadow,
+                    width: checkboxRect.width,
+                    height: checkboxRect.height,
+                    paddingLeft: parseFloat(style.paddingLeft),
+                    centerOffset: Math.abs(
+                        (checkboxRect.left + checkboxRect.width / 2)
+                        - (cellRect.left + cellRect.width / 2))
+                };
+            }
+            """);
+
+        Assert.Equal("none", checkboxAppearance.Appearance);
+        Assert.Equal("none", checkboxAppearance.BoxShadow);
+        Assert.InRange(checkboxAppearance.Width, 13.5, 14.5);
+        Assert.InRange(checkboxAppearance.Height, 13.5, 14.5);
+        Assert.Equal(0, checkboxAppearance.PaddingLeft);
+        Assert.InRange(checkboxAppearance.CenterOffset, 0, 1);
+
         var partitionHeaders = await page.EvaluateAsync<PartitionHeaders>(
             """
             () => ({
@@ -178,6 +206,21 @@ public sealed class GridResponsiveLayoutTests
         public string[] Center { get; init; } = [];
 
         public string[] Right { get; init; } = [];
+    }
+
+    private sealed class CheckboxAppearance
+    {
+        public string Appearance { get; init; } = string.Empty;
+
+        public string BoxShadow { get; init; } = string.Empty;
+
+        public double Width { get; init; }
+
+        public double Height { get; init; }
+
+        public double PaddingLeft { get; init; }
+
+        public double CenterOffset { get; init; }
     }
 
     private sealed class HorizontalLayout

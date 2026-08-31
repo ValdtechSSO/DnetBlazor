@@ -3,7 +3,7 @@
 Blazor component library for .NET 10, compatible with Blazor WebAssembly and
 interactive server-side applications.
 
-**Current version:** 6.0.11. See the [changelog](Changelog.md) for release
+**Current version:** 6.0.12. See the [changelog](Changelog.md) for release
 details.
 
 ## Components
@@ -21,7 +21,7 @@ application is available at [datalnet.com](https://www.datalnet.com).
 Install the package:
 
 ```bash
-dotnet add package Dnet.Blazor --version 6.0.11
+dotnet add package Dnet.Blazor --version 6.0.12
 ```
 
 Register the services in `Program.cs`:
@@ -63,11 +63,11 @@ Each release ships a machine-readable reference: every component's parameters,
 every styling token, plus setup and theming guides. Plain markdown, so it works
 with Claude, Codex, Cursor, Gemini CLI or anything else that reads project docs.
 
-**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/latest/download/dnet-blazor-agent-reference-6.0.11.zip)**
+**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/latest/download/dnet-blazor-agent-reference-6.0.12.zip)**
 — attached to every release.
 
 ```bash
-unzip dnet-blazor-agent-reference-6.0.11.zip -d docs/
+unzip dnet-blazor-agent-reference-6.0.12.zip -d docs/
 ```
 
 Then point your agent at it. The archive's `AGENTS-snippet.md` has text you can
@@ -81,6 +81,16 @@ npx degit ValdtechSSO/DnetBlazor/docs/ai/reference docs/dnet-blazor
 
 The reference is a snapshot of the version it ships with — grab the matching one
 when you upgrade the package.
+
+## What's new in 6.0.12
+
+- Added an adaptive modal presentation to `DnetTimePicker`, with a fixed header,
+  localizable cancel action and safe focus restoration after closing or choosing
+  a time.
+- Fixed Grid selection checkbox appearance and alignment on responsive layouts.
+- Placed FloatingPanel scrollbars flush with the panel edge without changing its
+  content spacing.
+- Aligned Tree expand controls, selection checkboxes and labels consistently.
 
 ## What's new in 6.0.11
 

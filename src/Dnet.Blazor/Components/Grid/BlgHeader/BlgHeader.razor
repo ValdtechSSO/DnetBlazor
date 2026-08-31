@@ -30,7 +30,7 @@
 
     <div class="blg-header-cell @(Pinned == Pinned.None ? "blg-header-cell-notpinned" : null)" role="columnheader" style="flex: 1 0 40px; height: @height; border: none">
         <div class="blg-header-cell-container">
-            <div class="blg-header-cell-label">
+            <div class="blg-header-cell-label blg-selection-checkbox-wrapper">
                 <input type="checkbox" @onclick="() => ChangeSelectAllNodes()" class="blg-checkbox-no-label" aria-label="Seleccionar todas las filas">
             </div>
         </div>

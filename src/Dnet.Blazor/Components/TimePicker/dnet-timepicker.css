@@ -60,12 +60,70 @@
 
   background: var(--_panel-background);
   box-sizing: border-box;
+  display: flex;
   flex: 1 1 auto;
+  flex-direction: column;
   max-height: 304px;
+  min-height: 0;
+  overflow: hidden;
+  width: 100%;
+}
+
+.dnet-timepicker-overlay-touch .dnet-timepicker-panel {
+  max-height: min(70dvh, 520px);
+}
+
+.dnet-timepicker-options {
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
   padding: var(--dnet-sys-space-2);
   scrollbar-color: var(--dnet-sys-border-strong) transparent;
   width: 100%;
+}
+
+.dnet-timepicker-panel-touch .dnet-timepicker-options {
+  overscroll-behavior: contain;
+  padding: 0 var(--dnet-sys-space-3) var(--dnet-sys-space-3);
+}
+
+.dnet-timepicker-panel-header {
+  align-items: center;
+  background: var(--_panel-background);
+  color: var(--_option-foreground);
+  display: flex;
+  font-size: var(--dnet-sys-text-md);
+  font-weight: 600;
+  min-height: 48px;
+  padding: var(--dnet-sys-space-3) var(--dnet-sys-space-3) var(--dnet-sys-space-2);
+}
+
+.dnet-timepicker-actions {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: flex-end;
+  min-height: 48px;
+  padding: var(--dnet-sys-space-2) var(--dnet-sys-space-3) var(--dnet-sys-space-3);
+}
+
+.dnet-timepicker-action {
+  background: transparent;
+  border: 0;
+  border-radius: var(--dnet-sys-radius-md);
+  color: var(--dnet-sys-primary-strong);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  min-height: 36px;
+  padding: 0 var(--dnet-sys-space-3);
+}
+
+.dnet-timepicker-action:hover,
+.dnet-timepicker-action:focus-visible {
+  background: var(--dnet-sys-state-hover);
+  outline: 0;
 }
 
 .dnet-timepicker-option {
@@ -105,4 +163,8 @@
   fill: currentColor;
   height: 18px;
   width: 18px;
+}
+
+.dnet-timepicker-panel-touch .dnet-timepicker-option {
+  min-height: 48px;
 }

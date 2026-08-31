@@ -18,7 +18,7 @@
 {
     var checkboxHeight = GridOptions.RowHeight + "px";
 
-    <div class="blg-cell blg-cell-value
+    <div class="blg-cell blg-cell-value blg-selection-checkbox-wrapper
                 @_rowCssClasses @(RowNode.IsHovered() ? "blg-hover-class" : null)
                 @(RowNode.IsClicked() && !RowNode.IsSelected() ? "blg-row-clicked" : null)
                 @(RowNode.IsSelected() ? "blg-row-selected" : null)"

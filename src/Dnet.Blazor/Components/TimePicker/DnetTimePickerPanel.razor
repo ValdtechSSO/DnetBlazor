@@ -4,29 +4,47 @@
 
 @inject IJSRuntime JSRuntime
 
-<div class="dnet-timepicker-panel">
-    @for (var index = 0; index < Options.Count; index++)
+<div class="dnet-timepicker-panel @(TouchUi ? "dnet-timepicker-panel-touch" : null)">
+    @if (TouchUi)
     {
-        var optionIndex = index;
-        var option = Options[index];
-        var selected = Selected == option;
-        var active = ActiveIndex == optionIndex;
+        <div class="dnet-timepicker-panel-header">@OptionsAriaLabel</div>
+    }
 
-        <button id="@($"{OptionIdPrefix}-{optionIndex}")"
-                class="@OptionClass(selected, active)"
-                type="button"
-                role="option"
-                tabindex="-1"
-                aria-selected="@(selected ? "true" : "false")"
-                @onclick="() => OptionSelected.InvokeAsync(option)">
-            <span>@option.ToString(Format, Culture)</span>
-            @if (selected)
-            {
-                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-                    <path d="m9 16.2-3.5-3.5L4.1 14.1 9 19 20.3 7.7l-1.4-1.4L9 16.2Z" />
-                </svg>
-            }
-        </button>
+    <div class="dnet-timepicker-options"
+         role="@(TouchUi ? "listbox" : null)"
+         aria-label="@(TouchUi ? OptionsAriaLabel : null)">
+        @for (var index = 0; index < Options.Count; index++)
+        {
+            var optionIndex = index;
+            var option = Options[index];
+            var selected = Selected == option;
+            var active = ActiveIndex == optionIndex;
+
+            <button id="@($"{OptionIdPrefix}-{optionIndex}")"
+                    class="@OptionClass(selected, active)"
+                    type="button"
+                    role="option"
+                    tabindex="-1"
+                    aria-selected="@(selected ? "true" : "false")"
+                    @onclick="() => OptionSelected.InvokeAsync(option)">
+                <span>@option.ToString(Format, Culture)</span>
+                @if (selected)
+                {
+                    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                        <path d="m9 16.2-3.5-3.5L4.1 14.1 9 19 20.3 7.7l-1.4-1.4L9 16.2Z" />
+                    </svg>
+                }
+            </button>
+        }
+    </div>
+
+    @if (TouchUi)
+    {
+        <div class="dnet-timepicker-actions">
+            <button class="dnet-timepicker-action"
+                    type="button"
+                    @onclick="Cancel">@CancelLabel</button>
+        </div>
     }
 </div>
 
@@ -55,6 +73,22 @@
     [Parameter, EditorRequired]
     public string OptionIdPrefix { get; set; } = "dnet-timepicker-option";
 
+    /// <summary>Gets or sets the accessible label for the options list.</summary>
+    [Parameter]
+    public string OptionsAriaLabel { get; set; } = "Choose a time";
+
+    /// <summary>Gets or sets the label of the cancel action.</summary>
+    [Parameter]
+    public string CancelLabel { get; set; } = "Cancel";
+
+    /// <summary>Gets or sets whether the panel is rendered using its touch-friendly modal presentation.</summary>
+    [Parameter]
+    public bool TouchUi { get; set; }
+
+    /// <summary>Raised when the user cancels the responsive dialog.</summary>
+    [Parameter]
+    public EventCallback Cancel { get; set; }
+
     /// <summary>Raised when the user chooses an option.</summary>
     [Parameter]
     public EventCallback<TimeOnly> OptionSelected { get; set; }
@@ -78,8 +112,14 @@
         }
 
         _lastScrolledIndex = ActiveIndex;
+        var activeOptionId = $"{OptionIdPrefix}-{ActiveIndex}";
         await JSRuntime.InvokeVoidAsync(
             "dnetinterop.scrollElementIntoViewById",
-            $"{OptionIdPrefix}-{ActiveIndex}");
+            activeOptionId);
+
+        if (TouchUi)
+        {
+            await JSRuntime.InvokeVoidAsync("dnetinterop.focusElementByIdAfterRender", activeOptionId);
+        }
     }
 }

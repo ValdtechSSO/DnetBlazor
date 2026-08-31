@@ -20,7 +20,10 @@
 		@if (CheckboxSelection)
 		{
 			var isSelected = Node.IsSelected();
-			<DnetInputCheckbox Value ="@isSelected" ValueChanged ="CheckboxClicked" ValueExpression="() => isSelected" class="dnet-m-r-5"></DnetInputCheckbox>
+			<DnetInputCheckbox Value ="@isSelected"
+						   ValueChanged ="CheckboxClicked"
+						   ValueExpression="() => isSelected"
+						   aria-label="@($"Select {DisplayValueConverter(Node.TreeNodeData)}")"></DnetInputCheckbox>
 		}
 		<div class="dnet-tree-content @(Node.IsActive() ? "active" : null)" tabindex="0" @onclick="TreeNodeClicked" @onkeydown="OnKeyDown">
 			@if (NodeContent != null)

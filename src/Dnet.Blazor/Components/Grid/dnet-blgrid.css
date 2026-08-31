@@ -191,76 +191,68 @@
   height: 100%;
 }
 
-/* Base for label styling */
-[type=checkbox].blg-checkbox-no-label:checked, [type=checkbox].blg-checkbox-no-label:not(:checked),
-[type=checkbox].blg-checkbox-no-label:checked,
-[type=checkbox].blg-checkbox-no-label:not(:checked) {
-  position: relative;
-  padding-left: 1.95em;
-  cursor: pointer;
+.blg-selection-checkbox-wrapper {
+  justify-content: center;
 }
 
-/* checkbox aspect */
-[type=checkbox].blg-checkbox-no-label:checked:before, [type=checkbox].blg-checkbox-no-label:not(:checked):before,
-[type=checkbox].blg-checkbox-no-label:checked:before,
-[type=checkbox].blg-checkbox-no-label:not(:checked):before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 0.9rem;
-  height: 0.9rem;
-  border: 1px solid var(--dnet-sys-border-strong);
+[type="checkbox"].blg-checkbox-no-label {
+  appearance: none;
   background: var(--dnet-sys-surface);
+  border: 1px solid var(--dnet-sys-border-strong);
   border-radius: 0;
   box-shadow: none;
-}
-[type=checkbox].blg-checkbox-no-label.negative:checked:before, [type=checkbox].blg-checkbox-no-label.negative:not(:checked):before,
-[type=checkbox].blg-checkbox-no-label.negative:checked:before,
-[type=checkbox].blg-checkbox-no-label.negative:not(:checked):before {
-  content: "";
-  border: 1px solid var(--dnet-sys-on-surface-emphasis);
-  background: var(--dnet-sys-surface);
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-grid;
+  flex: 0 0 auto;
+  height: 0.875rem;
+  margin: 0;
+  padding: 0;
+  place-content: center;
+  position: relative;
+  width: 0.875rem;
 }
 
-/* checked mark aspect */
-[type=checkbox].blg-checkbox-no-label:checked::after, [type=checkbox].blg-checkbox-no-label:not(:checked)::after,
-[type=checkbox].blg-checkbox-no-label:checked::after,
-[type=checkbox].blg-checkbox-no-label:not(:checked)::after {
-  font-weight: 900;
-  position: absolute;
-  top: 0.18rem;
-  left: 0.15rem;
-  font-size: 0.625rem;
-  line-height: 0.8;
-  color: var(--dnet-sys-on-surface-emphasis);
-  transition: all 0.2s;
+[type="checkbox"].blg-checkbox-no-label.negative {
+  border-color: var(--dnet-sys-on-surface-emphasis);
+}
+
+[type="checkbox"].blg-checkbox-no-label:checked {
+  background: var(--dnet-sys-primary);
+  border-color: var(--dnet-sys-primary);
+}
+
+[type="checkbox"].blg-checkbox-no-label::after {
+  background-color: var(--dnet-sys-surface);
   content: "";
-  background-color: currentColor;
+  height: 0.625rem;
   -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/></svg>");
   -webkit-mask-repeat: no-repeat;
-  -webkit-mask-size: 0.625rem 0.625rem;
+  -webkit-mask-size: contain;
   mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/></svg>");
   mask-repeat: no-repeat;
-  mask-size: 0.625rem 0.625rem;
-  width: 12px;
-  height: 12px;
-}
-[type=checkbox].blg-checkbox-no-label.negative:checked:after, [type=checkbox].blg-checkbox-no-label.negative:not(:checked):after,
-[type=checkbox].blg-checkbox-no-label.negative:checked:after,
-[type=checkbox].blg-checkbox-no-label.negative:not(:checked):after {
-  color: var(--dnet-sys-on-surface-emphasis);
-}
-
-/* checked mark aspect changes */
-[type=checkbox].blg-checkbox-no-label:not(:checked):after {
+  mask-size: contain;
   opacity: 0;
-  transform: scale(0);
+  transform: scale(0.65);
+  transition:
+    opacity 90ms ease,
+    transform 90ms ease;
+  width: 0.625rem;
 }
 
-[type=checkbox].blg-checkbox-no-label:checked:after.blg-checkbox-no-label:checked:after {
+[type="checkbox"].blg-checkbox-no-label:checked::after {
   opacity: 1;
   transform: scale(1);
+}
+
+[type="checkbox"].blg-checkbox-no-label:focus-visible {
+  outline: 2px solid var(--dnet-sys-primary);
+  outline-offset: 2px;
+}
+
+[type="checkbox"].blg-checkbox-no-label:disabled {
+  cursor: default;
+  opacity: 0.38;
 }
 
 /* Responsive styles for small screens */

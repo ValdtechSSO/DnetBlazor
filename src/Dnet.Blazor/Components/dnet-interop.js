@@ -96,6 +96,17 @@
             }
         },
 
+        focusElementByIdAfterRender: function (elementId) {
+            window.requestAnimationFrame(function () {
+                window.requestAnimationFrame(function () {
+                    const element = document.getElementById(elementId);
+                    if (element) {
+                        element.focus({ preventScroll: true });
+                    }
+                });
+            });
+        },
+
         matchesMedia: function (query) {
             return window.matchMedia(query).matches;
         },

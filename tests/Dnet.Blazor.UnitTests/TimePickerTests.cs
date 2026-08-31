@@ -1,5 +1,6 @@
 using Bunit;
 using Dnet.Blazor.Components.Form;
+using Dnet.Blazor.Components.Overlay.Infrastructure.Enums;
 using Dnet.Blazor.Components.Overlay.Infrastructure.Interfaces;
 using Dnet.Blazor.Components.Overlay.Infrastructure.Models;
 using Dnet.Blazor.Components.Overlay.Infrastructure.Services;
@@ -17,6 +18,8 @@ public sealed class TimePickerTests : BunitContext
     public TimePickerTests()
     {
         JSInterop.SetupVoid("dnetinterop.scrollElementIntoViewById", _ => true);
+        JSInterop.SetupVoid("dnetinterop.focusElementByIdAfterRender", _ => true);
+        JSInterop.Setup<bool>("dnetinterop.matchesMedia", _ => true).SetResult(false);
     }
 
     [Fact]
@@ -123,6 +126,85 @@ public sealed class TimePickerTests : BunitContext
             panel.FindAll("[role=option]"),
             option => Assert.Equal("10:10", option.TextContent.Trim()),
             option => Assert.Equal("16:40", option.TextContent.Trim()));
+    }
+
+    [Fact]
+    public async Task Responsive_picker_uses_centered_focus_trapped_overlay()
+    {
+        JSInterop.Setup<bool>("dnetinterop.matchesMedia", _ => true).SetResult(true);
+        var overlay = RegisterOverlayService();
+        RenderFragment? attachedContent = null;
+        OverlayConfig? attachedConfig = null;
+        var attachCount = 0;
+        overlay.OnAttach += (content, config) =>
+        {
+            attachCount++;
+            attachedContent = content;
+            attachedConfig = config;
+        };
+
+        TimeOnly? value = new(9, 15);
+        var cut = Render<DnetTimePicker>(parameters => parameters
+            .Add(component => component.Value, value)
+            .Add(component => component.ValueExpression, () => value)
+            .Add(component => component.Min, new TimeOnly(8, 0))
+            .Add(component => component.Max, new TimeOnly(10, 0))
+            .Add(component => component.Interval, TimeSpan.FromMinutes(15)));
+
+        await cut.Find("input").KeyDownAsync(new KeyboardEventArgs { Key = "ArrowDown" });
+
+        Assert.NotNull(attachedConfig);
+        Assert.Equal(PositionStrategy.Global, attachedConfig.PositionStrategy);
+        Assert.Equal(OverlayScrollStrategy.Block, attachedConfig.ScrollStrategy);
+        Assert.Equal("dialog", attachedConfig.Role);
+        Assert.True(attachedConfig.AriaModal);
+        Assert.True(attachedConfig.TrapFocus);
+        Assert.True(attachedConfig.RestoreFocus);
+        Assert.Contains("dnet-timepicker-overlay-touch", attachedConfig.PanelClass);
+        Assert.Contains("360px", attachedConfig.Width);
+
+        var panel = Render(attachedContent!);
+        Assert.Equal("listbox", panel.Find(".dnet-timepicker-options").GetAttribute("role"));
+        Assert.Equal("Choose a time", panel.Find(".dnet-timepicker-panel-header").TextContent.Trim());
+        Assert.Equal("Cancel", panel.Find(".dnet-timepicker-action").TextContent.Trim());
+
+        await panel.Find(".dnet-timepicker-action").ClickAsync(new());
+        await cut.Find("input").FocusInAsync(new FocusEventArgs());
+
+        Assert.Equal("false", cut.Find("input").GetAttribute("aria-expanded"));
+        Assert.Equal(1, attachCount);
+    }
+
+    [Fact]
+    public async Task Responsive_selection_does_not_reopen_when_focus_is_restored_to_input()
+    {
+        JSInterop.Setup<bool>("dnetinterop.matchesMedia", _ => true).SetResult(true);
+        var overlay = RegisterOverlayService();
+        RenderFragment? attachedContent = null;
+        var attachCount = 0;
+        overlay.OnAttach += (content, _) =>
+        {
+            attachCount++;
+            attachedContent = content;
+        };
+
+        TimeOnly? value = new(9, 15);
+        var cut = Render<DnetTimePicker>(parameters => parameters
+            .Add(component => component.Value, value)
+            .Add(component => component.ValueChanged, EventCallback.Factory.Create<TimeOnly?>(this, next => value = next))
+            .Add(component => component.ValueExpression, () => value)
+            .Add(component => component.Min, new TimeOnly(9, 0))
+            .Add(component => component.Max, new TimeOnly(10, 0))
+            .Add(component => component.Interval, TimeSpan.FromMinutes(15)));
+
+        await cut.Find("input").FocusInAsync(new FocusEventArgs());
+        var panel = Render(attachedContent!);
+        await panel.FindAll("[role=option]")[2].ClickAsync(new());
+        await cut.Find("input").FocusInAsync(new FocusEventArgs());
+
+        Assert.Equal(new TimeOnly(9, 30), value);
+        Assert.Equal("false", cut.Find("input").GetAttribute("aria-expanded"));
+        Assert.Equal(1, attachCount);
     }
 
     [Fact]
