@@ -1,6 +1,6 @@
 # Changelog for Blazor Library
 
-## Unreleased
+## Version 6.0.11 (August 2026)
 
 - Added `DnetSlider`, a form-aware native range control with single and dual-thumb
   modes, discrete formatted value labels, tick marks, semantic colors, RTL,

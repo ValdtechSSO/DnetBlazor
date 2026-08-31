@@ -1,6 +1,6 @@
 # Dnet.Blazor — AI agent reference
 
-Machine-readable reference for **Dnet.Blazor 6.0.2**, aimed at coding agents
+Machine-readable reference for **Dnet.Blazor 6.0.11**, aimed at coding agents
 (Claude, Codex, Cursor, Gemini CLI, or any tool that reads project docs).
 
 Point your agent at this folder and it will know the component API and the
@@ -19,7 +19,7 @@ npx degit ValdtechSSO/DnetBlazor/docs/ai/reference docs/dnet-blazor
 ```
 
 Pin it to the library version you actually use: this reference is a snapshot of
-6.0.2. If you upgrade the package, refresh this folder too.
+6.0.11. If you upgrade the package, refresh this folder too.
 
 ## What's here
 

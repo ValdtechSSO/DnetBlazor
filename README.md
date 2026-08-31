@@ -3,14 +3,15 @@
 Blazor component library for .NET 10, compatible with Blazor WebAssembly and
 interactive server-side applications.
 
-**Current version:** 6.0.10. See the [changelog](Changelog.md) for release
+**Current version:** 6.0.11. See the [changelog](Changelog.md) for release
 details.
 
 ## Components
 
 The library includes data-entry, navigation, overlay and data-display
 components, including Grid, PickList, List, DoubleList, Select, Autocomplete,
-Form, DatePicker, Tree, Tabs, Toast, Tooltip and Overlay.
+Form, DatePicker, TimePicker, Slider, Badge, Tree, Tabs, Toast, Tooltip and
+Overlay.
 
 Runnable examples for every component live in [`samples/`](samples/). The demo
 application is available at [datalnet.com](https://www.datalnet.com).
@@ -20,7 +21,7 @@ application is available at [datalnet.com](https://www.datalnet.com).
 Install the package:
 
 ```bash
-dotnet add package Dnet.Blazor --version 6.0.4
+dotnet add package Dnet.Blazor --version 6.0.11
 ```
 
 Register the services in `Program.cs`:
@@ -62,11 +63,11 @@ Each release ships a machine-readable reference: every component's parameters,
 every styling token, plus setup and theming guides. Plain markdown, so it works
 with Claude, Codex, Cursor, Gemini CLI or anything else that reads project docs.
 
-**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/latest/download/dnet-blazor-agent-reference-6.0.10.zip)**
+**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/latest/download/dnet-blazor-agent-reference-6.0.11.zip)**
 — attached to every release.
 
 ```bash
-unzip dnet-blazor-agent-reference-6.0.10.zip -d docs/
+unzip dnet-blazor-agent-reference-6.0.11.zip -d docs/
 ```
 
 Then point your agent at it. The archive's `AGENTS-snippet.md` has text you can
@@ -80,6 +81,17 @@ npx degit ValdtechSSO/DnetBlazor/docs/ai/reference docs/dnet-blazor
 
 The reference is a snapshot of the version it ships with — grab the matching one
 when you upgrade the package.
+
+## What's new in 6.0.11
+
+- Added the form-aware `DnetSlider`, with single and range modes, ticks,
+  formatted discrete labels, semantic colors and RTL support.
+- Added `DnetBadge`, `DnetTimePicker` and `DnetSlideToggle`, all aligned with
+  the Dnet visual and token contracts.
+- Expanded `DnetDatePicker` with typed ranges, inline calendars, comparison and
+  preview APIs, configurable selection strategies and adaptive presentation.
+- Integrated `DnetSlideToggle` into PickList items while preserving disabled
+  selections and controlled state.
 
 ## What's new in 6.0.10
 
