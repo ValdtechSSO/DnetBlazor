@@ -21,7 +21,7 @@ application is available at [datalnet.com](https://www.datalnet.com).
 Install the package:
 
 ```bash
-dotnet add package Dnet.Blazor --version 6.0.14
+dotnet add package Dnet.Blazor --version 6.0.15
 ```
 
 Register the services in `Program.cs`:
@@ -63,11 +63,11 @@ Each release ships a machine-readable reference: every component's parameters,
 every styling token, plus setup and theming guides. Plain markdown, so it works
 with Claude, Codex, Cursor, Gemini CLI or anything else that reads project docs.
 
-**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/latest/download/dnet-blazor-agent-reference-6.0.14.zip)**
+**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/latest/download/dnet-blazor-agent-reference-6.0.15.zip)**
 — attached to every release.
 
 ```bash
-unzip dnet-blazor-agent-reference-6.0.14.zip -d docs/
+unzip dnet-blazor-agent-reference-6.0.15.zip -d docs/
 ```
 
 Then point your agent at it. The archive's `AGENTS-snippet.md` has text you can
@@ -81,6 +81,15 @@ npx degit ValdtechSSO/DnetBlazor/docs/ai/reference docs/dnet-blazor
 
 The reference is a snapshot of the version it ships with — grab the matching one
 when you upgrade the package.
+
+## What's new in 6.0.15
+
+- Rebuilt ImageEditor as a responsive two-column editor with ratio presets,
+  numeric selection fields, native-resolution export and browser-side gestures.
+- Preserved image format, transparency and quality across crop, rotate and flip
+  operations, with optional output format, quality and dimension controls.
+- Fixed connected-list drag and drop, selected-value overflow and trailing form
+  icon spacing.
 
 ## What's new in 6.0.14
 

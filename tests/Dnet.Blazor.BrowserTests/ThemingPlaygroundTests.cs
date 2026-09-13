@@ -25,7 +25,11 @@ public sealed class ThemingPlaygroundTests
             WaitUntil = WaitUntilState.NetworkIdle
         });
 
-        await page.GetByLabel("Theme", new() { Exact = true }).SelectOptionAsync("dark");
+        await page.GetByRole(AriaRole.Combobox, new()
+        {
+            Name = "Theme",
+            Exact = true
+        }).SelectOptionAsync("dark");
         Assert.Equal("dark", await page.Locator("html").GetAttributeAsync("data-dnet-theme"));
 
         await page.Locator("input[type=color]").FillAsync("#0f6cbd");

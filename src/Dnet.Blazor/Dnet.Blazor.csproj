@@ -18,6 +18,7 @@
 			- ImageEditor: exports keep the resolution, aspect ratio, format and transparency of the selection instead of being resized to 170 x 170.
 			- ImageEditor: flips and crops are encoded once, gestures no longer round-trip to .NET per frame and images move without base64.
 			- ImageEditor: fixed the crop overlay misalignment and added MaxOutputDimension, OutputFormat and OutputQuality.
+			- Fixed connected-list drag and drop, selected-value overflow and trailing form icon spacing.
 		</PackageReleaseNotes>
 	</PropertyGroup>
 
