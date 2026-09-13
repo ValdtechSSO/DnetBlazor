@@ -2,6 +2,14 @@
 
 ## Version 6.0.15 (September 2026)
 
+- List: fixed drag and drop between connected lists. The fallback row markup,
+  which is the one the double list renders, made items draggable without ever
+  marking them as the drag payload, so every drop carried an empty list and the
+  connected list ignored it. Dragging now marks the item, and the connection
+  guard is covered by tests.
+- FloatingDoubleList: the right container was named "RghtContainer" on both
+  sides of the connection contract.
+
 - ImageEditor: rebuilt the dialog around the library's own components, in the
   layout of a two-column editor: a header with the file name and source size, a
   toolbar with Crop, rotate left/right, flip horizontal/vertical and Reset, the

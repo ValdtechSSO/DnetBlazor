@@ -128,7 +128,8 @@
                     var disabled = ListOptions?.DisableItem != null && ListOptions?.DisableItem(item.RowData) == true ? true
                     : false;
 
-                    <div class="dnet-list-item @GetRowCssClasses(item)" draggable="@draggable">
+                    <div class="dnet-list-item @GetRowCssClasses(item)" draggable="@draggable"
+                        @ondragstart="@(() => HandleItemDragStart(item))">
                         <div class="dnet-list-item-content" @onclick="(e => Transfer(item))">
                             <span class="@($"dnet-list-item-headline {(disabled ? "disabled" : "")}")">
                                 @ListOptions.DisplayValueConverter(item.RowData)
