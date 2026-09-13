@@ -1,12 +1,15 @@
-// Photon WASM initialization module
-// This module handles lazy loading and initialization of the Photon WASM library
+// Photon WASM initialization module.
+//
+// Loading is lazy on purpose: the module and its 1.8 MB wasm payload are only
+// fetched when an operation actually needs a resample, never when the editor
+// merely opens. Nothing in the UI blocks on it.
 
 let photonModule = null;
 let photonPromise = null;
 
 /**
- * Initialize Photon WASM module
- * @returns {Promise} Promise that resolves when Photon is loaded
+ * Initialize Photon WASM module.
+ * @returns {Promise} Promise that resolves when Photon is loaded.
  */
 async function initPhoton() {
     if (photonModule) {
@@ -19,25 +22,19 @@ async function initPhoton() {
 
     photonPromise = (async () => {
         try {
-            // Load the Photon ES module from the static file location
-            // The module path is relative to the app's base path
             const basePath = document.baseURI || window.location.origin + '/';
             const modulePath = new URL('photon_rs.js', basePath).href;
-            
-            console.log('🔄 Loading Photon WASM from:', modulePath);
-            
-            // Dynamic import of the Photon ES module
+
             const module = await import(/* webpackIgnore: true */ modulePath);
-            
-            // Initialize WASM with explicit path
+
             const wasmPath = new URL('photon_rs_bg.wasm', basePath).href;
-            await module.default(wasmPath);
-            
+            await module.default({ module_or_path: wasmPath });
+
             photonModule = module;
-            console.log('✅ Photon WASM initialized successfully');
+
             return module;
         } catch (error) {
-            console.error('❌ Failed to initialize Photon WASM:', error);
+            console.error('Dnet.Blazor: Photon WASM could not be initialized.', error);
             photonPromise = null;
             throw error;
         }
@@ -47,19 +44,20 @@ async function initPhoton() {
 }
 
 /**
- * Get initialized Photon module
- * @returns {Promise} Promise that resolves to the Photon module
+ * Get the initialized Photon module, loading it on first use.
+ * @returns {Promise} Promise that resolves to the Photon module.
  */
 async function getPhoton() {
     if (!photonModule) {
         await initPhoton();
     }
+
     return photonModule;
 }
 
 /**
- * Check if Photon is initialized
- * @returns {boolean} True if Photon is ready
+ * Check whether Photon is already initialized.
+ * @returns {boolean} True when Photon is ready.
  */
 function isPhotonReady() {
     return photonModule !== null;

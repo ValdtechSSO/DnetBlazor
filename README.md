@@ -3,7 +3,7 @@
 Blazor component library for .NET 10, compatible with Blazor WebAssembly and
 interactive server-side applications.
 
-**Current version:** 6.0.14. See the [changelog](Changelog.md) for release
+**Current version:** 6.0.15. See the [changelog](Changelog.md) for release
 details.
 
 ## Components

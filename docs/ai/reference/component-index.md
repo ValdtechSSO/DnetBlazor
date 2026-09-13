@@ -1,6 +1,6 @@
 # Component index
 
-Dnet.Blazor 6.0.14. One file per component under `components/`.
+Dnet.Blazor 6.0.15. One file per component under `components/`.
 Open only the one you need.
 
 | Component | Use in markup | Parameters | Styling tokens |
@@ -22,7 +22,7 @@ Open only the one you need.
 | [FloatingPanel](components/FloatingPanel.md) | `<DnetFloatingPanel>` | 3 | — |
 | [Form](components/Form.md) | `<DnetFormField>`, `<DnetInputDate>`, `<DnetInputNumber>`, `<DnetInputText>`, `<DnetInputTextArea>` | 45 | 4 |
 | [Grid](components/Grid.md) | `<BlgAdvancedFilterToggle>`, `<BlgBody>`, `<BlgGrid>`, `<BlgHeader>`, `<BlgRow>` | 72 | 29 |
-| [ImageEditor](components/ImageEditor.md) | `<DnetImageEditor>` | 14 | — |
+| [ImageEditor](components/ImageEditor.md) | `<DnetImageEditor>` | 17 | — |
 | [List](components/List.md) | `<DnetList>` | 16 | 17 |
 | [Overlay](components/Overlay.md) | `<DnetOverlay>` | 1 | — |
 | [Paginator](components/Paginator.md) | `<DnetPaginator>` | 22 | 8 |

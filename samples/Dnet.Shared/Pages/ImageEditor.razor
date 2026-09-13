@@ -1,4 +1,4 @@
-﻿@page "/ImageEditor"
+@page "/ImageEditor"
 
 @using System.Drawing
 @using Dnet.App.Shared.Infrastructure.Entities
@@ -32,6 +32,7 @@
                 }
             </div>
         </div>
+        <span class="upload-text">@_resultInfo</span>
         <DnetImageEditor ImageContainerHeight="480"
                          ImageContainerWidth="640"
                          ImagePreviewHeight="170"
@@ -46,6 +47,7 @@
                                            })"
                          AllowedFormats="@(new List<string>{ ImageFormat.JPEG, ImageFormat.PNG })"
                          OnImageSelected="OnImageSelected"
+                         OnCancel="OnCancel"
                          OnEndLoadingImage="EndLoadingImage"
                          OnStarLoadingImage="StarLoadingImage"
                          @ref="_imageEditor">
@@ -57,28 +59,47 @@
 
     private string _imageUrl { get; set; }
 
+    private string _resultInfo { get; set; }
+
     private DnetImageEditor _imageEditor { get; set; }
+
+    private MemoryStream _pendingStream { get; set; }
 
     private long _maxFileSizes { get; set; } = 1024 * 1024 * 15;
 
-
     private async Task LoadFiles(InputFileChangeEventArgs eventArgs)
     {
-        var imageFile = await eventArgs.GetMultipleFiles()[0].RequestImageFileAsync("image/jpeg", 640, 480);
+        // The original bytes reach the editor untouched: no downscale, no
+        // re-encode, no base64 on the way in.
+        var imageFile = eventArgs.GetMultipleFiles()[0];
 
         await using var fileStream = imageFile.OpenReadStream(_maxFileSizes);
 
-        await using var ms = new MemoryStream();
+        var memory = new MemoryStream();
 
-        await fileStream.CopyToAsync(ms);
+        await fileStream.CopyToAsync(memory);
+        memory.Position = 0;
 
-        await _imageEditor.ShowDialog(ms);
+        DisposePendingStream();
+
+        _pendingStream = memory;
+
+        await _imageEditor.ShowDialog(memory);
     }
 
     private void OnImageSelected(MemoryStream image)
     {
-        if (image != null) _imageUrl = $"data:image/jpeg;base64, {Convert.ToBase64String(image.ToArray())}";
+        if (image is null) return;
+
+        _imageUrl = $"data:{GetMimeType(image)};base64,{Convert.ToBase64String(image.ToArray())}";
+        _resultInfo = $"{image.Length / 1024d:F0} KB";
+
+        // The editor hands ownership of the result to the caller.
+        _pendingStream = null;
+        image.Dispose();
     }
+
+    private void OnCancel() => DisposePendingStream();
 
     private void StarLoadingImage()
     {
@@ -89,7 +110,27 @@
     {
         SpinnerService.Hide();
     }
+
+    private void DisposePendingStream()
+    {
+        _pendingStream?.Dispose();
+        _pendingStream = null;
+    }
+
+    private static string GetMimeType(MemoryStream image)
+    {
+        var bytes = image.GetBuffer();
+
+        if (image.Length > 8 && bytes[0] == 0x89 && bytes[1] == 0x50 && bytes[2] == 0x4E && bytes[3] == 0x47)
+        {
+            return "image/png";
+        }
+
+        if (image.Length > 12 && bytes[0] == 0x52 && bytes[1] == 0x49 && bytes[8] == 0x57 && bytes[9] == 0x45)
+        {
+            return "image/webp";
+        }
+
+        return "image/jpeg";
+    }
 }
-
-
-

@@ -3459,17 +3459,178 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   flex-direction: column;
 }
 
+/* Shrink-to-fit around the image canvas: the crop overlay is inset:0 on this
+   box, so its geometry can only ever match the displayed image, whatever size
+   the picture happens to be. */
 .dnet-editing-image {
+  /* Owned here, overridden by the component with the configured container size. */
+  --_editor-max-width: none;
+  --_editor-max-height: none;
   width: auto;
   height: auto;
   background-color: var(--dnet-sys-surface-hover);
   position: relative;
-  display: flex;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
 }
-.dnet-editing-image img {
-  opacity: 1;
+.dnet-editing-image-canvas {
+  display: block;
+  max-width: var(--_editor-max-width);
+  max-height: var(--_editor-max-height);
+}
+
+/* Crop geometry. The four --_crop-* properties are the single source of truth:
+   the component writes them on first render and JavaScript rewrites them on
+   every pointer frame, so the box, the dummy border, the masks and the eight
+   resizers all follow without a single JS -> .NET call. */
+.dnet-crop-container {
+  /* Single source of truth for the crop rectangle: the component writes these
+     inline on the first render and the interop layer rewrites them on every
+     pointer frame, so the box, the dummy border, the masks and the handles all
+     follow along without a single round trip to .NET. */
+  --_crop-left: 0px;
+  --_crop-top: 0px;
+  --_crop-width: 100px;
+  --_crop-height: 100px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.dnet-crop-box {
+  position: absolute;
+  left: var(--_crop-left);
+  top: var(--_crop-top);
+  width: var(--_crop-width);
+  height: var(--_crop-height);
+  background-color: aquamarine;
+  opacity: 0;
+  cursor: move;
+  z-index: 40;
+  touch-action: none;
+}
+
+.dnet-crop-box-dummy {
+  position: absolute;
+  left: var(--_crop-left);
+  top: var(--_crop-top);
+  width: var(--_crop-width);
+  height: var(--_crop-height);
+  border: 1px solid var(--dnet-sys-primary-strong);
+  z-index: 30;
+  pointer-events: none;
+}
+
+.dnet-crop-box-mask-top {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: var(--_crop-top);
+  background-color: var(--dnet-sys-surface);
+  opacity: 0.5;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.dnet-crop-box-mask-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--_crop-top) + var(--_crop-height));
+  bottom: 0;
+  background-color: var(--dnet-sys-surface);
+  opacity: 0.5;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.dnet-crop-box-mask-right {
+  position: absolute;
+  left: calc(var(--_crop-left) + var(--_crop-width));
+  right: 0;
+  top: var(--_crop-top);
+  height: var(--_crop-height);
+  background-color: var(--dnet-sys-surface);
+  opacity: 0.5;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.dnet-crop-box-mask-left {
+  position: absolute;
+  left: 0;
+  top: var(--_crop-top);
+  width: var(--_crop-left);
+  height: var(--_crop-height);
+  background-color: var(--dnet-sys-surface);
+  opacity: 0.5;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.dnet-crop-box-resizer {
+  position: absolute;
+  background-color: var(--dnet-sys-surface);
+  border: 1px solid var(--dnet-sys-primary-strong);
+  height: 8px;
+  overflow: hidden;
+  width: 8px;
+  z-index: 50;
+  margin: 0;
+  padding: 0;
+  touch-action: none;
+}
+
+.dnet-crop-box-resizer-top-left {
+  top: calc(var(--_crop-top) - 4px);
+  left: calc(var(--_crop-left) - 4px);
+  cursor: nwse-resize;
+}
+
+.dnet-crop-box-resizer-top-center {
+  top: calc(var(--_crop-top) - 4px);
+  left: calc(var(--_crop-left) + var(--_crop-width) / 2 - 4px);
+  cursor: ns-resize;
+}
+
+.dnet-crop-box-resizer-top-right {
+  top: calc(var(--_crop-top) - 4px);
+  left: calc(var(--_crop-left) + var(--_crop-width) - 4px);
+  cursor: nesw-resize;
+}
+
+.dnet-crop-box-resizer-left-center {
+  top: calc(var(--_crop-top) + var(--_crop-height) / 2 - 4px);
+  left: calc(var(--_crop-left) - 4px);
+  cursor: ew-resize;
+}
+
+.dnet-crop-box-resizer-right-center {
+  top: calc(var(--_crop-top) + var(--_crop-height) / 2 - 4px);
+  left: calc(var(--_crop-left) + var(--_crop-width) - 4px);
+  cursor: ew-resize;
+}
+
+.dnet-crop-box-resizer-bottom-left {
+  top: calc(var(--_crop-top) + var(--_crop-height) - 4px);
+  left: calc(var(--_crop-left) - 4px);
+  cursor: nesw-resize;
+}
+
+.dnet-crop-box-resizer-bottom-center {
+  top: calc(var(--_crop-top) + var(--_crop-height) - 4px);
+  left: calc(var(--_crop-left) + var(--_crop-width) / 2 - 4px);
+  cursor: ns-resize;
+}
+
+.dnet-crop-box-resizer-bottom-right {
+  top: calc(var(--_crop-top) + var(--_crop-height) - 4px);
+  left: calc(var(--_crop-left) + var(--_crop-width) - 4px);
+  cursor: nwse-resize;
 }
 
 .dnet-image-preview {
@@ -3501,67 +3662,27 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   margin-bottom: 10px;
 }
 
+/* Measured dimensions, not decoration: the source size on the left and the
+   size the export will have on the right. */
+.dnet-image-info {
+  color: var(--dnet-sys-primary);
+}
+
+.dnet-image-preview-canvas {
+  /* Owned here, overridden inline with the configured preview size. */
+  --_preview-max-width: 170px;
+  --_preview-max-height: 170px;
+  display: block;
+  max-width: var(--_preview-max-width);
+  max-height: var(--_preview-max-height);
+  margin: 0 auto;
+}
+
 .dnet-img-dialog-controls {
   display: flex;
   justify-content: flex-end;
   align-self: end;
   width: 100%;
-}
-
-.dnet-crop-box {
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: aquamarine;
-  opacity: 0;
-  cursor: move;
-  z-index: 40;
-}
-
-.dnet-crop-box-dummy {
-  border: 1px solid var(--dnet-sys-primary-strong);
-  position: absolute;
-  z-index: 30;
-}
-
-.dnet-crop-box-mask-top {
-  position: absolute;
-  background-color: var(--dnet-sys-surface);
-  opacity: 0.5;
-  z-index: 10;
-}
-
-.dnet-crop-box-mask-bottom {
-  position: absolute;
-  background-color: var(--dnet-sys-surface);
-  opacity: 0.5;
-  z-index: 10;
-}
-
-.dnet-crop-box-mask-right {
-  position: absolute;
-  background-color: var(--dnet-sys-surface);
-  opacity: 0.5;
-  z-index: 10;
-}
-
-.dnet-crop-box-mask-left {
-  position: absolute;
-  background-color: var(--dnet-sys-surface);
-  opacity: 0.5;
-  z-index: 10;
-}
-
-.dnet-crop-box-resizer {
-  position: absolute;
-  background-color: var(--dnet-sys-surface);
-  border: 1px solid var(--dnet-sys-primary-strong);
-  height: 8px;
-  overflow: hidden;
-  width: 8px;
-  z-index: 50;
-  margin: 0;
-  padding: 0;
 }
 
 .dnet-image-editor-control .dnet-button-wrapper {

@@ -1,12 +1,12 @@
-﻿@using System.IO
+@using System.IO
 @using Dnet.Blazor.Components.Dialog.Infrastructure.Interfaces
+@using Dnet.Blazor.Components.ImageEditor.Infrastructure.Constants
 @using Dnet.Blazor.Components.ImageEditor.Infrastructure.Enums
 @using Dnet.Blazor.Components.ImageEditor.Infrastructure.Models
 @using Dnet.Blazor.Components.ImageEditor.Infrastructure.Services
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Enums
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Services
 @using Microsoft.JSInterop
-@using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Web
 @using Dnet.Blazor.Components.Button
 
@@ -18,7 +18,7 @@
 @implements IDragAndDropJsCallbacks
 @implements IAsyncDisposable
 
-<div class="dnet-image-editor-wrapper" style="height: 100%">
+<div class="dnet-image-editor-wrapper">
     <div>
         <div class="dnet-image-editor-controls">
             @if (ShowControl(ImageEditorControlType.Crop))
@@ -46,47 +46,42 @@
         <div class="dnet-editor-container">
             <div class="dnet-image-container">
                 <div class="dnet-image-original-text">
-                    <span style="margin-right: 10px">Original Image</span>
-                    <span style="color: #4fc3f7">@Convert.ToInt32(_imgWidth) x @Convert.ToInt32(_imgHeight) </span>
+                    <span class="dnet-image-label">Original Image</span>
+                    <span class="dnet-image-info">@_sourceLabel</span>
                 </div>
-                <div @ref="_dragAndDropArea" class="dnet-editing-image">
-                    @if (!string.IsNullOrEmpty(_imageUrl))
+                <div @ref="_board" class="dnet-editing-image" style="@StyleService.GetCropContainerStyles(_imageContainerHeight, _imageContainerWidth)">
+                    @* The canvas is both the on-screen image and the source every operation works
+                       from, so nothing is ever re-read from the DOM or re-encoded in between. *@
+                    <canvas @ref="_canvas" class="dnet-editing-image-canvas" width="1" height="1"></canvas>
+                    @if (_isImageEditorReady)
                     {
-                        <img @ref="_image" src="@_imageUrl" />
-                        @if (_isImageEditorReady)
-                        {
-                            <div style="@StyleService.GetCropContainerStyles(_imageContainerHeight, _imageContainerWidth)">
-                                <div @ref="_cropbox" class="dnet-crop-box" draggable="true" style="@_styles">
-                                </div>
-                                <div class="dnet-crop-box-dummy" style="@_styles">
-                                </div>
-                                @foreach (var resizer in _resizerData)
-                                {
-                                    <div @ref="resizer.Reference" class="dnet-crop-box-resizer" style="@StyleService.GetResizerStyles(resizer)">
-                                    </div>
-                                }
-                                @foreach (var mask in _maskData)
-                                {
-                                    <div class="@mask.Class" style="@StyleService.GetMaskStyles(mask)">
-                                    </div>
-                                }
-                            </div>
-                        }
+                        <div @ref="_cropContainer" class="dnet-crop-container" style="@_cropStyles">
+                            <div class="dnet-crop-box-mask-top"></div>
+                            <div class="dnet-crop-box-mask-bottom"></div>
+                            <div class="dnet-crop-box-mask-left"></div>
+                            <div class="dnet-crop-box-mask-right"></div>
+                            <div @ref="_cropBox" class="dnet-crop-box"></div>
+                            <div class="dnet-crop-box-dummy"></div>
+                            @foreach (var resizer in _resizerData)
+                            {
+                                <div @ref="resizer.Reference" class="dnet-crop-box-resizer @GetResizerClass(resizer.ResizerType)"></div>
+                            }
+                        </div>
                     }
                 </div>
             </div>
             <div class="dnet-image-preview">
                 <div class="dnet-image-preview-text">
-                    <span style="margin-right: 10px">Previsualizacion</span>
-                    <span style="color: #4fc3f7">@Convert.ToInt32(_imgPreviewWidth) x @Convert.ToInt32(_imgPreviewHeight) </span>
+                    <span class="dnet-image-label">Preview</span>
+                    <span class="dnet-image-info">@_outputLabel</span>
                 </div>
-                <img src="@_imagePreviewUrl" style="@StyleService.GetImagePreviewStyles(_imgPreviewHeight, _imgPreviewWidth)" />
+                <canvas @ref="_previewCanvas" class="dnet-image-preview-canvas" width="1" height="1" style="@StyleService.GetImagePreviewStyles(_imgPreviewHeight, _imgPreviewWidth)"></canvas>
             </div>
         </div>
     </div>
     <div class="dnet-img-dialog-controls">
         <DnetButton OnClick="CancelOverlay" class="dnet-m-r-10">Close</DnetButton>
-        <DnetButton OnClick="CloseOverlay" class="dnet-m-r-10" disabled="@(_workingImageStream == null)" InitialFocus="true">Ok</DnetButton>
+        <DnetButton OnClick="CloseOverlay" class="dnet-m-r-10" disabled="@(!_isImageEditorReady)" InitialFocus="true">Ok</DnetButton>
     </div>
 </div>
 
@@ -99,15 +94,19 @@
     [Parameter]
     public DialogData DialogData { get; set; } = default!;
 
-    private ElementReference _cropbox;
+    // Identifies this editor in the browser module: two editors on the same page
+    // never share state.
+    private readonly string _editorId = Guid.NewGuid().ToString("N");
 
-    private ElementReference _dragAndDropArea;
+    private ElementReference _board;
 
-    private ElementReference _resizerTopCenter;
+    private ElementReference _canvas;
 
-    private ElementReference _resizerBottomCenter;
+    private ElementReference _previewCanvas;
 
-    private ElementReference _image;
+    private ElementReference _cropContainer;
+
+    private ElementReference _cropBox;
 
     private MemoryStream _fullSizeImageStream { get; set; }
 
@@ -115,17 +114,19 @@
 
     private MemoryStream _resulImageStream { get; set; }
 
-    private string _styles { get; set; }
-
     private DnetImageEditorInterop _jsInterop;
+
+    private ImageEditorSourceData _sourceData;
 
     private List<ResizerData> _resizerData { get; set; }
 
-    private List<MaskData> _maskData { get; set; }
+    private List<ImageEditorControlType> _imageEditingControls { get; set; }
 
-    private double _imgHeight { get; set; } = 480;
+    private string _cropStyles { get; set; }
 
-    private double _imgWidth { get; set; } = 640;
+    private string _sourceLabel { get; set; } = "—";
+
+    private string _outputLabel { get; set; } = "—";
 
     private int _imageContainerHeight { get; set; }
 
@@ -135,23 +136,15 @@
 
     private int _imgPreviewWidth { get; set; }
 
-    private double _cropBoxHeight { get; set; } = 100;
-
-    private double _cropBoxWidth { get; set; } = 100;
-
-    private long _maxFileSizes { get; set; }
-
-    private string _imageUrl { get; set; }
-
-    private string _imagePreviewUrl { get; set; }
-
-    private List<string> _allowedFormats { get; set; }
-
-    private List<ImageEditorControlType> _imageEditingControls { get; set; }
-
-    private DraggedData _draggedData { get; set; }
+    private long _lastExportSize { get; set; }
 
     private bool _isImageEditorReady { get; set; }
+
+    private bool _cropDirty { get; set; }
+
+    private bool _flipDirty { get; set; }
+
+    private bool _resultHandedOff { get; set; }
 
 
     protected override void OnInitialized()
@@ -159,15 +152,12 @@
         var dialogData = DialogData;
 
         _fullSizeImageStream = dialogData.imageFile;
+        _workingImageStream = dialogData.WorkingImageStream ?? dialogData.imageFile;
         _imageContainerHeight = dialogData.ImageContainerHeight;
         _imageContainerWidth = dialogData.ImageContainerWidth;
         _imgPreviewHeight = dialogData.ImagePreviewHeight;
         _imgPreviewWidth = dialogData.ImagePreviewWidth;
-        _maxFileSizes = dialogData.MaxFileSizes;
-        _allowedFormats = dialogData.AllowedFormats ?? new();
         _imageEditingControls = dialogData.ImageEditingControls ?? new();
-        _workingImageStream = dialogData.WorkingImageStream;
-        _imageUrl = dialogData.ImageUrl;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -180,129 +170,160 @@
 
     private async Task InitializeEditor()
     {
-        _jsInterop = new DnetImageEditorInterop(this, JSRuntime);
-
-        // Initialize Photon WASM for high-quality image processing
-        try
-        {
-            await JSRuntime.InvokeVoidAsync("photonInit.init");
-            Console.WriteLine("✅ Photon WASM pre-initialized for editor");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"⚠️ Photon initialization warning (will use fallback): {ex.Message}");
-        }
-
-        await _jsInterop.GetBoundingClientRect(_image);
-
-        var _imageSizeData = await _jsInterop.GetBoundingClientRect(_image);
-
-        _imgHeight = _imageSizeData.Height;
-        _imgWidth = _imageSizeData.Width;
-
-        var cropBoxTop = _imgHeight / 2 - _cropBoxHeight / 2;
-        var cropBoxLeft = _imgWidth / 2 - _cropBoxWidth / 2;
-
-        _styles = StyleService.GetStyles(cropBoxLeft, cropBoxTop, _cropBoxHeight, _cropBoxWidth);
-
+        _jsInterop = new DnetImageEditorInterop(this, JSRuntime, _editorId);
         _resizerData = ImageEditorService.InitializeResizers();
 
-        _maskData = ImageEditorService.PlaceMasks(_imgWidth, _imgHeight, cropBoxTop, cropBoxLeft, _cropBoxWidth, _cropBoxHeight);
-
-        foreach (var resizer in _resizerData)
+        try
         {
-            ImageEditorService.UpdateResizersData(resizer, cropBoxTop, cropBoxLeft, _cropBoxWidth, _cropBoxHeight);
+            _fullSizeImageStream.Position = 0;
+
+            var options = new ImageEditorOptions
+                {
+                    PreviewWidth = _imgPreviewWidth,
+                    PreviewHeight = _imgPreviewHeight,
+                    MaxOutputDimension = DialogData.MaxOutputDimension,
+                    OutputFormat = DialogData.OutputFormat,
+                    OutputQuality = DialogData.OutputQuality > 0 ? DialogData.OutputQuality : 95
+                };
+
+            // The bytes travel as a stream reference: no base64, no copy in .NET.
+            _sourceData = await _jsInterop.InitializeSource(
+                new DotNetStreamReference(_fullSizeImageStream, leaveOpen: true),
+                _canvas,
+                _previewCanvas,
+                options);
+
+            _fullSizeImageStream.Position = 0;
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine($"Dnet.Blazor: the image editor could not load the image. {exception.Message}");
+            return;
         }
 
+        _sourceLabel = $"{_sourceData.SourceWidth} x {_sourceData.SourceHeight}";
+        _outputLabel = _sourceLabel;
+        _cropStyles = StyleService.GetStyles(_sourceData.CropLeft, _sourceData.CropTop, _sourceData.CropHeight, _sourceData.CropWidth);
         _isImageEditorReady = true;
 
         StateHasChanged();
 
-        _draggedData = new DraggedData
-            {
-                Left = cropBoxLeft,
-                Top = cropBoxTop,
-                Height = _cropBoxHeight,
-                Width = _cropBoxWidth
-            };
+        // The crop chrome only exists after the render above, so the overlay is
+        // hooked up once it is on the page. The preview follows the selection
+        // from that first moment, which is why the label describes it too.
+        var selection = await _jsInterop.AttachCrop(_board, _cropContainer, _cropBox);
 
-        await _jsInterop.InitializeDragAndDrop(_cropbox, _dragAndDropArea, cropBoxLeft, cropBoxTop);
+        _outputLabel = FormatSize(selection.OutputWidth, selection.OutputHeight);
 
-        await _jsInterop.InitializeResize(_resizerData, cropBoxLeft, cropBoxTop, _cropBoxHeight, _cropBoxWidth, _imgWidth, _imgHeight, "TopCenter", 50, 50);
+        StateHasChanged();
+
+        // Photon is only needed to resample, which cannot happen before the user
+        // does something: load it in the background instead of blocking the dialog.
+        _ = PreloadPhotonAsync();
+    }
+
+    private async Task PreloadPhotonAsync()
+    {
+        try
+        {
+            await _jsInterop.PreloadPhotonWasm();
+        }
+        catch (Exception exception)
+        {
+            // Resampling falls back to the browser encoder.
+            Console.WriteLine($"Dnet.Blazor: Photon WASM could not be preloaded. {exception.Message}");
+        }
     }
 
     private async Task OnCropImage()
     {
-        // Invocamos a Photon en el lado JS para hacer crop+resize
-        var dataUrl = await JSRuntime.InvokeAsync<string>(
-            "dnetimageeditor.cropWithPhoton",
-            _image,
-            _draggedData.Left,
-            _draggedData.Top,
-            _draggedData.Width,
-            _draggedData.Height,
-            _imgPreviewWidth,
-            _imgPreviewHeight);
+        if (!_isImageEditorReady) return;
 
-        _imagePreviewUrl = dataUrl;
-
-        // Convertimos el data URL devuelto a MemoryStream para seguir usando el mismo contrato
-        var commaIndex = dataUrl.IndexOf(',', StringComparison.Ordinal);
-        if (commaIndex > 0)
+        try
         {
-            var base64Part = dataUrl.Substring(commaIndex + 1);
-            var bytes = Convert.FromBase64String(base64Part);
-            _resulImageStream = new MemoryStream(bytes);
+            var result = await _jsInterop.ExportImage(useCrop: true);
+
+            _lastExportSize = result.Size;
+
+            _resulImageStream = await ReadResultAsync();
+            _outputLabel = FormatSize(result.Width, result.Height);
         }
+        catch (Exception exception)
+        {
+            Console.WriteLine($"Dnet.Blazor: the selected image could not be cropped. {exception.Message}");
+        }
+
+        StateHasChanged();
     }
 
     private async Task OnFlipHorizontal()
     {
-        // Flip horizontal usando Photon WASM
-        var dataUrl = await JSRuntime.InvokeAsync<string>(
-            "dnetimageeditor.flipHorizontal",
-            _image);
-
-        // Actualizamos la imagen actual con el flip
-        _imageUrl = dataUrl;
-        _imagePreviewUrl = dataUrl;
-
-        // Convertimos a MemoryStream
-        var commaIndex = dataUrl.IndexOf(',', StringComparison.Ordinal);
-        if (commaIndex > 0)
-        {
-            var base64Part = dataUrl.Substring(commaIndex + 1);
-            var bytes = Convert.FromBase64String(base64Part);
-            _workingImageStream = new MemoryStream(bytes);
-            _resulImageStream = new MemoryStream(bytes);
-        }
-
-        StateHasChanged();
+        await FlipAsync(horizontal: true);
     }
 
     private async Task OnFlipVertical()
     {
-        // Flip vertical usando Photon WASM
-        var dataUrl = await JSRuntime.InvokeAsync<string>(
-            "dnetimageeditor.flipVertical",
-            _image);
+        await FlipAsync(horizontal: false);
+    }
 
-        // Actualizamos la imagen actual con el flip
-        _imageUrl = dataUrl;
-        _imagePreviewUrl = dataUrl;
+    private async Task FlipAsync(bool horizontal)
+    {
+        if (!_isImageEditorReady) return;
 
-        // Convertimos a MemoryStream
-        var commaIndex = dataUrl.IndexOf(',', StringComparison.Ordinal);
-        if (commaIndex > 0)
+        try
         {
-            var base64Part = dataUrl.Substring(commaIndex + 1);
-            var bytes = Convert.FromBase64String(base64Part);
-            _workingImageStream = new MemoryStream(bytes);
-            _resulImageStream = new MemoryStream(bytes);
+            // The flip only touches the canvas pixels: it is lossless and can be
+            // repeated as many times as the user wants.
+            await _jsInterop.Flip(horizontal);
+
+            _flipDirty = true;
+            ClearResultStream();
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine($"Dnet.Blazor: the image could not be flipped. {exception.Message}");
         }
 
         StateHasChanged();
     }
+
+    private async Task<MemoryStream> ReadResultAsync()
+    {
+        var reference = await _jsInterop.GetResultStream();
+
+        try
+        {
+            var maxAllowedSize = Math.Max(1, Math.Max(_fullSizeImageStream.Length, _lastExportSize));
+
+            await using var source = await reference.OpenReadStreamAsync(maxAllowedSize);
+
+            var memory = new MemoryStream();
+
+            await source.CopyToAsync(memory);
+            memory.Position = 0;
+
+            return memory;
+        }
+        finally
+        {
+            await reference.DisposeAsync();
+        }
+    }
+
+    private void ClearResultStream()
+    {
+        if (_resulImageStream is not null && OwnsResultStream())
+        {
+            _resulImageStream.Dispose();
+        }
+
+        _resulImageStream = null;
+    }
+
+    private bool OwnsResultStream()
+        => _resulImageStream is not null &&
+           !ReferenceEquals(_resulImageStream, _workingImageStream) &&
+           !ReferenceEquals(_resulImageStream, _fullSizeImageStream);
 
     void IDragAndDropJsCallbacks.OnDragStart()
     {
@@ -310,12 +331,12 @@
 
     void IDragAndDropJsCallbacks.OnDrag(DraggedData draggedData)
     {
-        UpdateEditorLayout(draggedData);
+        UpdateSelection(draggedData, commit: false);
     }
 
     void IDragAndDropJsCallbacks.OnDragEnd(DraggedData draggedData)
     {
-        UpdateEditorLayout(draggedData);
+        UpdateSelection(draggedData, commit: true);
     }
 
     void IDragAndDropJsCallbacks.OnResizeStart()
@@ -324,42 +345,69 @@
 
     void IDragAndDropJsCallbacks.OnResize(DraggedData draggedData)
     {
-        UpdateEditorLayout(draggedData);
+        UpdateSelection(draggedData, commit: false);
     }
 
     void IDragAndDropJsCallbacks.OnResizeEnd(DraggedData draggedData)
     {
-        UpdateEditorLayout(draggedData);
+        UpdateSelection(draggedData, commit: true);
     }
 
-    void UpdateEditorLayout(DraggedData draggedData)
+    private void UpdateSelection(DraggedData draggedData, bool commit)
     {
-        _styles = StyleService.GetStyles(draggedData.Left, draggedData.Top, draggedData.Height, draggedData.Width);
+        // The browser has already drawn the new rectangle; .NET only tracks the
+        // result, which is why a gesture no longer costs a render per frame.
+        _cropDirty = true;
+        _outputLabel = FormatSize(draggedData.OutputWidth, draggedData.OutputHeight);
 
-        _maskData = ImageEditorService.PlaceMasks(_imgWidth, _imgHeight, draggedData.Top, draggedData.Left, draggedData.Width, draggedData.Height);
+        ClearResultStream();
 
-        foreach (var resizer in _resizerData)
+        if (commit)
         {
-            ImageEditorService.UpdateResizersData(resizer, draggedData.Top, draggedData.Left, draggedData.Width, draggedData.Height);
+            // Keeps the rendered geometry equal to what the browser wrote, so a
+            // later render cannot snap the box back to a stale position.
+            _cropStyles = StyleService.GetStyles(draggedData.Left, draggedData.Top, draggedData.Height, draggedData.Width);
         }
-
-        _draggedData = draggedData;
 
         StateHasChanged();
     }
 
-    void CloseOverlay()
+    private async Task CloseOverlay()
     {
-        var result = _resulImageStream ?? _workingImageStream ?? _fullSizeImageStream;
-        if (result is not null)
+        if (!_isImageEditorReady) return;
+
+        if (_resulImageStream is null)
         {
-            result.Position = 0;
+            if (!_cropDirty && !_flipDirty)
+            {
+                // Nothing was edited: the caller gets its own bytes back, untouched.
+                _resulImageStream = _workingImageStream ?? _fullSizeImageStream;
+            }
+            else
+            {
+                try
+                {
+                    var result = await _jsInterop.ExportImage(useCrop: _cropDirty);
+
+                    _lastExportSize = result.Size;
+                    _resulImageStream = await ReadResultAsync();
+                    _outputLabel = FormatSize(result.Width, result.Height);
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine($"Dnet.Blazor: the image could not be exported. {exception.Message}");
+                    return;
+                }
+            }
         }
+
+        _resulImageStream.Position = 0;
+        _resultHandedOff = true;
 
         var dataResult = new OverlayResult()
             {
                 CloseReason = CloseReason.Ok,
-                ComponentData = result,
+                ComponentData = _resulImageStream,
                 OverlayReferenceId = OverlayReferenceId
 
             };
@@ -380,14 +428,37 @@
         DialogService.Close(dataResult);
     }
 
+    private static string FormatSize(double width, double height)
+        => $"{Convert.ToInt32(width)} x {Convert.ToInt32(height)}";
+
     private bool ShowControl(ImageEditorControlType control)
         => _imageEditingControls is null || _imageEditingControls.Count == 0 || _imageEditingControls.Contains(control);
+
+    private static string GetResizerClass(string resizerType)
+    {
+        if (resizerType == ResizerType.TopLeft) return "dnet-crop-box-resizer-top-left";
+        if (resizerType == ResizerType.TopCenter) return "dnet-crop-box-resizer-top-center";
+        if (resizerType == ResizerType.TopRight) return "dnet-crop-box-resizer-top-right";
+        if (resizerType == ResizerType.LeftCenter) return "dnet-crop-box-resizer-left-center";
+        if (resizerType == ResizerType.RightCenter) return "dnet-crop-box-resizer-right-center";
+        if (resizerType == ResizerType.BottomLeft) return "dnet-crop-box-resizer-bottom-left";
+        if (resizerType == ResizerType.BottomCenter) return "dnet-crop-box-resizer-bottom-center";
+        if (resizerType == ResizerType.BottomRight) return "dnet-crop-box-resizer-bottom-right";
+
+        return string.Empty;
+    }
 
     public async ValueTask DisposeAsync()
     {
         if (_jsInterop is not null)
         {
             await _jsInterop.DisposeAsync();
+        }
+
+        // Once the result is handed to the caller it belongs to the caller.
+        if (!_resultHandedOff && OwnsResultStream())
+        {
+            _resulImageStream.Dispose();
         }
     }
 }

@@ -1,7 +1,8 @@
-﻿@using System.Globalization
+@using System.Globalization
 @using System.IO
 @using Dnet.Blazor.Components.Dialog.Infrastructure.Interfaces
 @using Dnet.Blazor.Components.Dialog.Infrastructure.Models
+@using Dnet.Blazor.Components.ImageEditor.Infrastructure.Constants
 @using Dnet.Blazor.Components.ImageEditor.Infrastructure.Enums
 @using Dnet.Blazor.Components.ImageEditor.Infrastructure.Models
 @using Dnet.Blazor.Components.ImageEditor.Infrastructure.Services
@@ -22,6 +23,9 @@
 
 @code {
 
+    /// <summary>The largest image the editor accepts, in bytes, when <see cref="MaxFileSizes"/> is not set.</summary>
+    public const long DefaultMaxFileSize = 1024 * 1024 * 15;
+
     /// <summary>Raised when image selected occurs.</summary>
     [Parameter]
     public EventCallback<MemoryStream> OnImageSelected { get; set; }
@@ -38,11 +42,11 @@
     [Parameter]
     public EventCallback OnCancel { get; set; }
 
-    /// <summary>Gets or sets the image container height used by this component.</summary>
+    /// <summary>Gets or sets the image container height used by this component. It bounds the size the image is displayed at.</summary>
     [Parameter]
     public int ImageContainerHeight { get; set; } = 480;
 
-    /// <summary>Gets or sets the image container width used by this component.</summary>
+    /// <summary>Gets or sets the image container width used by this component. It bounds the size the image is displayed at.</summary>
     [Parameter]
     public int ImageContainerWidth { get; set; } = 640;
 
@@ -62,9 +66,21 @@
     [Parameter]
     public int ModalDialogWidth { get; set; } = 1024;
 
-    /// <summary>Gets or sets the max file sizes used by this component.</summary>
+    /// <summary>Gets or sets the maximum size accepted for the image, in bytes. A value of zero or less uses <see cref="DefaultMaxFileSize"/>.</summary>
     [Parameter]
     public long MaxFileSizes { get; set; }
+
+    /// <summary>Gets or sets the longest edge of the exported image. Zero keeps the native resolution of the selection.</summary>
+    [Parameter]
+    public int MaxOutputDimension { get; set; }
+
+    /// <summary>Gets or sets the format the editor exports, such as <see cref="ImageFormat.PNG"/>. A null or empty value keeps the format of the selected image.</summary>
+    [Parameter]
+    public string OutputFormat { get; set; }
+
+    /// <summary>Gets or sets the quality used by lossy output formats, from 1 to 100.</summary>
+    [Parameter]
+    public int OutputQuality { get; set; } = 95;
 
     /// <summary>Gets or sets the image file formats that may be selected.</summary>
     [Parameter]
@@ -78,20 +94,18 @@
     [Parameter]
     public IBrowserFile? ImageFile { get; set; }
 
-    private long _maxFileSizes { get; set; } = 1024 * 1024 * 15;
-
     private OverlayReference _dialogReference { get; set; }
-
-    private string _imageUrl { get; set; }
 
 
     public async Task ShowDialog(MemoryStream fullSizeImageStream)
     {
         ArgumentNullException.ThrowIfNull(fullSizeImageStream);
 
-        if (MaxFileSizes > 0 && fullSizeImageStream.Length > MaxFileSizes)
+        var maxFileSize = MaxFileSizes > 0 ? MaxFileSizes : DefaultMaxFileSize;
+
+        if (fullSizeImageStream.Length > maxFileSize)
         {
-            throw new InvalidOperationException($"The image exceeds the configured maximum size of {MaxFileSizes} bytes.");
+            throw new InvalidOperationException($"The image exceeds the configured maximum size of {maxFileSize} bytes.");
         }
 
         if (ImageFile is not null && AllowedFormats.Count > 0 &&
@@ -112,11 +126,7 @@
                 Height = $"{ModalDialogHeight}px"
             };
 
-        var workingImageStream = fullSizeImageStream;
-
-        var imageUrl = $"data:image/jpeg;base64, {Convert.ToBase64String(workingImageStream.ToArray())}";
-
-        await OnEndLoadingImage.InvokeAsync();
+        fullSizeImageStream.Position = 0;
 
         var dialogData = new DialogData
             {
@@ -127,16 +137,20 @@
                 ImagePreviewWidth = ImagePreviewWidth,
                 ModalDialogHeight = ModalDialogHeight,
                 ModalDialogWidth = ModalDialogWidth,
-                MaxFileSizes = MaxFileSizes,
+                MaxFileSizes = maxFileSize,
                 AllowedFormats = AllowedFormats,
                 ImageEditingControls = ImageEditingControls,
-                WorkingImageStream = workingImageStream,
-                ImageUrl = imageUrl
+                WorkingImageStream = fullSizeImageStream,
+                MaxOutputDimension = MaxOutputDimension,
+                OutputFormat = OutputFormat,
+                OutputQuality = OutputQuality
             };
 
         var parameters = new Dictionary<string, object>();
 
         parameters.Add("DialogData", dialogData);
+
+        await OnEndLoadingImage.InvokeAsync();
 
         _dialogReference = DialogService.Open(typeof(ImageEditorContent), parameters, dialogConfig);
 
@@ -145,10 +159,8 @@
 
     void CloseDialog(OverlayResult overlayDataResult)
     {
-        if (overlayDataResult.CloseReason == CloseReason.Ok)
+        if (overlayDataResult.CloseReason == CloseReason.Ok && overlayDataResult.ComponentData is MemoryStream stream)
         {
-            var stream = (MemoryStream)overlayDataResult.ComponentData;
-
             OnImageSelected.InvokeAsync(stream);
         }
         else

@@ -1,481 +1,752 @@
-﻿window.dnetimageeditor = (function () {
+// Dnet ImageEditor interop.
+//
+// Design notes (read before changing anything here):
+//
+//  * The source of truth for the pixels is the <canvas> rendered by the
+//    component, not the on-screen <img> that used to be re-read on every
+//    operation. The image is decoded once, drawn once, and every later
+//    operation works on that canvas, so nothing is re-encoded until the
+//    user actually exports.
+//  * The crop geometry lives in the DOM: the four --_crop-* custom
+//    properties written on the crop container. JavaScript updates them
+//    during a gesture and Blazor only commits the final rectangle, so a
+//    drag or a resize never costs a JS -> .NET call per frame.
+//  * Exports keep the resolution of the crop in source pixels: the preview
+//    box is a preview, never the output size. Only the optional
+//    MaxOutputDimension cap shrinks the result.
+//  * Nothing crosses the boundary as base64: the image comes in as a
+//    DotNetStreamReference (ArrayBuffer) and goes out as a Blob. The blob is
+//    returned as it is: the Blazor runtime wraps the returned value into a
+//    stream reference, and calling DotNet.createJSStreamReference here would
+//    hand it a value it can no longer convert.
 
-    var Rx = window['rxjs'];
+window.dnetimageeditor = (function () {
+    'use strict';
 
-    var targetLeft = 0;
-    var targetTop = 0;
-    var targetHeight = 0;
-    var targetWidth = 0;
-    const editorStates = new Map();
+    var editors = new Map();
 
-    function getEditorState(dotNetHelper) {
-        const id = dotNetHelper._id;
-        let state = editorStates.get(id);
-        if (!state) {
-            state = { subscriptions: [], dragCleanup: null };
-            editorStates.set(id, state);
-        }
-        return state;
+    var DEFAULT_MIN_CROP = 50;
+    var DEFAULT_PREVIEW_SIZE = 170;
+    var NOTIFY_INTERVAL = 120;
+
+    var JPEG = 'image/jpeg';
+    var PNG = 'image/png';
+    var WEBP = 'image/webp';
+
+    var RESIZER_TYPES = [
+        'top-left',
+        'top-center',
+        'top-right',
+        'left-center',
+        'right-center',
+        'bottom-left',
+        'bottom-center',
+        'bottom-right'
+    ];
+
+    function clamp(value, min, max) {
+        return Math.min(Math.max(value, min), max);
     }
 
-    function initializeDragAndDrop(dotNetHelper, draggedContainerElement, boardArea, initialleft, initialtop) {
+    function round(value) {
+        return Math.round(value);
+    }
 
-        const state = getEditorState(dotNetHelper);
-        if (state.dragCleanup) state.dragCleanup();
+    function getState(id) {
+        return editors.get(id) || null;
+    }
 
-        targetLeft = initialleft;
-        targetTop = initialtop;
-        targetWidth = draggedContainerElement.offsetWidth;
-        targetHeight = draggedContainerElement.offsetHeight;
+    // ---------------------------------------------------------------- format
 
-        const areaWidth = boardArea.offsetWidth;
-        const areaHeight = boardArea.offsetHeight;
-
-        // Margen horizontal para evitar que los "puntos" de los resizers
-        // se metan hacia dentro cuando el área toca los bordes.
-        const resizerHorizontalMargin = 6;
-
-        let startX = 0;
-        let startY = 0;
-        let startLeft = 0;
-        let startTop = 0;
-        let isDragging = false;
-        let pendingFrame = null;
-        let currentLeft = targetLeft;
-        let currentTop = targetTop;
-
-        const dummy = draggedContainerElement.nextElementSibling &&
-            draggedContainerElement.nextElementSibling.classList &&
-            draggedContainerElement.nextElementSibling.classList.contains('dnet-crop-box-dummy')
-            ? draggedContainerElement.nextElementSibling
-            : null;
-
-        function applyTransform(left, top) {
-
-            const clampedLeft = Math.min(
-                Math.max(left, resizerHorizontalMargin),
-                areaWidth - targetWidth - resizerHorizontalMargin
-            );
-            const clampedTop = Math.min(Math.max(top, 0), areaHeight - targetHeight);
-
-            currentLeft = clampedLeft;
-            currentTop = clampedTop;
-
-            // Usar left/top como fuente de verdad para posición
-            draggedContainerElement.style.left = clampedLeft + 'px';
-            draggedContainerElement.style.top = clampedTop + 'px';
-
-            if (dummy) {
-                dummy.style.left = clampedLeft + 'px';
-                dummy.style.top = clampedTop + 'px';
-            }
-
-            // Notificar a Blazor en el mismo frame (requestAnimationFrame ya limita a ~60fps)
-            dotNetHelper.invokeMethodAsync('OnDrag', {
-                height: targetHeight,
-                width: targetWidth,
-                left: clampedLeft,
-                top: clampedTop
-            });
+    function sniffFormat(bytes) {
+        if (bytes.length > 8 &&
+            bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4E && bytes[3] === 0x47) {
+            return PNG;
         }
 
-        function onMouseMove(e) {
+        if (bytes.length > 3 && bytes[0] === 0xFF && bytes[1] === 0xD8) {
+            return JPEG;
+        }
 
-            if (!isDragging) return;
+        if (bytes.length > 12 &&
+            bytes[0] === 0x52 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x46 &&
+            bytes[8] === 0x57 && bytes[9] === 0x45 && bytes[10] === 0x42 && bytes[11] === 0x50) {
+            return WEBP;
+        }
 
-            const newLeft = startLeft + (e.clientX - startX);
-            const newTop = startTop + (e.clientY - startY);
+        // Anything else (gif, bmp, avif, ...) is exported losslessly, which is
+        // the only safe choice: it keeps transparency and never re-encodes
+        // pixels the editor was not asked to change.
+        return PNG;
+    }
 
-            if (pendingFrame == null) {
-                pendingFrame = window.requestAnimationFrame(function () {
-                    pendingFrame = null;
-                    applyTransform(newLeft, newTop);
-                });
+    function normalizeFormat(format) {
+        if (!format) return null;
+
+        var value = String(format).toLowerCase();
+
+        if (value === 'jpeg' || value === 'jpg' || value === 'image/jpg') return JPEG;
+        if (value === 'png' || value === 'image/png') return PNG;
+        if (value === 'webp' || value === 'image/webp') return WEBP;
+
+        return null;
+    }
+
+    function hasAlpha(format) {
+        return format === PNG || format === WEBP;
+    }
+
+    // ---------------------------------------------------------------- decode
+
+    async function decodeImage(bytes, format) {
+        var blob = new Blob([bytes], { type: format });
+
+        if (typeof createImageBitmap === 'function') {
+            try {
+                var bitmap = await createImageBitmap(blob);
+
+                return {
+                    image: bitmap,
+                    width: bitmap.width,
+                    height: bitmap.height,
+                    release: function () { if (bitmap.close) bitmap.close(); }
+                };
+            } catch (error) {
+                // Falls through to the <img> path below.
             }
         }
 
-        function onMouseUp(e) {
+        var url = URL.createObjectURL(blob);
 
-            if (!isDragging) return;
-            isDragging = false;
-
-            document.removeEventListener('mousemove', onMouseMove);
-            document.removeEventListener('mouseup', onMouseUp);
-
-            targetLeft = currentLeft;
-            targetTop = currentTop;
-
-            dotNetHelper.invokeMethodAsync('OnDragEnd', {
-                height: targetHeight,
-                width: targetWidth,
-                left: targetLeft,
-                top: targetTop
+        try {
+            var image = await new Promise(function (resolve, reject) {
+                var element = new Image();
+                element.onload = function () { resolve(element); };
+                element.onerror = function () { reject(new Error('The selected image could not be decoded.')); };
+                element.src = url;
             });
+
+            return {
+                image: image,
+                width: image.naturalWidth || image.width,
+                height: image.naturalHeight || image.height,
+                release: function () { URL.revokeObjectURL(url); }
+            };
+        } catch (error) {
+            URL.revokeObjectURL(url);
+            throw error;
+        }
+    }
+
+    // --------------------------------------------------------------- geometry
+
+    // Crop rectangle in layout pixels, read straight from the DOM so it stays
+    // correct through dialog animations, window resizes and reflows.
+    function readCropRect(state) {
+        var box = state.box;
+
+        if (!box || !box.offsetWidth) {
+            return null;
         }
 
-        function onMouseDown(e) {
-
-            e.preventDefault();
-
-            isDragging = true;
-
-            startX = e.clientX;
-            startY = e.clientY;
-            startLeft = targetLeft;
-            startTop = targetTop;
-
-            dotNetHelper.invokeMethodAsync('OnDragStart');
-
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
-        }
-
-        // Posición inicial
-        applyTransform(targetLeft, targetTop);
-
-        draggedContainerElement.addEventListener('mousedown', onMouseDown);
-
-        state.dragCleanup = function () {
-            draggedContainerElement.removeEventListener('mousedown', onMouseDown);
-            document.removeEventListener('mousemove', onMouseMove);
-            document.removeEventListener('mouseup', onMouseUp);
-            if (pendingFrame !== null) window.cancelAnimationFrame(pendingFrame);
+        return {
+            left: box.offsetLeft,
+            top: box.offsetTop,
+            width: box.offsetWidth,
+            height: box.offsetHeight
         };
     }
 
-    function initializeResize(dotNetHelper, resizers, initialLeft, initialTop, initialHeight, initialWidth, imgWidth, imgHeight, resizerType, resizerMinWidth, resizerMinHeight) {
+    function writeCropVars(state, rect) {
+        var container = state.container;
 
-        const state = getEditorState(dotNetHelper);
-        state.subscriptions.forEach(subscription => subscription.unsubscribe());
-        state.subscriptions = [];
+        if (!container) return;
 
-        targetLeft = initialLeft;
-        targetTop = initialTop;
-        targetHeight = initialHeight;
-        targetWidth = initialWidth;
+        container.style.setProperty('--_crop-left', rect.left + 'px');
+        container.style.setProperty('--_crop-top', rect.top + 'px');
+        container.style.setProperty('--_crop-width', rect.width + 'px');
+        container.style.setProperty('--_crop-height', rect.height + 'px');
+    }
 
-        for (let resizer of resizers) {
+    function displaySize(state) {
+        var canvas = state.canvas;
 
-            const mousedownResizer$ = Rx.fromEvent(resizer.reference, 'mousedown');
-            const mousemove$ = Rx.fromEvent(document.body, 'mousemove');
-            const mousedragResizer$ = mousedownResizer$.pipe(
+        return {
+            width: canvas.offsetWidth || canvas.width,
+            height: canvas.offsetHeight || canvas.height
+        };
+    }
 
-                Rx.operators.switchMap((mousedownEvent) => {
+    // Maps the current selection (or the whole image) to source pixels.
+    function sourceRect(state, useCrop) {
+        var canvas = state.canvas;
+        var display = displaySize(state);
+        var rect = useCrop ? readCropRect(state) : null;
 
-                    // A mouseup observable can only be consumed once. Create it for each
-                    // drag so successive resize gestures remain functional.
-                    const mouseupResizer$ = Rx.fromEvent(document.body, 'mouseup').pipe(Rx.operators.take(1));
+        if (!rect) {
+            rect = { left: 0, top: 0, width: display.width, height: display.height };
+        }
 
-                    const startX = mousedownEvent.clientX;
-                    const startY = mousedownEvent.clientY;
+        var scaleX = canvas.width / Math.max(1, display.width);
+        var scaleY = canvas.height / Math.max(1, display.height);
 
-                    const resizeEndSub = mouseupResizer$.subscribe((mouseupEvent) => {
+        var x = clamp(round(rect.left * scaleX), 0, Math.max(0, canvas.width - 1));
+        var y = clamp(round(rect.top * scaleY), 0, Math.max(0, canvas.height - 1));
 
-                        var resultResizeData = getResizeData(resizer.resizerType, mouseupEvent.clientX, mouseupEvent.clientY, startX, startY, imgWidth, imgHeight, resizerMinWidth, resizerMinHeight);
+        return {
+            x: x,
+            y: y,
+            width: clamp(round(rect.width * scaleX), 1, canvas.width - x),
+            height: clamp(round(rect.height * scaleY), 1, canvas.height - y)
+        };
+    }
 
-                        targetLeft = resultResizeData.left;
-                        targetTop = resultResizeData.top;
-                        targetHeight = resultResizeData.height;
-                        targetWidth = resultResizeData.width;
+    function toNotifyPayload(state) {
+        var rect = readCropRect(state);
+        var crop = sourceRect(state, true);
 
-                        dotNetHelper.invokeMethodAsync('OnResizeEnd', { height: targetHeight, width: targetWidth, left: targetLeft, top: targetTop });
-                    });
-                    state.subscriptions.push(resizeEndSub);
+        return {
+            left: rect ? rect.left : 0,
+            top: rect ? rect.top : 0,
+            width: rect ? rect.width : 0,
+            height: rect ? rect.height : 0,
+            outputWidth: crop.width,
+            outputHeight: crop.height
+        };
+    }
 
-                    mousedownEvent.preventDefault();
+    function notify(state, method, payload) {
+        if (!state.dotNetHelper) return;
 
-                    dotNetHelper.invokeMethodAsync('OnResizeStart');
+        state.dotNetHelper.invokeMethodAsync(method, payload).catch(function () {
+            // The circuit can be gone while a gesture is still in flight.
+        });
+    }
 
-                    return mousemove$.pipe(
+    // ---------------------------------------------------------------- preview
 
-                        Rx.operators.map((mouseMoveEvent) => {
+    // Fits the given source rectangle into the preview canvas without
+    // allocating anything, so it is safe to run on every pointer frame. The
+    // rectangle carries its own origin: drawing from (0, 0) would show the
+    // top-left corner of the image instead of the selection.
+    function drawPreview(state, source, rect) {
+        var canvas = state.preview;
 
-                            mouseMoveEvent.preventDefault();
+        if (!canvas || !rect.width || !rect.height) return;
 
-                            return getResizeData(resizer.resizerType, mouseMoveEvent.clientX, mouseMoveEvent.clientY, startX, startY, imgWidth, imgHeight, resizerMinWidth, resizerMinHeight);
-                        }),
-                        Rx.operators.takeUntil(mouseupResizer$)
-                    );
-                }));
+        var box = state.previewBox;
+        var ratio = Math.min(1, box.width / rect.width, box.height / rect.height);
 
-            const resizeSub = mousedragResizer$.pipe(
-                Rx.operators.filter((pos) => {
-                    return (
-                        pos.top + pos.height) <= imgHeight &&
-                        (pos.left + pos.width) <= imgWidth &&
-                        pos.height > resizerMinHeight &&
-                        pos.top >= 0 && pos.left >= 0;
-                })).subscribe((pos) => {
-                    dotNetHelper.invokeMethodAsync('OnResize', pos);
-                });
-            state.subscriptions.push(resizeSub);
+        canvas.width = Math.max(1, round(rect.width * ratio));
+        canvas.height = Math.max(1, round(rect.height * ratio));
+
+        var context = canvas.getContext('2d');
+        context.imageSmoothingEnabled = true;
+        context.imageSmoothingQuality = 'high';
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(
+            source,
+            rect.x, rect.y, rect.width, rect.height,
+            0, 0, canvas.width, canvas.height);
+    }
+
+    // The preview always shows the selection the crop box is framing. The box is
+    // visible on screen, so previewing anything else reads as a mismatch.
+    function refreshPreview(state) {
+        if (!state.preview || !state.canvas.width) return;
+
+        drawPreview(state, state.canvas, sourceRect(state, true));
+    }
+
+    // ------------------------------------------------------------------- i/o
+
+    function canvasToBlob(canvas, type, quality) {
+        return new Promise(function (resolve, reject) {
+            canvas.toBlob(function (blob) {
+                if (blob) {
+                    resolve(blob);
+                } else {
+                    reject(new Error('The image could not be encoded as ' + type + '.'));
+                }
+            }, type, quality);
+        });
+    }
+
+    async function encodeWorkCanvas(work, format, quality, maxDimension) {
+        var width = work.width;
+        var height = work.height;
+
+        if (maxDimension > 0) {
+            var longest = Math.max(width, height);
+
+            if (longest > maxDimension) {
+                var ratio = maxDimension / longest;
+                width = Math.max(1, round(width * ratio));
+                height = Math.max(1, round(height * ratio));
+            }
+        }
+
+        var lossy = !hasAlpha(format);
+        var qualityValue = clamp(round(quality), 1, 100);
+
+        if (width === work.width && height === work.height) {
+            var blob = await canvasToBlob(work, format, lossy ? qualityValue / 100 : undefined);
+            return { blob: blob, width: width, height: height };
+        }
+
+        // Only the cropped region enters WASM, and only when a resize is
+        // actually needed. Lanczos3 is the best filter Photon exposes for
+        // photographic downscales.
+        var photon = await window.photonInit.get();
+        var image = photon.open_image(work, work.getContext('2d'));
+
+        try {
+            var resized = photon.resize(image, width, height, photon.SamplingFilter.Lanczos3);
+
+            try {
+                var bytes;
+
+                if (format === PNG) {
+                    bytes = resized.get_bytes();
+                } else if (format === WEBP) {
+                    bytes = resized.get_bytes_webp();
+                } else {
+                    bytes = resized.get_bytes_jpeg(qualityValue);
+                }
+
+                return { blob: new Blob([bytes], { type: format }), width: width, height: height };
+            } finally {
+                resized.free();
+            }
+        } finally {
+            image.free();
         }
     }
 
-    function getResizeData(resizerType, clientX, clientY, startX, startY, imgWidth, imgHeight, resizerMinWidth, resizerMinHeight) {
+    // --------------------------------------------------------------- gestures
 
-        let height;
-        let width;
-        let top;
-        let left;
+    function clampToBoard(rect, board) {
+        return {
+            left: clamp(rect.left, 0, Math.max(0, board.width - rect.width)),
+            top: clamp(rect.top, 0, Math.max(0, board.height - rect.height)),
+            width: rect.width,
+            height: rect.height
+        };
+    }
 
-        switch (resizerType) {
+    function computeRect(mode, start, deltaX, deltaY, minWidth, minHeight, board) {
+        var left = start.left;
+        var top = start.top;
+        var width = start.width;
+        var height = start.height;
 
-            case "TopLeft":
-                height = targetHeight + (startY - clientY);
-                width = targetWidth + (startY - clientY);
-                top = targetTop - (startY - clientY);
-                left = targetLeft - (startY - clientY);
+        var right = start.left + start.width;
+        var bottom = start.top + start.height;
+
+        switch (mode) {
+            case 'move':
+                return clampToBoard({
+                    left: start.left + deltaX,
+                    top: start.top + deltaY,
+                    width: width,
+                    height: height
+                }, board);
+            case 'top-left':
+                left = clamp(start.left + deltaX, 0, Math.max(0, right - minWidth));
+                top = clamp(start.top + deltaY, 0, Math.max(0, bottom - minHeight));
+                width = right - left;
+                height = bottom - top;
                 break;
-
-            case "TopRight":
-                height = targetHeight + (startY - clientY);
-                width = targetWidth + (startY - clientY);
-                top = targetTop - (startY - clientY);
-                left = targetLeft;
+            case 'top-center':
+                top = clamp(start.top + deltaY, 0, Math.max(0, bottom - minHeight));
+                height = bottom - top;
                 break;
-
-            case "BottomLeft":
-                height = targetHeight + (startX - clientX);
-                width = targetWidth + (startX - clientX);
-                top = targetTop;
-                left = targetLeft - (startX - clientX);
+            case 'top-right':
+                top = clamp(start.top + deltaY, 0, Math.max(0, bottom - minHeight));
+                height = bottom - top;
+                width = clamp(start.width + deltaX, Math.min(minWidth, board.width), board.width - start.left);
                 break;
-
-            case "BottomRight":
-                height = targetHeight - (startY - clientY);
-                width = targetWidth - (startY - clientY);
-                top = targetTop;
-                left = targetLeft;
+            case 'left-center':
+                left = clamp(start.left + deltaX, 0, Math.max(0, right - minWidth));
+                width = right - left;
                 break;
-
-            case "TopCenter":
-                height = targetHeight + (startY - clientY);
-                width = targetWidth;
-                top = targetTop - (startY - clientY);
-                left = targetLeft;
+            case 'right-center':
+                width = clamp(start.width + deltaX, Math.min(minWidth, board.width), board.width - start.left);
                 break;
-
-            case "BottomCenter":
-                height = targetHeight - (startY - clientY);
-                width = targetWidth;
-                top = targetTop;
-                left = targetLeft;
+            case 'bottom-left':
+                left = clamp(start.left + deltaX, 0, Math.max(0, right - minWidth));
+                width = right - left;
+                height = clamp(start.height + deltaY, Math.min(minHeight, board.height), board.height - start.top);
                 break;
-
-            case "RightCenter":
-                height = targetHeight;
-                width = targetWidth - (startX - clientX);
-                top = targetTop;
-                left = targetLeft;
+            case 'bottom-center':
+                height = clamp(start.height + deltaY, Math.min(minHeight, board.height), board.height - start.top);
                 break;
-
-            case "LeftCenter":
-                height = targetHeight;
-                width = targetWidth + (startX - clientX);
-                top = targetTop;
-                left = targetLeft - (startX - clientX);
+            case 'bottom-right':
+                width = clamp(start.width + deltaX, Math.min(minWidth, board.width), board.width - start.left);
+                height = clamp(start.height + deltaY, Math.min(minHeight, board.height), board.height - start.top);
                 break;
-
             default:
                 break;
         }
 
-        // Clamp values to ensure crop area stays within image bounds
-        // Ensure minimum size
-        width = Math.max(width, resizerMinWidth);
-        height = Math.max(height, resizerMinHeight);
-        
-        // Ensure left boundary
-        left = Math.max(0, left);
-        
-        // Ensure top boundary  
-        top = Math.max(0, top);
-        
-        // Ensure right boundary (left + width <= imgWidth)
-        if (left + width > imgWidth) {
-            width = imgWidth - left;
-        }
-        
-        // Ensure bottom boundary (top + height <= imgHeight)
-        if (top + height > imgHeight) {
-            height = imgHeight - top;
-        }
-
-        return {
-            height: height,
-            width: width,
-            top: top,
-            left: left
-        };
+        return { left: left, top: top, width: width, height: height };
     }
 
-    async function cropWithPhoton(imageElement, cropLeft, cropTop, cropWidth, cropHeight, targetWidth, targetHeight) {
+    function startGesture(state, event, mode) {
+        if (event.pointerType === 'mouse' && event.button !== 0) return;
 
-        if (!imageElement) {
-            throw new Error('Image element is required');
+        event.preventDefault();
+
+        var target = event.currentTarget;
+        var start = readCropRect(state);
+
+        if (!start) return;
+
+        var startX = event.clientX;
+        var startY = event.clientY;
+        var pointerId = event.pointerId;
+        var current = start;
+        var started = false;
+        var frame = null;
+        var lastNotify = 0;
+        var latest = { x: startX, y: startY };
+
+        var isMove = mode === 'move';
+        var startMethod = isMove ? 'OnDragStart' : 'OnResizeStart';
+        var moveMethod = isMove ? 'OnDrag' : 'OnResize';
+        var endMethod = isMove ? 'OnDragEnd' : 'OnResizeEnd';
+
+        if (target.setPointerCapture) {
+            try { target.setPointerCapture(pointerId); } catch (error) { /* capture is optional */ }
         }
-        
-        const photon = await window.photonInit.get();
-        
-        // Create canvas with the original image
-        var sourceCanvas = document.createElement('canvas');
-        var sourceCtx = sourceCanvas.getContext('2d');
-        sourceCanvas.width = imageElement.naturalWidth || imageElement.width;
-        sourceCanvas.height = imageElement.naturalHeight || imageElement.height;
-        sourceCtx.drawImage(imageElement, 0, 0);
-        
-        // Validate crop parameters
-        const displayRect = imageElement.getBoundingClientRect();
-        const scaleX = sourceCanvas.width / Math.max(1, displayRect.width);
-        const scaleY = sourceCanvas.height / Math.max(1, displayRect.height);
-        const x1 = Math.max(0, Math.min(Math.round(cropLeft * scaleX), sourceCanvas.width - 1));
-        const y1 = Math.max(0, Math.min(Math.round(cropTop * scaleY), sourceCanvas.height - 1));
-        const w = Math.max(1, Math.min(Math.round(cropWidth * scaleX), sourceCanvas.width - x1));
-        const h = Math.max(1, Math.min(Math.round(cropHeight * scaleY), sourceCanvas.height - y1));
-        
-        // Photon crop expects x1, y1, x2, y2 (NOT x, y, width, height!)
-        const x2 = x1 + w;
-        const y2 = y1 + h;
-        
-        // Convert canvas to PhotonImage
-        let photonImage = photon.open_image(sourceCanvas, sourceCtx);
-        
-        // Crop using Photon (high quality) - parameters are (image, x1, y1, x2, y2)
-        let croppedImage = photon.crop(photonImage, x1, y1, x2, y2);
-        
-        // Resize if needed using Photon's resize with Lanczos3 sampling
-        let finalImage = croppedImage;
-        if (targetWidth && targetHeight) {
-            const resizeW = Math.max(1, Math.min(Math.round(targetWidth), 8192)); // Max 8K dimension
-            const resizeH = Math.max(1, Math.min(Math.round(targetHeight), 8192)); // Max 8K dimension
-            
-            // Validate buffer size won't overflow (width * height * 4 channels < 2^31)
-            const bufferSize = resizeW * resizeH * 4;
-            const maxBufferSize = 2147483647; // 2^31 - 1 (safe for 32-bit WASM)
-            
-            if (bufferSize > maxBufferSize) {
-                throw new Error(`Resize dimensions too large: ${resizeW}x${resizeH} would create ${bufferSize} byte buffer (max: ${maxBufferSize})`);
+
+        function apply() {
+            var board = { width: state.board.clientWidth, height: state.board.clientHeight };
+
+            current = computeRect(
+                mode,
+                start,
+                latest.x - startX,
+                latest.y - startY,
+                state.minCropWidth,
+                state.minCropHeight,
+                board);
+
+            writeCropVars(state, current);
+
+            if (!started) {
+                started = true;
+                notify(state, startMethod);
             }
-            
-            // Photon resize(img, width, height, sampling_filter)
-            // SamplingFilter: Nearest=1, Triangle=2, CatmullRom=3, Gaussian=4, Lanczos3=5
-            finalImage = photon.resize(croppedImage, resizeW, resizeH, 5); // Lanczos3 for best quality
+
+            var now = Date.now();
+
+            if (now - lastNotify >= NOTIFY_INTERVAL) {
+                lastNotify = now;
+                notify(state, moveMethod, toNotifyPayload(state));
+            }
         }
-        
-        // Convert PhotonImage back to canvas
-        var resultCanvas = document.createElement('canvas');
-        resultCanvas.width = finalImage.get_width();
-        resultCanvas.height = finalImage.get_height();
-        var resultCtx = resultCanvas.getContext('2d');
-        
-        // Put image data on canvas
-        photon.putImageData(resultCanvas, resultCtx, finalImage);
-        
-        // Return high-quality JPEG
-        return resultCanvas.toDataURL('image/jpeg', 0.95);
+
+        function onPointerMove(moveEvent) {
+            if (moveEvent.pointerId !== pointerId) return;
+
+            moveEvent.preventDefault();
+
+            latest = { x: moveEvent.clientX, y: moveEvent.clientY };
+
+            if (frame !== null) return;
+
+            frame = window.requestAnimationFrame(function () {
+                frame = null;
+                apply();
+                refreshPreview(state);
+            });
+        }
+
+        function onPointerUp(upEvent) {
+            if (upEvent.pointerId !== pointerId) return;
+
+            target.removeEventListener('pointermove', onPointerMove);
+            target.removeEventListener('pointerup', onPointerUp);
+            target.removeEventListener('pointercancel', onPointerUp);
+
+            if (frame !== null) {
+                window.cancelAnimationFrame(frame);
+                frame = null;
+                apply();
+            }
+
+            if (!started) return;
+
+            refreshPreview(state);
+            notify(state, endMethod, toNotifyPayload(state));
+        }
+
+        target.addEventListener('pointermove', onPointerMove);
+        target.addEventListener('pointerup', onPointerUp);
+        target.addEventListener('pointercancel', onPointerUp);
     }
 
-    async function flipHorizontal(imageElement) {
-        if (!imageElement) {
-            throw new Error('Image element is required');
-        }
-        
-        const photon = await window.photonInit.get();
-        
-        // Create canvas with the original image
-        var sourceCanvas = document.createElement('canvas');
-        var sourceCtx = sourceCanvas.getContext('2d');
-        sourceCanvas.width = imageElement.naturalWidth || imageElement.width;
-        sourceCanvas.height = imageElement.naturalHeight || imageElement.height;
-        sourceCtx.drawImage(imageElement, 0, 0);
-        
-        // Convert canvas to PhotonImage
-        let photonImage = photon.open_image(sourceCanvas, sourceCtx);
-        
-        // Flip horizontally
-        photon.fliph(photonImage);
-        
-        // Convert PhotonImage back to canvas
-        var resultCanvas = document.createElement('canvas');
-        resultCanvas.width = photonImage.get_width();
-        resultCanvas.height = photonImage.get_height();
-        var resultCtx = resultCanvas.getContext('2d');
-        
-        // Put image data on canvas
-        photon.putImageData(resultCanvas, resultCtx, photonImage);
-        
-        // Return high-quality JPEG
-        return resultCanvas.toDataURL('image/jpeg', 0.95);
+    function attachGesture(state, element, mode) {
+        var handler = function (event) { startGesture(state, event, mode); };
+
+        element.addEventListener('pointerdown', handler);
+
+        state.cleanup.push(function () {
+            element.removeEventListener('pointerdown', handler);
+        });
     }
 
-    async function flipVertical(imageElement) {
-        if (!imageElement) {
-            throw new Error('Image element is required');
-        }
-        
-        const photon = await window.photonInit.get();
-        
-        // Create canvas with the original image
-        var sourceCanvas = document.createElement('canvas');
-        var sourceCtx = sourceCanvas.getContext('2d');
-        sourceCanvas.width = imageElement.naturalWidth || imageElement.width;
-        sourceCanvas.height = imageElement.naturalHeight || imageElement.height;
-        sourceCtx.drawImage(imageElement, 0, 0);
-        
-        // Convert canvas to PhotonImage
-        let photonImage = photon.open_image(sourceCanvas, sourceCtx);
-        
-        // Flip vertically
-        photon.flipv(photonImage);
-        
-        // Convert PhotonImage back to canvas
-        var resultCanvas = document.createElement('canvas');
-        resultCanvas.width = photonImage.get_width();
-        resultCanvas.height = photonImage.get_height();
-        var resultCtx = resultCanvas.getContext('2d');
-        
-        // Put image data on canvas
-        photon.putImageData(resultCanvas, resultCtx, photonImage);
-        
-        // Return high-quality JPEG
-        return resultCanvas.toDataURL('image/jpeg', 0.95);
+    function handleViewportResize(state) {
+        if (state.resizeFrame !== null) return;
+
+        state.resizeFrame = window.requestAnimationFrame(function () {
+            state.resizeFrame = null;
+
+            var current = readCropRect(state);
+
+            if (!current) return;
+
+            var write = clampToBoard(current, displaySize(state));
+
+            if (write.left !== current.left || write.top !== current.top) {
+                writeCropVars(state, write);
+            }
+
+            refreshPreview(state);
+        });
     }
+
+    // ---------------------------------------------------------------- public
 
     return {
 
         setFocus: function (element) {
-
             if (element) element.focus();
         },
 
         getBoundingClientRect: function (elementRef) {
-
-            const clientRect = elementRef.getBoundingClientRect();
-
-            return clientRect;
+            return elementRef.getBoundingClientRect();
         },
 
-        initializeDragAndDrop: function (dotNetHelper, draggedContainerElement, boardArea, left, top) {
-            initializeDragAndDrop(dotNetHelper, draggedContainerElement, boardArea, left, top);
+        /**
+         * Decodes the source image into the editor canvas and returns the
+         * geometry the component needs to render its chrome.
+         */
+        initializeSource: async function (dotNetHelper, id, streamReference, canvas, preview, options) {
+            if (getState(id)) {
+                window.dnetimageeditor.dispose(id);
+            }
+
+            options = options || {};
+
+            var buffer = await streamReference.arrayBuffer();
+            var bytes = new Uint8Array(buffer);
+            var format = sniffFormat(bytes);
+            var decoded = await decodeImage(bytes, format);
+
+            // Assigning width/height also clears the canvas, so a re-opened
+            // dialog can never show stale pixels.
+            canvas.width = decoded.width;
+            canvas.height = decoded.height;
+            canvas.getContext('2d').drawImage(decoded.image, 0, 0, decoded.width, decoded.height);
+            decoded.release();
+
+            var state = {
+                dotNetHelper: dotNetHelper,
+                canvas: canvas,
+                preview: preview,
+                previewBox: {
+                    width: options.previewWidth > 0 ? options.previewWidth : DEFAULT_PREVIEW_SIZE,
+                    height: options.previewHeight > 0 ? options.previewHeight : DEFAULT_PREVIEW_SIZE
+                },
+                board: null,
+                container: null,
+                box: null,
+                sourceFormat: format,
+                minCropWidth: options.minCropWidth > 0 ? options.minCropWidth : DEFAULT_MIN_CROP,
+                minCropHeight: options.minCropHeight > 0 ? options.minCropHeight : DEFAULT_MIN_CROP,
+                maxOutputDimension: options.maxOutputDimension > 0 ? options.maxOutputDimension : 0,
+                outputFormat: normalizeFormat(options.outputFormat),
+                outputQuality: options.outputQuality > 0 ? options.outputQuality : 95,
+                originalBlob: new Blob([bytes], { type: format }),
+                pendingBlob: null,
+                scratch: document.createElement('canvas'),
+                cleanup: [],
+                resizeFrame: null
+            };
+
+            editors.set(id, state);
+
+            var display = displaySize(state);
+            var cropWidth = round(Math.max(state.minCropWidth, Math.min(100, display.width)));
+            var cropHeight = round(Math.max(state.minCropHeight, Math.min(100, display.height)));
+
+            state.crop = {
+                left: round(Math.max(0, (display.width - cropWidth) / 2)),
+                top: round(Math.max(0, (display.height - cropHeight) / 2)),
+                width: cropWidth,
+                height: cropHeight
+            };
+
+            return {
+                sourceWidth: decoded.width,
+                sourceHeight: decoded.height,
+                sourceFormat: format,
+                displayWidth: display.width,
+                displayHeight: display.height,
+                cropLeft: state.crop.left,
+                cropTop: state.crop.top,
+                cropWidth: state.crop.width,
+                cropHeight: state.crop.height
+            };
         },
 
-        initializeResize: function (dotNetHelper, resizers, initialLeft, initialTop, initialHeight, initialWidth, imgWidth, imgHeight, resizerType, resizerMinWidth, resizerMinHeight) {
-            initializeResize(dotNetHelper, resizers, initialLeft, initialTop, initialHeight, initialWidth, imgWidth, imgHeight, resizerType, resizerMinWidth, resizerMinHeight);
+        /**
+         * Wires the crop rectangle to the rendered overlay. Called once the
+         * component has rendered the crop chrome.
+         */
+        attachCrop: function (id, board, container, box) {
+            var state = getState(id);
+
+            if (!state) throw new Error('The image editor is not initialized.');
+
+            state.board = board;
+            state.container = container;
+            state.box = box;
+
+            writeCropVars(state, state.crop);
+            attachGesture(state, box, 'move');
+
+            for (var index = 0; index < RESIZER_TYPES.length; index++) {
+                var element = container.querySelector('.dnet-crop-box-resizer-' + RESIZER_TYPES[index]);
+
+                if (element) {
+                    attachGesture(state, element, RESIZER_TYPES[index]);
+                }
+            }
+
+            var onViewportResize = function () { handleViewportResize(state); };
+            window.addEventListener('resize', onViewportResize);
+            state.cleanup.push(function () { window.removeEventListener('resize', onViewportResize); });
+
+            refreshPreview(state);
+
+            return toNotifyPayload(state);
         },
 
-        cropWithPhoton: cropWithPhoton,
-        
-        flipHorizontal: flipHorizontal,
-        
-        flipVertical: flipVertical,
-        dispose: function (dotNetHelper) {
-            if (!dotNetHelper) return;
-            const state = editorStates.get(dotNetHelper._id);
+        /**
+         * Mirrors the working image. The flip is applied to the raw pixels of
+         * the canvas, so any number of flips survives without the
+         * generational quality loss of re-encoding on every click.
+         */
+        flip: function (id, horizontal) {
+            var state = getState(id);
+
+            if (!state) throw new Error('The image editor is not initialized.');
+
+            var canvas = state.canvas;
+            var width = canvas.width;
+            var height = canvas.height;
+            var scratch = state.scratch;
+
+            scratch.width = width;
+            scratch.height = height;
+
+            var scratchContext = scratch.getContext('2d');
+            scratchContext.clearRect(0, 0, width, height);
+            scratchContext.drawImage(canvas, 0, 0);
+
+            var context = canvas.getContext('2d');
+            context.save();
+            context.setTransform(1, 0, 0, 1, 0, 0);
+            context.clearRect(0, 0, width, height);
+            context.translate(horizontal ? width : 0, horizontal ? 0 : height);
+            context.scale(horizontal ? -1 : 1, horizontal ? 1 : -1);
+            context.drawImage(scratch, 0, 0);
+            context.restore();
+
+            state.pendingBlob = null;
+            refreshPreview(state);
+        },
+
+        /**
+         * Encodes the current selection (or the whole image) at its native
+         * resolution and keeps the result until the component asks for it.
+         */
+        exportImage: async function (id, useCrop) {
+            var state = getState(id);
+
+            if (!state) throw new Error('The image editor is not initialized.');
+
+            var source = sourceRect(state, useCrop !== false);
+            var format = state.outputFormat || state.sourceFormat;
+            var work = document.createElement('canvas');
+
+            work.width = source.width;
+            work.height = source.height;
+
+            var context = work.getContext('2d', { willReadFrequently: true });
+
+            // JPEG has no alpha channel: without this, transparent pixels come
+            // out black.
+            if (!hasAlpha(format)) {
+                context.fillStyle = '#ffffff';
+                context.fillRect(0, 0, work.width, work.height);
+            }
+
+            context.drawImage(state.canvas, source.x, source.y, source.width, source.height, 0, 0, source.width, source.height);
+
+            var result = await encodeWorkCanvas(work, format, state.outputQuality, state.maxOutputDimension);
+
+            state.pendingBlob = result.blob;
+
+            // `work` already holds the selection, so the preview takes all of it.
+            // The optional size cap keeps the aspect ratio, so previewing the
+            // uncapped canvas shows the same picture.
+            drawPreview(state, work, { x: 0, y: 0, width: work.width, height: work.height });
+
+            return {
+                width: result.width,
+                height: result.height,
+                format: format,
+                size: result.blob.size
+            };
+        },
+
+        /**
+         * Hands the encoded result (or the untouched original bytes when the
+         * user changed nothing) back to .NET as a stream.
+         */
+        getResultStream: function (id) {
+            var state = getState(id);
+
+            if (!state) throw new Error('The image editor is not initialized.');
+
+            return state.pendingBlob || state.originalBlob;
+        },
+
+        dispose: function (id) {
+            var state = getState(id);
+
             if (!state) return;
-            if (state.dragCleanup) state.dragCleanup();
-            state.subscriptions.forEach(subscription => subscription.unsubscribe());
-            editorStates.delete(dotNetHelper._id);
+
+            state.cleanup.forEach(function (remove) { remove(); });
+
+            if (state.resizeFrame !== null) {
+                window.cancelAnimationFrame(state.resizeFrame);
+            }
+
+            state.pendingBlob = null;
+            state.originalBlob = null;
+            state.canvas = null;
+            state.box = null;
+            state.board = null;
+            state.container = null;
+            state.preview = null;
+            state.dotNetHelper = null;
+
+            editors.delete(id);
         }
     };
 })();

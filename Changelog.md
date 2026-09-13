@@ -1,5 +1,56 @@
 # Changelog for Blazor Library
 
+## Version 6.0.15 (September 2026)
+
+- ImageEditor: fixed the preview, which drew the top-left corner of the picture
+  at the size of the selection instead of the selected pixels, so it never
+  matched the crop box while dragging. It now mirrors the selection live, and it
+  shows the selection from the moment the dialog opens instead of the whole
+  image.
+- ImageEditor: the exported image now keeps the resolution of the selection in
+  source pixels instead of always being resized to the preview box (170 x 170),
+  it preserves the aspect ratio of the crop and the format of the source image
+  (PNG and WebP keep their transparency), and it no longer turns transparent
+  pixels black when the output is JPEG.
+- ImageEditor: an untouched image is returned byte for byte, and every other
+  edit is encoded exactly once. Flipping now mirrors the working pixels instead
+  of re-encoding a JPEG on every click, so both repeated flips and a crop
+  followed by a flip keep their full quality.
+- ImageEditor: added `MaxOutputDimension` (caps the longest edge of the result;
+  zero keeps the native resolution), `OutputFormat` (forces the output format)
+  and `OutputQuality` (lossy quality, 95 by default).
+- ImageEditor: fixed the crop overlay, which was pinned to
+  `ImageContainerHeight`/`ImageContainerWidth` and therefore misaligned with the
+  image for any picture whose natural size differs from those values; the
+  overlay and its masks and handles now track the displayed image exactly.
+- ImageEditor: dragging and resizing run entirely in the browser. The selection
+  is written as four `--_crop-*` custom properties that the stylesheet turns
+  into the box, the masks and the handles, so a gesture no longer costs a
+  JS -> .NET call and a component render per pointer frame; .NET receives a
+  throttled progress notification and the final rectangle.
+- ImageEditor: the image is transferred without base64. Bytes arrive through a
+  `DotNetStreamReference` and the result is returned as a blob stream, so a
+  large picture no longer becomes a multi-megabyte string on either side. The
+  editor draws the picture and the preview on canvases and never re-reads the
+  DOM for pixels.
+- ImageEditor: Photon WASM is loaded in the background on first use and only
+  resamples the selection, releasing its buffers explicitly. `MaxFileSizes` now
+  falls back to `DnetImageEditor.DefaultMaxFileSize` (15 MB) when it is not set.
+- ImageEditor: the measured dimensions use the `--dnet-sys-primary` token
+  instead of a hardcoded colour, the preview label shows the size of the result,
+  the left and right handles use the correct resize cursors, and every editor
+  instance keeps its own state, so two editors on one page no longer interfere.
+- ImageEditor, breaking: the default output is the native resolution of the
+  selection; set `MaxOutputDimension` to cap it. `DialogData.ImageUrl` was
+  removed, `IStyleService.GetResizerStyles`/`GetMaskStyles` and
+  `IImageEditorService.UpdateResizersData`/`PlaceMasks` were removed together
+  with the `MaskData` model, and `IStyleService.GetStyles`,
+  `GetCropContainerStyles` and `GetImagePreviewStyles` now return custom
+  properties instead of finished positions. The result stream handed to
+  `OnImageSelected` belongs to the consumer from that moment on.
+- ImageEditor sample: uploads reach the editor without being downscaled and
+  re-encoded to 640 x 480 first, and the page reports the size of the result.
+
 ## Version 6.0.14 (August 2026)
 
 - Increased Toast title typography from 12px to 14px and message typography

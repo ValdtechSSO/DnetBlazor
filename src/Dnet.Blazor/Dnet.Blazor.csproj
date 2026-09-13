@@ -10,13 +10,14 @@
 		<Description>Set of Components for Blazor Framework</Description>
 		<Copyright>Datalnet</Copyright>
 		<PackageTags>Blazor-Components-Datalnet</PackageTags>
-		<PackageVersion>6.0.14</PackageVersion>
+		<PackageVersion>6.0.15</PackageVersion>
 		<PackageProjectUrl>https://datalnet.com/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ValdtechSSO/DnetBlazor</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
-			- Toast: Increased title and message typography for improved readability.
-			- AdminLayout: Replaced the fixed light scrollbar thumb with theme-derived normal and hover colors.
+			- ImageEditor: exports keep the resolution, aspect ratio, format and transparency of the selection instead of being resized to 170 x 170.
+			- ImageEditor: flips and crops are encoded once, gestures no longer round-trip to .NET per frame and images move without base64.
+			- ImageEditor: fixed the crop overlay misalignment and added MaxOutputDimension, OutputFormat and OutputQuality.
 		</PackageReleaseNotes>
 	</PropertyGroup>
 
