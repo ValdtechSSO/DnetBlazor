@@ -14,10 +14,22 @@
 .dnet-floating-doublelist-value-wrapper {
   display: flex;
   align-items: center;
-  overflow: auto;
-  flex-wrap: wrap;
+  overflow: hidden;
 }
-.dnet-floating-doublelist-value-wrapper span:last-child span {
+
+/* The selected values stay on one line and end in an ellipsis once they no
+   longer fit the control, instead of wrapping under its fixed height. */
+.dnet-floating-doublelist-value-text {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* The trailing separator of the last value is redundant. */
+.dnet-floating-doublelist-value-wrapper .dnet-select-multi-value:last-child span {
   display: none;
 }
 

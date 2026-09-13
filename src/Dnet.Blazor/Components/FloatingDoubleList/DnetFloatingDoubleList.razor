@@ -34,10 +34,14 @@
          class="dnet-plain-select-trigger" style="width: 100%">
         <div class="dnet-plain-select-value">
             <div class="dnet-floating-doublelist-value-wrapper" style="height: @(InputItemHeight)px">
-                @foreach (var item in _itemsToshow)
-                {
-                    <span class="dnet-select-multi-value">@DisplayValueConverter(item) <span> - </span></span>
-                }
+                @* One inline run: the values used to be flex items that wrapped onto a
+                   second line and were clipped by the fixed height. *@
+                <span class="dnet-floating-doublelist-value-text">
+                    @foreach (var item in _itemsToshow)
+                    {
+                        <span class="dnet-select-multi-value">@DisplayValueConverter(item) <span> - </span></span>
+                    }
+                </span>
             </div>
         </div>
     </div>

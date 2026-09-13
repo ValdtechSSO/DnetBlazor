@@ -2,6 +2,10 @@
 
 ## Version 6.0.15 (September 2026)
 
+- FloatingDoubleList: the selected values shown by the control stay on one line
+  and end in an ellipsis when they no longer fit its width, instead of wrapping
+  onto a second line that the fixed control height cut in half.
+
 - List: fixed drag and drop between connected lists. The fallback row markup,
   which is the one the double list renders, made items draggable without ever
   marking them as the drag payload, so every drop carried an empty list and the
