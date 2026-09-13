@@ -9,7 +9,11 @@
 <header class="dnet-header">
     <div class="dnet-header-content-wrapper">
         <div class="dnet-header-menu-button">
-            <button class="dnet-menu-button" @onclick="ShowMenuNav">☰</button>
+            <button class="dnet-menu-button" type="button" aria-label="Open navigation menu" @onclick="ShowMenuNav">
+                <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                    <path fill="currentColor" d="M2 4h16v2H2V4Zm0 5h16v2H2V9Zm0 5h16v2H2v-2Z" />
+                </svg>
+            </button>
         </div>
         <div class="dnet-header-content">
             @ChildContent
