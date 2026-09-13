@@ -3612,10 +3612,13 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   gap: var(--dnet-sys-space-2);
 }
 
+/* Sits inside the field's control, so it starts on the field's own left padding
+   and keeps the numbers the same distance from the edge in every box. */
 .dnet-image-editor-field-label {
   color: var(--dnet-sys-on-surface-muted);
   font-size: var(--dnet-sys-text-sm);
   min-width: 1.25em;
+  margin-right: var(--dnet-sys-space-1);
 }
 
 .dnet-image-editor-footer {

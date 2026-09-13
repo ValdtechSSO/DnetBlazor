@@ -19,6 +19,9 @@
 - FloatingDoubleList: the right container was named "RghtContainer" on both
   sides of the connection contract.
 
+- ImageEditor: the X/Y/W/H labels of the selection fields start on the field's own
+  padding instead of pressed against its border, with a gap before the value.
+
 - ImageEditor: rebuilt the dialog around the library's own components, in the
   layout of a two-column editor: a header with the file name and source size, a
   toolbar with Crop, rotate left/right, flip horizontal/vertical and Reset, the
