@@ -113,3 +113,6 @@ src/Dnet.Blazor/Components/Grid/.DS_Store
 
 # Build artifacts
 artifacts/
+
+# Implementation plans: working notes kept in the checkout, not published
+docs/implementation-plans/
