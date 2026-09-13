@@ -18,8 +18,8 @@ namespace Dnet.Blazor.Components.ImageEditor.Infrastructure.Services
 
         public string GetCropContainerStyles(int height, int width)
         {
-            var styles = new StyleBuilder("--_editor-max-width", $"{width}px")
-                .AddStyle("--_editor-max-height", $"{height}px")
+            var styles = new StyleBuilder("--_editor-stage-width", $"{width}px")
+                .AddStyle("--_editor-stage-height", $"{height}px")
                 .Build();
 
             return styles;

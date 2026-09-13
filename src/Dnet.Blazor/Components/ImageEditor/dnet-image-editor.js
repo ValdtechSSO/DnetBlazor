@@ -166,6 +166,19 @@ window.dnetimageeditor = (function () {
         container.style.setProperty('--_crop-top', rect.top + 'px');
         container.style.setProperty('--_crop-width', rect.width + 'px');
         container.style.setProperty('--_crop-height', rect.height + 'px');
+
+        updateBadge(state, rect);
+    }
+
+    // The badge on the crop box reports the selection in source pixels, which is
+    // also the size the export will have.
+    function updateBadge(state, rect) {
+        if (!state.label) return;
+
+        // Same source as the panel fields, so both always agree.
+        var crop = sourceRect(state, true);
+
+        state.label.textContent = crop.width + ' \u00d7 ' + crop.height;
     }
 
     function displaySize(state) {
@@ -210,6 +223,8 @@ window.dnetimageeditor = (function () {
             top: rect ? rect.top : 0,
             width: rect ? rect.width : 0,
             height: rect ? rect.height : 0,
+            outputLeft: crop.x,
+            outputTop: crop.y,
             outputWidth: crop.width,
             outputHeight: crop.height
         };
@@ -323,6 +338,112 @@ window.dnetimageeditor = (function () {
         }
     }
 
+    // ------------------------------------------------------------------- zoom
+
+    // A zoom of 1 shows one source pixel per CSS pixel. The editor opens fitted
+    // to the stage, so the initial factor is computed rather than assumed.
+    function fitZoom(state) {
+        var viewport = state.viewport;
+
+        if (!viewport || !viewport.clientWidth || !viewport.clientHeight) return 1;
+
+        return Math.min(1, viewport.clientWidth / state.canvas.width, viewport.clientHeight / state.canvas.height);
+    }
+
+    // The canvas drives its own display size; the stage scrolls when the zoomed
+    // picture no longer fits, and the crop rectangle keeps its own coordinates.
+    function applyFitZoom(state) {
+        state.zoom = fitZoom(state);
+        applyZoom(state);
+
+        // The first pass can still see the scrollbars of the previous zoom, so
+        // the fit is measured again once they are gone.
+        state.zoom = fitZoom(state);
+        applyZoom(state);
+    }
+
+    function applyZoom(state) {
+        var canvas = state.canvas;
+
+        canvas.style.maxWidth = 'none';
+        canvas.style.maxHeight = 'none';
+        canvas.style.width = Math.max(1, round(canvas.width * state.zoom)) + 'px';
+        canvas.style.height = Math.max(1, round(canvas.height * state.zoom)) + 'px';
+    }
+
+    function clampCrop(state) {
+        var current = readCropRect(state);
+
+        if (!current) return;
+
+        var display = displaySize(state);
+        var board = { width: display.width, height: display.height };
+
+        writeCropVars(state, clampToBoard({
+            left: current.left,
+            top: current.top,
+            width: Math.max(1, Math.min(current.width, board.width)),
+            height: Math.max(1, Math.min(current.height, board.height))
+        }, board));
+    }
+
+    function viewState(state) {
+        return {
+            sourceWidth: state.canvas.width,
+            sourceHeight: state.canvas.height,
+            zoom: state.zoom,
+            selection: toNotifyPayload(state)
+        };
+    }
+
+    // Keeps the selection on its locked ratio: the edges the gesture does not
+    // move stay where they are, and the locked size shrinks proportionally when
+    // it would not fit the picture.
+    function withAspect(rect, mode, aspect, minWidth, minHeight, board) {
+        var width = rect.width;
+        var height = rect.height;
+        var right = rect.left + rect.width;
+        var bottom = rect.top + rect.height;
+        var centerX = rect.left + rect.width / 2;
+        var centerY = rect.top + rect.height / 2;
+
+        if (mode === 'top-center' || mode === 'bottom-center') {
+            width = height * aspect;
+        } else {
+            height = width / aspect;
+        }
+
+        if (width < minWidth) {
+            width = minWidth;
+            height = width / aspect;
+        }
+
+        if (height < minHeight) {
+            height = minHeight;
+            width = height * aspect;
+        }
+
+        var factor = Math.min(1, board.width / width, board.height / height);
+
+        width *= factor;
+        height *= factor;
+
+        var left = mode.indexOf('left') >= 0
+            ? right - width
+            : mode.indexOf('right') >= 0 ? rect.left : centerX - width / 2;
+
+        var top = mode.indexOf('top') >= 0
+            ? bottom - height
+            : mode.indexOf('bottom') >= 0 ? rect.top : centerY - height / 2;
+
+        return {
+            left: clamp(left, 0, Math.max(0, board.width - width)),
+            top: clamp(top, 0, Math.max(0, board.height - height)),
+            width: width,
+            height: height
+        };
+    }
+
     // --------------------------------------------------------------- gestures
 
     function clampToBoard(rect, board) {
@@ -432,6 +553,10 @@ window.dnetimageeditor = (function () {
                 state.minCropHeight,
                 board);
 
+            if (state.aspect) {
+                current = withAspect(current, mode, state.aspect, state.minCropWidth, state.minCropHeight, board);
+            }
+
             writeCropVars(state, current);
 
             if (!started) {
@@ -503,16 +628,7 @@ window.dnetimageeditor = (function () {
         state.resizeFrame = window.requestAnimationFrame(function () {
             state.resizeFrame = null;
 
-            var current = readCropRect(state);
-
-            if (!current) return;
-
-            var write = clampToBoard(current, displaySize(state));
-
-            if (write.left !== current.left || write.top !== current.top) {
-                writeCropVars(state, write);
-            }
-
+            clampCrop(state);
             refreshPreview(state);
         });
     }
@@ -533,7 +649,7 @@ window.dnetimageeditor = (function () {
          * Decodes the source image into the editor canvas and returns the
          * geometry the component needs to render its chrome.
          */
-        initializeSource: async function (dotNetHelper, id, streamReference, canvas, preview, options) {
+        initializeSource: async function (dotNetHelper, id, streamReference, canvas, preview, viewport, options) {
             if (getState(id)) {
                 window.dnetimageeditor.dispose(id);
             }
@@ -556,6 +672,10 @@ window.dnetimageeditor = (function () {
                 dotNetHelper: dotNetHelper,
                 canvas: canvas,
                 preview: preview,
+                viewport: viewport,
+                label: null,
+                aspect: null,
+                zoom: 1,
                 previewBox: {
                     width: options.previewWidth > 0 ? options.previewWidth : DEFAULT_PREVIEW_SIZE,
                     height: options.previewHeight > 0 ? options.previewHeight : DEFAULT_PREVIEW_SIZE
@@ -578,6 +698,10 @@ window.dnetimageeditor = (function () {
 
             editors.set(id, state);
 
+            // The picture opens fitted to the stage, which is the zoom the
+            // percentage shows from the first render on.
+            applyFitZoom(state);
+
             var display = displaySize(state);
             var cropWidth = round(Math.max(state.minCropWidth, Math.min(100, display.width)));
             var cropHeight = round(Math.max(state.minCropHeight, Math.min(100, display.height)));
@@ -593,6 +717,7 @@ window.dnetimageeditor = (function () {
                 sourceWidth: decoded.width,
                 sourceHeight: decoded.height,
                 sourceFormat: format,
+                zoom: state.zoom,
                 displayWidth: display.width,
                 displayHeight: display.height,
                 cropLeft: state.crop.left,
@@ -606,7 +731,7 @@ window.dnetimageeditor = (function () {
          * Wires the crop rectangle to the rendered overlay. Called once the
          * component has rendered the crop chrome.
          */
-        attachCrop: function (id, board, container, box) {
+        attachCrop: function (id, board, container, box, label) {
             var state = getState(id);
 
             if (!state) throw new Error('The image editor is not initialized.');
@@ -614,6 +739,7 @@ window.dnetimageeditor = (function () {
             state.board = board;
             state.container = container;
             state.box = box;
+            state.label = label;
 
             writeCropVars(state, state.crop);
             attachGesture(state, box, 'move');
@@ -668,6 +794,219 @@ window.dnetimageeditor = (function () {
 
             state.pendingBlob = null;
             refreshPreview(state);
+        },
+
+        /** Applies a zoom factor and reports the view back to the component. */
+        setZoom: function (id, factor) {
+            var state = getState(id);
+
+            if (!state) throw new Error('The image editor is not initialized.');
+
+            var fit = fitZoom(state);
+            var previous = state.zoom;
+            var current = readCropRect(state);
+
+            state.zoom = clamp(factor, Math.max(0.02, fit / 4), 8);
+            applyZoom(state);
+
+            // Zooming changes how many source pixels a CSS pixel covers, so the
+            // rectangle is scaled with the picture: the framed region stays the
+            // same instead of shrinking under the cursor.
+            if (current && previous > 0) {
+                var ratio = state.zoom / previous;
+
+                writeCropVars(state, clampToBoard({
+                    left: current.left * ratio,
+                    top: current.top * ratio,
+                    width: current.width * ratio,
+                    height: current.height * ratio
+                }, displaySize(state)));
+            }
+            else {
+                clampCrop(state);
+            }
+
+            refreshPreview(state);
+
+            return viewState(state);
+        },
+
+        /** Locks the selection to a ratio (width / height) or releases it. */
+        setAspectRatio: function (id, ratio) {
+            var state = getState(id);
+
+            if (!state) throw new Error('The image editor is not initialized.');
+
+            state.aspect = ratio > 0 ? ratio : null;
+
+            if (state.aspect) {
+                var current = readCropRect(state);
+                var board = displaySize(state);
+
+                if (current) {
+                    writeCropVars(state, withAspect(
+                        current,
+                        'bottom-right',
+                        state.aspect,
+                        state.minCropWidth,
+                        state.minCropHeight,
+                        board));
+                }
+            }
+
+            refreshPreview(state);
+
+            return toNotifyPayload(state);
+        },
+
+        /**
+         * Moves the selection to an explicit rectangle given in source pixels,
+         * which is what the panel fields use.
+         */
+        setCropInSource: function (id, x, y, width, height) {
+            var state = getState(id);
+
+            if (!state) throw new Error('The image editor is not initialized.');
+
+            var canvas = state.canvas;
+            var display = displaySize(state);
+            var scaleX = canvas.width / Math.max(1, display.width);
+            var scaleY = canvas.height / Math.max(1, display.height);
+
+            var rect = clampToBoard({
+                left: (x || 0) / scaleX,
+                top: (y || 0) / scaleY,
+                width: Math.max(1, (width || 1) / scaleX),
+                height: Math.max(1, (height || 1) / scaleY)
+            }, display);
+
+            if (state.aspect) {
+                rect = withAspect(rect, 'bottom-right', state.aspect, state.minCropWidth, state.minCropHeight, display);
+            }
+
+            writeCropVars(state, rect);
+            refreshPreview(state);
+
+            return toNotifyPayload(state);
+        },
+
+        /** Turns the picture a quarter turn, swapping its dimensions. */
+        rotate: function (id, clockwise) {
+            var state = getState(id);
+
+            if (!state) throw new Error('The image editor is not initialized.');
+
+            var canvas = state.canvas;
+            var width = canvas.width;
+            var height = canvas.height;
+            var scratch = state.scratch;
+
+            scratch.width = width;
+            scratch.height = height;
+
+            var scratchContext = scratch.getContext('2d');
+            scratchContext.clearRect(0, 0, width, height);
+            scratchContext.drawImage(canvas, 0, 0);
+
+            canvas.width = height;
+            canvas.height = width;
+
+            var context = canvas.getContext('2d');
+            context.save();
+            context.translate(canvas.width / 2, canvas.height / 2);
+            context.rotate(clockwise ? Math.PI / 2 : -Math.PI / 2);
+            context.drawImage(scratch, -width / 2, -height / 2);
+            context.restore();
+
+            state.pendingBlob = null;
+            applyZoom(state);
+            clampCrop(state);
+            refreshPreview(state);
+
+            return viewState(state);
+        },
+
+        /**
+         * Applies the selection to the working image. The canvas keeps only the
+         * selected pixels, which is a lossless copy, and the crop box goes back
+         * to framing the whole picture.
+         */
+        cropToSelection: function (id) {
+            var state = getState(id);
+
+            if (!state) throw new Error('The image editor is not initialized.');
+
+            var canvas = state.canvas;
+            var source = sourceRect(state, true);
+            var region = document.createElement('canvas');
+
+            region.width = source.width;
+            region.height = source.height;
+            region.getContext('2d').drawImage(
+                canvas,
+                source.x, source.y, source.width, source.height,
+                0, 0, source.width, source.height);
+
+            canvas.width = source.width;
+            canvas.height = source.height;
+
+            var context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(region, 0, 0);
+
+            state.pendingBlob = null;
+            applyFitZoom(state);
+
+            var display = displaySize(state);
+
+            state.crop = {
+                left: 0,
+                top: 0,
+                width: round(display.width),
+                height: round(display.height)
+            };
+
+            writeCropVars(state, state.crop);
+            refreshPreview(state);
+
+            return viewState(state);
+        },
+
+        /** Returns to the untouched picture: original pixels, fitted zoom, centred selection. */
+        reset: async function (id) {
+            var state = getState(id);
+
+            if (!state) throw new Error('The image editor is not initialized.');
+
+            // The original bytes are still at hand, so the reset is a real undo
+            // of every crop, flip and quarter turn made so far.
+            var decoded = await decodeImage(new Uint8Array(await state.originalBlob.arrayBuffer()), state.sourceFormat);
+            var canvas = state.canvas;
+
+            canvas.width = decoded.width;
+            canvas.height = decoded.height;
+            canvas.getContext('2d').drawImage(decoded.image, 0, 0, decoded.width, decoded.height);
+            decoded.release();
+
+            state.pendingBlob = null;
+            state.aspect = null;
+            applyFitZoom(state);
+
+            var display = displaySize(state);
+            var cropWidth = round(Math.min(Math.max(state.minCropWidth, Math.min(100, display.width)), display.width));
+            var cropHeight = round(Math.min(Math.max(state.minCropHeight, Math.min(100, display.height)), display.height));
+
+            state.crop = {
+                left: round(Math.max(0, (display.width - cropWidth) / 2)),
+                top: round(Math.max(0, (display.height - cropHeight) / 2)),
+                width: cropWidth,
+                height: cropHeight
+            };
+
+            writeCropVars(state, state.crop);
+            refreshPreview(state);
+
+            return viewState(state);
         },
 
         /**
@@ -744,6 +1083,8 @@ window.dnetimageeditor = (function () {
             state.board = null;
             state.container = null;
             state.preview = null;
+            state.viewport = null;
+            state.label = null;
             state.dotNetHelper = null;
 
             editors.delete(id);

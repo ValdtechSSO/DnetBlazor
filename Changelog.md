@@ -2,6 +2,30 @@
 
 ## Version 6.0.15 (September 2026)
 
+- ImageEditor: rebuilt the dialog around the library's own components, in the
+  layout of a two-column editor: a header with the file name and source size, a
+  toolbar with Crop, rotate left/right, flip horizontal/vertical and Reset, the
+  picture on a bounded stage with a zoom control, a side panel with the live
+  preview, the ratio presets (`DnetChipList`) and the selection fields
+  (`DnetFormField` + `DnetInputNumber`), and a footer with Cancel and Apply. The
+  buttons, chips, fields and tooltips come from Button, Chips, Form and Tooltip;
+  the editor only places them and paints the crop overlay.
+- ImageEditor: added a selection lock by ratio (Free, 1:1, 4:3, 16:9), editable
+  X/Y/W/H fields in source pixels, a zoom control that opens fitted to the stage
+  and scrolls when the picture no longer fits, quarter turns in both directions
+  - wiring the `RotateClockWise` and `RotateCounterClockWise` values that the
+  control enum declared but never used - a size badge on the crop box, a
+  rule-of-thirds grid and tooltips on the icon-only actions.
+- ImageEditor: Crop now applies the selection to the working image instead of
+  only staging a result, and Reset is a real undo: it re-decodes the original
+  bytes, clears the quarter turns and returns to the fitted, centred selection.
+- ImageEditor: the working image is bounded by `ImageContainerHeight` and
+  `ImageContainerWidth`, which now size the stage instead of the overlay, and the
+  default `ModalDialogHeight` grew from 668 to 780 for the two-column layout.
+  Button roles (primary, outlined, square icon) are set per instance through
+  Button's public tokens, so no component stylesheet declares another
+  component's tokens.
+
 - ImageEditor: fixed the preview, which drew the top-left corner of the picture
   at the size of the selection instead of the selected pixels, so it never
   matched the crop box while dragging. It now mirrors the selection live, and it

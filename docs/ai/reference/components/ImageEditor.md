@@ -20,7 +20,7 @@
 | `ImageContainerWidth` | `int` | `640` | Gets or sets the image container width used by this component. It bounds the size the image is displayed at. |
 | `ImagePreviewHeight` | `int` | `170` | Gets or sets the image preview height used by this component. |
 | `ImagePreviewWidth` | `int` | `170` | Gets or sets the image preview width used by this component. |
-| `ModalDialogHeight` | `int` | `668` | Gets or sets the modal dialog height used by this component. |
+| `ModalDialogHeight` | `int` | `780` | Gets or sets the modal dialog height used by this component. |
 | `ModalDialogWidth` | `int` | `1024` | Gets or sets the modal dialog width used by this component. |
 | `MaxFileSizes` | `long` | — | Gets or sets the maximum size accepted for the image, in bytes. A value of zero or less uses DefaultMaxFileSize. |
 | `MaxOutputDimension` | `int` | — | Gets or sets the longest edge of the exported image. Zero keeps the native resolution of the selection. |

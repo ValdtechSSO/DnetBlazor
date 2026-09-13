@@ -18,6 +18,9 @@ namespace Dnet.Blazor.Components.ImageEditor.Infrastructure.Models
         /// <summary>Gets or sets the height the image is displayed at.</summary>
         public int DisplayHeight { get; set; }
 
+        /// <summary>Gets or sets the zoom factor the picture is displayed with, where 1 shows one source pixel per CSS pixel.</summary>
+        public double Zoom { get; set; } = 1;
+
         /// <summary>Gets or sets the initial left offset of the crop box, in display pixels.</summary>
         public double CropLeft { get; set; }
 

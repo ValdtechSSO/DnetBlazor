@@ -8,6 +8,9 @@ namespace Dnet.Blazor.Components.ImageEditor.Infrastructure.Models
         /// <summary>Gets or sets the image being edited.</summary>
         public MemoryStream imageFile { get; set; }
 
+        /// <summary>Gets or sets the name of the file being edited, shown under the dialog title.</summary>
+        public string FileName { get; set; }
+
         /// <summary>Gets or sets the working image stream. Points at the same image as <see cref="imageFile"/>.</summary>
         public MemoryStream WorkingImageStream { get; set; }
 

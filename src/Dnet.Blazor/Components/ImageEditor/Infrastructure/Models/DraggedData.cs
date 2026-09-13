@@ -10,6 +10,12 @@ namespace Dnet.Blazor.Components.ImageEditor.Infrastructure.Models
 
         public double Width { get; set; } = 0.0;
 
+        /// <summary>Gets or sets the left edge of the selection in source pixels.</summary>
+        public double OutputLeft { get; set; } = 0.0;
+
+        /// <summary>Gets or sets the top edge of the selection in source pixels.</summary>
+        public double OutputTop { get; set; } = 0.0;
+
         /// <summary>Gets or sets the width of the selection in source pixels, which is the size the export will have.</summary>
         public double OutputWidth { get; set; } = 0.0;
 

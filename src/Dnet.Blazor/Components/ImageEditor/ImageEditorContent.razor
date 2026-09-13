@@ -1,11 +1,17 @@
+@using System.Globalization
 @using System.IO
+@using Dnet.Blazor.Components.Chips
+@using Dnet.Blazor.Components.Form
 @using Dnet.Blazor.Components.Dialog.Infrastructure.Interfaces
 @using Dnet.Blazor.Components.ImageEditor.Infrastructure.Constants
 @using Dnet.Blazor.Components.ImageEditor.Infrastructure.Enums
 @using Dnet.Blazor.Components.ImageEditor.Infrastructure.Models
 @using Dnet.Blazor.Components.ImageEditor.Infrastructure.Services
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Enums
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Models
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Services
+@using Dnet.Blazor.Components.Tooltip.Infrastructure.Interfaces
+@using Dnet.Blazor.Components.Tooltip.Infrastructure.Models
 @using Microsoft.JSInterop
 @using Microsoft.AspNetCore.Components.Web
 @using Dnet.Blazor.Components.Button
@@ -14,44 +20,72 @@
 @inject IDialogService DialogService
 @inject IStyleService StyleService
 @inject IImageEditorService ImageEditorService
+@inject ITooltipService TooltipService
 
 @implements IDragAndDropJsCallbacks
 @implements IAsyncDisposable
 
-<div class="dnet-image-editor-wrapper">
-    <div>
-        <div class="dnet-image-editor-controls">
-            @if (ShowControl(ImageEditorControlType.Crop))
-            {
-            <DnetButton OnClick="OnCropImage" class="dnet-image-editor-control">
+<div class="dnet-image-editor">
+    <div class="dnet-image-editor-header">
+        <span class="dnet-image-editor-subtitle">@_subtitle</span>
+    </div>
+
+    <div class="dnet-image-editor-toolbar">
+        @if (ShowControl(ImageEditorControlType.Crop))
+        {
+            <DnetButton OnClick="OnCropImage" class="dnet-image-editor-tool" style="@ToolButtonStyle" disabled="@(!_isImageEditorReady)">
                 <span class="dnet-icon dnet-icon-crop" unselectable="on"></span>
                 <span class="dnet-icon-text" unselectable="on">Crop</span>
             </DnetButton>
-            }
-            @if (ShowControl(ImageEditorControlType.FlipHorizontal))
-            {
-            <DnetButton OnClick="OnFlipHorizontal" class="dnet-image-editor-control">
-                <span class="dnet-icon dnet-icon-flip-h" unselectable="on">⇄</span>
-                <span class="dnet-icon-text" unselectable="on">Flip H</span>
-            </DnetButton>
-            }
-            @if (ShowControl(ImageEditorControlType.FlipVertical))
-            {
-            <DnetButton OnClick="OnFlipVertical" class="dnet-image-editor-control">
-                <span class="dnet-icon dnet-icon-flip-v" unselectable="on">⇅</span>
-                <span class="dnet-icon-text" unselectable="on">Flip V</span>
-            </DnetButton>
-            }
-        </div>
-        <div class="dnet-editor-container">
-            <div class="dnet-image-container">
-                <div class="dnet-image-original-text">
-                    <span class="dnet-image-label">Original Image</span>
-                    <span class="dnet-image-info">@_sourceLabel</span>
-                </div>
-                <div @ref="_board" class="dnet-editing-image" style="@StyleService.GetCropContainerStyles(_imageContainerHeight, _imageContainerWidth)">
-                    @* The canvas is both the on-screen image and the source every operation works
-                       from, so nothing is ever re-read from the DOM or re-encoded in between. *@
+        }
+        @if (ShowControl(ImageEditorControlType.RotateCounterClockWise))
+        {
+            <span @ref="_rotateLeftTrigger" @onmouseenter='() => ShowTooltip("Rotate left", _rotateLeftTrigger)' @onmouseleave="HideTooltip">
+                <DnetButton OnClick="OnRotateLeft" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)">
+                    <span class="dnet-icon dnet-icon-rotate-left" unselectable="on"></span>
+                </DnetButton>
+            </span>
+        }
+        @if (ShowControl(ImageEditorControlType.RotateClockWise))
+        {
+            <span @ref="_rotateRightTrigger" @onmouseenter='() => ShowTooltip("Rotate right", _rotateRightTrigger)' @onmouseleave="HideTooltip">
+                <DnetButton OnClick="OnRotateRight" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)">
+                    <span class="dnet-icon dnet-icon-rotate-right" unselectable="on"></span>
+                </DnetButton>
+            </span>
+        }
+        @if (ShowControl(ImageEditorControlType.FlipHorizontal))
+        {
+            <span @ref="_flipHorizontalTrigger" @onmouseenter='() => ShowTooltip("Flip horizontal", _flipHorizontalTrigger)' @onmouseleave="HideTooltip">
+                <DnetButton OnClick="OnFlipHorizontal" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)">
+                    <span class="dnet-icon dnet-icon-flip-h" unselectable="on"></span>
+                </DnetButton>
+            </span>
+        }
+        @if (ShowControl(ImageEditorControlType.FlipVertical))
+        {
+            <span @ref="_flipVerticalTrigger" @onmouseenter='() => ShowTooltip("Flip vertical", _flipVerticalTrigger)' @onmouseleave="HideTooltip">
+                <DnetButton OnClick="OnFlipVertical" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)">
+                    <span class="dnet-icon dnet-icon-flip-v" unselectable="on"></span>
+                </DnetButton>
+            </span>
+        }
+        <span class="dnet-image-editor-toolbar-end">
+            <span @ref="_resetTrigger" @onmouseenter='() => ShowTooltip("Reset the image", _resetTrigger)' @onmouseleave="HideTooltip">
+                <DnetButton OnClick="OnReset" class="dnet-image-editor-tool" style="@ToolButtonStyle" disabled="@(!_isImageEditorReady)">
+                    <span class="dnet-icon dnet-icon-reset" unselectable="on"></span>
+                    <span class="dnet-icon-text" unselectable="on">Reset</span>
+                </DnetButton>
+            </span>
+        </span>
+    </div>
+
+    <div class="dnet-image-editor-body">
+        <div class="dnet-image-editor-stage" style="@StyleService.GetCropContainerStyles(_imageContainerHeight, _imageContainerWidth)">
+            @* The stage bounds the picture; the canvas sizes itself from the zoom, so the
+               viewport scrolls once the zoomed image no longer fits. *@
+            <div @ref="_viewport" class="dnet-image-viewport">
+                <div @ref="_board" class="dnet-editing-image">
                     <canvas @ref="_canvas" class="dnet-editing-image-canvas" width="1" height="1"></canvas>
                     @if (_isImageEditorReady)
                     {
@@ -66,22 +100,112 @@
                             {
                                 <div @ref="resizer.Reference" class="dnet-crop-box-resizer @GetResizerClass(resizer.ResizerType)"></div>
                             }
+                            <span @ref="_selectionBadge" class="dnet-crop-box-size">@_selectionLabel</span>
                         </div>
                     }
                 </div>
             </div>
-            <div class="dnet-image-preview">
-                <div class="dnet-image-preview-text">
-                    <span class="dnet-image-label">Preview</span>
-                    <span class="dnet-image-info">@_outputLabel</span>
-                </div>
-                <canvas @ref="_previewCanvas" class="dnet-image-preview-canvas" width="1" height="1" style="@StyleService.GetImagePreviewStyles(_imgPreviewHeight, _imgPreviewWidth)"></canvas>
+
+            <div class="dnet-image-editor-zoom">
+                <span @ref="_zoomOutTrigger" @onmouseenter='() => ShowTooltip("Zoom out", _zoomOutTrigger)' @onmouseleave="HideTooltip">
+                    <DnetButton OnClick="OnZoomOut" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)">
+                        <span class="dnet-icon dnet-icon-zoom-out" unselectable="on"></span>
+                    </DnetButton>
+                </span>
+                <span class="dnet-image-editor-zoom-value">@_zoomLabel</span>
+                <span @ref="_zoomInTrigger" @onmouseenter='() => ShowTooltip("Zoom in", _zoomInTrigger)' @onmouseleave="HideTooltip">
+                    <DnetButton OnClick="OnZoomIn" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)">
+                        <span class="dnet-icon dnet-icon-zoom-in" unselectable="on"></span>
+                    </DnetButton>
+                </span>
             </div>
         </div>
+
+        <div class="dnet-image-editor-panel">
+            <section class="dnet-image-editor-section">
+                <h2 class="dnet-image-editor-section-title">Preview</h2>
+                <div class="dnet-image-editor-preview">
+                    <canvas @ref="_previewCanvas" class="dnet-image-preview-canvas" width="1" height="1" style="@StyleService.GetImagePreviewStyles(_imgPreviewHeight, _imgPreviewWidth)"></canvas>
+                </div>
+                <span class="dnet-image-editor-caption">@_previewCaption</span>
+            </section>
+
+            <section class="dnet-image-editor-section">
+                <h2 class="dnet-image-editor-section-title">Ratio</h2>
+                <DnetChipList @key="_ratioRevision" OnSelectionChange="OnRatioChanged">
+                    @foreach (var option in RatioOptions)
+                    {
+                        <DnetChip ChipSize="ChipSize.Small" Value="@RatioValue(option)" Removable="false" Selected="@(_ratio == option)">@RatioLabel(option)</DnetChip>
+                    }
+                </DnetChipList>
+            </section>
+
+            <section class="dnet-image-editor-section">
+                <h2 class="dnet-image-editor-section-title">Selection</h2>
+                <div class="dnet-image-editor-fields">
+                    <DnetFormField>
+                        <PrefixContent>
+                            <span class="dnet-image-editor-field-label">X</span>
+                        </PrefixContent>
+                        <ChildContent>
+                            <DnetInputNumber TValue="int"
+                                             Value="_cropX"
+                                             ValueChanged="OnCropXChanged"
+                                             ValueExpression="@(() => _cropX)"
+                                             Min="0"
+                                             Disabled="@(!_isImageEditorReady)" />
+                        </ChildContent>
+                    </DnetFormField>
+                    <DnetFormField>
+                        <PrefixContent>
+                            <span class="dnet-image-editor-field-label">Y</span>
+                        </PrefixContent>
+                        <ChildContent>
+                            <DnetInputNumber TValue="int"
+                                             Value="_cropY"
+                                             ValueChanged="OnCropYChanged"
+                                             ValueExpression="@(() => _cropY)"
+                                             Min="0"
+                                             Disabled="@(!_isImageEditorReady)" />
+                        </ChildContent>
+                    </DnetFormField>
+                    <DnetFormField>
+                        <PrefixContent>
+                            <span class="dnet-image-editor-field-label">W</span>
+                        </PrefixContent>
+                        <ChildContent>
+                            <DnetInputNumber TValue="int"
+                                             Value="_cropWidth"
+                                             ValueChanged="OnCropWidthChanged"
+                                             ValueExpression="@(() => _cropWidth)"
+                                             Min="1"
+                                             Disabled="@(!_isImageEditorReady)" />
+                        </ChildContent>
+                    </DnetFormField>
+                    <DnetFormField>
+                        <PrefixContent>
+                            <span class="dnet-image-editor-field-label">H</span>
+                        </PrefixContent>
+                        <ChildContent>
+                            <DnetInputNumber TValue="int"
+                                             Value="_cropHeight"
+                                             ValueChanged="OnCropHeightChanged"
+                                             ValueExpression="@(() => _cropHeight)"
+                                             Min="1"
+                                             Disabled="@(!_isImageEditorReady)" />
+                        </ChildContent>
+                    </DnetFormField>
+                </div>
+            </section>
+        </div>
     </div>
-    <div class="dnet-img-dialog-controls">
-        <DnetButton OnClick="CancelOverlay" class="dnet-m-r-10">Close</DnetButton>
-        <DnetButton OnClick="CloseOverlay" class="dnet-m-r-10" disabled="@(!_isImageEditorReady)" InitialFocus="true">Ok</DnetButton>
+
+    <div class="dnet-image-editor-footer">
+        <DnetButton OnClick="CancelOverlay" class="dnet-image-editor-secondary" style="@ToolButtonStyle">Cancel</DnetButton>
+        <DnetButton OnClick="CloseOverlay" class="dnet-image-editor-primary" style="@PrimaryButtonStyle" disabled="@(!_isImageEditorReady)" InitialFocus="true">
+            <span class="dnet-icon dnet-icon-check" unselectable="on"></span>
+            <span class="dnet-icon-text" unselectable="on">Apply</span>
+        </DnetButton>
     </div>
 </div>
 
@@ -98,6 +222,24 @@
     // never share state.
     private readonly string _editorId = Guid.NewGuid().ToString("N");
 
+    // Zoom levels the buttons step through. The picture opens fitted, which is a
+    // computed factor that need not be one of these.
+    private static readonly double[] ZoomSteps = { 0.25, 0.5, 0.75, 1, 1.5, 2, 4 };
+
+    // Button exposes its look through its own public tokens, so pointing one
+    // instance at a different role means writing them on that instance: the
+    // component stylesheet must not declare another component's tokens.
+    private const string ToolButtonStyle = "--dnet-btn-padding: 0 var(--dnet-sys-space-3); --dnet-btn-min-width: 0;";
+
+    private const string IconButtonStyle = "--dnet-btn-padding: 0; --dnet-btn-min-width: 0;";
+
+    private const string PrimaryButtonStyle = "--dnet-btn-background: var(--dnet-sys-primary); --dnet-btn-background-hover: var(--dnet-sys-primary-strong); --dnet-btn-foreground: var(--dnet-sys-on-primary); --dnet-btn-padding: 0 var(--dnet-sys-space-4);";
+
+    // The ratio presets, as width / height. Zero means free.
+    private static readonly double[] RatioOptions = { 0, 1, 4d / 3d, 16d / 9d };
+
+    private ElementReference _viewport;
+
     private ElementReference _board;
 
     private ElementReference _canvas;
@@ -107,6 +249,22 @@
     private ElementReference _cropContainer;
 
     private ElementReference _cropBox;
+
+    private ElementReference _selectionBadge;
+
+    private ElementReference _rotateLeftTrigger;
+
+    private ElementReference _rotateRightTrigger;
+
+    private ElementReference _flipHorizontalTrigger;
+
+    private ElementReference _flipVerticalTrigger;
+
+    private ElementReference _resetTrigger;
+
+    private ElementReference _zoomInTrigger;
+
+    private ElementReference _zoomOutTrigger;
 
     private MemoryStream _fullSizeImageStream { get; set; }
 
@@ -118,15 +276,21 @@
 
     private ImageEditorSourceData _sourceData;
 
+    private OverlayReference _tooltipReference;
+
     private List<ResizerData> _resizerData { get; set; }
 
     private List<ImageEditorControlType> _imageEditingControls { get; set; }
 
     private string _cropStyles { get; set; }
 
-    private string _sourceLabel { get; set; } = "—";
+    private string _subtitle { get; set; } = string.Empty;
 
-    private string _outputLabel { get; set; } = "—";
+    private string _selectionLabel { get; set; } = string.Empty;
+
+    private string _previewCaption { get; set; } = string.Empty;
+
+    private string _zoomLabel { get; set; } = string.Empty;
 
     private int _imageContainerHeight { get; set; }
 
@@ -135,6 +299,24 @@
     private int _imgPreviewHeight { get; set; }
 
     private int _imgPreviewWidth { get; set; }
+
+    private int _sourceWidth { get; set; }
+
+    private int _sourceHeight { get; set; }
+
+    private int _cropX { get; set; }
+
+    private int _cropY { get; set; }
+
+    private int _cropWidth { get; set; }
+
+    private int _cropHeight { get; set; }
+
+    private int _ratioRevision { get; set; }
+
+    private double _ratio { get; set; }
+
+    private double _zoom { get; set; } = 1;
 
     private long _lastExportSize { get; set; }
 
@@ -145,6 +327,8 @@
     private bool _flipDirty { get; set; }
 
     private bool _resultHandedOff { get; set; }
+
+    private bool _applyingSelection { get; set; }
 
 
     protected override void OnInitialized()
@@ -191,6 +375,7 @@
                 new DotNetStreamReference(_fullSizeImageStream, leaveOpen: true),
                 _canvas,
                 _previewCanvas,
+                _viewport,
                 options);
 
             _fullSizeImageStream.Position = 0;
@@ -201,8 +386,11 @@
             return;
         }
 
-        _sourceLabel = $"{_sourceData.SourceWidth} x {_sourceData.SourceHeight}";
-        _outputLabel = _sourceLabel;
+        _sourceWidth = _sourceData.SourceWidth;
+        _sourceHeight = _sourceData.SourceHeight;
+        _zoom = _sourceData.Zoom > 0 ? _sourceData.Zoom : 1;
+        _zoomLabel = FormatZoom(_zoom);
+        _subtitle = BuildSubtitle();
         _cropStyles = StyleService.GetStyles(_sourceData.CropLeft, _sourceData.CropTop, _sourceData.CropHeight, _sourceData.CropWidth);
         _isImageEditorReady = true;
 
@@ -210,10 +398,11 @@
 
         // The crop chrome only exists after the render above, so the overlay is
         // hooked up once it is on the page. The preview follows the selection
-        // from that first moment, which is why the label describes it too.
-        var selection = await _jsInterop.AttachCrop(_board, _cropContainer, _cropBox);
+        // from that first moment, which is why the labels describe it too.
+        var selection = await _jsInterop.AttachCrop(_board, _cropContainer, _cropBox, _selectionBadge);
 
-        _outputLabel = FormatSize(selection.OutputWidth, selection.OutputHeight);
+        ApplySelection(selection);
+        _previewCaption = FormatSelection();
 
         StateHasChanged();
 
@@ -235,22 +424,50 @@
         }
     }
 
+    /// <summary>Applies the selection to the working image and keeps a result at hand.</summary>
     private async Task OnCropImage()
     {
         if (!_isImageEditorReady) return;
 
         try
         {
-            var result = await _jsInterop.ExportImage(useCrop: true);
-
-            _lastExportSize = result.Size;
-
-            _resulImageStream = await ReadResultAsync();
-            _outputLabel = FormatSize(result.Width, result.Height);
+            ApplyView(await _jsInterop.CropToSelection());
+            await ExportAsync(useCrop: true);
         }
         catch (Exception exception)
         {
             Console.WriteLine($"Dnet.Blazor: the selected image could not be cropped. {exception.Message}");
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task OnRotateLeft()
+    {
+        await RotateAsync(clockwise: false);
+    }
+
+    private async Task OnRotateRight()
+    {
+        await RotateAsync(clockwise: true);
+    }
+
+    private async Task RotateAsync(bool clockwise)
+    {
+        if (!_isImageEditorReady) return;
+
+        try
+        {
+            ApplyView(await _jsInterop.Rotate(clockwise));
+
+            // A quarter turn changes the pixels, so the image has to be exported
+            // again before it can be handed over.
+            _flipDirty = true;
+            ClearResultStream();
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine($"Dnet.Blazor: the image could not be rotated. {exception.Message}");
         }
 
         StateHasChanged();
@@ -287,6 +504,149 @@
         StateHasChanged();
     }
 
+    private async Task OnReset()
+    {
+        if (!_isImageEditorReady) return;
+
+        try
+        {
+            ApplyView(await _jsInterop.ResetEditor());
+
+            // Back to the untouched picture, so the caller gets its own bytes.
+            _cropDirty = false;
+            _flipDirty = false;
+            _ratio = 0;
+            _ratioRevision++;
+            ClearResultStream();
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine($"Dnet.Blazor: the image could not be reset. {exception.Message}");
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task OnZoomOut()
+    {
+        await ZoomTo(NextZoom(-1));
+    }
+
+    private async Task OnZoomIn()
+    {
+        await ZoomTo(NextZoom(1));
+    }
+
+    private async Task ZoomTo(double factor)
+    {
+        if (!_isImageEditorReady) return;
+
+        try
+        {
+            ApplyView(await _jsInterop.SetZoom(factor));
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine($"Dnet.Blazor: the zoom could not be applied. {exception.Message}");
+        }
+
+        StateHasChanged();
+    }
+
+    private double NextZoom(int direction)
+    {
+        if (direction > 0)
+        {
+            foreach (var step in ZoomSteps)
+            {
+                if (step > _zoom + 0.001) return step;
+            }
+
+            return ZoomSteps[^1];
+        }
+
+        for (var index = ZoomSteps.Length - 1; index >= 0; index--)
+        {
+            if (ZoomSteps[index] < _zoom - 0.001) return ZoomSteps[index];
+        }
+
+        return ZoomSteps[0];
+    }
+
+    private async Task OnRatioChanged(List<DnetChip> chips)
+    {
+        if (!_isImageEditorReady) return;
+
+        var ratio = 0d;
+        var selected = chips?.FirstOrDefault();
+
+        if (selected?.Value is not null)
+        {
+            double.TryParse(selected.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out ratio);
+        }
+
+        _ratio = ratio;
+
+        try
+        {
+            ApplySelection(await _jsInterop.SetAspectRatio(ratio));
+
+            _cropDirty = true;
+            ClearResultStream();
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine($"Dnet.Blazor: the ratio could not be applied. {exception.Message}");
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task OnCropXChanged(int value)
+    {
+        _cropX = value;
+        await ApplyFieldsAsync();
+    }
+
+    private async Task OnCropYChanged(int value)
+    {
+        _cropY = value;
+        await ApplyFieldsAsync();
+    }
+
+    private async Task OnCropWidthChanged(int value)
+    {
+        _cropWidth = value;
+        await ApplyFieldsAsync();
+    }
+
+    private async Task OnCropHeightChanged(int value)
+    {
+        _cropHeight = value;
+        await ApplyFieldsAsync();
+    }
+
+    // The panel fields are the other way into the selection: they speak source
+    // pixels, which is the size the export will have.
+    private async Task ApplyFieldsAsync()
+    {
+        if (!_isImageEditorReady || _applyingSelection) return;
+
+        try
+        {
+            ApplySelection(await _jsInterop.SetCropInSource(_cropX, _cropY, _cropWidth, _cropHeight));
+
+            _cropDirty = true;
+            ClearResultStream();
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine($"Dnet.Blazor: the selection could not be applied. {exception.Message}");
+        }
+
+        StateHasChanged();
+    }
+
     private async Task<MemoryStream> ReadResultAsync()
     {
         var reference = await _jsInterop.GetResultStream();
@@ -308,6 +668,16 @@
         {
             await reference.DisposeAsync();
         }
+    }
+
+    private async Task ExportAsync(bool useCrop)
+    {
+        var result = await _jsInterop.ExportImage(useCrop);
+
+        _lastExportSize = result.Size;
+
+        _resulImageStream = await ReadResultAsync();
+        _previewCaption = $"{result.Width} × {result.Height} px";
     }
 
     private void ClearResultStream()
@@ -358,18 +728,93 @@
         // The browser has already drawn the new rectangle; .NET only tracks the
         // result, which is why a gesture no longer costs a render per frame.
         _cropDirty = true;
-        _outputLabel = FormatSize(draggedData.OutputWidth, draggedData.OutputHeight);
+
+        ApplySelection(draggedData, commit);
 
         ClearResultStream();
 
+        StateHasChanged();
+    }
+
+    private void ApplyView(ImageEditorViewState view)
+    {
+        if (view is null) return;
+
+        _sourceWidth = view.SourceWidth;
+        _sourceHeight = view.SourceHeight;
+        _zoom = view.Zoom > 0 ? view.Zoom : 1;
+        _zoomLabel = FormatZoom(_zoom);
+        _subtitle = BuildSubtitle();
+
+        ApplySelection(view.Selection);
+    }
+
+    // The panel fields move with the browser; the rendered geometry is only
+    // rewritten when a gesture commits, so a render cannot snap the box back.
+    private void ApplySelection(DraggedData selection, bool commit = true)
+    {
+        if (selection is null) return;
+
+        _applyingSelection = true;
+
+        _cropX = Convert.ToInt32(selection.OutputLeft);
+        _cropY = Convert.ToInt32(selection.OutputTop);
+        _cropWidth = Convert.ToInt32(selection.OutputWidth);
+        _cropHeight = Convert.ToInt32(selection.OutputHeight);
+        _selectionLabel = FormatSelection();
+
         if (commit)
         {
-            // Keeps the rendered geometry equal to what the browser wrote, so a
-            // later render cannot snap the box back to a stale position.
-            _cropStyles = StyleService.GetStyles(draggedData.Left, draggedData.Top, draggedData.Height, draggedData.Width);
+            _cropStyles = StyleService.GetStyles(selection.Left, selection.Top, selection.Height, selection.Width);
         }
 
-        StateHasChanged();
+        _applyingSelection = false;
+    }
+
+    private string FormatSelection()
+        => _cropWidth <= 0 || _cropHeight <= 0 ? string.Empty : $"{_cropWidth} × {_cropHeight} px";
+
+    private static string FormatZoom(double zoom)
+        => $"{Convert.ToInt32(Math.Round(zoom * 100))}%";
+
+    private string BuildSubtitle()
+    {
+        var size = $"{_sourceWidth} × {_sourceHeight} px";
+
+        return string.IsNullOrWhiteSpace(DialogData.FileName) ? size : $"{DialogData.FileName} · {size}";
+    }
+
+    private static string RatioValue(double ratio)
+        => ratio.ToString(CultureInfo.InvariantCulture);
+
+    private static string RatioLabel(double ratio)
+    {
+        if (ratio <= 0) return "Free";
+        if (Math.Abs(ratio - 1) < 0.0001) return "1:1";
+        if (Math.Abs(ratio - (4d / 3d)) < 0.0001) return "4:3";
+        if (Math.Abs(ratio - (16d / 9d)) < 0.0001) return "16:9";
+
+        return ratio.ToString("0.##", CultureInfo.InvariantCulture);
+    }
+
+    private void ShowTooltip(string text, ElementReference target)
+    {
+        HideTooltip();
+
+        _tooltipReference = TooltipService.Show(new TooltipConfig
+            {
+                Text = text,
+                MaxWidth = "180px",
+                ShowDelay = 400
+            }, target);
+    }
+
+    private void HideTooltip()
+    {
+        if (_tooltipReference is null) return;
+
+        TooltipService.Close(new OverlayResult { OverlayReferenceId = _tooltipReference.GetOverlayReferenceId() });
+        _tooltipReference = null;
     }
 
     private async Task CloseOverlay()
@@ -387,11 +832,7 @@
             {
                 try
                 {
-                    var result = await _jsInterop.ExportImage(useCrop: _cropDirty);
-
-                    _lastExportSize = result.Size;
-                    _resulImageStream = await ReadResultAsync();
-                    _outputLabel = FormatSize(result.Width, result.Height);
+                    await ExportAsync(useCrop: _cropDirty);
                 }
                 catch (Exception exception)
                 {
@@ -417,6 +858,8 @@
 
     void CancelOverlay()
     {
+        HideTooltip();
+
         var dataResult = new OverlayResult()
             {
                 CloseReason = CloseReason.Cancel,
@@ -427,9 +870,6 @@
 
         DialogService.Close(dataResult);
     }
-
-    private static string FormatSize(double width, double height)
-        => $"{Convert.ToInt32(width)} x {Convert.ToInt32(height)}";
 
     private bool ShowControl(ImageEditorControlType control)
         => _imageEditingControls is null || _imageEditingControls.Count == 0 || _imageEditingControls.Contains(control);
@@ -450,6 +890,8 @@
 
     public async ValueTask DisposeAsync()
     {
+        HideTooltip();
+
         if (_jsInterop is not null)
         {
             await _jsInterop.DisposeAsync();

@@ -37,11 +37,13 @@
                          ImageContainerWidth="640"
                          ImagePreviewHeight="170"
                          ImagePreviewWidth="170"
-                         ModalDialogHeight="668"
+                         ModalDialogHeight="780"
                          ModalDialogWidth="1024"
                          MaxFileSizes="@_maxFileSizes"
                          ImageEditingControls="@(new List<ImageEditorControlType>{
                                                ImageEditorControlType.Crop,
+                                               ImageEditorControlType.RotateCounterClockWise,
+                                               ImageEditorControlType.RotateClockWise,
                                                ImageEditorControlType.FlipHorizontal,
                                                ImageEditorControlType.FlipVertical
                                            })"

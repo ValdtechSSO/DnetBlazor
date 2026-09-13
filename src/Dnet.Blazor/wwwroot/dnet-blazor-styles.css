@@ -3440,55 +3440,179 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 /*! Sass ImageEditor (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
-.dnet-image-editor-wrapper {
+
+/* Layout: header / toolbar / body (stage + panel) / footer. Controls come from
+   the library's Button, Chips, Form and Tooltip components; this file only
+   places them and paints the crop overlay. */
+.dnet-image-editor {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: var(--dnet-sys-space-4);
+  height: 100%;
 }
 
-.dnet-editor-container {
+.dnet-image-editor-header {
   display: flex;
-  flex-direction: row;
-}
-
-.dnet-image-container {
-  display: flex;
-  justify-content: center;
   align-items: center;
-  margin-right: 30px;
+  min-height: 1rem;
+}
+
+.dnet-image-editor-subtitle {
+  color: var(--dnet-sys-on-surface-muted);
+  font-size: var(--dnet-sys-text-sm);
+}
+
+.dnet-image-editor-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--dnet-sys-space-2);
+}
+
+.dnet-image-editor-toolbar-end {
+  margin-left: auto;
+}
+
+/* The buttons read their own public tokens; the editor points each instance at
+   the role it needs from the markup, so nothing of Button is declared here. This
+   file only adds the outline and the square shape of the icon-only actions. */
+.dnet-image-editor .dnet-image-editor-tool,
+.dnet-image-editor .dnet-image-editor-secondary {
+  border: 1px solid var(--dnet-sys-border-strong);
+}
+
+.dnet-image-editor .dnet-image-editor-icon-button {
+  --_icon-button-size: 36px;
+  border: 1px solid var(--dnet-sys-border-strong);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--_icon-button-size);
+  width: var(--_icon-button-size);
+}
+
+.dnet-image-editor-body {
+  display: flex;
+  flex: 1 1 auto;
+  gap: var(--dnet-sys-space-4);
+  min-height: 0;
+}
+
+.dnet-image-editor-stage {
+  /* Owned here, written by the component from ImageContainerHeight/Width. The
+     stage size is independent of the picture, so the fitted zoom is stable. */
+  --_editor-stage-width: 40rem;
+  --_editor-stage-height: 30rem;
+  display: flex;
   flex-direction: column;
+  gap: var(--dnet-sys-space-2);
+  flex: 0 1 auto;
+  min-width: 0;
+  width: min(100%, var(--_editor-stage-width));
+}
+
+/* The stage bounds the picture; the canvas sizes itself from the zoom, so the
+   viewport scrolls once the zoomed image no longer fits. */
+.dnet-image-viewport {
+  display: flex;
+  overflow: auto;
+  width: 100%;
+  height: var(--_editor-stage-height);
+  background-color: var(--dnet-sys-surface-hover);
+  border-radius: var(--dnet-sys-radius-md);
 }
 
 /* Shrink-to-fit around the image canvas: the crop overlay is inset:0 on this
-   box, so its geometry can only ever match the displayed image, whatever size
-   the picture happens to be. */
+   box, so its geometry can only ever match the displayed image. */
 .dnet-editing-image {
-  /* Owned here, overridden by the component with the configured container size. */
-  --_editor-max-width: none;
-  --_editor-max-height: none;
-  width: auto;
-  height: auto;
-  background-color: var(--dnet-sys-surface-hover);
   position: relative;
   display: inline-flex;
-  justify-content: center;
-  align-items: center;
+  margin: auto;
 }
+
 .dnet-editing-image-canvas {
   display: block;
-  max-width: var(--_editor-max-width);
-  max-height: var(--_editor-max-height);
+}
+
+.dnet-image-editor-zoom {
+  display: flex;
+  align-items: center;
+  align-self: center;
+  gap: var(--dnet-sys-space-2);
+  border: 1px solid var(--dnet-sys-border);
+  border-radius: var(--dnet-sys-radius-md);
+  padding: 0 var(--dnet-sys-space-1);
+}
+
+.dnet-image-editor-zoom-value {
+  color: var(--dnet-sys-on-surface);
+  font-size: var(--dnet-sys-text-sm);
+  min-width: 3.5em;
+  text-align: center;
+}
+
+.dnet-image-editor-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dnet-sys-space-4);
+  width: 15rem;
+  flex: 0 0 auto;
+}
+
+.dnet-image-editor-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dnet-sys-space-2);
+}
+
+.dnet-image-editor-section-title {
+  color: var(--dnet-sys-on-surface-muted);
+  font-size: var(--dnet-sys-text-sm);
+  font-weight: 400;
+  margin: 0;
+}
+
+.dnet-image-editor-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--dnet-sys-border);
+  border-radius: var(--dnet-sys-radius-md);
+  padding: var(--dnet-sys-space-2);
+  min-height: 6rem;
+}
+
+.dnet-image-editor-caption {
+  color: var(--dnet-sys-on-surface-muted);
+  font-size: var(--dnet-sys-text-sm);
+  text-align: center;
+}
+
+.dnet-image-editor-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--dnet-sys-space-2);
+}
+
+.dnet-image-editor-field-label {
+  color: var(--dnet-sys-on-surface-muted);
+  font-size: var(--dnet-sys-text-sm);
+  min-width: 1.25em;
+}
+
+.dnet-image-editor-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--dnet-sys-space-2);
+  border-top: 1px solid var(--dnet-sys-border);
+  padding-top: var(--dnet-sys-space-3);
 }
 
 /* Crop geometry. The four --_crop-* properties are the single source of truth:
    the component writes them on first render and JavaScript rewrites them on
-   every pointer frame, so the box, the dummy border, the masks and the eight
-   resizers all follow without a single JS -> .NET call. */
+   every pointer frame, so the box, the dummy border, the masks, the handles and
+   the size badge all follow along without a round trip to .NET. */
 .dnet-crop-container {
-  /* Single source of truth for the crop rectangle: the component writes these
-     inline on the first render and the interop layer rewrites them on every
-     pointer frame, so the box, the dummy border, the masks and the handles all
-     follow along without a single round trip to .NET. */
   --_crop-left: 0px;
   --_crop-top: 0px;
   --_crop-width: 100px;
@@ -3521,6 +3645,41 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   height: var(--_crop-height);
   border: 1px solid var(--dnet-sys-primary-strong);
   z-index: 30;
+  pointer-events: none;
+}
+
+/* Rule of thirds, drawn from fills only so a theme can recolour it. */
+.dnet-crop-box-dummy::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0.35;
+  background-image:
+    linear-gradient(to right, var(--dnet-sys-on-surface) 1px, transparent 1px),
+    linear-gradient(to right, var(--dnet-sys-on-surface) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--dnet-sys-on-surface) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--dnet-sys-on-surface) 1px, transparent 1px);
+  background-size: 1px 100%, 1px 100%, 100% 1px, 100% 1px;
+  background-position: 33.333% 0, 66.666% 0, 0 33.333%, 0 66.666%;
+  background-repeat: no-repeat;
+}
+
+.dnet-crop-box-size {
+  position: absolute;
+  left: calc(var(--_crop-left) + var(--_crop-width));
+  top: calc(var(--_crop-top) + var(--_crop-height));
+  transform: translate(-100%, 6px);
+  background-color: var(--dnet-sys-surface);
+  border: 1px solid var(--dnet-sys-primary-strong);
+  border-radius: var(--dnet-sys-radius-sm);
+  color: var(--dnet-sys-on-surface);
+  font-size: var(--dnet-sys-text-sm);
+  padding: 0 var(--dnet-sys-space-1);
+  white-space: nowrap;
+  z-index: 45;
   pointer-events: none;
 }
 
@@ -3633,41 +3792,6 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   cursor: nwse-resize;
 }
 
-.dnet-image-preview {
-  display: flex;
-  flex-direction: column;
-}
-
-.dnet-image-editor-controls {
-  margin-bottom: 30px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: var(--dnet-sys-space-2);
-}
-
-.dnet-image-original-text {
-  font-size: 0.875rem;
-  width: 100%;
-  display: flex;
-  align-items: start;
-  margin-bottom: 10px;
-}
-
-.dnet-image-preview-text {
-  font-size: 0.875rem;
-  width: 100%;
-  display: flex;
-  align-items: start;
-  margin-bottom: 10px;
-}
-
-/* Measured dimensions, not decoration: the source size on the left and the
-   size the export will have on the right. */
-.dnet-image-info {
-  color: var(--dnet-sys-primary);
-}
-
 .dnet-image-preview-canvas {
   /* Owned here, overridden inline with the configured preview size. */
   --_preview-max-width: 170px;
@@ -3676,20 +3800,6 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   max-width: var(--_preview-max-width);
   max-height: var(--_preview-max-height);
   margin: 0 auto;
-}
-
-.dnet-img-dialog-controls {
-  display: flex;
-  justify-content: flex-end;
-  align-self: end;
-  width: 100%;
-}
-
-.dnet-image-editor-control .dnet-button-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--dnet-sys-space-2);
 }
 
 .dnet-icon {
@@ -3707,31 +3817,48 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-icon-text {
-  font-size: 0.875rem;
+  font-size: var(--dnet-sys-text-sm);
 }
 
 .dnet-icon-crop {
   -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M3.5.5A.5.5 0 0 1 4 1v13h13a.5.5 0 0 1 0 1h-2v2a.5.5 0 0 1-1 0v-2H3.5a.5.5 0 0 1-.5-.5V4H1a.5.5 0 0 1 0-1h2V1a.5.5 0 0 1 .5-.5zm2.5 3a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4H6.5a.5.5 0 0 1-.5-.5z'/></svg>");
   mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M3.5.5A.5.5 0 0 1 4 1v13h13a.5.5 0 0 1 0 1h-2v2a.5.5 0 0 1-1 0v-2H3.5a.5.5 0 0 1-.5-.5V4H1a.5.5 0 0 1 0-1h2V1a.5.5 0 0 1 .5-.5zm2.5 3a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4H6.5a.5.5 0 0 1-.5-.5z'/></svg>");
-  background-image: ;
-}
-
-.dnet-icon-resize {
-  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M5 2V0H0v5h2v6H0v5h5v-2h6v2h5v-5h-2V5h2V0h-5v2H5zm6 1v2h2v6h-2v2H5v-2H3V5h2V3h6zm1-2h3v3h-3V1zm3 11v3h-3v-3h3zM4 15H1v-3h3v3zM1 4V1h3v3H1z'/></svg>");
-  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M5 2V0H0v5h2v6H0v5h5v-2h6v2h5v-5h-2V5h2V0h-5v2H5zm6 1v2h2v6h-2v2H5v-2H3V5h2V3h6zm1-2h3v3h-3V1zm3 11v3h-3v-3h3zM4 15H1v-3h3v3zM1 4V1h3v3H1z'/></svg>");
-  background-image: ;
 }
 
 .dnet-icon-rotate-left {
-  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z'/> <path fill-rule='evenodd' d='M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z'/></svg>");
-  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z'/> <path fill-rule='evenodd' d='M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z'/></svg>");
-  background-image: ;
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' d='M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z'/> <path d='M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z'/></svg>");
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' d='M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z'/> <path d='M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z'/></svg>");
 }
 
 .dnet-icon-rotate-right {
-  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z'/> <path fill-rule='evenodd' d='M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z'/></svg>");
-  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z'/> <path fill-rule='evenodd' d='M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z'/></svg>");
-  background-image: ;
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' d='M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z'/> <path d='M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z'/></svg>");
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' d='M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z'/> <path d='M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z'/></svg>");
+}
+
+/* Mirror axis with the reflected half drawn lighter. */
+.dnet-icon-flip-h {
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M1 3h6v10H1z'/><path d='M9 3h6v10H9z' fill-opacity='.35'/><path d='M7.5 1h1v14h-1z'/></svg>");
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M1 3h6v10H1z'/><path d='M9 3h6v10H9z' fill-opacity='.35'/><path d='M7.5 1h1v14h-1z'/></svg>");
+}
+
+.dnet-icon-flip-v {
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M3 1h10v6H3z'/><path d='M3 9h10v6H3z' fill-opacity='.35'/><path d='M1 7.5h14v1H1z'/></svg>");
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M3 1h10v6H3z'/><path d='M3 9h10v6H3z' fill-opacity='.35'/><path d='M1 7.5h14v1H1z'/></svg>");
+}
+
+.dnet-icon-zoom-out {
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M3 7.25h10v1.5H3z'/></svg>");
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M3 7.25h10v1.5H3z'/></svg>");
+}
+
+.dnet-icon-zoom-in {
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M7.25 3h1.5v4.25H13v1.5H8.75V13h-1.5V8.75H3v-1.5h4.25z'/></svg>");
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M7.25 3h1.5v4.25H13v1.5H8.75V13h-1.5V8.75H3v-1.5h4.25z'/></svg>");
+}
+
+.dnet-icon-check {
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M6.2 11.2 3.1 8.1l-1.4 1.4 4.5 4.5 9-9-1.4-1.4z'/></svg>");
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M6.2 11.2 3.1 8.1l-1.4 1.4 4.5 4.5 9-9-1.4-1.4z'/></svg>");
 }
 
 .dnet-btn {

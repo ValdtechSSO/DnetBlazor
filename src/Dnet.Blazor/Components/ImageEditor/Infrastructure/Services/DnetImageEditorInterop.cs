@@ -35,7 +35,7 @@ namespace Dnet.Blazor.Components.ImageEditor.Infrastructure.Services
         }
 
         /// <summary>Decodes the image in the browser and draws it on the editor canvas.</summary>
-        public ValueTask<ImageEditorSourceData> InitializeSource(DotNetStreamReference streamReference, ElementReference canvas, ElementReference preview, ImageEditorOptions options)
+        public ValueTask<ImageEditorSourceData> InitializeSource(DotNetStreamReference streamReference, ElementReference canvas, ElementReference preview, ElementReference viewport, ImageEditorOptions options)
         {
             return _jsRuntime.InvokeAsync<ImageEditorSourceData>(
                 $"{JsFunctionsPrefix}.initializeSource",
@@ -44,13 +44,62 @@ namespace Dnet.Blazor.Components.ImageEditor.Infrastructure.Services
                 streamReference,
                 canvas,
                 preview,
+                viewport,
                 options);
         }
 
         /// <summary>Wires the crop rectangle to the rendered overlay and reports the initial selection.</summary>
-        public ValueTask<DraggedData> AttachCrop(ElementReference board, ElementReference cropContainer, ElementReference cropBox)
+        public ValueTask<DraggedData> AttachCrop(ElementReference board, ElementReference cropContainer, ElementReference cropBox, ElementReference selectionBadge)
         {
-            return _jsRuntime.InvokeAsync<DraggedData>($"{JsFunctionsPrefix}.attachCrop", _editorId, board, cropContainer, cropBox);
+            return _jsRuntime.InvokeAsync<DraggedData>(
+                $"{JsFunctionsPrefix}.attachCrop",
+                _editorId,
+                board,
+                cropContainer,
+                cropBox,
+                selectionBadge);
+        }
+
+        /// <summary>Sets the zoom factor and reports the resulting view.</summary>
+        public ValueTask<ImageEditorViewState> SetZoom(double factor)
+        {
+            return _jsRuntime.InvokeAsync<ImageEditorViewState>($"{JsFunctionsPrefix}.setZoom", _editorId, factor);
+        }
+
+        /// <summary>Locks the selection to a width/height ratio, or releases it with a null or zero value.</summary>
+        public ValueTask<DraggedData> SetAspectRatio(double ratio)
+        {
+            return _jsRuntime.InvokeAsync<DraggedData>($"{JsFunctionsPrefix}.setAspectRatio", _editorId, ratio);
+        }
+
+        /// <summary>Moves the selection to an explicit rectangle given in source pixels.</summary>
+        public ValueTask<DraggedData> SetCropInSource(double left, double top, double width, double height)
+        {
+            return _jsRuntime.InvokeAsync<DraggedData>(
+                $"{JsFunctionsPrefix}.setCropInSource",
+                _editorId,
+                left,
+                top,
+                width,
+                height);
+        }
+
+        /// <summary>Turns the picture a quarter turn, swapping its dimensions.</summary>
+        public ValueTask<ImageEditorViewState> Rotate(bool clockwise)
+        {
+            return _jsRuntime.InvokeAsync<ImageEditorViewState>($"{JsFunctionsPrefix}.rotate", _editorId, clockwise);
+        }
+
+        /// <summary>Applies the selection to the working image, without re-encoding it.</summary>
+        public ValueTask<ImageEditorViewState> CropToSelection()
+        {
+            return _jsRuntime.InvokeAsync<ImageEditorViewState>($"{JsFunctionsPrefix}.cropToSelection", _editorId);
+        }
+
+        /// <summary>Returns to the untouched picture and a centred selection.</summary>
+        public ValueTask<ImageEditorViewState> ResetEditor()
+        {
+            return _jsRuntime.InvokeAsync<ImageEditorViewState>($"{JsFunctionsPrefix}.reset", _editorId);
         }
 
         /// <summary>Mirrors the working image on the canvas, without re-encoding it.</summary>
