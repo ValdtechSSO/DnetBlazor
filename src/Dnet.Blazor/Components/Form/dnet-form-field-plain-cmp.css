@@ -285,6 +285,9 @@ select.mat-input-element::-ms-value {
   justify-content: center;
   cursor: pointer;
   width: 24px;
+  /* Breathing room between the trailing icon (clear button, search glyph) and
+     the field's right border. */
+  margin-right: 5px;
 }
 
 .dnet-floating-label--required::after {

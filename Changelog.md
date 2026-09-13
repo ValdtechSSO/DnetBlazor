@@ -2,6 +2,11 @@
 
 ## Version 6.0.15 (September 2026)
 
+- Form: the trailing icon of a field with a clear button - the clear mark, or the
+  empty-state glyph a consumer passes in `EmptyIconClass`, such as the grid's
+  search magnifier - now sits 5px away from the right border instead of against
+  it.
+
 - FloatingDoubleList: the selected values shown by the control stay on one line
   and end in an ellipsis when they no longer fit its width, instead of wrapping
   onto a second line that the fixed control height cut in half.
