@@ -34,8 +34,10 @@
         @if (ShowControl(ImageEditorControlType.Crop))
         {
             <DnetButton OnClick="OnCropImage" class="dnet-image-editor-tool" style="@ToolButtonStyle" disabled="@(!_isImageEditorReady)">
-                <span class="dnet-icon dnet-icon-crop" unselectable="on"></span>
-                <span class="dnet-icon-text" unselectable="on">Crop</span>
+                <span class="dnet-image-editor-button-content">
+                    <span class="dnet-icon dnet-icon-crop" unselectable="on"></span>
+                    <span class="dnet-icon-text" unselectable="on">Crop</span>
+                </span>
             </DnetButton>
         }
         @if (ShowControl(ImageEditorControlType.RotateCounterClockWise))
@@ -73,8 +75,9 @@
         <span class="dnet-image-editor-toolbar-end">
             <span @ref="_resetTrigger" @onmouseenter='() => ShowTooltip("Reset the image", _resetTrigger)' @onmouseleave="HideTooltip">
                 <DnetButton OnClick="OnReset" class="dnet-image-editor-tool" style="@ToolButtonStyle" disabled="@(!_isImageEditorReady)">
-                    <span class="dnet-icon dnet-icon-reset" unselectable="on"></span>
-                    <span class="dnet-icon-text" unselectable="on">Reset</span>
+                    <span class="dnet-image-editor-button-content">
+                        <span class="dnet-icon-text" unselectable="on">Reset</span>
+                    </span>
                 </DnetButton>
             </span>
         </span>
@@ -203,8 +206,10 @@
     <div class="dnet-image-editor-footer">
         <DnetButton OnClick="CancelOverlay" class="dnet-image-editor-secondary" style="@ToolButtonStyle">Cancel</DnetButton>
         <DnetButton OnClick="CloseOverlay" class="dnet-image-editor-primary" style="@PrimaryButtonStyle" disabled="@(!_isImageEditorReady)" InitialFocus="true">
-            <span class="dnet-icon dnet-icon-check" unselectable="on"></span>
-            <span class="dnet-icon-text" unselectable="on">Apply</span>
+            <span class="dnet-image-editor-button-content">
+                <span class="dnet-icon dnet-icon-check" unselectable="on"></span>
+                <span class="dnet-icon-text" unselectable="on">Apply</span>
+            </span>
         </DnetButton>
     </div>
 </div>

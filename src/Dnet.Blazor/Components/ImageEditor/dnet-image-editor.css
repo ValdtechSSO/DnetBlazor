@@ -40,6 +40,24 @@
   border: 1px solid var(--dnet-sys-border-strong);
 }
 
+/* One height across the toolbar, so the labelled actions line up with the
+   icon-only ones instead of drifting a couple of pixels. */
+.dnet-image-editor .dnet-image-editor-tool {
+  --_tool-height: 36px;
+  height: var(--_tool-height);
+}
+
+/* Icon and label share one line: .dnet-icon is a block box, so without this the
+   content stacks and every labelled button comes out square. */
+.dnet-image-editor-button-content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--dnet-sys-space-2);
+  line-height: 1;
+  vertical-align: middle;
+}
+
 .dnet-image-editor .dnet-image-editor-icon-button {
   --_icon-button-size: 36px;
   border: 1px solid var(--dnet-sys-border-strong);
