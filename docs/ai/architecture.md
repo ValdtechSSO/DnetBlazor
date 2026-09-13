@@ -1,8 +1,6 @@
 # Dnet.Blazor styling architecture
 
-Full context lives in the repo at
-`docs/implementation-plans/dnet-blazor-styling-architecture-plan.md`.
-This file is the working summary.
+This file is the working summary of the styling architecture.
 
 ## The three layers
 

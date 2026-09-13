@@ -109,5 +109,3 @@ approves anything.
 - `tools/component-info.mjs` — fact sheet for any component, extracted from
   source on the spot.
 
-The full plan, including the reasoning behind each decision, lives in the repo at
-`docs/implementation-plans/dnet-blazor-styling-architecture-plan.md`.
