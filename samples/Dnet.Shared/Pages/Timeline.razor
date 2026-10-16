@@ -1,0 +1,93 @@
+@page "/Timeline"
+@using Dnet.Blazor.Components.Timeline
+
+<div class="container-fluid" style="padding-top: 10px;">
+    <div class="dnet-page-content-left-margin dnet-m-t-20" style="max-width: 1000px;">
+        <h1 class="dnet-app-comp-name">Timeline</h1>
+        <p>Historias, actividad y procesos con un lugar para cada momento.</p>
+
+        <section class="dnet-m-t-20" aria-labelledby="timeline-order-title"
+                 style="padding: 24px; border-radius: 12px; background: var(--dnet-sys-surface);">
+            <p style="margin: 0 0 4px; color: var(--dnet-sys-on-surface-muted); font-size: 0.75rem;">PEDIDO #2048</p>
+            <h2 id="timeline-order-title" style="font-size: 1.25rem; margin: 0 0 24px;">Tu pedido, paso a paso</h2>
+            <DnetTimeline AriaLabel="Seguimiento del pedido 2048" id="timeline-default">
+                <DnetTimelineItem Title="Pedido confirmado" Status="DnetTimelineItemStatus.Completed" StatusLabel="Completado"
+                                  Timestamp="Hoy, 09:15" DateTime="2026-10-16T09:15:00+02:00" id="timeline-confirmed">
+                    <ChildContent><p>Hemos recibido tu pedido y el pago se ha realizado correctamente.</p></ChildContent>
+                </DnetTimelineItem>
+                <DnetTimelineItem Title="Preparando tu paquete" Status="DnetTimelineItemStatus.Current" StatusLabel="En curso"
+                                  Timestamp="Hoy, 10:30" DateTime="2026-10-16T10:30:00+02:00" id="timeline-preparing">
+                    <ChildContent>
+                        <p>Estamos reuniendo tus productos para que lleguen en perfectas condiciones.</p>
+                        <a href="/PillTabs" id="timeline-event-link">Ver otras formas de organizar estados</a>
+                    </ChildContent>
+                </DnetTimelineItem>
+                <DnetTimelineItem Title="En camino" Status="DnetTimelineItemStatus.Pending" StatusLabel="Pendiente"
+                                  Timestamp="Próxima actualización" id="timeline-shipping">
+                    <ChildContent><p>Te avisaremos cuando salga del almacén.</p></ChildContent>
+                </DnetTimelineItem>
+                <DnetTimelineItem Title="Entrega" Status="DnetTimelineItemStatus.Pending" StatusLabel="Pendiente"
+                                  Timestamp="Mañana, de 09:00 a 14:00" id="timeline-delivery">
+                    <ChildContent><p>El último paso antes de disfrutarlo.</p></ChildContent>
+                </DnetTimelineItem>
+            </DnetTimeline>
+        </section>
+
+        <section class="dnet-m-t-20" aria-labelledby="timeline-journey-title"
+                 style="padding: 24px; border-radius: 12px; background: var(--dnet-sys-surface);">
+            <h2 id="timeline-journey-title" style="font-size: 1.25rem; margin: 0 0 8px;">Un proyecto que crece</h2>
+            <p style="margin: 0 0 28px; color: var(--dnet-sys-on-surface-muted);">Cada hito tiene su espacio. En el móvil, la historia continúa en una sola columna.</p>
+            <DnetTimeline Alignment="DnetTimelineAlignment.Alternate" AriaLabel="Historia del proyecto" id="timeline-alternate">
+                <DnetTimelineItem Title="La primera idea" Status="DnetTimelineItemStatus.Completed" StatusLabel="Completado"
+                                  Timestamp="12 de enero" DateTime="2026-01-12" id="timeline-alternate-first">
+                    <ChildContent><p>Un pequeño equipo imaginó una manera más sencilla de trabajar juntos.</p></ChildContent>
+                    <OppositeContent><strong>Enero 2026</strong><br />De una conversación a un boceto</OppositeContent>
+                </DnetTimelineItem>
+                <DnetTimelineItem Title="Un espacio para todos" Status="DnetTimelineItemStatus.Current" StatusLabel="En curso"
+                                  Timestamp="16 de octubre" DateTime="2026-10-16" id="timeline-alternate-second">
+                    <ChildContent><p>Probamos las primeras experiencias con las personas que las van a usar.</p></ChildContent>
+                    <OppositeContent><strong>Octubre 2026</strong><br />Aprender, escuchar y mejorar</OppositeContent>
+                </DnetTimelineItem>
+                <DnetTimelineItem Title="El siguiente capítulo" Status="DnetTimelineItemStatus.Pending" StatusLabel="Pendiente">
+                    <ChildContent><p>Abriremos las puertas a nuevas ideas y nuevas formas de colaborar.</p></ChildContent>
+                    <OppositeContent><strong>Lo que viene</strong><br />El camino sigue abierto</OppositeContent>
+                </DnetTimelineItem>
+            </DnetTimeline>
+        </section>
+
+        <section class="dnet-m-t-20" aria-labelledby="timeline-people-title"
+                 style="padding: 24px; border-radius: 12px; background: var(--dnet-sys-surface);">
+            <h2 id="timeline-people-title" style="font-size: 1.125rem; margin: 0 0 24px;">Las personas detrás de cada cambio</h2>
+            <DnetTimeline Alignment="DnetTimelineAlignment.End" AriaLabel="Actividad del equipo" id="timeline-end">
+                <DnetTimelineItem Title="Ana actualizó la propuesta" Status="DnetTimelineItemStatus.Completed" StatusLabel="Completado"
+                                  Timestamp="Hace 20 minutos">
+                    <BulletContent>A</BulletContent>
+                    <ChildContent><p>Los nuevos bocetos ya están listos para compartir con el equipo.</p></ChildContent>
+                </DnetTimelineItem>
+                <DnetTimelineItem Title="Lucas está revisando los detalles" Status="DnetTimelineItemStatus.Current" StatusLabel="En curso"
+                                  Timestamp="Ahora">
+                    <BulletContent>L</BulletContent>
+                    <ChildContent><p>Una última mirada antes de dar el siguiente paso.</p></ChildContent>
+                </DnetTimelineItem>
+            </DnetTimeline>
+        </section>
+
+        <section class="dnet-m-t-20" aria-labelledby="timeline-direction-title"
+                 style="padding: 24px; border-radius: 12px; background: var(--dnet-sys-surface);">
+            <h2 id="timeline-direction-title" style="font-size: 1.125rem; margin: 0 0 24px;">La misma historia, otra dirección</h2>
+            <DnetTimeline AriaLabel="Seguimiento de derecha a izquierda" dir="rtl" id="timeline-rtl">
+                <DnetTimelineItem Title="Solicitud recibida" Status="DnetTimelineItemStatus.Completed" StatusLabel="Completado"
+                                  Timestamp="09:00">
+                    <ChildContent><p>Todos los documentos están en su sitio.</p></ChildContent>
+                </DnetTimelineItem>
+                <DnetTimelineItem Title="Revisión en curso" Status="DnetTimelineItemStatus.Current" StatusLabel="En curso"
+                                  Timestamp="10:45">
+                    <ChildContent><p>El equipo está comprobando la información.</p></ChildContent>
+                </DnetTimelineItem>
+                <DnetTimelineItem Title="Resolución" Status="DnetTimelineItemStatus.Pending" StatusLabel="Pendiente">
+                    <ChildContent><p>Recibirás una respuesta cuando termine la revisión.</p></ChildContent>
+                </DnetTimelineItem>
+            </DnetTimeline>
+        </section>
+    </div>
+</div>

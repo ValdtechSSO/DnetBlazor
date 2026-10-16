@@ -1,5 +1,17 @@
 # Changelog for Blazor Library
 
+## Unreleased
+
+- Added `DnetTimeline` and `DnetTimelineItem` to display activity with rich content,
+  status markers, timestamps, custom bullets, RTL and responsive layouts.
+- Added `DnetSkeleton` for animated loading placeholders, circular variants and
+  preserving wrapped content while loading. Includes reduced-motion support.
+- Added `/Timeline` and `/Skeleton` samples and component documentation.
+- Added `DnetSpoiler` with a configurable preview height, automatic overflow
+  detection, controlled or internal expansion, localized labels and accessible
+  keyboard controls. Hidden interactive content is removed from keyboard focus.
+- Added five styling tokens, reduced-motion support and the `/Spoiler` sample.
+
 ## Version 6.0.17-rc.2 (October 2026)
 
 - PillTabs hides horizontal scrollbars and fades only the edges with hidden

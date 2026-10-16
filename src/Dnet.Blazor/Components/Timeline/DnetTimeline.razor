@@ -1,0 +1,32 @@
+@using Dnet.Blazor.Infrastructure.Forms
+
+<ol @attributes="AdditionalAttributes" class="@CssClass" role="list" aria-label="@AriaLabel">
+    @ChildContent
+</ol>
+
+@code {
+    /// <summary>Gets or sets the position of the rail. Start and End follow the text direction.</summary>
+    [Parameter]
+    public DnetTimelineAlignment Alignment { get; set; } = DnetTimelineAlignment.Start;
+
+    /// <summary>Gets or sets the accessible name of the ordered list.</summary>
+    [Parameter]
+    public string? AriaLabel { get; set; } = "Timeline";
+
+    /// <summary>Gets or sets the DnetTimelineItem components in chronological or process order.</summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Gets or sets unmatched attributes, including class, style, id and dir, on the ordered list.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string CssClass => DnetAttributeUtilities.CombineClassNames(AdditionalAttributes,
+        $"dnet-timeline dnet-timeline-align-{Alignment.ToString().ToLowerInvariant()}");
+
+    protected override void OnParametersSet()
+    {
+        if (!Enum.IsDefined(Alignment))
+            throw new ArgumentOutOfRangeException(nameof(Alignment), Alignment, "Unknown timeline alignment.");
+    }
+}

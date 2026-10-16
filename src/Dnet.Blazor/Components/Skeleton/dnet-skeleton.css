@@ -1,0 +1,76 @@
+.dnet-skeleton {
+    --_background: var(--dnet-skeleton-background, color-mix(in srgb, var(--dnet-sys-on-surface) 12%, var(--dnet-sys-surface)));
+    --_highlight: var(--dnet-skeleton-highlight, color-mix(in srgb, var(--dnet-sys-on-surface) 20%, var(--dnet-sys-surface)));
+    --_radius: var(--dnet-skeleton-border-radius, var(--dnet-sys-radius-sm));
+    --_width: var(--dnet-skeleton-width, 100%);
+    --_height: var(--dnet-skeleton-height, 1rem);
+    --_duration: var(--dnet-skeleton-animation-duration, 1.5s);
+    position: relative;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    inline-size: var(--_width);
+    block-size: var(--_height);
+    flex-shrink: 0;
+}
+
+.dnet-skeleton-content {
+    display: flow-root;
+    min-inline-size: 0;
+}
+
+.dnet-skeleton[data-visible="true"] {
+    overflow: clip;
+    border-radius: var(--_radius);
+}
+
+.dnet-skeleton[data-visible="true"]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    background-color: var(--_background);
+    pointer-events: none;
+}
+
+.dnet-skeleton[data-visible="true"][data-animate="true"]::before {
+    animation: dnet-skeleton-pulse var(--_duration) ease-in-out infinite alternate;
+}
+
+.dnet-skeleton[data-visible="true"] > .dnet-skeleton-content {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Variants follow the base rule so geometry defaults can be overridden. */
+.dnet-skeleton-with-content {
+    --_height: var(--dnet-skeleton-height, auto);
+}
+
+.dnet-skeleton-circle {
+    --_radius: 50%;
+    inline-size: var(--_height);
+    block-size: auto;
+    min-block-size: 0;
+    max-inline-size: none;
+    aspect-ratio: 1;
+}
+
+/* A circle needs a definite size even when it wraps content. */
+.dnet-skeleton-circle.dnet-skeleton-with-content {
+    --_height: var(--dnet-skeleton-height, 1rem);
+}
+
+@keyframes dnet-skeleton-pulse {
+    from { background-color: var(--_background); }
+    to { background-color: var(--_highlight); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dnet-skeleton[data-visible="true"][data-animate="true"]::before {
+        animation: none;
+    }
+}

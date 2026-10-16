@@ -10,8 +10,9 @@ Adjust the path to wherever you put the folder.
 
 ## Dnet.Blazor components
 
-This project uses the Dnet.Blazor component library (6.0.16-rc.2). Reference material
-is in `docs/dnet-blazor/`.
+This project uses the Dnet.Blazor component library. Reference material is in
+`docs/dnet-blazor/`; use the reference from the release matching the installed
+package version.
 
 - Before writing markup with any `Dnet*` component, read
   `docs/dnet-blazor/components/<Name>.md` for its parameters and styling tokens.

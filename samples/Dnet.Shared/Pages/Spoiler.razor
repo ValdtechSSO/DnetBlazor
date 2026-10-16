@@ -1,0 +1,77 @@
+@page "/Spoiler"
+@using Dnet.Blazor.Components.Spoiler
+
+<div class="container-fluid" style="padding-top: 10px;">
+    <div class="dnet-page-content-left-margin dnet-m-t-20" style="max-width: 800px;">
+        <h1 class="dnet-app-comp-name">Spoiler</h1>
+        <p>Una vista previa del contenido largo con controles para leerlo completo o volver a resumirlo.</p>
+
+        <section class="dnet-m-t-20" aria-labelledby="spoiler-basic-title"
+                 style="padding: 24px; border-radius: 12px; background: var(--dnet-sys-surface);">
+            <h2 id="spoiler-basic-title" style="font-size: 1.125rem; margin-top: 0;">Un fin de semana para descubrir algo nuevo</h2>
+            <DnetSpoiler MaxHeight="110" ShowLabel="Leer el artículo completo" HideLabel="Mostrar solo el resumen"
+                         AriaLabel="Artículo de ejemplo" id="spoiler-basic">
+                @Article
+            </DnetSpoiler>
+        </section>
+
+        <section class="dnet-m-t-20" aria-labelledby="spoiler-short-title">
+            <h2 id="spoiler-short-title" style="font-size: 1rem;">Si todo cabe, no aparece el control</h2>
+            <DnetSpoiler ShowLabel="Ver más" HideLabel="Ver menos" id="spoiler-short">
+                <p style="margin: 0;">Este contenido es breve y se muestra completo.</p>
+            </DnetSpoiler>
+        </section>
+
+        <section class="dnet-m-t-20" aria-labelledby="spoiler-controlled-title">
+            <h2 id="spoiler-controlled-title" style="font-size: 1rem;">Selección controlada y contenido interactivo</h2>
+            <button type="button" class="dnet-button" id="spoiler-external-toggle" @onclick="() => _expanded = !_expanded">
+                @(_expanded ? "Contraer desde fuera" : "Expandir desde fuera")
+            </button>
+            <DnetSpoiler MaxHeight="90" @bind-Expanded="_expanded" ShowLabel="Ver todos los detalles" HideLabel="Ocultar detalles"
+                         AriaLabel="Detalles y enlaces" id="spoiler-controlled">
+                <p style="margin: 0 0 12px;"><a href="/PillTabs" id="spoiler-visible-link">Explorar Pill Tabs</a></p>
+                <p style="min-height: 110px; margin: 0;">Aquí puedes ampliar la información antes de continuar. Los enlaces que quedan fuera de la vista previa estarán disponibles al expandir el contenido.</p>
+                <a href="/theming" id="spoiler-hidden-link">Explorar los temas de la librería</a>
+                <button type="button" inert id="spoiler-original-inert">Control inactivo de ejemplo</button>
+            </DnetSpoiler>
+            <p id="spoiler-controlled-state">Estado: @(_expanded ? "expandido" : "contraído")</p>
+        </section>
+
+        <section class="dnet-m-t-20" aria-labelledby="spoiler-dynamic-title">
+            <h2 id="spoiler-dynamic-title" style="font-size: 1rem;">Cambios de contenido y ancho</h2>
+            <button type="button" class="dnet-button" id="spoiler-change-content" @onclick="() => _longContent = !_longContent">
+                @(_longContent ? "Mostrar texto corto" : "Añadir texto largo")
+            </button>
+            <DnetSpoiler MaxHeight="100" ShowLabel="Ver la descripción completa" HideLabel="Resumir descripción" id="spoiler-dynamic">
+                @if (_longContent)
+                {
+                    @Article
+                }
+                else
+                {
+                    <p style="margin: 0;">Todavía no hay detalles adicionales.</p>
+                }
+            </DnetSpoiler>
+        </section>
+
+        <section class="dnet-m-t-20" aria-labelledby="spoiler-rtl-title">
+            <h2 id="spoiler-rtl-title" style="font-size: 1rem;">Dirección RTL y apertura inicial</h2>
+            <DnetSpoiler MaxHeight="70" DefaultExpanded="true" ShowLabel="Ver más" HideLabel="Ver menos" dir="rtl"
+                         style="--dnet-spoiler-gap: 12px;" id="spoiler-rtl">
+                @Article
+            </DnetSpoiler>
+        </section>
+    </div>
+</div>
+
+@code {
+    private bool _expanded;
+    private bool _longContent;
+
+    private static RenderFragment Article => @<div style="line-height: 1.65;">
+        <p style="margin: 0 0 12px;">A veces basta con cambiar de camino para encontrar un lugar que no conocíamos. Un paseo sin prisas, una conversación junto al río y una mesa compartida pueden transformar un fin de semana corriente.</p>
+        <p style="margin: 0 0 12px;">La propuesta empieza por la mañana, con tiempo para recorrer las calles y detenerse donde apetezca. No hace falta completar una lista de visitas: lo interesante es dejar espacio para descubrir algo inesperado.</p>
+        <p style="margin: 0 0 12px;">Por la tarde podemos acercarnos al parque, preparar una pequeña merienda o reunir al grupo para decidir el siguiente plan. Cada persona aporta una idea y entre todos encontramos una forma distinta de disfrutar del día.</p>
+        <p style="margin: 0;">Al volver, quedan las fotografías, las anécdotas y las ganas de repetir. Los mejores recuerdos suelen estar en esos pequeños momentos que nadie había previsto.</p>
+    </div>;
+}

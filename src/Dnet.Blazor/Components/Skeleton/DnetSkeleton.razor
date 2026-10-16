@@ -1,0 +1,63 @@
+@using System.Globalization
+@using Dnet.Blazor.Infrastructure.Forms
+
+<div @attributes="AdditionalAttributes" class="@CssClass" style="@InstanceStyle"
+     data-visible="@(Visible ? "true" : "false")" data-animate="@(Animate ? "true" : "false")"
+     aria-hidden="@(ChildContent is null ? "true" : null)"
+     aria-busy="@(ChildContent is null ? null : Visible ? "true" : "false")">
+    @if (ChildContent is not null)
+    {
+        <div class="dnet-skeleton-content" inert="@Visible" aria-hidden="@(Visible ? "true" : null)">
+            @ChildContent
+        </div>
+    }
+</div>
+
+@code {
+    /// <summary>Gets or sets whether the loading placeholder covers the content.</summary>
+    [Parameter]
+    public bool Visible { get; set; } = true;
+
+    /// <summary>Gets or sets whether the placeholder pulses. Reduced-motion preferences always disable the animation.</summary>
+    [Parameter]
+    public bool Animate { get; set; } = true;
+
+    /// <summary>Gets or sets whether the placeholder is circular. Height determines its size; percentages use the container width. Width is ignored.</summary>
+    [Parameter]
+    public bool Circle { get; set; }
+
+    /// <summary>Gets or sets an optional CSS width. When omitted, the width token controls the size.</summary>
+    [Parameter]
+    public string? Width { get; set; }
+
+    /// <summary>Gets or sets an optional CSS height, or the reference size of a circle. When omitted, the height token controls the size.</summary>
+    [Parameter]
+    public string? Height { get; set; }
+
+    /// <summary>Gets or sets optional content. It stays mounted and preserves its layout while hidden and inert during loading.</summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Gets or sets unmatched HTML attributes, including class, style, id and dir, on the component root.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string CssClass => DnetAttributeUtilities.CombineClassNames(AdditionalAttributes,
+        $"dnet-skeleton{(ChildContent is not null ? " dnet-skeleton-with-content" : "")}{(Circle ? " dnet-skeleton-circle" : "")}");
+
+    private string? InstanceStyle
+    {
+        get
+        {
+            var styles = new List<string>();
+            if (AdditionalAttributes?.TryGetValue("style", out var style) == true)
+            {
+                var customStyle = Convert.ToString(style, CultureInfo.InvariantCulture);
+                if (!string.IsNullOrWhiteSpace(customStyle)) styles.Add(customStyle.Trim().TrimEnd(';'));
+            }
+            if (!string.IsNullOrWhiteSpace(Width)) styles.Add($"--_width: {Width}");
+            if (!string.IsNullOrWhiteSpace(Height)) styles.Add($"--_height: {Height}");
+            return styles.Count == 0 ? null : string.Join("; ", styles);
+        }
+    }
+}

@@ -1,6 +1,6 @@
 # Dnet.Blazor — AI agent reference
 
-Machine-readable reference for **Dnet.Blazor 6.0.12**, aimed at coding agents
+Machine-readable reference for the checked-out **Dnet.Blazor** source, aimed at coding agents
 (Claude, Codex, Cursor, Gemini CLI, or any tool that reads project docs).
 
 Point your agent at this folder and it will know the component API and the
@@ -18,8 +18,10 @@ your agent reads at startup (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`, …). See
 npx degit ValdtechSSO/DnetBlazor/docs/ai/reference docs/dnet-blazor
 ```
 
-Pin it to the library version you actually use: this reference is a snapshot of
-6.0.12. If you upgrade the package, refresh this folder too.
+The library version is recorded in `component-index.md`. The repository can also
+contain unreleased additions listed in `Changelog.md`; Spoiler, Timeline and
+Skeleton are currently unreleased. For a NuGet application, use the reference
+archive attached to the matching release. Refresh it when upgrading the package.
 
 ## What's here
 

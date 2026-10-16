@@ -43,14 +43,23 @@ configuration. Stop any sample already running on these ports before launching.
 
 The library includes data-entry, navigation, overlay and data-display
 components, including Grid, PickList, List, DoubleList, Select, Autocomplete,
-Form, DatePicker, TimePicker, Slider, Badge, Tree, Tabs, PillTabs, Toast, Tooltip and
-Overlay.
+Form, DatePicker, TimePicker, Slider, Badge, Tree, Tabs, PillTabs, Spoiler, Timeline,
+Skeleton, Toast, Tooltip and Overlay.
 
 Runnable examples for every component live in [`samples/`](samples/). The demo
 application is available at [datalnet.com](https://www.datalnet.com).
 
 [`DnetPillTabs`](docs/pill-tabs.md) provides rounded tabs with optional counters,
 two-way value binding and keyboard navigation. Its sample is available at `/PillTabs`.
+
+[`DnetSpoiler`](docs/spoiler.md) shows a height-limited preview with an automatic
+expand/collapse control. Its sample is available at `/Spoiler`.
+
+[`DnetTimeline`](docs/timeline.md) displays activity and progress as a sequence of
+events. Its sample is available at `/Timeline`.
+
+[`DnetSkeleton`](docs/skeleton.md) provides animated loading placeholders and can
+cover existing content while preserving its state. Its sample is at `/Skeleton`.
 
 ## Installation
 

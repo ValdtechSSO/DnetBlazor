@@ -4,4 +4,5 @@ require("../../ImageEditor/dnet-image-editor");
 require("../../AdminLayout/dnet-admin-dashboard-interop");
 require("../../Overlay/dnet-overlay");
 require("../../PillTabs/dnet-pill-tabs");
+require("../../Spoiler/dnet-spoiler");
 require("../../dnet-interop");

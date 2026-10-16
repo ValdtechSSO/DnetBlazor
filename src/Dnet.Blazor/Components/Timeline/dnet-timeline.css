@@ -1,0 +1,242 @@
+.dnet-timeline {
+    --_bullet-size: var(--dnet-timeline-bullet-size, calc(var(--dnet-sys-space-unit) * 6));
+    --_line-width: var(--dnet-timeline-line-width, 2px);
+    --_gap: var(--dnet-timeline-gap, calc(var(--dnet-sys-space-unit) * 7));
+    --_content-gap: var(--dnet-timeline-content-gap, var(--dnet-sys-space-4));
+    --_line-color: var(--dnet-timeline-line-color, var(--dnet-sys-border-strong));
+    --_accent-color: var(--dnet-timeline-accent-color, var(--dnet-sys-primary-emphasis));
+    --_accent-foreground: var(--dnet-timeline-accent-foreground, var(--dnet-sys-on-primary));
+    --_bullet-background: var(--dnet-timeline-bullet-background, var(--dnet-sys-surface));
+    --_foreground: var(--dnet-timeline-foreground, var(--dnet-sys-on-surface));
+    --_muted-foreground: var(--dnet-timeline-muted-foreground, var(--dnet-sys-on-surface-muted));
+    --_title-font-size: var(--dnet-timeline-title-font-size, var(--dnet-sys-text-lg));
+    --_font-size: var(--dnet-timeline-font-size, var(--dnet-sys-text-md));
+
+    inline-size: 100%;
+    max-inline-size: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--_foreground);
+    font-family: var(--dnet-sys-font);
+    font-size: var(--_font-size);
+    line-height: 1.6;
+    box-sizing: border-box;
+}
+
+.dnet-timeline > .dnet-timeline-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--_bullet-size) minmax(0, 1fr);
+    column-gap: var(--_content-gap);
+    min-inline-size: 0;
+    min-block-size: var(--_bullet-size);
+    padding: 0 0 var(--_gap);
+    list-style: none;
+    text-align: start;
+    box-sizing: border-box;
+}
+
+.dnet-timeline > .dnet-timeline-item:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: calc((var(--_bullet-size) - var(--_line-width)) / 2);
+    inset-block-start: calc(var(--_bullet-size) + var(--dnet-sys-space-1));
+    inset-block-end: var(--dnet-sys-space-1);
+    inline-size: var(--_line-width);
+    background: var(--_line-color);
+}
+
+.dnet-timeline > .dnet-timeline-item-completed:not(:last-child)::before {
+    background: var(--_accent-color);
+}
+
+.dnet-timeline > .dnet-timeline-item:last-child {
+    padding-block-end: 0;
+}
+
+.dnet-timeline-item > .dnet-timeline-bullet {
+    position: relative;
+    display: inline-flex;
+    grid-column: 1;
+    grid-row: 1;
+    align-items: center;
+    justify-content: center;
+    align-self: start;
+    inline-size: var(--_bullet-size);
+    block-size: var(--_bullet-size);
+    border: var(--_line-width) solid var(--_line-color);
+    border-radius: var(--dnet-sys-radius-pill);
+    background: var(--_bullet-background);
+    color: var(--_muted-foreground);
+    font-size: calc(var(--_bullet-size) * 0.5);
+    font-weight: 700;
+    line-height: 1;
+    box-sizing: border-box;
+}
+
+.dnet-timeline-bullet > svg,
+.dnet-timeline-bullet > img {
+    max-inline-size: 75%;
+    max-block-size: 75%;
+}
+
+.dnet-timeline-item > .dnet-timeline-content {
+    display: flex;
+    grid-column: 2;
+    grid-row: 1;
+    flex-direction: column;
+    gap: var(--dnet-sys-space-1);
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+}
+
+.dnet-timeline-title {
+    font-size: var(--_title-font-size);
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.dnet-timeline-body > :first-child {
+    margin-block-start: 0;
+}
+
+.dnet-timeline-body > :last-child {
+    margin-block-end: 0;
+}
+
+.dnet-timeline-timestamp,
+.dnet-timeline-item > .dnet-timeline-opposite {
+    color: var(--_muted-foreground);
+    font-size: calc(var(--_font-size) * 0.857143);
+}
+
+.dnet-timeline-item > .dnet-timeline-opposite {
+    grid-column: 2;
+    grid-row: 2;
+    min-inline-size: 0;
+    padding-block-start: var(--dnet-sys-space-2);
+    overflow-wrap: anywhere;
+}
+
+.dnet-timeline-status {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.dnet-timeline-content :focus-visible,
+.dnet-timeline-opposite :focus-visible {
+    border-radius: var(--dnet-sys-radius-sm);
+    box-shadow: 0 0 0 2px var(--dnet-sys-focus-ring);
+}
+
+/* Status and alignment variants follow base rules so they win in the cascade. */
+.dnet-timeline-item-completed > .dnet-timeline-bullet {
+    border-color: var(--_accent-color);
+    background: var(--_accent-color);
+    color: var(--_accent-foreground);
+}
+
+.dnet-timeline-item-current > .dnet-timeline-bullet {
+    border-color: var(--_accent-color);
+    color: var(--_accent-color);
+}
+
+.dnet-timeline-item-completed:not(.dnet-timeline-item-custom-bullet) > .dnet-timeline-bullet::after {
+    content: "";
+    inline-size: calc(var(--_bullet-size) * 0.2);
+    block-size: calc(var(--_bullet-size) * 0.35);
+    margin-block-start: calc(var(--_bullet-size) * -0.1);
+    border: solid currentColor;
+    border-width: 0 var(--_line-width) var(--_line-width) 0;
+    transform: rotate(45deg);
+}
+
+.dnet-timeline-item-current:not(.dnet-timeline-item-custom-bullet) > .dnet-timeline-bullet::after {
+    content: "";
+    inline-size: calc(var(--_bullet-size) / 3);
+    block-size: calc(var(--_bullet-size) / 3);
+    border-radius: var(--dnet-sys-radius-pill);
+    background: currentColor;
+}
+
+.dnet-timeline-align-end > .dnet-timeline-item {
+    grid-template-columns: minmax(0, 1fr) var(--_bullet-size);
+    text-align: end;
+}
+
+.dnet-timeline-align-end > .dnet-timeline-item > .dnet-timeline-bullet {
+    grid-column: 2;
+}
+
+.dnet-timeline-align-end > .dnet-timeline-item > .dnet-timeline-content,
+.dnet-timeline-align-end > .dnet-timeline-item > .dnet-timeline-opposite {
+    grid-column: 1;
+}
+
+.dnet-timeline-align-end > .dnet-timeline-item:not(:last-child)::before {
+    inset-inline-start: auto;
+    inset-inline-end: calc((var(--_bullet-size) - var(--_line-width)) / 2);
+}
+
+.dnet-timeline-align-alternate > .dnet-timeline-item {
+    grid-template-columns: minmax(0, 1fr) var(--_bullet-size) minmax(0, 1fr);
+}
+
+.dnet-timeline-align-alternate > .dnet-timeline-item > .dnet-timeline-bullet {
+    grid-column: 2;
+}
+
+.dnet-timeline-align-alternate > .dnet-timeline-item > .dnet-timeline-content,
+.dnet-timeline-align-alternate > .dnet-timeline-item:nth-child(even) > .dnet-timeline-opposite {
+    grid-column: 3;
+    text-align: start;
+}
+
+.dnet-timeline-align-alternate > .dnet-timeline-item > .dnet-timeline-opposite,
+.dnet-timeline-align-alternate > .dnet-timeline-item:nth-child(even) > .dnet-timeline-content {
+    grid-column: 1;
+    text-align: end;
+}
+
+.dnet-timeline-align-alternate > .dnet-timeline-item > .dnet-timeline-opposite {
+    grid-row: 1;
+    padding-block-start: var(--dnet-sys-space-1);
+}
+
+.dnet-timeline-align-alternate > .dnet-timeline-item:not(:last-child)::before {
+    inset-inline-start: calc(50% - var(--_line-width) / 2);
+}
+
+@media (max-width: 640px) {
+    .dnet-timeline-align-alternate > .dnet-timeline-item {
+        grid-template-columns: var(--_bullet-size) minmax(0, 1fr);
+    }
+
+    .dnet-timeline-align-alternate > .dnet-timeline-item > .dnet-timeline-bullet {
+        grid-column: 1;
+    }
+
+    .dnet-timeline-align-alternate > .dnet-timeline-item > .dnet-timeline-content,
+    .dnet-timeline-align-alternate > .dnet-timeline-item > .dnet-timeline-opposite,
+    .dnet-timeline-align-alternate > .dnet-timeline-item:nth-child(even) > .dnet-timeline-content,
+    .dnet-timeline-align-alternate > .dnet-timeline-item:nth-child(even) > .dnet-timeline-opposite {
+        grid-column: 2;
+        text-align: start;
+    }
+
+    .dnet-timeline-align-alternate > .dnet-timeline-item > .dnet-timeline-opposite {
+        grid-row: 2;
+        padding-block-start: var(--dnet-sys-space-2);
+    }
+
+    .dnet-timeline-align-alternate > .dnet-timeline-item:not(:last-child)::before {
+        inset-inline-start: calc((var(--_bullet-size) - var(--_line-width)) / 2);
+    }
+}

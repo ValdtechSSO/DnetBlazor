@@ -1,0 +1,94 @@
+@using Dnet.Blazor.Infrastructure.Forms
+@using Microsoft.AspNetCore.Components.Web
+
+<dnet-spoiler @attributes="AdditionalAttributes" class="@CssClass"
+              data-expanded="@(IsExpanded ? "true" : "false")" data-max-height="@MaxHeight">
+    <div class="dnet-spoiler-viewport" id="@_contentId" tabindex="-1"
+         role="@(string.IsNullOrWhiteSpace(AriaLabel) ? null : "region")" aria-label="@AriaLabel">
+        <div class="dnet-spoiler-body">@ChildContent</div>
+    </div>
+    <button class="dnet-spoiler-toggle" type="button" aria-controls="@_contentId"
+            aria-expanded="@(IsExpanded ? "true" : "false")"
+            aria-label="@(IsExpanded ? HideAriaLabel : ShowAriaLabel)" @onclick="ToggleAsync">
+        @(IsExpanded ? HideLabel : ShowLabel)
+    </button>
+</dnet-spoiler>
+
+@code {
+    /// <summary>Gets or sets the visible height, in pixels, when collapsed. Zero hides the entire preview.</summary>
+    [Parameter]
+    public int MaxHeight { get; set; } = 100;
+
+    /// <summary>Gets or sets the controlled expanded state. Use @bind-Expanded to accept user changes.</summary>
+    [Parameter]
+    public bool Expanded { get; set; }
+
+    /// <summary>Raised when the user requests a different expanded state.</summary>
+    [Parameter]
+    public EventCallback<bool> ExpandedChanged { get; set; }
+
+    /// <summary>Gets or sets the initial state when Expanded is omitted. Later changes do not reset user selection.</summary>
+    [Parameter]
+    public bool DefaultExpanded { get; set; }
+
+    /// <summary>Gets or sets the label of the button that reveals the full content.</summary>
+    [Parameter]
+    public string ShowLabel { get; set; } = "Show more";
+
+    /// <summary>Gets or sets the label of the button that collapses the content.</summary>
+    [Parameter]
+    public string HideLabel { get; set; } = "Show less";
+
+    /// <summary>Gets or sets the accessible name of the content region. Omit it to avoid adding a region landmark.</summary>
+    [Parameter]
+    public string? AriaLabel { get; set; }
+
+    /// <summary>Gets or sets an optional accessible label for the collapsed state's button.</summary>
+    [Parameter]
+    public string? ShowAriaLabel { get; set; }
+
+    /// <summary>Gets or sets an optional accessible label for the expanded state's button.</summary>
+    [Parameter]
+    public string? HideAriaLabel { get; set; }
+
+    /// <summary>Gets or sets the content. It stays mounted when collapsed.</summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Gets or sets unmatched HTML attributes, including class, style, id and dir, on the component root.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private readonly string _contentId = $"dnet-spoiler-{Guid.NewGuid():N}";
+    private bool _expandedProvided;
+    private bool _initialized;
+    private bool _internalExpanded;
+
+    private bool IsExpanded => _expandedProvided ? Expanded : _internalExpanded;
+    private string CssClass => DnetAttributeUtilities.CombineClassNames(AdditionalAttributes, "dnet-spoiler");
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _expandedProvided |= parameters.TryGetValue<bool>(nameof(Expanded), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    protected override void OnParametersSet()
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(MaxHeight);
+        ArgumentException.ThrowIfNullOrWhiteSpace(ShowLabel);
+        ArgumentException.ThrowIfNullOrWhiteSpace(HideLabel);
+        if (!_initialized)
+        {
+            _internalExpanded = DefaultExpanded;
+            _initialized = true;
+        }
+    }
+
+    private async Task ToggleAsync()
+    {
+        var next = !IsExpanded;
+        if (!_expandedProvided) _internalExpanded = next;
+        await ExpandedChanged.InvokeAsync(next);
+    }
+}

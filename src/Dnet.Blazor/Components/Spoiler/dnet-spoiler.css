@@ -1,0 +1,69 @@
+.dnet-spoiler {
+    --_control-color: var(--dnet-spoiler-control-color, color-mix(in srgb, var(--dnet-sys-primary-emphasis) 60%, var(--dnet-sys-on-surface)));
+    --_control-hover-color: var(--dnet-spoiler-control-hover-color, color-mix(in srgb, var(--_control-color) 75%, var(--dnet-sys-on-surface)));
+    --_control-font-size: var(--dnet-spoiler-control-font-size, var(--dnet-sys-text-md));
+    --_gap: var(--dnet-spoiler-gap, var(--dnet-sys-space-2));
+    --_duration: var(--dnet-spoiler-transition-duration, var(--dnet-sys-motion-normal));
+    display: block;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    font-family: var(--dnet-sys-font);
+}
+
+.dnet-spoiler-viewport {
+    --_height: auto;
+    min-inline-size: 0;
+    outline: none;
+}
+
+.dnet-spoiler-body {
+    display: flow-root;
+}
+
+.dnet-spoiler-toggle {
+    display: none;
+    inline-size: fit-content;
+    max-inline-size: 100%;
+    margin: var(--_gap) 0 0;
+    margin-inline-end: auto;
+    padding: 0;
+    border: 0;
+    border-radius: var(--dnet-sys-radius-sm);
+    background: var(--dnet-sys-transparent);
+    color: var(--_control-color);
+    font: inherit;
+    font-size: var(--_control-font-size);
+    font-weight: 600;
+    line-height: 1.5;
+    text-align: start;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.dnet-spoiler-toggle:hover {
+    color: var(--_control-hover-color);
+    text-decoration: underline;
+}
+
+.dnet-spoiler-toggle:focus-visible,
+.dnet-spoiler-viewport:focus-visible {
+    /* The legacy bundle resets focus outlines; a shadow keeps this ring visible. */
+    box-shadow: 0 0 0 2px var(--dnet-sys-focus-ring);
+}
+
+/* Without JavaScript, render all content and hide the inoperative control. */
+.dnet-spoiler[data-overflow="true"] > .dnet-spoiler-viewport {
+    block-size: var(--_height);
+    overflow: hidden;
+    transition: block-size var(--_duration) var(--dnet-sys-motion-ease);
+}
+
+.dnet-spoiler[data-overflow="true"] > .dnet-spoiler-toggle {
+    display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dnet-spoiler[data-overflow="true"] > .dnet-spoiler-viewport {
+        transition: none;
+    }
+}

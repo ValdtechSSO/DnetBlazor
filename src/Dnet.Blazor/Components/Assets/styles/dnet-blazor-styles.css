@@ -19,7 +19,9 @@
 @import "../../PickList/dnet-pick-list.css";
 @import "../../PillTabs/dnet-pill-tabs.css";
 @import "../../RadioButton/dnet-radio-button.css";
+@import "../../Skeleton/dnet-skeleton.css";
 @import "../../Spinner/dnet-spinner.css";
+@import "../../Spoiler/dnet-spoiler.css";
 @import "../../Stepper/dnet-stepper.css";
 @import "../../Tabs/dnet-tabs.css";
 @import "../../Toast/dnet-toast.css";
@@ -33,5 +35,6 @@
 @import "../../SlideToggle/dnet-slide-toggle.css";
 @import "../../Slider/dnet-slider.css";
 @import "../../TimePicker/dnet-timepicker.css";
+@import "../../Timeline/dnet-timeline.css";
 @import "../../Button/dnet-button.css";
 @import "../../DynamicStepper/dnet-dynamic-stepper.css";

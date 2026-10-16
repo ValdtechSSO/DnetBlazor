@@ -1,0 +1,78 @@
+@using Dnet.Blazor.Infrastructure.Forms
+
+<li @attributes="AdditionalAttributes" class="@CssClass" aria-current="@(Status == DnetTimelineItemStatus.Current ? "step" : null)">
+    <span class="dnet-timeline-bullet" aria-hidden="true">@BulletContent</span>
+    <div class="dnet-timeline-content">
+        <span class="dnet-timeline-status">@(StatusLabel ?? Status.ToString())</span>
+        @if (!string.IsNullOrWhiteSpace(Title))
+        {
+            <div class="dnet-timeline-title">@Title</div>
+        }
+        @if (ChildContent is not null)
+        {
+            <div class="dnet-timeline-body">@ChildContent</div>
+        }
+        @if (!string.IsNullOrWhiteSpace(Timestamp))
+        {
+            @if (!string.IsNullOrWhiteSpace(DateTime))
+            {
+                <time class="dnet-timeline-timestamp" datetime="@DateTime">@Timestamp</time>
+            }
+            else
+            {
+                <span class="dnet-timeline-timestamp">@Timestamp</span>
+            }
+        }
+    </div>
+    @if (OppositeContent is not null)
+    {
+        <div class="dnet-timeline-opposite">@OppositeContent</div>
+    }
+</li>
+
+@code {
+    /// <summary>Gets or sets the event title.</summary>
+    [Parameter]
+    public string? Title { get; set; }
+
+    /// <summary>Gets or sets a human-readable date or time shown after the event content.</summary>
+    [Parameter]
+    public string? Timestamp { get; set; }
+
+    /// <summary>Gets or sets an optional ISO date or time. When provided, Timestamp renders as a time element.</summary>
+    [Parameter]
+    public string? DateTime { get; set; }
+
+    /// <summary>Gets or sets the explicit event status. It does not depend on sibling order.</summary>
+    [Parameter]
+    public DnetTimelineItemStatus Status { get; set; } = DnetTimelineItemStatus.Pending;
+
+    /// <summary>Gets or sets the localized status announced to assistive technology. Defaults to the status name.</summary>
+    [Parameter]
+    public string? StatusLabel { get; set; }
+
+    /// <summary>Gets or sets a decorative custom bullet. Put meaningful information in the title or content.</summary>
+    [Parameter]
+    public RenderFragment? BulletContent { get; set; }
+
+    /// <summary>Gets or sets secondary metadata opposite alternating events, or below other layouts.</summary>
+    [Parameter]
+    public RenderFragment? OppositeContent { get; set; }
+
+    /// <summary>Gets or sets the rich event content, including links or other controls.</summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Gets or sets unmatched attributes, including class, style and id, on this list item.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string CssClass => DnetAttributeUtilities.CombineClassNames(AdditionalAttributes,
+        $"dnet-timeline-item dnet-timeline-item-{Status.ToString().ToLowerInvariant()}{(BulletContent is null ? string.Empty : " dnet-timeline-item-custom-bullet")}");
+
+    protected override void OnParametersSet()
+    {
+        if (!Enum.IsDefined(Status))
+            throw new ArgumentOutOfRangeException(nameof(Status), Status, "Unknown timeline item status.");
+    }
+}
