@@ -17,7 +17,6 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  DOTNET_VERSION: "10.0.x"
   NODE_VERSION: "22.x"
   PROJECT_PATH: "src/Dnet.Blazor/Dnet.Blazor.csproj"
   PACKAGE_OUTPUT: "artifacts/nuget"
@@ -44,7 +43,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+          global-json-file: global.json
 
       - name: Resolve package version
         id: version
@@ -150,5 +149,6 @@ jobs:
         if: github.ref_type == 'tag'
         uses: softprops/action-gh-release@v2
         with:
+          prerelease: ${{ contains(steps.version.outputs.value, '-') }}
           files: ${{ steps.reference.outputs.path }}
           fail_on_unmatched_files: true

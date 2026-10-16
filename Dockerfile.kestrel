@@ -1,8 +1,9 @@
-FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS base
+FROM mcr.microsoft.com/dotnet/aspnet:11.0.0-rc.2-alpine3.24 AS base
 EXPOSE 80
 
 # Blazor WASM Client
-FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS buildwasm
+FROM mcr.microsoft.com/dotnet/sdk:11.0.100-rc.2-alpine3.24 AS buildwasm
+COPY global.json /global.json
 
 WORKDIR /wasm/src
 COPY /src/Dnet.Blazor/Dnet.Blazor.csproj .
@@ -23,7 +24,8 @@ FROM buildwasm AS publishwasm
 RUN dotnet publish "Dnet.ClientSide/Dnet.App.ClientSide.csproj" -c Release -o /app/wasm/publish
 
 # Kestrel 
-FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS buildkestrel
+FROM mcr.microsoft.com/dotnet/sdk:11.0.100-rc.2-alpine3.24 AS buildkestrel
+COPY global.json /global.json
 WORKDIR /src
 COPY ["samples/Dnet.App.KestrelServer/Dnet.App.KestrelServer.csproj", "Dnet.App.KestrelServer/"]
 RUN dotnet restore "Dnet.App.KestrelServer/Dnet.App.KestrelServer.csproj"

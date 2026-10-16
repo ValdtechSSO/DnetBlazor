@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
+		<TargetFramework>net11.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Authors>Adrian Mustelier Camino</Authors>
@@ -10,15 +10,14 @@
 		<Description>Set of Components for Blazor Framework</Description>
 		<Copyright>Datalnet</Copyright>
 		<PackageTags>Blazor-Components-Datalnet</PackageTags>
-		<PackageVersion>6.0.15</PackageVersion>
+		<PackageVersion>6.0.16-rc.2</PackageVersion>
 		<PackageProjectUrl>https://datalnet.com/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ValdtechSSO/DnetBlazor</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
-			- ImageEditor: exports keep the resolution, aspect ratio, format and transparency of the selection instead of being resized to 170 x 170.
-			- ImageEditor: flips and crops are encoded once, gestures no longer round-trip to .NET per frame and images move without base64.
-			- ImageEditor: fixed the crop overlay misalignment and added MaxOutputDimension, OutputFormat and OutputQuality.
-			- Fixed connected-list drag and drop, selected-value overflow and trailing form icon spacing.
+			- Migrated the library, samples and tests to .NET 11 RC2.
+			- Requires .NET 11 and Microsoft.AspNetCore.Components 11.0.0-rc.2.26504.105 or later.
+			- Pinned the RC2 SDK and aligned CI, Docker and publish profiles.
 		</PackageReleaseNotes>
 	</PropertyGroup>
 
@@ -34,8 +33,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Components" Version="10.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components" Version="11.0.0-rc.2.26504.105" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="11.0.0-rc.2.26504.105" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -23,7 +23,7 @@ public sealed class VisualBaselineFixture : IAsyncLifetime
 
     public VisualBaselineFixture()
     {
-        // bin/Debug/net10.0 -> project root.
+        // bin/Debug/net11.0 -> project root.
         TestProjectRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", ".."));
     }
 

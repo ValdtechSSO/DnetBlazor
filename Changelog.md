@@ -1,5 +1,15 @@
 # Changelog for Blazor Library
 
+## Version 6.0.16-rc.2 (October 2026)
+
+- Migrated the library, samples and test projects to .NET 11 RC2 (`net11.0`),
+  with ASP.NET Core and .NET packages at `11.0.0-rc.2.26504.105`.
+- Pinned SDK `11.0.100-rc.2.26504.105` in `global.json` and aligned GitHub
+  Actions, Docker images, the WebAssembly publish profile and the Playwright
+  installer with RC2. Consumers of this build must target .NET 11.
+- Updated bUnit to 2.11.3 and AngleSharp to 1.8.1 to support the .NET 11
+  virtualization callbacks in component tests.
+
 ## Version 6.0.15 (September 2026)
 
 - Form: the trailing icon of a field with a clear button - the clear mark, or the

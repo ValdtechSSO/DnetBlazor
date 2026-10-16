@@ -132,7 +132,7 @@ function describeParameter(name, type) {
 const INTERNAL = /(Panel|Host|Pane|Content|PropertyDisplay|Probe)\.razor$/;
 
 const version =
-    (readFileSync(join(repo, "README.md"), "utf8").match(/\*\*Current version:\*\*\s*(\d+\.\d+\.\d+)/) ?? [])[1]
+    (readFileSync(join(repo, "README.md"), "utf8").match(/\*\*Current version:\*\*\s*(\d+\.\d+\.\d+(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?)/) ?? [])[1]
     ?? "unknown";
 
 // ------------------------------------------------- global token resolution

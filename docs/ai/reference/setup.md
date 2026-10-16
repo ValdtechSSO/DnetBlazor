@@ -1,12 +1,12 @@
 # Setup
 
-Dnet.Blazor 6.0.2. Targets .NET 10, works in Blazor WebAssembly and interactive
+Dnet.Blazor 6.0.16-rc.2. Targets .NET 11 RC2, works in Blazor WebAssembly and interactive
 server-side.
 
 ## Install
 
 ```bash
-dotnet add package Dnet.Blazor --version 6.0.2
+dotnet add package Dnet.Blazor --version 6.0.16-rc.2
 ```
 
 Register services in `Program.cs`:

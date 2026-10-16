@@ -2,7 +2,7 @@
 set -euo pipefail
 
 configuration="${DNET_BLAZOR_CONFIGURATION:-Release}"
-runtime_dir="$(cd "$(dirname "$0")/bin/$configuration/net10.0" && pwd)"
+runtime_dir="$(cd "$(dirname "$0")/bin/$configuration/net11.0" && pwd)"
 
 case "$(uname -s)-$(uname -m)" in
   Darwin-arm64) node_rid="darwin-arm64" ;;

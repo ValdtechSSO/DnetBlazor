@@ -1,10 +1,30 @@
 # DnetBlazor
 
-Blazor component library for .NET 10, compatible with Blazor WebAssembly and
+Blazor component library for .NET 11 RC2, compatible with Blazor WebAssembly and
 interactive server-side applications.
 
-**Current version:** 6.0.15. See the [changelog](Changelog.md) for release
+**Current version:** 6.0.16-rc.2. See the [changelog](Changelog.md) for release
 details.
+
+## Building from source
+
+Install the [.NET 11 RC2 SDK](https://dotnet.microsoft.com/download/dotnet/11.0)
+(`11.0.100-rc.2.26504.105`, pinned in `global.json`) and Node.js 22. The library,
+samples and tests target `net11.0` and use the matching RC2 packages.
+Applications consuming this build must also target .NET 11.
+
+```bash
+npm ci --ignore-scripts
+npm run lint:css
+npm run buildDnetBlazor
+dotnet restore DnetBlazorComponents.sln
+dotnet build DnetBlazorComponents.sln --configuration Release --no-restore
+tests/Dnet.Blazor.BrowserTests/install-playwright.sh chromium
+dotnet test DnetBlazorComponents.sln --configuration Release --no-build --no-restore
+```
+
+For browser and visual regression checks against the running sample, see the
+[visual test guide](tests/Dnet.Blazor.BrowserTests/VisualBaseline/README.md).
 
 ## Components
 
@@ -21,7 +41,7 @@ application is available at [datalnet.com](https://www.datalnet.com).
 Install the package:
 
 ```bash
-dotnet add package Dnet.Blazor --version 6.0.15
+dotnet add package Dnet.Blazor --version 6.0.16-rc.2
 ```
 
 Register the services in `Program.cs`:
@@ -63,11 +83,11 @@ Each release ships a machine-readable reference: every component's parameters,
 every styling token, plus setup and theming guides. Plain markdown, so it works
 with Claude, Codex, Cursor, Gemini CLI or anything else that reads project docs.
 
-**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/latest/download/dnet-blazor-agent-reference-6.0.15.zip)**
+**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/download/v6.0.16-rc.2/dnet-blazor-agent-reference-6.0.16-rc.2.zip)**
 — attached to every release.
 
 ```bash
-unzip dnet-blazor-agent-reference-6.0.15.zip -d docs/
+unzip dnet-blazor-agent-reference-6.0.16-rc.2.zip -d docs/
 ```
 
 Then point your agent at it. The archive's `AGENTS-snippet.md` has text you can
@@ -81,6 +101,13 @@ npx degit ValdtechSSO/DnetBlazor/docs/ai/reference docs/dnet-blazor
 
 The reference is a snapshot of the version it ships with — grab the matching one
 when you upgrade the package.
+
+## What's new in 6.0.16-rc.2
+
+- Migrated the library and samples to .NET 11 RC2, with matching ASP.NET Core
+  packages and a pinned SDK shared by local builds, CI and Docker.
+- Updated the component test dependencies for .NET 11 virtualization support.
+- Applications consuming this version must target .NET 11.
 
 ## What's new in 6.0.15
 
