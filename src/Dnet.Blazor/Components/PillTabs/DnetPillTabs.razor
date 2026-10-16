@@ -1,0 +1,172 @@
+@typeparam TValue where TValue : notnull
+@using Dnet.Blazor.Infrastructure.Forms
+@using Microsoft.AspNetCore.Components.Web
+
+<div @attributes="AdditionalAttributes" class="@CssClass" aria-disabled="@(Disabled ? "true" : null)">
+    <dnet-pill-tabs-viewport class="dnet-pill-tabs-viewport">
+        <div class="dnet-pill-tabs-list" role="@(ChildContent is null ? "group" : "tablist")" aria-label="@AriaLabel"
+             aria-orientation="@(ChildContent is null ? null : "horizontal")">
+            @for (var index = 0; index < Items.Count; index++)
+            {
+                var item = Items[index];
+                var selected = index == SelectedIndex;
+                <button @key="item.Value"
+                        type="button"
+                        class="dnet-pill-tabs-tab"
+                        role="@(ChildContent is null ? null : "tab")"
+                        id="@TabId(index)"
+                        aria-selected="@(ChildContent is null ? null : selected ? "true" : "false")"
+                        aria-pressed="@(ChildContent is null ? selected ? "true" : "false" : null)"
+                        aria-controls="@(ChildContent is null ? null : PanelId(index))"
+                        aria-disabled="@(Disabled || item.Disabled ? "true" : "false")"
+                        disabled="@(Disabled || item.Disabled)"
+                        tabindex="@(!Disabled && !item.Disabled && index == FocusableIndex ? 0 : -1)"
+                        @onclick="() => SelectAsync(item)">
+                    <span class="dnet-pill-tabs-label">
+                        @if (ItemTemplate is not null)
+                        {
+                            @ItemTemplate(item)
+                        }
+                        else
+                        {
+                            @item.Label
+                        }
+                    </span>
+                    @if (item.Count is not null)
+                    {
+                        <span class="dnet-pill-tabs-count">@item.Count</span>
+                    }
+                </button>
+            }
+        </div>
+    </dnet-pill-tabs-viewport>
+    @if (ChildContent is not null)
+    {
+        @for (var index = 0; index < Items.Count; index++)
+        {
+            var item = Items[index];
+            <div @key="item.Value"
+                 class="dnet-pill-tabs-panel"
+                 role="tabpanel"
+                 id="@PanelId(index)"
+                 aria-labelledby="@TabId(index)"
+                 hidden="@(index != SelectedIndex)"
+                 tabindex="@(index == SelectedIndex ? 0 : -1)">
+                @if (index == SelectedIndex)
+                {
+                    @ChildContent(item)
+                }
+            </div>
+        }
+    }
+</div>
+
+@code {
+    /// <summary>Gets or sets the tabs in their display order. Values must be unique and non-null.</summary>
+    [Parameter]
+    [EditorRequired]
+    public IReadOnlyList<DnetPillTabItem<TValue>> Items { get; set; } = [];
+
+    /// <summary>Gets or sets the selected value. Omit this parameter to select the first enabled tab automatically.</summary>
+    [Parameter]
+    public TValue? Value { get; set; }
+
+    /// <summary>Raised when the user requests a different selected value. Supports @bind-Value.</summary>
+    [Parameter]
+    public EventCallback<TValue> ValueChanged { get; set; }
+
+    /// <summary>Gets or sets the accessible name of the tab list.</summary>
+    [Parameter]
+    public string AriaLabel { get; set; } = "Tabs";
+
+    /// <summary>Gets or sets whether all tabs are disabled.</summary>
+    [Parameter]
+    public bool Disabled { get; set; }
+
+    /// <summary>Gets or sets whether the tab list fills its container with equally sized tabs.</summary>
+    [Parameter]
+    public bool FullWidth { get; set; }
+
+    /// <summary>Gets or sets custom label content. Counts are rendered separately.</summary>
+    [Parameter]
+    public RenderFragment<DnetPillTabItem<TValue>>? ItemTemplate { get; set; }
+
+    /// <summary>Gets or sets the selected tab's panel content. Only the active panel's content is mounted.</summary>
+    [Parameter]
+    public RenderFragment<DnetPillTabItem<TValue>>? ChildContent { get; set; }
+
+    /// <summary>Gets or sets unmatched HTML attributes, including class, style, id and dir, on the component root.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private readonly string _idPrefix = $"dnet-pill-tabs-{Guid.NewGuid():N}";
+    private bool _valueProvided;
+    private bool _hasInternalValue;
+    private TValue? _internalValue;
+
+    private string CssClass => DnetAttributeUtilities.CombineClassNames(AdditionalAttributes,
+        FullWidth ? "dnet-pill-tabs dnet-pill-tabs-full-width" : "dnet-pill-tabs");
+
+    private int FirstEnabledIndex => FindIndex(item => !item.Disabled);
+    private int SelectedIndex => FindIndex(item => !item.Disabled &&
+        (_valueProvided || _hasInternalValue) &&
+        EqualityComparer<TValue>.Default.Equals(item.Value, _valueProvided ? Value! : _internalValue!));
+    private int FocusableIndex => SelectedIndex >= 0 ? SelectedIndex : FirstEnabledIndex;
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        // A supplied value remains controlled during partial parameter updates.
+        _valueProvided |= parameters.TryGetValue<TValue?>(nameof(Value), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    protected override void OnParametersSet()
+    {
+        ArgumentNullException.ThrowIfNull(Items);
+        var values = new HashSet<TValue>();
+        foreach (var item in Items)
+        {
+            if (item.Value is null || !values.Add(item.Value))
+            {
+                throw new ArgumentException("DnetPillTabs requires unique, non-null item values.", nameof(Items));
+            }
+        }
+
+        if (!_valueProvided && SelectedIndex < 0)
+        {
+            var index = FirstEnabledIndex;
+            _hasInternalValue = index >= 0;
+            _internalValue = index >= 0 ? Items[index].Value : default;
+        }
+    }
+
+    private int FindIndex(Func<DnetPillTabItem<TValue>, bool> predicate)
+    {
+        for (var index = 0; index < Items.Count; index++)
+        {
+            if (predicate(Items[index])) return index;
+        }
+        return -1;
+    }
+
+    private string TabId(int index) => $"{_idPrefix}-tab-{index}";
+    private string PanelId(int index) => $"{_idPrefix}-panel-{index}";
+
+    private async Task SelectAsync(DnetPillTabItem<TValue> item)
+    {
+        var index = SelectedIndex;
+        if (Disabled || item.Disabled ||
+            (index >= 0 && EqualityComparer<TValue>.Default.Equals(Items[index].Value, item.Value)))
+        {
+            return;
+        }
+
+        if (!_valueProvided)
+        {
+            _internalValue = item.Value;
+            _hasInternalValue = true;
+        }
+
+        await ValueChanged.InvokeAsync(item.Value);
+    }
+}

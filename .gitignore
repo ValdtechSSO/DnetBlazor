@@ -88,11 +88,7 @@ datalnet_com.key
 
 .npmrc
 
-.vscode/launch.json
-
 .vscode/settings.json
-
-.vscode/tasks.json
 
 src/.DS_Store
 

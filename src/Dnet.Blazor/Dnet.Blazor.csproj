@@ -10,14 +10,15 @@
 		<Description>Set of Components for Blazor Framework</Description>
 		<Copyright>Datalnet</Copyright>
 		<PackageTags>Blazor-Components-Datalnet</PackageTags>
-		<PackageVersion>6.0.16-rc.2</PackageVersion>
+		<PackageVersion>6.0.17-rc.2</PackageVersion>
 		<PackageProjectUrl>https://datalnet.com/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ValdtechSSO/DnetBlazor</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
-			- Migrated the library, samples and tests to .NET 11 RC2.
-			- Requires .NET 11 and Microsoft.AspNetCore.Components 11.0.0-rc.2.26504.105 or later.
-			- Pinned the RC2 SDK and aligned CI, Docker and publish profiles.
+			- Added DnetPillTabs with optional counts, selection binding, keyboard navigation and RTL support.
+			- Added horizontal scrolling with hidden scrollbars and adaptive edge fades.
+			- Added a sample, component documentation and simultaneous VS Code launch profiles.
+			- Targets .NET 11 RC2.
 		</PackageReleaseNotes>
 	</PropertyGroup>
 

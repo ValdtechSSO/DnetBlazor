@@ -127,7 +127,7 @@
     {
         AppName = "Datalnet Blazor Components";
         AppDescription = "";
-        AppVersion = "v.6.0.16-rc.2";
+        AppVersion = "v.6.0.17-rc.2";
         Title = "Ready to eat";
         UserName = "admin@datalnet.com";
         PersonName = "Adrian Mustelier";
@@ -460,6 +460,17 @@
                 Rights = new List<string> {
                     "CanReadDashboard"
                 },
+            },
+            new NavigationMenu {
+                MenuId = 40,
+                Link = "/PillTabs",
+                ParentId = 0,
+                Text = "Pill Tabs",
+                MinifiedText = "PT",
+                IconClass = "",
+                Children = new List<NavigationMenu>(),
+                IsNode = true,
+                Rights = new List<string> { "CanReadDashboard" },
             },
             new NavigationMenu {
                 MenuId = 11,

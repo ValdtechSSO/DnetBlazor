@@ -1,0 +1,82 @@
+@page "/PillTabs"
+@using Dnet.Blazor.Components.PillTabs
+
+<div class="container-fluid" style="padding-top: 10px;">
+    <div class="dnet-page-content-left-margin dnet-m-t-20">
+        <h1 class="dnet-app-comp-name">Pill Tabs</h1>
+        <p>Pestañas compactas con contadores opcionales. Usa las flechas, Inicio y Fin para navegar.</p>
+
+        <section class="dnet-m-t-20" aria-labelledby="pill-tabs-reference-title">
+            <h2 id="pill-tabs-reference-title" style="font-size: 1rem;">Como en la referencia</h2>
+            <div data-dnet-theme="base" style="padding: 24px; border-radius: 12px; background: #f1f3f8; max-width: 480px;">
+                <DnetPillTabs Items="_statuses" @bind-Value="_status" AriaLabel="Estado de solicitudes"
+                              id="pill-tabs-reference"
+                              style="--dnet-pill-tabs-background: #fff; --dnet-pill-tabs-selected-background: #3855ff; --dnet-pill-tabs-selected-foreground: #fff; --dnet-pill-tabs-foreground: #586581; --dnet-pill-tabs-badge-background: #eff1f5;">
+                    <ChildContent Context="tab">
+                        <p style="margin: 8px 0 0; color: #586581;" id="pill-tabs-selected-status">Mostrando: @tab.Label</p>
+                    </ChildContent>
+                </DnetPillTabs>
+            </div>
+        </section>
+
+        <section class="dnet-m-t-20" aria-labelledby="pill-tabs-theme-title">
+            <h2 id="pill-tabs-theme-title" style="font-size: 1rem;">Tema actual, ancho completo y una opción deshabilitada</h2>
+            <div style="max-width: 560px;">
+                <DnetPillTabs Items="_settings" FullWidth="true" AriaLabel="Configuración" id="pill-tabs-settings">
+                    <ChildContent Context="tab">
+                        <p>@tab.Label: contenido de la pestaña activa.</p>
+                    </ChildContent>
+                </DnetPillTabs>
+            </div>
+        </section>
+
+        <section class="dnet-m-t-20" aria-labelledby="pill-tabs-overflow-title">
+            <h2 id="pill-tabs-overflow-title" style="font-size: 1rem;">Desplazamiento sin barra y difuminado en los extremos</h2>
+            <p>Desliza horizontalmente: el difuminado indica dónde quedan más opciones.</p>
+            <div style="max-width: 260px; margin-bottom: 16px;">
+                <DnetPillTabs Items="_statuses" AriaLabel="Estado con desplazamiento" id="pill-tabs-overflow" />
+            </div>
+            <p>La misma lista en dirección RTL:</p>
+            <div style="max-width: 260px;">
+                <DnetPillTabs Items="_statuses" AriaLabel="Estado en RTL" dir="rtl" id="pill-tabs-rtl" />
+            </div>
+        </section>
+
+        <section class="dnet-m-t-20" aria-labelledby="pill-tabs-controlled-title">
+            <h2 id="pill-tabs-controlled-title" style="font-size: 1rem;">Selección controlada y cambios de los contadores</h2>
+            <div class="dnet-m-b-10">
+                <button type="button" class="dnet-button" @onclick="SelectAll" id="pill-tabs-select-all">Seleccionar Todos</button>
+                <button type="button" class="dnet-button" @onclick="AddPending" id="pill-tabs-add-pending">Añadir pendiente</button>
+            </div>
+            <DnetPillTabs Items="_statuses" @bind-Value="_status" AriaLabel="Estado sincronizado" id="pill-tabs-synchronized" />
+            <p>Selección compartida: @_status</p>
+        </section>
+    </div>
+</div>
+
+@code {
+    private string _status = "pending";
+    private IReadOnlyList<DnetPillTabItem<string>> _statuses =
+    [
+        new("pending", "Pendientes", 1),
+        new("approved", "Aprobados", 2),
+        new("all", "Todos", 3)
+    ];
+
+    private readonly IReadOnlyList<DnetPillTabItem<string>> _settings =
+    [
+        new("general", "General"),
+        new("notifications", "Notificaciones", 0),
+        new("restricted", "Restringido", Disabled: true),
+        new("history", "Historial", 12)
+    ];
+
+    private void SelectAll() => _status = "all";
+
+    private void AddPending()
+    {
+        _statuses = _statuses.Select(tab => tab.Value is "pending" or "all"
+            ? tab with { Count = tab.Count + 1 }
+            : tab).ToArray();
+    }
+}

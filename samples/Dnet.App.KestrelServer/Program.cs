@@ -3,10 +3,14 @@ using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.ConfigureKestrel(serverOptions =>
+// Let local launch profiles choose their port; the container listens on port 80.
+if (!builder.Environment.IsDevelopment())
 {
-    serverOptions.Listen(IPAddress.Any, 80, x => x.Protocols = HttpProtocols.Http1AndHttp2AndHttp3);
-});
+    builder.WebHost.ConfigureKestrel(serverOptions =>
+    {
+        serverOptions.Listen(IPAddress.Any, 80, x => x.Protocols = HttpProtocols.Http1AndHttp2AndHttp3);
+    });
+}
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

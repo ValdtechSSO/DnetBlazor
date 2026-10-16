@@ -1,5 +1,20 @@
 # Changelog for Blazor Library
 
+## Version 6.0.17-rc.2 (October 2026)
+
+- PillTabs hides horizontal scrollbars and fades only the edges with hidden
+  options, updating on scroll, resize and content changes in LTR and RTL.
+- Added `DnetPillTabs<TValue>` and `DnetPillTabItem<TValue>`: rounded tabs with
+  optional counts, two-way selection binding, disabled items, custom label and
+  panel templates, full-width layout and horizontal overflow. Keyboard navigation
+  supports Left/Right, Home and End, including inherited RTL direction.
+- Added the `/PillTabs` sample and twelve public styling tokens that inherit
+  correctly from root, container and instance scopes and adapt to existing themes.
+
+- Added VS Code launch profiles for ClientSide and KestrelServer, including a
+  compound launch that builds once and starts both projects. The development
+  Kestrel host now respects the configured local port.
+
 ## Version 6.0.16-rc.2 (October 2026)
 
 - Migrated the library, samples and test projects to .NET 11 RC2 (`net11.0`),

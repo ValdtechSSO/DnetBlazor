@@ -3,7 +3,7 @@
 Blazor component library for .NET 11 RC2, compatible with Blazor WebAssembly and
 interactive server-side applications.
 
-**Current version:** 6.0.16-rc.2. See the [changelog](Changelog.md) for release
+**Current version:** 6.0.17-rc.2. See the [changelog](Changelog.md) for release
 details.
 
 ## Building from source
@@ -26,22 +26,38 @@ dotnet test DnetBlazorComponents.sln --configuration Release --no-build --no-res
 For browser and visual regression checks against the running sample, see the
 [visual test guide](tests/Dnet.Blazor.BrowserTests/VisualBaseline/README.md).
 
+## Running the samples in VS Code
+
+With the .NET SDK, Node.js, C# extension and Chrome installed, run `npm ci --ignore-scripts`
+once. Select **Dnet - ClientSide + KestrelServer** in Run and Debug and press **F5**.
+The compound configuration builds the library assets and solution once, then starts
+both sample projects:
+
+- ClientSide: `http://127.0.0.1:5101` (Blazor WebAssembly debugging in Chrome).
+- KestrelServer: `http://localhost:62297`.
+
+Stopping either session stops both. Each project also has an individual launch
+configuration. Stop any sample already running on these ports before launching.
+
 ## Components
 
 The library includes data-entry, navigation, overlay and data-display
 components, including Grid, PickList, List, DoubleList, Select, Autocomplete,
-Form, DatePicker, TimePicker, Slider, Badge, Tree, Tabs, Toast, Tooltip and
+Form, DatePicker, TimePicker, Slider, Badge, Tree, Tabs, PillTabs, Toast, Tooltip and
 Overlay.
 
 Runnable examples for every component live in [`samples/`](samples/). The demo
 application is available at [datalnet.com](https://www.datalnet.com).
+
+[`DnetPillTabs`](docs/pill-tabs.md) provides rounded tabs with optional counters,
+two-way value binding and keyboard navigation. Its sample is available at `/PillTabs`.
 
 ## Installation
 
 Install the package:
 
 ```bash
-dotnet add package Dnet.Blazor --version 6.0.16-rc.2
+dotnet add package Dnet.Blazor --version 6.0.17-rc.2
 ```
 
 Register the services in `Program.cs`:
@@ -83,11 +99,11 @@ Each release ships a machine-readable reference: every component's parameters,
 every styling token, plus setup and theming guides. Plain markdown, so it works
 with Claude, Codex, Cursor, Gemini CLI or anything else that reads project docs.
 
-**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/download/v6.0.16-rc.2/dnet-blazor-agent-reference-6.0.16-rc.2.zip)**
+**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/download/v6.0.17-rc.2/dnet-blazor-agent-reference-6.0.17-rc.2.zip)**
 — attached to every release.
 
 ```bash
-unzip dnet-blazor-agent-reference-6.0.16-rc.2.zip -d docs/
+unzip dnet-blazor-agent-reference-6.0.17-rc.2.zip -d docs/
 ```
 
 Then point your agent at it. The archive's `AGENTS-snippet.md` has text you can
@@ -101,6 +117,13 @@ npx degit ValdtechSSO/DnetBlazor/docs/ai/reference docs/dnet-blazor
 
 The reference is a snapshot of the version it ships with — grab the matching one
 when you upgrade the package.
+
+## What's new in 6.0.17-rc.2
+
+- Added `DnetPillTabs` with optional counts, selection binding, keyboard
+  navigation, RTL support, label templates and content panels.
+- Long tab lists hide the scrollbar and fade the edges that contain more options.
+- Added a sample and compound VS Code launch configuration for both sample projects.
 
 ## What's new in 6.0.16-rc.2
 

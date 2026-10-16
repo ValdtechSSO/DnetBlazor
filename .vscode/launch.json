@@ -1,0 +1,88 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Dnet - ClientSide",
+      "type": "blazorwasm",
+      "request": "launch",
+      "preLaunchTask": "build-dnet-samples",
+      "cwd": "${workspaceFolder}/samples/Dnet.ClientSide",
+      "projectPath": "${workspaceFolder}/samples/Dnet.ClientSide/Dnet.App.ClientSide.csproj",
+      "url": "http://127.0.0.1:5101",
+      "browser": "chrome",
+      "webRoot": "${workspaceFolder}/samples/Dnet.ClientSide/wwwroot",
+      "dotNetConfig": {
+        "args": [
+          "run",
+          "--no-build",
+          "--no-launch-profile",
+          "--urls",
+          "http://127.0.0.1:5101"
+        ]
+      }
+    },
+    {
+      "name": "Dnet - KestrelServer",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-dnet-samples",
+      "program": "${workspaceFolder}/samples/Dnet.App.KestrelServer/bin/Debug/net11.0/Dnet.App.KestrelServer.dll",
+      "cwd": "${workspaceFolder}/samples/Dnet.App.KestrelServer",
+      "args": [],
+      "stopAtEntry": false,
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://localhost:62297"
+      }
+    },
+    {
+      "name": "Dnet - ClientSide (ya compilado)",
+      "type": "blazorwasm",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/samples/Dnet.ClientSide",
+      "projectPath": "${workspaceFolder}/samples/Dnet.ClientSide/Dnet.App.ClientSide.csproj",
+      "url": "http://127.0.0.1:5101",
+      "browser": "chrome",
+      "webRoot": "${workspaceFolder}/samples/Dnet.ClientSide/wwwroot",
+      "dotNetConfig": {
+        "args": [
+          "run",
+          "--no-build",
+          "--no-launch-profile",
+          "--urls",
+          "http://127.0.0.1:5101"
+        ]
+      },
+      "presentation": {
+        "hidden": true
+      }
+    },
+    {
+      "name": "Dnet - KestrelServer (ya compilado)",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/samples/Dnet.App.KestrelServer/bin/Debug/net11.0/Dnet.App.KestrelServer.dll",
+      "cwd": "${workspaceFolder}/samples/Dnet.App.KestrelServer",
+      "args": [],
+      "stopAtEntry": false,
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://localhost:62297"
+      },
+      "presentation": {
+        "hidden": true
+      }
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Dnet - ClientSide + KestrelServer",
+      "configurations": [
+        "Dnet - ClientSide (ya compilado)",
+        "Dnet - KestrelServer (ya compilado)"
+      ],
+      "preLaunchTask": "build-dnet-samples",
+      "stopAll": true
+    }
+  ]
+}

@@ -1,0 +1,160 @@
+.dnet-pill-tabs {
+    --_background: var(--dnet-pill-tabs-background, var(--dnet-sys-surface));
+    --_foreground: var(--dnet-pill-tabs-foreground, var(--dnet-sys-on-surface));
+    --_selected-background: var(--dnet-pill-tabs-selected-background, var(--dnet-sys-primary-emphasis));
+    --_selected-foreground: var(--dnet-pill-tabs-selected-foreground, var(--dnet-sys-on-primary));
+    --_hover-background: var(--dnet-pill-tabs-hover-background, var(--dnet-sys-state-hover));
+    --_badge-background: var(--dnet-pill-tabs-badge-background, var(--dnet-sys-surface-hover));
+    --_badge-selected-background: var(--dnet-pill-tabs-badge-selected-background, color-mix(in srgb, currentColor 22%, transparent));
+    --_radius: var(--dnet-pill-tabs-radius, var(--dnet-sys-radius-pill));
+    --_padding: var(--dnet-pill-tabs-padding, var(--dnet-sys-space-1));
+    --_tab-height: var(--dnet-pill-tabs-tab-height, var(--dnet-sys-control-height-sm));
+    --_font-size: var(--dnet-pill-tabs-font-size, var(--dnet-sys-text-md));
+    --_shadow: var(--dnet-pill-tabs-shadow, var(--dnet-sys-elevation-1));
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--dnet-sys-space-3);
+    inline-size: fit-content;
+    max-inline-size: 100%;
+    min-inline-size: 0;
+    box-sizing: border-box;
+    font-family: var(--dnet-sys-font);
+}
+
+.dnet-pill-tabs-viewport {
+    display: block;
+    inline-size: fit-content;
+    max-inline-size: 100%;
+    min-inline-size: 0;
+    border-radius: var(--_radius);
+    background: var(--_background);
+    box-shadow: var(--_shadow);
+}
+
+.dnet-pill-tabs-list {
+    --_fade-left: 0px;
+    --_fade-right: 0px;
+    display: flex;
+    align-items: center;
+    gap: var(--dnet-sys-space-1);
+    inline-size: fit-content;
+    max-inline-size: 100%;
+    min-inline-size: 0;
+    padding: var(--_padding);
+    box-sizing: border-box;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+    scroll-padding-inline: calc(var(--dnet-sys-space-5) + var(--_padding));
+    border-radius: var(--_radius);
+    background: var(--_background);
+    mask-image: linear-gradient(to right, transparent, currentColor var(--_fade-left),
+        currentColor calc(100% - var(--_fade-right)), transparent);
+}
+
+.dnet-pill-tabs-list::-webkit-scrollbar {
+    display: none;
+}
+
+.dnet-pill-tabs-overflow-left > .dnet-pill-tabs-list {
+    --_fade-left: var(--dnet-sys-space-5);
+}
+
+.dnet-pill-tabs-overflow-right > .dnet-pill-tabs-list {
+    --_fade-right: var(--dnet-sys-space-5);
+}
+
+.dnet-pill-tabs-tab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--dnet-sys-space-2);
+    flex: 0 0 auto;
+    min-block-size: var(--_tab-height);
+    min-inline-size: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: var(--dnet-sys-space-1) var(--dnet-sys-space-3);
+    border: 0;
+    border-radius: var(--_radius);
+    background: var(--dnet-sys-transparent);
+    color: var(--_foreground);
+    font: inherit;
+    font-size: var(--_font-size);
+    font-weight: 700;
+    line-height: 1.25;
+    text-align: center;
+    white-space: nowrap;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: background-color var(--dnet-sys-motion-fast), color var(--dnet-sys-motion-fast);
+}
+
+.dnet-pill-tabs-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    min-inline-size: 20px;
+    block-size: 20px;
+    box-sizing: border-box;
+    padding-inline: 5px;
+    border-radius: var(--_radius);
+    background: var(--_badge-background);
+    font-size: calc(var(--_font-size) * .85714286);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+}
+
+.dnet-pill-tabs-tab:hover:not(:disabled):not([aria-selected="true"]):not([aria-pressed="true"]) {
+    background: var(--_hover-background);
+}
+
+.dnet-pill-tabs-tab[aria-selected="true"],
+.dnet-pill-tabs-tab[aria-pressed="true"] {
+    background: var(--_selected-background);
+    color: var(--_selected-foreground);
+}
+
+.dnet-pill-tabs-tab[aria-selected="true"] .dnet-pill-tabs-count,
+.dnet-pill-tabs-tab[aria-pressed="true"] .dnet-pill-tabs-count {
+    background: var(--_badge-selected-background);
+}
+
+.dnet-pill-tabs-tab:focus-visible,
+.dnet-pill-tabs-panel:focus-visible {
+    outline: 2px solid var(--dnet-sys-focus-ring);
+    outline-offset: 2px;
+}
+
+.dnet-pill-tabs-tab:disabled {
+    color: var(--dnet-sys-state-disabled-fg);
+    cursor: not-allowed;
+}
+
+.dnet-pill-tabs-panel {
+    inline-size: 100%;
+    min-inline-size: 0;
+}
+
+.dnet-pill-tabs-panel[hidden] {
+    display: none;
+}
+
+/* Width variants follow the base rules so they can override intrinsic sizing. */
+.dnet-pill-tabs-full-width,
+.dnet-pill-tabs-full-width > .dnet-pill-tabs-viewport,
+.dnet-pill-tabs-full-width > .dnet-pill-tabs-viewport > .dnet-pill-tabs-list {
+    inline-size: 100%;
+}
+
+.dnet-pill-tabs-full-width > .dnet-pill-tabs-viewport > .dnet-pill-tabs-list > .dnet-pill-tabs-tab {
+    flex: 1 0 auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dnet-pill-tabs-tab {
+        transition: none;
+    }
+}

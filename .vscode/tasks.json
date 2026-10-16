@@ -1,0 +1,48 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build-dnet-assets",
+      "type": "process",
+      "command": "npm",
+      "args": [
+        "run",
+        "buildDnetBlazor"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "build-dnet-solution",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "${workspaceFolder}/DnetBlazorComponents.sln",
+        "--configuration",
+        "Debug",
+        "--disable-build-servers",
+        "/property:GenerateFullPaths=true"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "build-dnet-samples",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "build-dnet-assets",
+        "build-dnet-solution"
+      ],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}
