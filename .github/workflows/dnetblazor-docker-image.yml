@@ -41,7 +41,7 @@ jobs:
             ss -ltn '( sport = :5001 )' || true
             docker inspect --format 'Proxy image={{.Config.Image}} mounts={{range .Mounts}}{{.Source}} -> {{.Destination}}; {{end}}' docker-webproxy-1
             docker exec docker-webproxy-1 sh -c 'ls -1 /app/appsettings*.json'
-            docker exec docker-webproxy-1 cat /app/appsettings.json | python3 -c '
+            docker exec docker-webproxy-1 cat /app/appsettings.Production.json | python3 -c '
             import json, sys
             data=json.load(sys.stdin)
             proxy=data.get("ReverseProxy", {})
