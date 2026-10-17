@@ -24,7 +24,7 @@
             <Footer>@S["Tooltip.CustomContentA300msPause"]</Footer>
         </DemoCard>
     </div>
-    <div class="tooltip-keyboard-note"><span aria-hidden="true">⌨</span><p><strong>@S["Tooltip.TryItWithYourKeyboard"]</strong> @S["Tooltip.TabToAnyExampleToRevealItsHint"]</p></div>
+    <div class="tooltip-keyboard-note"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" focusable="false" style="flex-shrink:0"><rect x="2" y="5" width="20" height="14" rx="2" /><path d="M6 9h2m3 0h2m3 0h2M6 12h2m3 0h2m3 0h2M7 15h10" /></svg><p><strong>@S["Tooltip.TryItWithYourKeyboard"]</strong> @S["Tooltip.TabToAnyExampleToRevealItsHint"]</p></div>
 </DemoPage>
 
 @code {
@@ -49,8 +49,8 @@
             _references[index] = TooltipService.Show<TestTooltipContent>(config, new Dictionary<string, object> { ["Title"] = "Taylor Morgan" }, target);
         else
         {
-            config.Text = index == 0 ? "Helpful context, right where you need it." : "A little patience reveals this extra detail.";
-            _references[index] = TooltipService.Show<SampleTooltipText>(config, new Dictionary<string, object> { ["Text"] = config.Text }, target);
+            var text = index == 0 ? "Helpful context, right where you need it." : "A little patience reveals this extra detail.";
+            _references[index] = TooltipService.Show<SampleTooltipText>(config, new Dictionary<string, object> { ["Text"] = text }, target);
         }
     }
     private void HandleKey(int index, KeyboardEventArgs args) { if (args.Key == "Escape") CloseTooltip(index); }
