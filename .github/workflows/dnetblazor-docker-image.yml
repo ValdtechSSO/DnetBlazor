@@ -17,6 +17,7 @@ on:
           - reserve
           - preview
           - apply
+          - finish
 
 env:
   REGISTRY: ghcr.io
@@ -37,7 +38,7 @@ jobs:
           username: ${{ secrets.SSH_REMOTE_USER }}
           password: ${{ secrets.SSH_REMOTE_PASSWORD }}
           port: ${{ secrets.SSH_REMOTE_PORT }}
-          source: tools/deployment-repair/recover_soccer_worker.py,tools/deployment-repair/reserve_soccer_worker_ip.py,tools/deployment-repair/allocate_proxy_ips.py,tools/deployment-repair/network-reservations.baseline.json
+          source: tools/deployment-repair/recover_soccer_worker.py,tools/deployment-repair/finish_soccer_recovery.py,tools/deployment-repair/reserve_soccer_worker_ip.py,tools/deployment-repair/allocate_proxy_ips.py,tools/deployment-repair/network-reservations.baseline.json
           target: /tmp/dnet-soccer-recovery-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Revalidate and recover only the soccer worker
         uses: appleboy/ssh-action@v1.2.5
@@ -58,6 +59,7 @@ jobs:
               reserve) python3 reserve_soccer_worker_ip.py ;;
               preview) python3 recover_soccer_worker.py --baseline network-reservations.baseline.json ;;
               apply) python3 recover_soccer_worker.py --baseline network-reservations.baseline.json --apply ;;
+              finish) python3 finish_soccer_recovery.py ;;
               *) exit 1 ;;
             esac
 
