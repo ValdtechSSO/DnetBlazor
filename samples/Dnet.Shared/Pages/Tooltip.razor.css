@@ -1,0 +1,10 @@
+.tooltip-stage { display: grid; place-items: center; min-height: 144px; }
+.tooltip-trigger { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; gap: 8px; max-width: 100%; min-height: 40px; padding: 9px 14px; border: 1px solid var(--dnet-sys-border); border-radius: var(--dnet-sys-radius-pill); background: var(--dnet-sys-surface-raised); color: var(--dnet-sys-on-surface); font: inherit; font-size: var(--dnet-sys-text-sm); font-weight: 500; line-height: 1.5; text-align: start; cursor: help; }
+.tooltip-trigger:hover { background: var(--dnet-sys-state-hover); }
+.tooltip-trigger:focus-visible { box-shadow: 0 0 0 2px var(--dnet-sys-focus-ring); }
+.tooltip-trigger svg { flex: 0 0 20px; }
+.tooltip-trigger-avatar { display: grid; place-items: center; flex: 0 0 24px; width: 24px; height: 24px; border-radius: var(--dnet-sys-radius-pill); background: var(--dnet-sys-state-selected); color: var(--dnet-sys-on-surface-emphasis); font-size: var(--dnet-sys-text-xs); font-weight: 600; }
+.tooltip-keyboard-note { display: flex; align-items: flex-start; gap: 12px; margin-block-start: 28px; padding-block-start: 24px; border-block-start: 1px solid var(--dnet-sys-border); color: var(--dnet-sys-on-surface-muted); }
+.tooltip-keyboard-note > span { font-size: var(--dnet-sys-text-xl); line-height: 1.4; }
+.tooltip-keyboard-note p { max-width: 720px; margin: 0; font-size: var(--dnet-sys-text-sm); line-height: 1.7; }
+.tooltip-keyboard-note strong { color: var(--dnet-sys-on-surface); font-weight: 500; }

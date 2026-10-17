@@ -1,10 +1,12 @@
 /*! Sass DatePickerWeekRaw (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 .dnet-datepickerweek-raw-content {
   --_week-raw-day-size: var(--dnet-datepickerweekca-raw-day-height, var(--dnet-calendar-day-height, 40px));
+  --_week-raw-background: var(--dnet-calendar-background, var(--dnet-sys-surface-raised));
 
   width: 100%;
+  border-radius: var(--dnet-sys-radius-lg);
   box-shadow: none;
-  background: var(--dnet-sys-surface);
+  background: var(--_week-raw-background);
   color: var(--dnet-sys-on-surface-emphasis);
 }
 

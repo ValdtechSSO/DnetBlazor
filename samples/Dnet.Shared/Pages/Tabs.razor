@@ -1,84 +1,80 @@
-﻿@page "/Tabs"
+@page "/Tabs"
 @using Dnet.Blazor.Components.Tabs
 @using Dnet.Blazor.Components.Tabs.Infrastructure.Models
 
-<div class="container-fluid" style="padding-top: 10px;">
-	<div class="d-flex dnet-page-content-left-margin dnet-m-t-20">
-		<span class="dnet-m-r-10 dnet-app-comp-name">Tabs</span>
-	</div>
-	<div class="dnet-page-content-left-margin dnet-m-t-20">
-		<div class="row" style="height: calc(100% - 10px)">
-			<div class="col-12" style="height: calc(100% - 0px);">
-				<div style="height: calc(100% - 0px);" class="dnet-page-content-width ">
-					<DnetTabGroup mat-align-tabs="start" OnTabClicked="TabClicked" TabHeaderBorder="false">
-						<DnetTab Label="Tab1">
-							<span>Tab 1</span>
-						</DnetTab>
-						<DnetTab Label="Tab2">
-							<span>Tab 2</span>
-						</DnetTab>
-						<DnetTab Label="Tab3" Disabled="true">
-							<span>Tab 3</span>
-						</DnetTab>
-						<DnetTab Label="Tab4">
-							<span>Tab 4</span>
-						</DnetTab>
-						<DnetTab Label="Tab5">
-							<span>Tab 5</span>
-						</DnetTab>
-						<DnetTab Label="Tab6">
-							<span>Tab 6</span>
-						</DnetTab>
-						<DnetTab Label="Tab7">
-							<span>Tab 7</span>
-						</DnetTab>
-						<DnetTab Label="Tab8">
-							<span>Tab 8</span>
-						</DnetTab>
-						<DnetTab Label="Tab9">
-							<span>Tab 9</span>
-						</DnetTab>
-						<DnetTab Label="Tab10">
-							<span>Tab 10</span>
-						</DnetTab>
-						<DnetTab Label="Tab11">
-							<span>Tab 11</span>
-						</DnetTab>
-						<DnetTab Label="Tab12">
-							<span>Tab 12</span>
-						</DnetTab>
-						<DnetTab Label="Tab13">
-							<span>Tab 13</span>
-						</DnetTab>
-						<DnetTab Label="Tab14">
-							<span>Tab 14</span>
-						</DnetTab>
-						<DnetTab Label="Tab15">
-							<span>Tab 15</span>
-						</DnetTab>
-						<DnetTab Label="Tab16">
-							<span>Tab 16</span>
-						</DnetTab>
-						<DnetTab Label="Tab17">
-							<span>Tab 17</span>
-						</DnetTab>
-						<DnetTab Label="Tab18">
-							<span>Tab 18</span>
-						</DnetTab>
-					</DnetTabGroup>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+<DemoPage Id="demo-tabs" Title="Tabs" Category="Navigation"
+          Description="Keep related views in one workspace, with a clear active section and room for longer navigation." Badge="18 sections">
+    <div class="demo-stack">
+    <DemoCard Id="tabs-workspace" Title="Project workspace" Eyebrow="Scrollable navigation"
+              Description="Choose a section to change the view. Billing is unavailable in this workspace.">
+        <ChildContent>
+            <div class="tabs-stage">
+                <DnetTabGroup mat-align-tabs="start" OnTabClicked="TabClicked" TabHeaderBorder="false">
+                    @foreach (var section in _sections)
+                    {
+                        <DnetTab Label="@section.Title" Disabled="@(section.Title == "Billing")">
+                            <div class="tabs-panel">
+                                <p class="tabs-panel-eyebrow">Northstar workspace</p>
+                                <h3>@section.Title</h3>
+                                <p class="demo-muted">@section.Description</p>
+                                <div class="tabs-metrics">
+                                    <div><span class="demo-info">Project</span><strong>Website launch</strong></div>
+                                    <div><span class="demo-info">Workspace status</span><strong>On track</strong></div>
+                                </div>
+                            </div>
+                        </DnetTab>
+                    }
+                </DnetTabGroup>
+            </div>
+        </ChildContent>
+        <Footer><span class="demo-value" id="tabs-current-label" role="status">Active section: <strong>@_activeSection</strong></span></Footer>
+    </DemoCard>
 
+    <div class="demo-grid">
+        <DemoCard Id="tabs-navigation-guide" Title="Explore every section" Description="Long navigation stays together in a single row.">
+            <p class="demo-muted">Use the arrows at the ends of the tab strip to reveal more sections, then choose the view you need.</p>
+        </DemoCard>
+        <DemoCard Id="tabs-keyboard-guide" Title="Keyboard navigation" Description="Move through available tabs without leaving the keyboard.">
+            <ul class="demo-bullets">
+                <li>Use the arrow keys to move between tabs.</li>
+                <li>Home and End move to the first and last available section.</li>
+                <li>Disabled sections stay visible and cannot be selected.</li>
+            </ul>
+        </DemoCard>
+    </div>
+    </div>
+</DemoPage>
 
 @code {
+    private string _activeSection = "Overview";
 
-	public void TabClicked(TabClikedEventData tabClikedEventData)
-	{
-		var tt = tabClikedEventData.TabId;
-	}
+    private readonly WorkspaceSection[] _sections =
+    [
+        new("Overview", "A shared view of the launch, upcoming milestones and the work that matters this week."),
+        new("Activity", "Follow recent updates, decisions and conversations from the project team."),
+        new("Billing", "Billing is managed by the workspace owner."),
+        new("Members", "See who is collaborating on the launch and how responsibilities are shared."),
+        new("Files", "Keep design assets, documents and project resources together."),
+        new("Tasks", "Review planned work and track the next deliverables."),
+        new("Calendar", "Plan reviews, handoffs and release dates in one place."),
+        new("Messages", "Catch up on the conversations behind the work."),
+        new("Reports", "Explore project progress and recent delivery trends."),
+        new("Milestones", "Check the checkpoints that lead to a successful release."),
+        new("Approvals", "Review the decisions waiting for a team member."),
+        new("Integrations", "Connect the tools used throughout the project."),
+        new("Resources", "Find the people and materials available to the team."),
+        new("Notes", "Capture context, meeting notes and working ideas."),
+        new("Automations", "Review the routines that keep work moving."),
+        new("Permissions", "Understand access across the workspace."),
+        new("Archive", "Browse completed work and previous releases."),
+        new("Settings", "Manage the preferences for this project workspace.")
+    ];
+
+    private void TabClicked(TabClikedEventData change)
+    {
+        if (change.TabId > 0 && change.TabId <= _sections.Length)
+            _activeSection = _sections[change.TabId - 1].Title;
+    }
+
+    private sealed record WorkspaceSection(string Title, string Description);
 }
-
-

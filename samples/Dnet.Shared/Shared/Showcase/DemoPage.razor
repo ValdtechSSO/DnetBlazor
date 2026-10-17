@@ -1,0 +1,27 @@
+<div id="@Id" class="demo-page" data-demo-page="@Title" aria-labelledby="@TitleId">
+    <header class="demo-page-header">
+        <div>
+            <p class="demo-eyebrow">@Category</p>
+            <h1 id="@TitleId" class="demo-page-title">@Title</h1>
+            @if (!string.IsNullOrWhiteSpace(Description))
+            {
+                <p class="demo-page-description">@Description</p>
+            }
+        </div>
+        @if (!string.IsNullOrWhiteSpace(Badge))
+        {
+            <span class="demo-page-badge">@Badge</span>
+        }
+    </header>
+    <div class="demo-page-content">@ChildContent</div>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public string Id { get; set; } = string.Empty;
+    [Parameter, EditorRequired] public string Title { get; set; } = string.Empty;
+    [Parameter] public string Category { get; set; } = "Components";
+    [Parameter] public string Description { get; set; } = string.Empty;
+    [Parameter] public string Badge { get; set; } = string.Empty;
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    private string TitleId => $"{Id}-title";
+}

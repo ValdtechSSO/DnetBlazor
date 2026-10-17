@@ -1,0 +1,5 @@
+.expansion-actions { margin-bottom: 20px; }
+.expansion-answer { max-width: 72ch; font-size: 14px; line-height: 1.7; color: var(--dnet-sys-on-surface-subtle); }
+.expansion-answer p { margin: 0 0 12px; }
+.expansion-answer p:last-child { margin-bottom: 0; }
+.expansion-preference-status { margin: 20px 0 0; }

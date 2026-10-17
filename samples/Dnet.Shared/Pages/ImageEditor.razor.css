@@ -1,0 +1,301 @@
+.image-workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: 40px;
+    align-items: center;
+}
+
+.image-upload-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    min-width: 0;
+    min-height: 360px;
+    padding: 32px 24px;
+    border: 1px dashed var(--dnet-sys-border-strong);
+    border-radius: var(--dnet-sys-radius-lg);
+    background: var(--dnet-sys-state-hover);
+    text-align: center;
+}
+
+.image-upload-symbol,
+.image-tool-symbol {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    color: var(--dnet-sys-primary-strong);
+    background: var(--dnet-sys-state-selected);
+    border-radius: var(--dnet-sys-radius-md);
+}
+
+.image-upload-symbol {
+    width: 64px;
+    height: 64px;
+}
+
+.image-upload-symbol svg {
+    width: 36px;
+    height: 36px;
+}
+
+.image-upload-zone h3,
+.image-workflow h3,
+.image-tool-list h3 {
+    margin: 0;
+    color: var(--dnet-sys-on-surface-emphasis);
+    font-size: var(--dnet-sys-text-lg);
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.image-upload-zone p,
+.image-tool-list p,
+.image-result-empty p,
+.image-steps p {
+    margin: 0;
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-sm);
+    line-height: 1.7;
+}
+
+.image-file-action,
+.image-download {
+    display: inline-flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 40px;
+    max-width: 100%;
+    padding: 8px 20px;
+    overflow: hidden;
+    border: 1px solid var(--dnet-sys-primary-strong);
+    border-radius: var(--dnet-sys-radius-pill);
+    background: var(--dnet-sys-primary-strong);
+    color: var(--dnet-sys-on-primary);
+    font-size: var(--dnet-sys-text-sm);
+    font-weight: 600;
+    line-height: 1.5;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 0;
+}
+
+.image-file-action:hover,
+.image-download:hover {
+    background: var(--dnet-sys-primary-emphasis);
+    border-color: var(--dnet-sys-primary-emphasis);
+}
+
+.image-file-action:focus-within,
+.image-download:focus-visible {
+    outline: 2px solid var(--dnet-sys-primary-strong);
+    outline-offset: 3px;
+}
+
+.image-file-action[aria-disabled="true"] {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.image-file-action ::deep .image-file-input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: inherit;
+}
+
+.image-upload-hint {
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-sm);
+    line-height: 1.6;
+}
+
+.image-demo-action {
+    border-top: 1px solid var(--dnet-sys-border);
+    padding-block-start: 12px;
+    margin-block-start: 4px;
+}
+
+.image-workflow {
+    display: grid;
+    gap: 20px;
+    min-width: 0;
+}
+
+.image-tag {
+    width: fit-content;
+    padding: 5px 10px;
+    color: var(--dnet-sys-on-surface-emphasis);
+    background: var(--dnet-sys-state-selected);
+    border-radius: var(--dnet-sys-radius-pill);
+    font-size: var(--dnet-sys-text-sm);
+    line-height: 1.5;
+}
+
+.image-steps {
+    display: grid;
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.image-steps li {
+    display: flex;
+    gap: 14px;
+    height: auto;
+    padding: 0;
+    white-space: normal;
+    line-height: 1.6;
+}
+
+.image-steps strong {
+    display: block;
+    margin-block-end: 4px;
+    color: var(--dnet-sys-on-surface-emphasis);
+    font-size: var(--dnet-sys-text-sm);
+    font-weight: 600;
+}
+
+.image-step-number {
+    display: grid;
+    place-items: center;
+    flex: 0 0 28px;
+    height: 28px;
+    border: 1px solid var(--dnet-sys-border-strong);
+    border-radius: var(--dnet-sys-radius-pill);
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-sm);
+}
+
+.image-local-note {
+    margin: 0;
+    padding-block-start: 16px;
+    border-top: 1px solid var(--dnet-sys-border);
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-sm);
+    line-height: 1.6;
+}
+
+.image-result-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    min-height: 260px;
+    padding: 32px 20px;
+    border: 1px solid var(--dnet-sys-border);
+    border-radius: var(--dnet-sys-radius-lg);
+    text-align: center;
+}
+
+.image-result-empty svg {
+    width: 48px;
+    height: 48px;
+    color: var(--dnet-sys-on-surface-muted);
+}
+
+.image-result-empty strong {
+    color: var(--dnet-sys-on-surface-emphasis);
+    font-size: var(--dnet-sys-text-md);
+    font-weight: 600;
+}
+
+.image-result-preview {
+    display: grid;
+    place-items: center;
+    min-height: 220px;
+    padding: 20px;
+    overflow: hidden;
+    border: 1px solid var(--dnet-sys-border);
+    border-radius: var(--dnet-sys-radius-lg);
+    background: var(--dnet-sys-state-hover);
+}
+
+.image-result-preview img {
+    display: block;
+    max-width: 100%;
+    max-height: 260px;
+    object-fit: contain;
+}
+
+.image-result-facts {
+    display: grid;
+    gap: 14px;
+    margin: 0;
+}
+
+.image-result-facts div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 6px 20px;
+}
+
+.image-result-facts dt {
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-sm);
+    font-weight: 400;
+}
+
+.image-result-facts dd {
+    min-width: 0;
+    margin: 0;
+    overflow-wrap: anywhere;
+    color: var(--dnet-sys-on-surface-emphasis);
+    font-size: var(--dnet-sys-text-sm);
+    font-weight: 600;
+}
+
+.image-tool-list {
+    display: grid;
+    gap: 28px;
+}
+
+.image-tool-list > div {
+    display: flex;
+    align-items: start;
+    gap: 16px;
+}
+
+.image-tool-symbol {
+    width: 40px;
+    height: 40px;
+}
+
+.image-tool-symbol svg {
+    width: 24px;
+    height: 24px;
+}
+
+.image-tool-list h3 {
+    margin-block-end: 6px;
+    font-size: var(--dnet-sys-text-md);
+}
+
+.image-error {
+    margin: 8px 0 0;
+    color: var(--dnet-sys-danger);
+    font-size: var(--dnet-sys-text-sm);
+    line-height: 1.6;
+}
+
+@media (max-width: 1180px) {
+    .image-workspace {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 28px;
+    }
+}
+
+@media (max-width: 600px) {
+    .image-upload-zone {
+        min-height: 320px;
+        padding: 28px 16px;
+    }
+}

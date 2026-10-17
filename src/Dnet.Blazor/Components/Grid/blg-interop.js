@@ -274,17 +274,9 @@
         },
 
         getHeaderWidth: function (id) {
-
-            let parent = document.getElementById(id);
-            let elements = parent.getElementsByClassName("blg-header-cell blg-header-cell-notpinned");
-
-            let headerWidth = 0;
-
-            for (var i = 0; i < elements.length; i++) {
-                headerWidth = headerWidth + elements[i].clientWidth;
-            }
-
-            return headerWidth;
+            // The complete grid extent includes cell borders and fractional
+            // track sizing, both lost when summing each cell's clientWidth.
+            return document.getElementById(id).scrollWidth;
         },
 
         init: function (dotNetHelper, spacerBefore, spacerAfter, rootMargin = 50) {

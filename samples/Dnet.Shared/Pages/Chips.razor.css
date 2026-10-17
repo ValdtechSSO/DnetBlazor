@@ -1,0 +1,88 @@
+.chips-stage {
+    display: grid;
+    align-content: center;
+    min-height: 108px;
+}
+
+.chips-priority-preview p {
+    margin: 8px 0;
+}
+
+.chips-person {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chips-person-avatar {
+    display: grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    border-radius: var(--dnet-sys-radius-pill);
+    background: var(--dnet-sys-state-selected);
+    color: var(--dnet-sys-on-surface-emphasis);
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.chips-empty p {
+    margin: 8px 0 0;
+}
+
+.chips-disabled {
+    display: inline-block;
+    opacity: 0.5;
+}
+
+.chips-state-row + .chips-state-row {
+    padding-top: 20px;
+    border-top: 1px solid var(--dnet-sys-border);
+}
+
+.chips-sizes {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.chips-size-cell {
+    min-width: 0;
+    padding: 16px;
+    border: 1px solid var(--dnet-sys-border);
+    border-radius: var(--dnet-sys-radius-md);
+}
+
+.chips-size-label {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-sm);
+}
+
+.chips-size-label strong {
+    color: var(--dnet-sys-on-surface-emphasis);
+    font-weight: 600;
+}
+
+.chips-size-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 76px;
+    margin-top: 12px;
+}
+
+@media (max-width: 600px) {
+    .chips-sizes {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .chips-size-cell {
+        padding: 12px;
+    }
+}

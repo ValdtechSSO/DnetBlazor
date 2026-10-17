@@ -13,7 +13,7 @@ public class GridConfigurationService : IGridConfigurationService
         return new GridOptions<Person>()
         {
             HeaderHeight = 60,
-            RowHeight = 40,
+            RowHeight = 56,
             GridClass = "cvs-bl-grid",
             CheckboxSelectionColumn = true,
             SuppressRowClickSelection = true,
@@ -29,7 +29,7 @@ public class GridConfigurationService : IGridConfigurationService
 
     public List<GridColumn<Person>> GetGridColumns()
     {
-        var height = 40;
+        var height = 56;
         var width = 100;
         var canGrow = 1;
 

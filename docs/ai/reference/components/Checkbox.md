@@ -29,7 +29,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-checkbox-border-width` | `1px` |
 | `--dnet-checkbox-checkmark-path` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
 | `--dnet-checkbox-font-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
-| `--dnet-checkbox-size` | `14px` |
+| `--dnet-checkbox-size` | `18px` |
 
 ```css
 :root { --dnet-checkbox-background: /* your value */; }

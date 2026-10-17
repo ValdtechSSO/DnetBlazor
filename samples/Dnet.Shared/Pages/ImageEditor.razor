@@ -1,116 +1,293 @@
 @page "/ImageEditor"
-
-@using System.Drawing
-@using Dnet.App.Shared.Infrastructure.Entities
+@using System.IO
+@using Dnet.Blazor.Components.Button
 @using Dnet.Blazor.Components.ImageEditor
 @using Dnet.Blazor.Components.ImageEditor.Infrastructure.Constants
 @using Dnet.Blazor.Components.ImageEditor.Infrastructure.Enums
-@using System.IO
-@using Dnet.Blazor.Components.Spinner.Infrastructure.Interfaces
+@implements IDisposable
+@inject IHttpClientFactory ClientFactory
 
-@inject ISpinnerService SpinnerService
-
-<div class="container-fluid" style="padding-top: 10px;">
-	<div class="d-flex dnet-m-l-30 dnet-m-t-20">
-        <span class="dnet-m-r-10 dnet-app-comp-name">Image Editor - Experimental</span>
-    </div>
-    <div class="dnet-m-l-30 dnet-m-t-30">
-        <div class="upload-file-container-add">
-            <div class="upload-file d-flex justify-content-center align-items-center">
-                @if (!string.IsNullOrEmpty(_imageUrl))
-                {
-                    <img class="image-preview" src="@_imageUrl" />
-                }
-                <InputFile OnChange="@LoadFiles" multiple class="inputfile" />
-                @if (string.IsNullOrEmpty(_imageUrl))
-                {
-                    <div class="d-flex flex-column justify-content-center align-items-center upload-file-zone">
-                        <span class="lla-no-pic-grey lla-no-pic">
-                        </span>
-                        <span class="upload-text coms-m-t-5">Add Picture</span>
+<DemoPage Id="demo-image-editor" Title="Image Editor" Category="Imágenes y contenido"
+          Description="Encuentra el encuadre, ajusta la orientación y prepara una imagen para compartir. Empieza con un archivo propio o explora el editor con el logo de ejemplo."
+          Badge="Experimental">
+    <DemoCard Id="image-editor-upload-card" Title="Un buen resultado empieza por tu imagen" Eyebrow="01 · Elige y edita"
+              Description="Abre una imagen y trabaja con una vista previa de la selección antes de aplicar los cambios.">
+        <ChildContent>
+            <div class="image-workspace">
+                <div class="image-upload-zone">
+                    <span class="image-upload-symbol" aria-hidden="true">
+                        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="5" width="24" height="22" rx="4" /><circle cx="11" cy="12" r="2.5" /><path d="m5 23 7-7 5 5 4-4 6 6" /></svg>
+                    </span>
+                    <h3>Haz espacio para una nueva imagen</h3>
+                    <p>Selecciona una foto o un recurso gráfico para empezar.</p>
+                    <label class="image-file-action" aria-disabled="@(_isLoading ? "true" : "false")">
+                        <span>@(_isLoading ? "Preparando imagen…" : "Seleccionar imagen")</span>
+                        <InputFile id="image-editor-file" class="image-file-input" OnChange="LoadFiles"
+                                   accept="image/png,image/jpeg,.png,.jpg,.jpeg" disabled="@_isLoading"
+                                   aria-label="Seleccionar una imagen PNG o JPEG" aria-describedby="image-editor-file-help" />
+                    </label>
+                    <span id="image-editor-file-help" class="image-upload-hint">PNG o JPEG · Hasta 15 MB por imagen</span>
+                    <div class="image-demo-action">
+                        <DnetButton id="image-editor-demo" OnClick="LoadDemoImage" disabled="@_isLoading">Probar con el logo</DnetButton>
                     </div>
-                }
+                </div>
+                <aside class="image-workflow" aria-labelledby="image-editor-guide-title">
+                    <span class="image-tag">De principio a fin</span>
+                    <h3 id="image-editor-guide-title">Tu imagen, en tres pasos</h3>
+                    <ol class="image-steps">
+                        <li><span class="image-step-number" aria-hidden="true">1</span><div><strong>Elige el archivo</strong><p>Trabaja con una imagen de tu equipo o con el ejemplo incluido.</p></div></li>
+                        <li><span class="image-step-number" aria-hidden="true">2</span><div><strong>Cuida el encuadre</strong><p>Ajusta la selección, gira o refleja la imagen y comprueba la vista previa.</p></div></li>
+                        <li><span class="image-step-number" aria-hidden="true">3</span><div><strong>Aplica y descarga</strong><p>Confirma con Apply. El resultado aparecerá aquí, listo para guardar.</p></div></li>
+                    </ol>
+                    <p class="image-local-note">La edición se realiza en tu navegador.</p>
+                </aside>
             </div>
-        </div>
-        <span class="upload-text">@_resultInfo</span>
-        <DnetImageEditor ImageContainerHeight="480"
-                         ImageContainerWidth="640"
-                         ImagePreviewHeight="170"
-                         ImagePreviewWidth="170"
-                         ModalDialogHeight="780"
-                         ModalDialogWidth="1024"
-                         MaxFileSizes="@_maxFileSizes"
-                         ImageEditingControls="@(new List<ImageEditorControlType>{
-                                               ImageEditorControlType.Crop,
-                                               ImageEditorControlType.RotateCounterClockWise,
-                                               ImageEditorControlType.RotateClockWise,
-                                               ImageEditorControlType.FlipHorizontal,
-                                               ImageEditorControlType.FlipVertical
-                                           })"
-                         AllowedFormats="@(new List<string>{ ImageFormat.JPEG, ImageFormat.PNG })"
-                         OnImageSelected="OnImageSelected"
-                         OnCancel="OnCancel"
-                         OnEndLoadingImage="EndLoadingImage"
-                         OnStarLoadingImage="StarLoadingImage"
-                         @ref="_imageEditor">
-        </DnetImageEditor>
+        </ChildContent>
+        <Footer>
+            <p id="image-editor-status" class="demo-status" role="status">@_status</p>
+            @if (!string.IsNullOrEmpty(_error))
+            {
+                <p id="image-editor-error" class="image-error" role="alert">@_error</p>
+            }
+        </Footer>
+    </DemoCard>
+
+    <div class="demo-grid">
+        <DemoCard Id="image-editor-result-card" Title="Tu imagen preparada" Eyebrow="02 · Revisa el resultado"
+                  Description="La última edición confirmada se conserva aquí mientras pruebas otro encuadre.">
+            <ChildContent>
+                <div class="demo-stack">
+                    @if (string.IsNullOrEmpty(_imageUrl))
+                    {
+                        <div id="image-editor-result-empty" class="image-result-empty">
+                            <svg aria-hidden="true" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="5" width="24" height="22" rx="4" /><path d="m10 17 4 4 8-9" /></svg>
+                            <strong>El próximo encuadre va aquí</strong>
+                            <p>Aplica los cambios en el editor para ver tu imagen y descargarla.</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="image-result-preview">
+                            <img id="image-editor-result-image" src="@_imageUrl" alt="Resultado de la edición de @_resultName" />
+                        </div>
+                        <dl class="image-result-facts">
+                            <div><dt>Archivo</dt><dd id="image-editor-result-name">@_resultName</dd></div>
+                            <div><dt>Formato</dt><dd id="image-editor-result-format">@(_resultMime == ImageFormat.PNG ? "PNG" : "JPEG")</dd></div>
+                            <div><dt>Tamaño</dt><dd id="image-editor-result-size">@FormatSize(_resultBytes.Length)</dd></div>
+                        </dl>
+                        <div class="demo-actions">
+                            <a id="image-editor-download" class="image-download" href="@_imageUrl" download="@_resultName">Descargar imagen <span aria-hidden="true">↓</span></a>
+                            <DnetButton id="image-editor-reopen" OnClick="ReopenResult" disabled="@_isLoading">Volver a editar</DnetButton>
+                            <DnetButton id="image-editor-clear" OnClick="ClearResult" disabled="@_isLoading">Quitar imagen</DnetButton>
+                        </div>
+                    }
+                </div>
+            </ChildContent>
+            <Footer><span class="demo-info">Cancelar una edición conserva el último resultado que hayas confirmado.</span></Footer>
+        </DemoCard>
+
+        <DemoCard Id="image-editor-tools-card" Title="Pequeños ajustes, otro punto de vista" Eyebrow="Explora las herramientas"
+                  Description="Todo lo necesario para preparar el encuadre desde el mismo espacio de trabajo.">
+            <ChildContent>
+                <div class="image-tool-list">
+                    <div><span class="image-tool-symbol" aria-hidden="true">@CropIcon</span><div><h3>Encuentra la proporción</h3><p>Elige un recorte libre, cuadrado, 4:3 o 16:9. Ajusta su posición y tamaño sobre la imagen.</p></div></div>
+                    <div><span class="image-tool-symbol" aria-hidden="true">@RotateIcon</span><div><h3>Cambia la orientación</h3><p>Gira a izquierda o derecha y refleja en horizontal o vertical para probar otra composición.</p></div></div>
+                    <div><span class="image-tool-symbol" aria-hidden="true">@ZoomIcon</span><div><h3>Acércate al detalle</h3><p>Usa el zoom para trabajar con precisión y la vista previa para comprobar el resultado.</p></div></div>
+                    <div><span class="image-tool-symbol" aria-hidden="true">@ResetIcon</span><div><h3>Prueba con tranquilidad</h3><p>Reset recupera la imagen con la que abriste el editor. Cancel cierra sin sustituir tu resultado.</p></div></div>
+                </div>
+            </ChildContent>
+            <Footer><span class="demo-info">Sin cambios, se conservan los bytes originales. Si editas, el resultado mantiene el formato de la imagen.</span></Footer>
+        </DemoCard>
     </div>
-</div>
+</DemoPage>
+
+<DnetImageEditor @ref="_imageEditor" MaxFileSizes="MaxFileSize"
+                 ImageEditingControls="EditingControls" AllowedFormats="AllowedFormats"
+                 OnImageSelected="OnImageSelected" OnCancel="OnCancel" />
 
 @code {
-
-    private string _imageUrl { get; set; }
-
-    private string _resultInfo { get; set; }
-
-    private DnetImageEditor _imageEditor { get; set; }
-
-    private MemoryStream _pendingStream { get; set; }
-
-    private long _maxFileSizes { get; set; } = 1024 * 1024 * 15;
-
-    private async Task LoadFiles(InputFileChangeEventArgs eventArgs)
+#nullable enable
+    private const long MaxFileSize = DnetImageEditor.DefaultMaxFileSize;
+    private static readonly List<string> AllowedFormats = new() { ImageFormat.JPEG, ImageFormat.PNG };
+    private static readonly List<ImageEditorControlType> EditingControls = new()
     {
-        // The original bytes reach the editor untouched: no downscale, no
-        // re-encode, no base64 on the way in.
-        var imageFile = eventArgs.GetMultipleFiles()[0];
+        ImageEditorControlType.Crop, ImageEditorControlType.RotateCounterClockWise,
+        ImageEditorControlType.RotateClockWise, ImageEditorControlType.FlipHorizontal, ImageEditorControlType.FlipVertical
+    };
 
-        await using var fileStream = imageFile.OpenReadStream(_maxFileSizes);
+    private DnetImageEditor _imageEditor = default!;
+    private MemoryStream? _pendingStream;
+    private byte[] _resultBytes = Array.Empty<byte>();
+    private string _imageUrl = string.Empty;
+    private string _editingName = string.Empty;
+    private string _resultName = string.Empty;
+    private string _resultMime = string.Empty;
+    private string _status = "Todo listo para elegir una imagen.";
+    private string _error = string.Empty;
+    private bool _isLoading;
+    private bool _disposed;
 
-        var memory = new MemoryStream();
+    private async Task LoadFiles(InputFileChangeEventArgs args)
+    {
+        if (_isLoading || _disposed) return;
+        _error = string.Empty;
+        var file = args.File;
+        if (file.Size > MaxFileSize)
+        {
+            ShowError("La imagen supera los 15 MB. Elige un archivo más pequeño.");
+            return;
+        }
 
-        await fileStream.CopyToAsync(memory);
-        memory.Position = 0;
+        var extension = Path.GetExtension(file.Name);
+        var allowedType = file.ContentType.Equals(ImageFormat.PNG, StringComparison.OrdinalIgnoreCase)
+            || file.ContentType.Equals(ImageFormat.JPEG, StringComparison.OrdinalIgnoreCase);
+        var allowedExtension = extension.Equals(".png", StringComparison.OrdinalIgnoreCase)
+            || extension.Equals(".jpg", StringComparison.OrdinalIgnoreCase)
+            || extension.Equals(".jpeg", StringComparison.OrdinalIgnoreCase);
+        if (!allowedType && !(string.IsNullOrEmpty(file.ContentType) && allowedExtension))
+        {
+            ShowError("Ese formato no está admitido. Selecciona una imagen PNG o JPEG.");
+            return;
+        }
+
+        _isLoading = true;
+        _status = "Preparando tu imagen…";
+        MemoryStream? memory = new();
+        try
+        {
+            await using var source = file.OpenReadStream(MaxFileSize);
+            await source.CopyToAsync(memory);
+            var pending = memory;
+            memory = null;
+            await OpenEditor(pending, file.Name);
+        }
+        catch (Exception)
+        {
+            ShowError("No se ha podido abrir la imagen. Comprueba el archivo y vuelve a intentarlo.");
+        }
+        finally
+        {
+            memory?.Dispose();
+            _isLoading = false;
+        }
+    }
+
+    private async Task LoadDemoImage()
+    {
+        if (_isLoading || _disposed) return;
+        _isLoading = true;
+        _error = string.Empty;
+        _status = "Preparando el ejemplo…";
+        try
+        {
+            using var client = ClientFactory.CreateClient("WebHostURL");
+            var bytes = await client.GetByteArrayAsync("_content/Dnet.App.Shared/img/blazor-logo.png");
+            await OpenEditor(new MemoryStream(bytes), "blazor-logo.png");
+        }
+        catch (Exception)
+        {
+            ShowError("No se ha podido cargar el ejemplo. Puedes elegir una imagen de tu equipo.");
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private async Task ReopenResult()
+    {
+        if (_isLoading || _disposed || _resultBytes.Length == 0) return;
+        _isLoading = true;
+        _error = string.Empty;
+        try
+        {
+            await OpenEditor(new MemoryStream(_resultBytes, writable: false), _resultName);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private async Task OpenEditor(MemoryStream memory, string name)
+    {
+        if (_disposed)
+        {
+            memory.Dispose();
+            return;
+        }
+        if (GetMimeType(memory) is null)
+        {
+            memory.Dispose();
+            ShowError("El archivo no contiene una imagen PNG o JPEG válida.");
+            return;
+        }
 
         DisposePendingStream();
-
         _pendingStream = memory;
-
-        await _imageEditor.ShowDialog(memory);
+        _editingName = name;
+        memory.Position = 0;
+        try
+        {
+            await _imageEditor.ShowDialog(memory);
+            _status = "Imagen abierta. Confirma con Apply para guardar el resultado.";
+        }
+        catch (Exception)
+        {
+            DisposePendingStream();
+            ShowError("No se ha podido abrir el editor. Vuelve a seleccionar la imagen.");
+        }
     }
 
     private void OnImageSelected(MemoryStream image)
     {
-        if (image is null) return;
-
-        _imageUrl = $"data:{GetMimeType(image)};base64,{Convert.ToBase64String(image.ToArray())}";
-        _resultInfo = $"{image.Length / 1024d:F0} KB";
-
-        // The editor hands ownership of the result to the caller.
-        _pendingStream = null;
-        image.Dispose();
+        try
+        {
+            if (_disposed) return;
+            var bytes = image.ToArray();
+            var mime = GetMimeType(bytes);
+            if (mime is null)
+            {
+                ShowError("No se ha podido preparar el resultado. Prueba de nuevo con tu imagen.");
+                return;
+            }
+            _resultBytes = bytes;
+            _resultMime = mime;
+            var stem = Path.GetFileNameWithoutExtension(_editingName);
+            if (!stem.EndsWith("-editada", StringComparison.OrdinalIgnoreCase)) stem += "-editada";
+            _resultName = $"{stem}.{(mime == ImageFormat.PNG ? "png" : "jpg")}";
+            _imageUrl = $"data:{mime};base64,{Convert.ToBase64String(bytes)}";
+            _error = string.Empty;
+            _status = "Imagen lista. Puedes descargarla o seguir editando.";
+        }
+        finally
+        {
+            if (ReferenceEquals(image, _pendingStream)) _pendingStream = null;
+            image.Dispose();
+            DisposePendingStream();
+        }
     }
 
-    private void OnCancel() => DisposePendingStream();
-
-    private void StarLoadingImage()
+    private void OnCancel()
     {
-        SpinnerService.Show();
+        DisposePendingStream();
+        _status = _resultBytes.Length > 0
+            ? "Edición cancelada. Tu último resultado sigue disponible."
+            : "Edición cancelada. Puedes elegir otra imagen cuando quieras.";
     }
 
-    private void EndLoadingImage()
+    private void ClearResult()
     {
-        SpinnerService.Hide();
+        _resultBytes = Array.Empty<byte>();
+        _imageUrl = _resultName = _resultMime = _error = string.Empty;
+        _status = "Resultado eliminado. Todo listo para empezar de nuevo.";
+    }
+
+    private void ShowError(string message)
+    {
+        if (_disposed) return;
+        _error = message;
+        _status = "Elige otra imagen para continuar.";
     }
 
     private void DisposePendingStream()
@@ -119,20 +296,34 @@
         _pendingStream = null;
     }
 
-    private static string GetMimeType(MemoryStream image)
+    public void Dispose()
     {
-        var bytes = image.GetBuffer();
-
-        if (image.Length > 8 && bytes[0] == 0x89 && bytes[1] == 0x50 && bytes[2] == 0x4E && bytes[3] == 0x47)
-        {
-            return "image/png";
-        }
-
-        if (image.Length > 12 && bytes[0] == 0x52 && bytes[1] == 0x49 && bytes[8] == 0x57 && bytes[9] == 0x45)
-        {
-            return "image/webp";
-        }
-
-        return "image/jpeg";
+        _disposed = true;
+        DisposePendingStream();
     }
+
+    private static string FormatSize(long bytes) => bytes < 1024 * 1024
+        ? $"{bytes / 1024d:0.#} KB" : $"{bytes / (1024d * 1024d):0.#} MB";
+
+    private static string? GetMimeType(MemoryStream stream)
+    {
+        Span<byte> header = stackalloc byte[8];
+        stream.Position = 0;
+        var length = stream.Read(header);
+        stream.Position = 0;
+        return GetMimeType(header[..length]);
+    }
+
+    private static string? GetMimeType(ReadOnlySpan<byte> bytes)
+    {
+        if (bytes.Length >= 8 && bytes[0] == 0x89 && bytes[1] == 0x50 && bytes[2] == 0x4e && bytes[3] == 0x47
+            && bytes[4] == 0x0d && bytes[5] == 0x0a && bytes[6] == 0x1a && bytes[7] == 0x0a) return ImageFormat.PNG;
+        if (bytes.Length >= 3 && bytes[0] == 0xff && bytes[1] == 0xd8 && bytes[2] == 0xff) return ImageFormat.JPEG;
+        return null;
+    }
+
+    private static RenderFragment CropIcon => @<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 3v14h14M3 7h14v14" /></svg>;
+    private static RenderFragment RotateIcon => @<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 10a8 8 0 1 1 1 7M4 4v6h6" /></svg>;
+    private static RenderFragment ZoomIcon => @<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="6" /><path d="m15 15 6 6M7 10h6M10 7v6" /></svg>;
+    private static RenderFragment ResetIcon => @<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 10a8 8 0 1 1 1 7M4 4v6h6M12 7v5l3 2" /></svg>;
 }

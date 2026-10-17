@@ -14,6 +14,7 @@
 @using Dnet.Blazor.Components.AdminLayout.DesktopNavigation
 @using Dnet.Blazor.Components.Spinner
 @using Dnet.Blazor.Components.AdminLayout.Menu
+@implements IAsyncDisposable
 
 @inject IThemeMessageService<ThemeConfigData> ThemeMessageService
 @inject IJSRuntime JSRuntime
@@ -108,6 +109,10 @@
 
     private const string ThemeStorageKey = "dnet.theme";
     private string _theme = "dark";
+    private IJSObjectReference? _themeModule;
+    private DotNetObjectReference<MainLayout>? _themeReference;
+    private int _themeWatcherId;
+    private bool _disposed;
 
     private List<NavigationMenu> Menus { get; set; }
 
@@ -149,6 +154,9 @@
         }
 
         await JSRuntime.InvokeVoidAsync("dnetinterop.setTheme", _theme);
+        _themeModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Dnet.App.Shared/js/theming-playground.js");
+        _themeReference = DotNetObjectReference.Create(this);
+        _themeWatcherId = await _themeModule.InvokeAsync<int>("watchTheme", _themeReference);
         StateHasChanged();
     }
 
@@ -166,6 +174,36 @@
     }
 
     private static bool IsSupportedTheme(string? theme) => theme is "" or "dark" or "compact" or "high-contrast" or "modern";
+
+    [JSInvokable]
+    public Task OnThemeChanged(string theme)
+    {
+        if (_disposed || !IsSupportedTheme(theme) || _theme == theme)
+        {
+            return Task.CompletedTask;
+        }
+
+        _theme = theme;
+        return InvokeAsync(StateHasChanged);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _disposed = true;
+        if (_themeModule is not null)
+        {
+            try
+            {
+                await _themeModule.InvokeVoidAsync("unwatchTheme", _themeWatcherId);
+                await _themeModule.DisposeAsync();
+            }
+            catch (JSDisconnectedException)
+            {
+            }
+        }
+
+        _themeReference?.Dispose();
+    }
 
     private void SetupTheme()
     {
@@ -205,6 +243,19 @@
                     "CanReadDashboard"
                 },
                 HasImage = true
+            },
+            new NavigationMenu {
+                MenuId = 44,
+                Link = "/Buttons",
+                ParentId = 0,
+                Text = "Buttons",
+                MinifiedText = "Bt",
+                IconClass = "",
+                Children = new List<NavigationMenu>(),
+                IsNode = true,
+                Rights = new List<string> {
+                    "CanReadDashboard"
+                }
             },
              new NavigationMenu {
                 MenuId = 10,

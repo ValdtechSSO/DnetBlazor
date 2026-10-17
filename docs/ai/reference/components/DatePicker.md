@@ -159,7 +159,7 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
-| `--dnet-calendar-background` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
+| `--dnet-calendar-background` | `#ffffff` <br><sub>via `--dnet-sys-surface-raised`</sub> |
 | `--dnet-calendar-comparison-color` | — |
 | `--dnet-calendar-day-disabled-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 38%, transparent)` <br><sub>via `--dnet-sys-state-disabled-fg`</sub> |
 | `--dnet-calendar-day-height` | `40px` |

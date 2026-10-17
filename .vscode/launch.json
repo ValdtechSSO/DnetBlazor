@@ -9,6 +9,7 @@
       "cwd": "${workspaceFolder}/samples/Dnet.ClientSide",
       "projectPath": "${workspaceFolder}/samples/Dnet.ClientSide/Dnet.App.ClientSide.csproj",
       "url": "http://127.0.0.1:5101",
+      "launchBrowser": false,
       "browser": "chrome",
       "webRoot": "${workspaceFolder}/samples/Dnet.ClientSide/wwwroot",
       "dotNetConfig": {
@@ -42,6 +43,7 @@
       "cwd": "${workspaceFolder}/samples/Dnet.ClientSide",
       "projectPath": "${workspaceFolder}/samples/Dnet.ClientSide/Dnet.App.ClientSide.csproj",
       "url": "http://127.0.0.1:5101",
+      "launchBrowser": false,
       "browser": "chrome",
       "webRoot": "${workspaceFolder}/samples/Dnet.ClientSide/wwwroot",
       "dotNetConfig": {

@@ -1,128 +1,62 @@
-﻿@page "/Tooltip"
-
-@using Dnet.App.Shared.Infrastructure.Entities
+@page "/Tooltip"
 @using Dnet.App.Shared.Pages.TooltipContent
-@using Dnet.Blazor.Components.Overlay.Infrastructure.Enums
-@using Dnet.Blazor.Components.Overlay.Infrastructure.Interfaces
-@using Dnet.Blazor.Components.Overlay.Infrastructure.Models
-@using Dnet.Blazor.Components.Overlay.Infrastructure.Services
 @using Dnet.Blazor.Components.Tooltip.Infrastructure.Interfaces
 @using Dnet.Blazor.Components.Tooltip.Infrastructure.Models
-
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Models
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Services
 @inject ITooltipService TooltipService
+@implements IDisposable
 
-
-<div class="container-fluid" style="padding-top: 10px;">
-    <div class="d-flex dnet-m-l-30 dnet-m-t-20">
-        <span class="dnet-m-r-10 dnet-app-comp-name">Tooltip</span>
+<DemoPage Id="demo-tooltip" Title="Tooltip" Category="Components / Feedback" Description="Offer a little more context at just the right moment. Hover over a trigger or reach it with the Tab key." Badge="Pointer & keyboard">
+    <div class="demo-grid-three">
+        <DemoCard Id="tooltip-basic" Title="A useful hint" Eyebrow="01 / Immediate" Description="Short, helpful context that appears as soon as you need it.">
+            <ChildContent><div class="tooltip-stage demo-preview"><button id="tooltip-basic-trigger" @ref="_basicTarget" class="tooltip-trigger" type="button" @onmouseenter="() => SetHover(0, true)" @onmouseleave="() => SetHover(0, false)" @onfocus="() => SetFocus(0, true)" @onblur="() => SetFocus(0, false)" @onkeydown="args => HandleKey(0, args)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 11v6M12 7v1" /></svg><span>Show tooltip</span></button></div></ChildContent>
+            <Footer>Appears immediately · no delay</Footer>
+        </DemoCard>
+        <DemoCard Id="tooltip-delay" Title="Give it a moment" Eyebrow="02 / Delayed" Description="A brief pause keeps hints from appearing as the pointer passes by.">
+            <ChildContent><div class="tooltip-stage demo-preview"><button id="tooltip-delay-trigger" @ref="_delayTarget" class="tooltip-trigger" type="button" @onmouseenter="() => SetHover(1, true)" @onmouseleave="() => SetHover(1, false)" @onfocus="() => SetFocus(1, true)" @onblur="() => SetFocus(1, false)" @onkeydown="args => HandleKey(1, args)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg><span>Show tooltip with delay</span></button></div></ChildContent>
+            <Footer>Waits 500ms · leaving cancels the hint</Footer>
+        </DemoCard>
+        <DemoCard Id="tooltip-component" Title="A richer introduction" Eyebrow="03 / Custom content" Description="Use a small component when a name needs a little more context.">
+            <ChildContent><div class="tooltip-stage demo-preview"><button id="tooltip-component-trigger" @ref="_componentTarget" class="tooltip-trigger" type="button" @onmouseenter="() => SetHover(2, true)" @onmouseleave="() => SetHover(2, false)" @onfocus="() => SetFocus(2, true)" @onblur="() => SetFocus(2, false)" @onkeydown="args => HandleKey(2, args)"><span class="tooltip-trigger-avatar" aria-hidden="true">TM</span><span>Show tooltip with component</span></button></div></ChildContent>
+            <Footer>Custom content · a 300ms pause</Footer>
+        </DemoCard>
     </div>
-
-    <div class="dnet-m-l-30 dnet-m-t-30">
-        <h5>Tooltip sin delay</h5>
-        <div @ref="_tooltipTarget" style="width: 100px; height: 100px; background-color: #4fc3f7; position: absolute; top: 50%; left: 45%; display: flex; align-items: center; justify-content:center"
-             @onmouseenter="ShowTooltip"
-             @onmouseleave="HideTooltip">
-            <span style="color: #FFFFFF">Show tooltip</span>
-        </div>
-    </div>
-
-    <div class="dnet-m-l-30 dnet-m-t-30">
-        <h5>Tooltip con delay de 500ms</h5>
-        <div @ref="_tooltipDelayTarget" style="width: 120px; height: 100px; background-color: #66bb6a; position: absolute; top: 50%; left: 55%; display: flex; align-items: center; justify-content:center; text-align: center"
-             @onmouseenter="ShowTooltipWithDelay"
-             @onmouseleave="HideTooltipWithDelay">
-            <span style="color: #FFFFFF">Show tooltip with delay</span>
-        </div>
-    </div>
-
-    <div class="dnet-m-l-30 dnet-m-t-30">
-        <h5>Tooltip con componente</h5>
-        <div @ref="_tooltipComponentTarget" style="width: 100px; height: 100px; background-color: #4fc3f7; position: absolute; top: 50%; left: 65%; display: flex; align-items: center; justify-content:center; text-align: center"
-             @onmouseenter="ShowTooltipWithComponent"
-             @onmouseleave="HideTooltipWithComponent">
-            <span style="color: #FFFFFF">Show tooltip with component</span>
-        </div>
-    </div>
-</div>
-
+    <div class="tooltip-keyboard-note"><span aria-hidden="true">⌨</span><p><strong>Try it with your keyboard.</strong> Tab to any example to reveal its hint. Press Escape to dismiss it and keep focus on the trigger.</p></div>
+</DemoPage>
 
 @code {
+    private ElementReference _basicTarget;
+    private ElementReference _delayTarget;
+    private ElementReference _componentTarget;
+    private readonly OverlayReference?[] _references = new OverlayReference?[3];
+    private readonly bool[] _hovered = new bool[3];
+    private readonly bool[] _focused = new bool[3];
+    private bool _disposed;
 
-    private ElementReference _tooltipTarget;
-    
-    private ElementReference _tooltipDelayTarget;
-    
-    private ElementReference _tooltipComponentTarget;
-
-    private OverlayReference _tooltipReference;
-
-    private OverlayReference _tooltipDelayReference;
-
-    private OverlayReference _tooltipComponentReference;
-
-    public void ShowTooltip()
+    private void SetHover(int index, bool active) { _hovered[index] = active; UpdateTooltip(index); }
+    private void SetFocus(int index, bool active) { _focused[index] = active; UpdateTooltip(index); }
+    private void UpdateTooltip(int index)
     {
-        var tooltipConfig = new TooltipConfig()
-            {
-                Text = "Tooltip base on Blazor Overlay Library",
-                MaxHeight = "50px",
-                MaxWidth = "400px",
-                MinWidth = "100px",
-                Height = "50px",
-                ShowDelay = 0
-            };
-
-        _tooltipReference = TooltipService.Show(tooltipConfig, _tooltipTarget);
-    }
-
-    public void HideTooltip()
-    {
-        TooltipService.Close(new OverlayResult { OverlayReferenceId = _tooltipReference.GetOverlayReferenceId() });
-    }
-
-    public void ShowTooltipWithDelay()
-    {
-        var tooltipConfig = new TooltipConfig()
-            {
-                Text = "Este tooltip aparece después de 500ms de hover",
-                MaxHeight = "50px",
-                MaxWidth = "400px",
-                MinWidth = "100px",
-                Height = "50px",
-                ShowDelay = 500
-            };
-
-        _tooltipDelayReference = TooltipService.Show(tooltipConfig, _tooltipDelayTarget);
-    }
-
-    public void HideTooltipWithDelay()
-    {
-        if (_tooltipDelayReference != null)
+        if (_disposed) return;
+        if (!_hovered[index] && !_focused[index]) { CloseTooltip(index); return; }
+        if (_references[index] is not null) return;
+        var target = index switch { 1 => _delayTarget, 2 => _componentTarget, _ => _basicTarget };
+        var config = new TooltipConfig { MaxWidth = "280px", ShowDelay = index switch { 1 => 500, 2 => 300, _ => 0 } };
+        if (index == 2)
+            _references[index] = TooltipService.Show<TestTooltipContent>(config, new Dictionary<string, object> { ["Title"] = "Taylor Morgan" }, target);
+        else
         {
-            TooltipService.Close(new OverlayResult { OverlayReferenceId = _tooltipDelayReference.GetOverlayReferenceId() });
+            config.Text = index == 0 ? "Helpful context, right where you need it." : "A little patience reveals this extra detail.";
+            _references[index] = TooltipService.Show(config, target);
         }
     }
-
-    public void ShowTooltipWithComponent()
+    private void HandleKey(int index, KeyboardEventArgs args) { if (args.Key == "Escape") CloseTooltip(index); }
+    private void CloseTooltip(int index)
     {
-        var tooltipConfig = new TooltipConfig()
-        {
-            MaxWidth = "400px",
-            MinWidth = "100px",
-            ShowDelay = 300
-        };
-        
-        var parameters = new Dictionary<string, object>
-        {
-            { "Title", "Tooltip with component" }
-        };
-
-        _tooltipComponentReference = TooltipService.Show<TestTooltipContent>(tooltipConfig, parameters, _tooltipComponentTarget);
+        var reference = _references[index];
+        _references[index] = null;
+        if (reference is not null) TooltipService.Close(new OverlayResult { OverlayReferenceId = reference.GetOverlayReferenceId() });
     }
-
-    public void HideTooltipWithComponent()
-    {
-        TooltipService.Close(new OverlayResult { OverlayReferenceId = _tooltipComponentReference.GetOverlayReferenceId() });
-    }
+    public void Dispose() { _disposed = true; for (var index = 0; index < _references.Length; index++) CloseTooltip(index); }
 }
-

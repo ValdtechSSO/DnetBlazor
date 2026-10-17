@@ -1,0 +1,13 @@
+.floating-placement-demo { display: grid; justify-items: center; gap: 14px; }
+.floating-placement-demo > span { color: var(--dnet-sys-on-surface-muted); font-size: var(--dnet-sys-text-sm); }
+.floating-placement-canvas { position: relative; box-sizing: border-box; display: grid; align-content: start; gap: 10px; width: min(100%, 280px); height: 148px; padding: 24px; border: 1px solid var(--dnet-sys-border); border-radius: var(--dnet-sys-radius-md); background: var(--dnet-sys-surface); overflow: hidden; }
+.floating-placement-canvas > span { display: block; width: 55%; height: 7px; border-radius: var(--dnet-sys-radius-pill); background: var(--dnet-sys-state-selected); }
+.floating-placement-canvas > span:first-child { width: 35%; height: 10px; margin-block-end: 6px; }
+.floating-placement-panel { position: absolute; display: grid; align-content: start; gap: 9px; padding: 20px 14px; border: 1px solid var(--dnet-sys-border); border-radius: var(--dnet-sys-radius-md); background: var(--dnet-sys-surface-raised); box-shadow: var(--dnet-sys-elevation-1); }
+.floating-placement-panel.is-right { inset-block: 8px; inset-inline-end: 8px; width: 42%; }
+.floating-placement-panel.is-left { inset-block: 8px; inset-inline-start: 8px; width: 42%; }
+.floating-placement-panel.is-top { inset-block-start: 8px; inset-inline: 8px; height: 55%; }
+.floating-placement-panel.is-bottom { inset-block-end: 8px; inset-inline: 8px; height: 55%; }
+.floating-placement-panel i { display: block; height: 6px; border-radius: var(--dnet-sys-radius-pill); background: var(--dnet-sys-state-selected); }
+.floating-placement-panel i:first-child { width: 65%; background: color-mix(in srgb, var(--dnet-sys-primary-strong) 40%, var(--dnet-sys-surface-raised)); }
+#floating-panel-result { display: grid; gap: 6px; }

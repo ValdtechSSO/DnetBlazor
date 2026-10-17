@@ -1,393 +1,263 @@
-﻿@page "/DoubleList"
-
-@using System.Drawing
-@using Dnet.App.Shared.Infrastructure.Entities
-@using Dnet.App.Shared.Infrastructure.Models
-@using Dnet.App.Shared.Infrastructure.Services
-@using Dnet.Blazor.Components.Form
+@page "/DoubleList"
 @using Dnet.Blazor.Components.List
 @using Dnet.Blazor.Components.Checkbox
-@using System.Net.Http
-@using System.Net.Http.Json
-@using Dnet.Blazor.Components.Select
+@using Dnet.Blazor.Components.Button
 
-@inject HttpClient HttpClient
-@inject IHttpClientFactory ClientFactory
-@inject IApplicationServiceService ApplicationServiceService
+@{ var listRevision = _listRevision; }
 
-<div class="container-fluid" style="padding-top: 10px;">
-    <div class="d-flex dnet-page-content-left-margin dnet-m-t-20">
-        <span class="dnet-m-r-10 dnet-app-comp-name">Double list</span>
-    </div>
-    <div class="d-flex dnet-page-content-left-margin dnet-m-t-20 dnet-page-doc-text">
-        <span class="dnet-m-r-10">Select and use de buttons or Drag&Drop between lists</span>
-    </div>
-    <div class="dnet-page-content-left-margin dnet-m-t-20">
-        <EditForm Model="@_formData1">
-            <DataAnnotationsValidator />
-            <div style="display:flex;align-items: center;flex-direction: row;justify-content:space-between;max-width: 300px;">
-                <DnetFormField Label="List options" IsRequired="true">
-                    <ChildContent>
-                        <DnetSelect Value="@_formData1.Value" TValue="string"
-                            ValueChanged="@((string e) => MyValueChangeHandler(e))"
-                            ValueExpression="@( () => _formData1.Value )" Items="_features" TItem="KeyValueModel<int>"
-                            DisplayValueConverter="(value) => (value.Value)" OnSelectionChanged="SelectionChanged"
-                            InputTextToUpper="true" PlaceHolder="List features" MultiSelect="true"
-                            SelectedItems="@_selectedFeatures"
-                            IsSelectedFn="@( (item, itemSelected) => item.Key == itemSelected.Key )">
-                        </DnetSelect>
-                    </ChildContent>
-                    <ErrorContent>
-                        <ValidationMessage For="@(() => _formData1.Key)" />
-                    </ErrorContent>
-                </DnetFormField>
-            </div>
-        </EditForm>
-    </div>
-    <div class="dnet-split-content dnet-page-content-left-margin dnet-m-t-10" style="height:calc(100% - 200px);">
-        <div class="dnet-split-content-btn-wrapper">
-            <button type="button" class="dnet-split-content-btn" @onclick="ToggleListView">
-                @(isActive ? $"Ir a la lista {_rightListOptions.HeaderText} >>" : $"Ir a la lista {_leftListOptions.HeaderText} >>")
-            </button>
-        </div>
-        <div class="dnet-split-content-container" style="">
-            <div style="height: 500px; padding-bottom: 20px" class="@($"dnet-split-content-right {(isActive ? "active" : "")}")">
-                <DnetList TItem="Person" 
-                          @ref="_leftComponent" 
-                          Items="_leftItems"
-                          OnSelectionChange="LeftSelectionChanged" 
-                          OnDrop="LeftDrop" 
-                          ListOptions="@_leftListOptions"
-                          OnTransfer="LeftTransfer">
-                    @* <ListItemContent Context="Person">
-                        <div class="dnet-list-item-content">
-                            @Person.Name @Person.IsActive
-                        </div>
-                    </ListItemContent> *@
-                    <ItemPrefixContent Context="Person">
-                        <div class="dnet-app-icon-wrapper">
-                            <span
-                                class="dnet-app-icon @(Person.Gender == "female" ? "dnet-app-formfield-female" : "dnet-app-formfield-male") "></span>
-                        </div>
-                    </ItemPrefixContent>
-                </DnetList>
-            </div>
-            <div class="dnet-double-list-controls">
-                <div style="width: 25px">
-                    <button type="button" class="dnet-app-icon-button" @onclick="(e => LeftToRight())">
-                        <svg width="1em" height="1.1em" viewBox="0 0 16 16"
-                            fill="@(_leftSelectedItems.Any()  ? "#4fc3f7" : "grey" )"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </button>
-                    <button type="button" class="dnet-app-icon-button" @onclick="(e => RightToLeft())">
-                        <svg width="1em" height="1.1em" viewBox="0 0 16 16"
-                            fill="@(_rightSelectedItems.Any() ? "#4fc3f7" : "grey" )"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </button>
+<DemoPage Id="demo-doublelist" Title="Double List" Category="Selection controls"
+          Description="Bring the right people into a project. Move one person at a time, transfer a selection or drag people between the two lists."
+          Badge="Choose · Move · Review">
+    <DemoCard Id="doublelist-workspace-card" Title="Build your project team" Eyebrow="Website launch"
+              Description="Move people from the available list into your project team. Select people with the checkboxes, then assign or return them.">
+        <ChildContent>
+            <div class="demo-stack">
+                <div class="doublelist-view-switch" role="group" aria-label="Choose a list">
+                    <button id="doublelist-show-available" type="button" aria-pressed="@(!_showAssigned ? "true" : "false")"
+                            @onclick="() => _showAssigned = false">Available (@_availableItems.Count)</button>
+                    <button id="doublelist-show-assigned" type="button" aria-pressed="@(_showAssigned ? "true" : "false")"
+                            @onclick="() => _showAssigned = true">Assigned (@_assignedItems.Count)</button>
                 </div>
-            </div>
-            <div style="height: 500px; padding-bottom: 20px" class="@($"dnet-split-content-left {(!isActive ? "active" : "")}")">
-                <DnetList TItem="Person" 
-                          @ref="_rightComponent" 
-                          Items="_rightItems"
-                          OnSelectionChange="RightSelectionChanged" 
-                          OnDrop="RightDrop" 
-                          ListOptions="@_rightListOptions"
-                          OnTransfer="RightTransfer">
-                    @* <ListItemContent Context="Person">
-                        <div class="dnet-list-item-content">
-                            @Person.Name @Person.IsActive
+                <div class="doublelist-workspace">
+                    <section class="doublelist-column @(!_showAssigned ? "doublelist-active" : null)" aria-labelledby="doublelist-available-title">
+                        <div class="doublelist-column-heading"><h3 id="doublelist-available-title">Available people</h3><span class="doublelist-count">@_availableItems.Count</span></div>
+                        <p class="demo-muted doublelist-column-description">Choose who joins the project.</p>
+                        <div id="doublelist-available" class="doublelist-stage">
+                            <DnetList @key="listRevision" TItem="Contact" Items="_availableItems" ListOptions="_availableOptions"
+                                      Label="Search available" PlaceHolder="Type a name"
+                                      OnSelectionChange="AvailableSelectionChanged" OnDrop="ReturnPeople"
+                                      OnTransfer="@(contact => QuickMove(contact, true, listRevision))">
+                                <ItemPrefixContent Context="contact"><span class="doublelist-avatar" aria-hidden="true">@Initials(contact.Name)</span></ItemPrefixContent>
+                                <ListItemContent Context="contact">
+                                    <span class="dnet-list-item-headline">@contact.Name</span>
+                                    <span class="dnet-list-item-supporting-text">@contact.Role</span>
+                                </ListItemContent>
+                            </DnetList>
+                            @if (_availableItems.Count == 0)
+                            {
+                                <div id="doublelist-available-empty" class="doublelist-empty" role="status"><strong>Everyone is on the team</strong><span>Return someone to make them available again.</span></div>
+                            }
                         </div>
-                    </ListItemContent> *@
-                    <ItemPrefixContent Context="Person">
-                        <div class="dnet-app-icon-wrapper">
-                            <span
-                                class="dnet-app-icon @(Person.Gender == "female" ? "dnet-app-formfield-female" : "dnet-app-formfield-male") "></span>
-                        </div>
-                    </ItemPrefixContent>
-                </DnetList>
-            </div>
-        </div>
-    </div>
-</div>
+                        <div class="doublelist-mobile-action"><DnetButton id="doublelist-assign-mobile" disabled="@(_availableSelection.Count == 0)" OnClick="AssignSelection">Assign selected (@_availableSelection.Count) →</DnetButton></div>
+                    </section>
 
+                    <div class="doublelist-transfer-controls" role="group" aria-label="Move selected people">
+                        <DnetButton id="doublelist-assign" disabled="@(_availableSelection.Count == 0)" OnClick="AssignSelection">Assign →</DnetButton>
+                        <DnetButton id="doublelist-return" disabled="@(_assignedSelection.Count == 0)" OnClick="ReturnSelection">← Return</DnetButton>
+                        <span class="demo-muted">Selected people</span>
+                    </div>
+
+                    <section class="doublelist-column @(_showAssigned ? "doublelist-active" : null)" aria-labelledby="doublelist-assigned-title">
+                        <div class="doublelist-column-heading"><h3 id="doublelist-assigned-title">Assigned to project</h3><span class="doublelist-count">@_assignedItems.Count</span></div>
+                        <p class="demo-muted doublelist-column-description">The project lead stays on the team.</p>
+                        <div id="doublelist-assigned" class="doublelist-stage">
+                            <DnetList @key="listRevision" TItem="Contact" Items="_assignedItems" ListOptions="_assignedOptions"
+                                      Label="Search assigned" PlaceHolder="Type a name"
+                                      OnSelectionChange="AssignedSelectionChanged" OnDrop="AssignPeople"
+                                      OnTransfer="@(contact => QuickMove(contact, false, listRevision))">
+                                <ItemPrefixContent Context="contact"><span class="doublelist-avatar @(contact.IsLocked ? "doublelist-avatar-muted" : null)" aria-hidden="true">@Initials(contact.Name)</span></ItemPrefixContent>
+                                <ListItemContent Context="contact">
+                                    <span class="dnet-list-item-headline @(contact.IsLocked ? "disabled" : null)">@contact.Name</span>
+                                    <span class="dnet-list-item-supporting-text @(contact.IsLocked ? "disabled" : null)">@contact.Role @(contact.IsLocked ? "· Fixed" : null)</span>
+                                </ListItemContent>
+                            </DnetList>
+                        </div>
+                        <div class="doublelist-mobile-action"><DnetButton id="doublelist-return-mobile" disabled="@(_assignedSelection.Count == 0)" OnClick="ReturnSelection">← Return selected (@_assignedSelection.Count)</DnetButton></div>
+                    </section>
+                </div>
+                <p id="doublelist-action" class="demo-status" role="status">@_lastAction</p>
+                <p class="demo-info">Click a person's name for a quick move. On desktop, you can also drag a person or a selection to the other list. Moving people clears searches and pending selections.</p>
+            </div>
+        </ChildContent>
+        <Footer>
+            <div class="doublelist-metrics" role="status">
+                <span id="doublelist-available-count"><strong>@_availableItems.Count</strong> available</span>
+                <span id="doublelist-assigned-count"><strong>@_assignedItems.Count</strong> assigned</span>
+                <span id="doublelist-selected-count"><strong>@(_availableSelection.Count + _assignedSelection.Count)</strong> selected</span>
+            </div>
+        </Footer>
+    </DemoCard>
+
+    <div class="demo-grid">
+        <DemoCard Id="doublelist-options" Title="Choose your list controls" Eyebrow="Display preferences"
+                  Description="Adjust both lists together. Assignments stay in place; changing a control clears searches and pending selections.">
+            <div class="doublelist-options-grid">
+                <div class="demo-option-row"><DnetInputCheckbox id="doublelist-option-search" @bind-Value="_searching" @bind-Value:after="ApplyOptions">Search</DnetInputCheckbox></div>
+                <div class="demo-option-row"><DnetInputCheckbox id="doublelist-option-checkboxes" @bind-Value="_checkboxes" @bind-Value:after="ApplyOptions">Selection checkboxes</DnetInputCheckbox></div>
+                <div class="demo-option-row"><DnetInputCheckbox id="doublelist-option-sorting" @bind-Value="_sorting" @bind-Value:after="SortingChanged">Sorting</DnetInputCheckbox></div>
+                <div class="demo-option-row"><DnetInputCheckbox id="doublelist-option-header" @bind-Value="_header" @bind-Value:after="HeaderChanged">Header</DnetInputCheckbox></div>
+                <div class="demo-option-row"><DnetInputCheckbox id="doublelist-option-pagination" @bind-Value="_pagination" @bind-Value:after="PaginationChanged">Pagination</DnetInputCheckbox></div>
+                <div class="demo-option-row"><DnetInputCheckbox id="doublelist-option-footer" @bind-Value="_footer" @bind-Value:after="FooterChanged">Footer</DnetInputCheckbox></div>
+            </div>
+            <p class="demo-info">The header checkbox selects the current page. Click Name to change sorting. Pagination keeps the footer visible; sorting keeps the header visible.</p>
+        </DemoCard>
+
+        <DemoCard Id="doublelist-summary" Title="Your project team" Eyebrow="Live assignment"
+                  Description="Review everyone currently assigned to the project. The fixed project lead is always included.">
+            <ChildContent>
+                <ul id="doublelist-roster" class="doublelist-roster">
+                    @foreach (var contact in _assignedItems.OrderBy(contact => contact.Name))
+                    {
+                        <li @key="contact.Id"><span>@contact.Name</span>@if (contact.IsLocked) { <span class="doublelist-fixed">Project lead · Fixed</span> }</li>
+                    }
+                </ul>
+                <div class="demo-actions doublelist-reset-action"><DnetButton id="doublelist-reset" OnClick="ResetAssignment">Reset assignment</DnetButton></div>
+                <p class="demo-info">Restore the original team. Your display preferences stay in place.</p>
+            </ChildContent>
+            <Footer><span id="doublelist-team-count" class="demo-value" role="status">@_assignedItems.Count @(_assignedItems.Count == 1 ? "person" : "people") on the project · 1 fixed lead</span></Footer>
+        </DemoCard>
+    </div>
+</DemoPage>
 
 @code {
-    private List<Person> _leftItems = new();
-
-    private List<Person> _leftBkItems = new();
-
-    private List<Person> _leftSelectedItems = new();
-
-    private List<Person> _leftAddedItems = new();
-
-    private List<Person> _leftRemovedItems = new();
-
-    private List<Person> _rightItems = new();
-
-    private List<Person> _rightBkItems = new();
-
-    private List<Person> _rightSelectedItems = new();
-
-    private List<Person> _rightAddedItems = new();
-
-    private List<Person> _rightRemovedItems = new();
-
-    private DnetList<Person> _leftComponent { get; set; }
-
-    private DnetList<Person> _rightComponent { get; set; }
-
-    private List<KeyValueModel<int>> _features = new();
-
-    private List<KeyValueModel<int>> _selectedFeatures = new();
-
-    private KeyValueModel<int> _formData1 = new();
-
-    private ListOptions<Person> _leftListOptions { get; set; } = new();
-
-    private ListOptions<Person> _rightListOptions { get; set; } = new();
-
-    private bool isActive { get; set; } = true;
-
+    private readonly Contact[] _contacts =
+    [
+        new(1, "Alex Rivera", "Product designer"),
+        new(2, "Sam Chen", "Frontend engineer"),
+        new(3, "Casey Brooks", "UX researcher"),
+        new(4, "Morgan Patel", "QA engineer"),
+        new(5, "Jamie Torres", "Product manager"),
+        new(6, "Taylor Morgan", "Project lead", true),
+        new(7, "Riley Parker", "Backend engineer"),
+        new(8, "Jordan Lee", "Data analyst"),
+        new(9, "Avery Scott", "Content designer"),
+        new(10, "Cameron Reed", "DevOps engineer")
+    ];
+    private List<Contact> _availableItems = [];
+    private List<Contact> _assignedItems = [];
+    private List<Contact> _availableSelection = [];
+    private List<Contact> _assignedSelection = [];
+    private ListOptions<Contact> _availableOptions = new();
+    private ListOptions<Contact> _assignedOptions = new();
+    private bool _searching = true;
+    private bool _checkboxes = true;
+    private bool _sorting = true;
+    private bool _header = true;
+    private bool _pagination = true;
+    private bool _footer = true;
+    private bool _showAssigned;
+    private int _listRevision;
+    private string _lastAction = "Choose people to assign, or move someone back to the available list.";
 
     protected override void OnInitialized()
     {
-        _leftListOptions = GetListOptions();
-        _leftListOptions.HeaderText = "Left";
-        _leftListOptions.ContainerName = "LeftContainer";
-        _leftListOptions.ConnectedTo = "RghtContainer";
-
-        _rightListOptions = GetListOptions();
-        _rightListOptions.HeaderText = "Right";
-        _rightListOptions.ContainerName = "RghtContainer";
-        _rightListOptions.ConnectedTo = "LeftContainer";
+        _availableItems = _contacts.Take(5).ToList();
+        _assignedItems = _contacts.Skip(5).ToList();
+        RefreshLists();
     }
 
-
-    protected override async Task OnInitializedAsync()
+    private ListOptions<Contact> CreateOptions(bool assigned) => new()
     {
-        var itemsToTake = 5;
+        DisplayValueConverter = contact => contact.Name,
+        SupportTextValueConverter = contact => contact.Role,
+        SortedData = contact => contact.Name,
+        SearchValueConverter = contact => contact.Name,
+        DisableItem = contact => contact.IsLocked,
+        HeaderText = "Name",
+        MultiSelect = true,
+        EnableServerSide = false,
+        EnableSearching = _searching,
+        EnableSorting = _sorting,
+        PageSize = _pagination ? 4 : _contacts.Length,
+        EnablePagingination = _pagination,
+        CheckboxSelectionColumn = _checkboxes,
+        ShowHeader = _header,
+        ShowFooter = _footer,
+        ContainerName = assigned ? "project-assigned" : "project-available",
+        ConnectedTo = assigned ? "project-available" : "project-assigned"
+    };
 
-        var items = await GetPersons();
+    private void AvailableSelectionChanged(List<Contact> people) =>
+        _availableSelection = people.Where(person => !person.IsLocked && _availableItems.Any(item => item.Id == person.Id)).DistinctBy(person => person.Id).ToList();
 
-        _leftItems = items.Take(itemsToTake).ToList();
+    private void AssignedSelectionChanged(List<Contact> people) =>
+        _assignedSelection = people.Where(person => !person.IsLocked && _assignedItems.Any(item => item.Id == person.Id)).DistinctBy(person => person.Id).ToList();
 
-        _leftBkItems = items.Take(itemsToTake).ToList();
+    private void AssignSelection() => AssignPeople(_availableSelection);
+    private void ReturnSelection() => ReturnPeople(_assignedSelection);
+    private void AssignPeople(List<Contact> people) => MovePeople(people, true);
+    private void ReturnPeople(List<Contact> people) => MovePeople(people, false);
 
-        _rightItems = items.Skip(itemsToTake).Take(itemsToTake).ToList();
-
-        _rightBkItems = items.Skip(itemsToTake).Take(itemsToTake).ToList();
-
-        _features = GetKeyValueModels();
-
-        _selectedFeatures = _features.Where(p => p.Key == 5 || p.Key == 6 || p.Key == 1 || p.Key == 3).Select(p => p).ToList();
-
-        StateHasChanged();
+    private void QuickMove(Contact person, bool assign, int revision)
+    {
+        if (revision == _listRevision) MovePeople([person], assign);
     }
 
-    private async Task<List<Person>> GetPersons()
+    private void MovePeople(IEnumerable<Contact> people, bool assign)
     {
-        var dataPersons = await ApplicationServiceService.GetPersons();
+        var source = assign ? _availableItems : _assignedItems;
+        var requestedIds = people.Select(person => person.Id).ToHashSet();
+        var moved = source.Where(person => requestedIds.Contains(person.Id) && !person.IsLocked).DistinctBy(person => person.Id).ToList();
+        if (moved.Count == 0) return;
 
-        return dataPersons;
-    }
-
-    private void LeftSelectionChanged(List<Person> selectedItems)
-    {
-        _leftSelectedItems = selectedItems;
-    }
-
-    private void RightSelectionChanged(List<Person> selectedItems)
-    {
-        _rightSelectedItems = selectedItems;
-    }
-
-    private void MyValueChangeHandler(string item)
-    {
-        _formData1.Value = item;
-    }
-
-    private void LeftDrop(List<Person> selectedItems)
-    {
-        _rightSelectedItems = selectedItems;
-        RightToLeft();
-    }
-
-    private void RightDrop(List<Person> selectedItems)
-    {
-        _leftSelectedItems = selectedItems;
-        LeftToRight();
-    }
-
-    private void LeftTransfer(Person item)
-    {
-        _leftSelectedItems = new List<Person>() { item };
-        LeftToRight();
-    }
-
-    private void RightTransfer(Person item)
-    {
-        _rightSelectedItems = new List<Person>() { item };
-        RightToLeft();
-    }
-
-    private void LeftToRight()
-    {
-        if (!_leftSelectedItems.Any()) return;
-
-        _rightItems.AddRange(_leftSelectedItems);
-
-        foreach (var item in _leftSelectedItems)
+        var movedIds = moved.Select(person => person.Id).ToHashSet();
+        if (assign)
         {
-            _leftItems.Remove(item);
+            _availableItems = _availableItems.Where(person => !movedIds.Contains(person.Id)).ToList();
+            _assignedItems = _assignedItems.Concat(moved).DistinctBy(person => person.Id).ToList();
+        }
+        else
+        {
+            _assignedItems = _assignedItems.Where(person => !movedIds.Contains(person.Id)).ToList();
+            _availableItems = _availableItems.Concat(moved).DistinctBy(person => person.Id).ToList();
         }
 
-        _leftSelectedItems = new();
-
-        _leftAddedItems = _leftItems.Except(_leftBkItems, new PersonEqualityComparer()).ToList();
-
-        _leftRemovedItems = _leftBkItems.Except(_leftItems, new PersonEqualityComparer()).ToList();
-
-        _rightAddedItems = _rightItems.Except(_rightBkItems, new PersonEqualityComparer()).ToList();
-
-        _rightRemovedItems = _rightBkItems.Except(_rightItems, new PersonEqualityComparer()).ToList();
-
-        _rightComponent.SetRowData(_rightItems);
-
-        _leftComponent.SetRowData(_leftItems);
+        _showAssigned = assign;
+        _lastAction = $"{moved.Count} {(moved.Count == 1 ? "person" : "people")} {(assign ? "assigned to the project" : "returned to the available list")}.";
+        RefreshLists();
     }
 
-    private void RightToLeft()
+    private void RefreshLists()
     {
-        if (!_rightSelectedItems.Any()) return;
-
-        _leftItems.AddRange(_rightSelectedItems);
-
-        foreach (var item in _rightSelectedItems)
-        {
-            _rightItems.Remove(item);
-        }
-
-        _rightSelectedItems = new();
-
-        _leftAddedItems = _leftItems.Except(_leftBkItems, new PersonEqualityComparer()).ToList();
-
-        _leftRemovedItems = _leftBkItems.Except(_leftItems, new PersonEqualityComparer()).ToList();
-
-        _rightAddedItems = _rightItems.Except(_rightBkItems, new PersonEqualityComparer()).ToList();
-
-        _rightRemovedItems = _rightBkItems.Except(_rightItems, new PersonEqualityComparer()).ToList();
-
-        _rightComponent.SetRowData(_rightItems);
-
-        _leftComponent.SetRowData(_leftItems);
+        _availableSelection = [];
+        _assignedSelection = [];
+        _availableOptions = CreateOptions(false);
+        _assignedOptions = CreateOptions(true);
+        // Recreate both lists so searches, paging, fading rows and selection reset together.
+        _listRevision++;
     }
 
-    private ListOptions<Person> GetListOptions()
+    private void ApplyOptions()
     {
-        return new ListOptions<Person>()
-            {
-                DisplayValueConverter = (value) => value.Name,
-                SortedData = (value) => value.Name,
-                SearchValueConverter = (value) => value.Name,
-                DisableItem = (value) => value.IsActive,
-                HeaderText = "",
-                ItemSize = 40f,
-                MultiSelect = true,
-                DebounceTime = 250,
-                EnableServerSide = false,
-                EnableSearching = false,
-                EnableSorting = false,
-                PageSize = 50,
-                EnablePagingination = true,
-                CheckboxSelectionColumn = true,
-                ShowHeader = true,
-                ShowFooter = true,
-            };
+        RefreshLists();
+        _lastAction = "List controls updated. Assignments kept; searches and selection cleared.";
     }
 
-    private void SelectionChanged(List<KeyValueModel<int>> items)
+    private void SortingChanged()
     {
-        _leftListOptions.EnablePagingination = _rightListOptions.EnablePagingination = items.FirstOrDefault(p => p.Key == 1) !=
-        null;
-        _leftListOptions.EnableSearching = _rightListOptions.EnableSearching = items.FirstOrDefault(p => p.Key == 2) != null;
-        _leftListOptions.CheckboxSelectionColumn = _rightListOptions.CheckboxSelectionColumn = items.FirstOrDefault(p => p.Key
-        == 3) != null;
-        _leftListOptions.ShowHeader = _rightListOptions.ShowHeader = items.FirstOrDefault(p => p.Key == 5) != null;
-        _leftListOptions.ShowFooter = _rightListOptions.ShowFooter = items.FirstOrDefault(p => p.Key == 6) != null;
+        if (_sorting) _header = true;
+        ApplyOptions();
     }
 
-    private List<KeyValueModel<int>> GetKeyValueModels()
+    private void HeaderChanged()
     {
-        var keyValueModels = new List<KeyValueModel<int>>
-{
-new KeyValueModel<int> { Key = 1, Value = "Enable pagination" },
-new KeyValueModel<int> { Key = 2, Value = "Enable searching" },
-new KeyValueModel<int> { Key = 3, Value = "Enable checkbox selection" },
-new KeyValueModel<int> { Key = 4, Value = "Enable sorting" },
-new KeyValueModel<int> { Key = 5, Value = "Show header" },
-new KeyValueModel<int> { Key = 6, Value = "Show footer" }
-};
-
-        return keyValueModels;
+        if (!_header) _sorting = false;
+        ApplyOptions();
     }
 
-    private void ToggleListView()
+    private void PaginationChanged()
     {
-        isActive = !isActive;
+        if (_pagination) _footer = true;
+        ApplyOptions();
     }
 
-    public class PersonEqualityComparer : IEqualityComparer<Person>
+    private void FooterChanged()
     {
-        public bool Equals(Person x, Person y)
-        {
-            if (x == null || y == null)
-                return false;
-
-            if (ReferenceEquals(x, y)) return true;
-
-            x.PersonId = x.PersonId ?? string.Empty;
-
-            y.PersonId = y.PersonId ?? string.Empty;
-
-            return x.PersonId.Equals(y.PersonId);
-        }
-
-        public int GetHashCode(Person obj)
-        {
-            int hashPersonId = obj.PersonId == null ? 0 : obj.PersonId.GetHashCode();
-
-            return hashPersonId;
-        }
+        if (!_footer) _pagination = false;
+        ApplyOptions();
     }
+
+    private void ResetAssignment()
+    {
+        _availableItems = _contacts.Take(5).ToList();
+        _assignedItems = _contacts.Skip(5).ToList();
+        _showAssigned = false;
+        RefreshLists();
+        _lastAction = "Original assignment restored. Display preferences kept.";
+    }
+
+    private static string Initials(string name) =>
+        string.Concat(name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(2).Select(part => part[0]));
+
+    private sealed record Contact(int Id, string Name, string Role, bool IsLocked = false);
 }
-
-    @* <div class="dnet-m-t-10">
-                    <div class="dnet-m-b-5">
-                        <span>Added: </span>
-                        <span>@_leftAddedItems.Count()</span>
-                    </div>
-                    <div>
-                        <span>Removed: </span>
-                        <span>@_leftRemovedItems.Count()</span>
-                    </div>
-                </div> *@
-
-                   @* <div class="dnet-m-t-10">
-                    <div class="dnet-m-b-5">
-                        <span>Added: </span>
-                        <span>@_rightAddedItems.Count()</span>
-                    </div>
-                    <div>
-                        <span>Removed: </span>
-                        <span>@_rightRemovedItems.Count()</span>
-                    </div>
-                </div> *@

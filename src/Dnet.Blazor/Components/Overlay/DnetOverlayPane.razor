@@ -70,6 +70,9 @@
 
     private bool _disposed;
 
+    private bool IsConnectedSelectionPanel =>
+        (OverlayConfig.ComponentType is ComponentType.Autocomplete or ComponentType.Select) &&
+        OverlayConfig.FlexibleConnectedPositionStrategyBuilder is not null;
 
 
     protected override void OnInitialized()
@@ -91,7 +94,9 @@
         {
             var deviceType = dnetOverlay.GetDeviceType();
 
-            if(deviceType == DeviceType.Mobile || deviceType == DeviceType.Tablet) {
+            // Hints stay anchored to their trigger at every viewport size.
+            if ((deviceType == DeviceType.Mobile || deviceType == DeviceType.Tablet)
+                && OverlayConfig.ComponentType != ComponentType.ToolTip) {
 
                 OverlayConfig.PositionStrategy = PositionStrategy.Global;
 
@@ -100,7 +105,7 @@
 
             if (OverlayConfig.PositionStrategy == PositionStrategy.Global)
             {
-                _styles = GetStyles();
+                _styles = await GetGlobalStylesAsync();
                 _cssClasses = GetCssClasses();
             }
             else
@@ -113,18 +118,27 @@
                 var tt = Convert.ToString(_styles, CultureInfo.InvariantCulture);
             }
 
-            if (OverlayConfig.PositionStrategy == PositionStrategy.FlexibleConnectedTo)
+            if (_disposed) return;
+
+            if (OverlayConfig.PositionStrategy == PositionStrategy.FlexibleConnectedTo || IsConnectedSelectionPanel)
             {
-                ViewportRuler.OnResized += ApplyFlexibleStyles;
+                ViewportRuler.OnResized += HandleViewportResize;
                 _isSubscribedToViewport = true;
                 OverlayService.OnPositionUpdate += RequestPositionUpdate;
                 _isSubscribedToPositionUpdates = true;
 
                 _selfReference = DotNetObjectReference.Create(this);
-                _sizeObserverId = await DnetOverlayInterop.ObserveOverlaySize(
+                var observerId = await DnetOverlayInterop.ObserveOverlaySize(
                     _paneReference,
                     OverlayConfig.FlexibleConnectedPositionStrategyBuilder.Origin(),
                     _selfReference);
+                if (_disposed)
+                {
+                    await StopObservingOverlaySizeAsync(observerId);
+                    return;
+                }
+
+                _sizeObserverId = observerId;
             }
 
             OverlayService.OnConfigurationUpdate += RefreshConfiguration;
@@ -156,9 +170,27 @@
         return classes;
     }
 
-    private string GetStyles()
+    private async Task<string> GetGlobalStylesAsync()
     {
-        var responsiveData = GetResponsiveDataByComponent(OverlayConfig);
+        string? originWidth = null;
+        if (IsConnectedSelectionPanel && string.IsNullOrEmpty(OverlayConfig.Width))
+        {
+            var origin = await OverlayConfig.FlexibleConnectedPositionStrategyBuilder.GetOriginRect(DnetOverlayInterop);
+            if (origin is not null)
+                originWidth = $"{Convert.ToString(origin.Width, CultureInfo.InvariantCulture)}px";
+        }
+
+        return GetStyles(originWidth);
+    }
+
+    private string? GetPanelWidth(string? originWidth) =>
+        IsConnectedSelectionPanel && string.IsNullOrEmpty(OverlayConfig.Width)
+            ? originWidth
+            : OverlayConfig.Width;
+
+    private string GetStyles(string? originWidth = null)
+    {
+        var responsiveData = GetResponsiveDataByComponent(OverlayConfig, originWidth);
 
         var globalPositionStrategy = OverlayConfig.GlobalPositionStrategy;
 
@@ -199,7 +231,7 @@
         return styles;
     }
 
-    private ResponsiveData GetResponsiveDataByComponent(OverlayConfig overlayConfig) 
+    private ResponsiveData GetResponsiveDataByComponent(OverlayConfig overlayConfig, string? originWidth)
     {
         var responsiveData = new ResponsiveData();
 
@@ -231,7 +263,7 @@
 
         }
         else{
-            responsiveData.Width = overlayConfig.Width;
+            responsiveData.Width = GetPanelWidth(originWidth);
             responsiveData.Height = overlayConfig.Height;
         }
 
@@ -285,29 +317,29 @@
     }
 
 
-    private void ApplyFlexibleStyles(object _, Size size) => QueueFlexibleStyleUpdate();
+    private void HandleViewportResize(object _, Size size) => QueuePositionUpdate();
 
     private void RequestPositionUpdate(int overlayReferenceId)
     {
         if (overlayReferenceId == OverlayConfig.OverlayReferenceId)
         {
-            QueueFlexibleStyleUpdate();
+            QueuePositionUpdate();
         }
     }
 
     [JSInvokable]
-    public void OnOverlayResized() => QueueFlexibleStyleUpdate();
+    public void OnOverlayResized() => QueuePositionUpdate();
 
-    private void QueueFlexibleStyleUpdate()
+    private void QueuePositionUpdate()
     {
-        if (_disposed || OverlayConfig.PositionStrategy != PositionStrategy.FlexibleConnectedTo)
+        if (_disposed || (OverlayConfig.PositionStrategy != PositionStrategy.FlexibleConnectedTo && !IsConnectedSelectionPanel))
         {
             return;
         }
 
         OverlayPositionScheduler.Schedule(
             OverlayReferenceId,
-            requestVersion => InvokeAsync(() => ApplyFlexibleStylesAsync(requestVersion)));
+            requestVersion => InvokeAsync(() => ApplyPositionStylesAsync(requestVersion)));
     }
 
     private void RefreshConfiguration(int overlayReferenceId)
@@ -317,9 +349,9 @@
             return;
         }
 
-        if (OverlayConfig.PositionStrategy == PositionStrategy.FlexibleConnectedTo)
+        if (OverlayConfig.PositionStrategy == PositionStrategy.FlexibleConnectedTo || IsConnectedSelectionPanel)
         {
-            QueueFlexibleStyleUpdate();
+            QueuePositionUpdate();
             return;
         }
 
@@ -328,13 +360,21 @@
         _ = InvokeAsync(StateHasChanged);
     }
 
-    private async Task ApplyFlexibleStylesAsync(long requestVersion)
+    private async Task ApplyPositionStylesAsync(long requestVersion)
     {
-        if (OverlayConfig.PositionStrategy != PositionStrategy.FlexibleConnectedTo) return;
+        if (_disposed || !OverlayPositionScheduler.IsCurrent(OverlayReferenceId, requestVersion)) return;
 
-        var viewportRect = await ViewportRuler.GetViewportRectNoScroll(_viewportMargin);
+        string styles;
+        if (OverlayConfig.PositionStrategy == PositionStrategy.Global)
+        {
+            styles = await GetGlobalStylesAsync();
+        }
+        else
+        {
+            var viewportRect = await ViewportRuler.GetViewportRectNoScroll(_viewportMargin);
 
-        var styles = await GetFlexibleStyles(viewportRect);
+            styles = await GetFlexibleStyles(viewportRect);
+        }
 
         if (_disposed || !OverlayPositionScheduler.IsCurrent(OverlayReferenceId, requestVersion))
         {
@@ -342,6 +382,7 @@
         }
 
         _styles = styles;
+        _cssClasses = GetCssClasses();
 
         await InvokeAsync(StateHasChanged);
     }
@@ -470,6 +511,9 @@
         }
 
         var minWidth = !string.IsNullOrEmpty(OverlayConfig.MinWidth) ? OverlayConfig.MinWidth : $"{Convert.ToString(originRect.Width, CultureInfo.InvariantCulture)}px";
+        // Virtualized rows must not determine the panel's intrinsic width. An
+        // omitted selection-panel width follows its field, including on resize.
+        var width = GetPanelWidth($"{Convert.ToString(originRect.Width, CultureInfo.InvariantCulture)}px");
 
         var maxHeight = "";
         var maxWidth = "";
@@ -505,7 +549,7 @@
 
         var globalStyles = styles.AddStyle("pointer-events", "auto")
                                        .AddStyle("visibility", "visible")
-                                       .AddStyle("width", OverlayConfig.Width, when: !string.IsNullOrEmpty(OverlayConfig.Width))
+                                       .AddStyle("width", width, when: !string.IsNullOrEmpty(width))
                                        .AddStyle("height", OverlayConfig.Height, when: !string.IsNullOrEmpty(OverlayConfig.Height))
                                        .AddStyle("min-height", OverlayConfig.MinHeight, when: !string.IsNullOrEmpty(OverlayConfig.MinHeight))
                                        .AddStyle("min-width", minWidth, when: !string.IsNullOrEmpty(minWidth))
@@ -839,7 +883,7 @@
 
         if (_isSubscribedToViewport)
         {
-            ViewportRuler.OnResized -= ApplyFlexibleStyles;
+            ViewportRuler.OnResized -= HandleViewportResize;
             _isSubscribedToViewport = false;
         }
 

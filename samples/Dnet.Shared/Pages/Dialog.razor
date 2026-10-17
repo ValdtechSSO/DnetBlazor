@@ -1,83 +1,71 @@
-﻿@page "/Dialog"
-
-@using Dnet.App.Shared.Infrastructure.Entities
-@using Dnet.App.Shared.Shared.CustomComponents
+@page "/Dialog"
+@using Dnet.App.Shared.Pages.ShowcaseContent
 @using Dnet.Blazor.Components.Button
 @using Dnet.Blazor.Components.Dialog.Infrastructure.Interfaces
 @using Dnet.Blazor.Components.Dialog.Infrastructure.Models
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Enums
-@using Dnet.Blazor.Components.Overlay.Infrastructure.Interfaces
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Models
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Services
-
-@inject IOverlayService OverlayService
 @inject IDialogService DialogService
-
 @implements IDisposable
 
-<div class="container-fluid" style="padding-top: 10px;">
-	<div class="d-flex dnet-page-content-left-margin dnet-m-t-20">
-		<span class="dnet-m-r-10 dnet-app-comp-name">Dialog</span>
-	</div>
-	<div class="dnet-page-content-left-margin dnet-m-t-30">
-		<DnetButton OnClick="ShowDialog" InitialFocus="true" class="dnet-m-r-10">Show Dialog</DnetButton>
-	</div>
-	<div class="dnet-page-content-left-margin dnet-m-t-30">
-		<span>Dialog Ok result: </span>
-		<span>@_dialogData</span>
-	</div>
-</div>
-
+<DemoPage Id="demo-dialog" Title="Dialog" Category="Components / Feedback" Description="Bring a focused task to the foreground, then return to the page with a clear result." Badge="Modal overlay">
+    <div class="demo-grid">
+        <DemoCard Id="dialog-basic" Title="A moment to focus" Eyebrow="01 / Profile editor" Description="Open a profile editor, make a change and save it. Cancel leaves the example as it was.">
+            <ChildContent>
+                <div class="demo-stack">
+                    <div class="dialog-profile demo-preview">
+                        <span class="dialog-avatar" aria-hidden="true">TM</span>
+                        <div><strong>Taylor Morgan</strong><span>Product designer</span><small>taylor.morgan@example.com</small></div>
+                    </div>
+                    <label class="demo-option-row dialog-option"><input id="dialog-require-action" type="checkbox" @bind="_requireAction" /><span><strong>Require an explicit action</strong><small>Keep the dialog open when the backdrop is clicked.</small></span></label>
+                    <div class="demo-actions"><DnetButton id="dialog-open" OnClick="ShowDialog">Show Dialog</DnetButton></div>
+                </div>
+            </ChildContent>
+            <Footer><div id="dialog-result" class="demo-value" role="status"><span class="demo-muted">Latest result</span><strong>@_result</strong></div></Footer>
+        </DemoCard>
+        <DemoCard Id="dialog-guide" Title="A complete conversation" Eyebrow="02 / Interaction" Description="Use a dialog for a short task that needs the user's attention.">
+            <div class="demo-stack">
+                <div class="demo-info"><strong>Open</strong><p>The editor receives its own copy of the profile, ready to change.</p></div>
+                <div class="demo-info"><strong>Complete or dismiss</strong><p>Save returns the updated details. Cancel, the close icon and Escape dismiss the editor.</p></div>
+                <div class="demo-info"><strong>Continue where you left off</strong><p>Focus returns to the opening button when the dialog closes.</p></div>
+            </div>
+        </DemoCard>
+    </div>
+</DemoPage>
 
 @code {
+    private OverlayReference? _dialogReference;
+    private bool _requireAction;
+    private bool _disposed;
+    private string _result = "No changes yet";
 
-	string _dialogData;
+    private void ShowDialog()
+    {
+        if (_dialogReference?.IsAttached == true) return;
+        _dialogReference = DialogService.Open(typeof(ProfileEditorContent), new Dictionary<string, object>(), new DialogConfig
+        {
+            Title = "Edit profile", Width = "520px", Height = "auto",
+            MaxWidth = "calc(100vw - 32px)", MaxHeight = "calc(100dvh - 32px)",
+            DisableBackdropClick = _requireAction, InitialFocusSelector = "#showcase-profile-name"
+        });
+        _dialogReference.Close += DialogClosed;
+    }
 
-	private OverlayReference _dialogReference;
+    private void DialogClosed(OverlayResult result)
+    {
+        if (_dialogReference is not null) _dialogReference.Close -= DialogClosed;
+        _dialogReference = null;
+        if (_disposed) return;
+        _result = result.CloseReason == CloseReason.Ok ? $"Saved: {result.ComponentData}" : "Editor dismissed · no changes saved";
+        _ = InvokeAsync(StateHasChanged);
+    }
 
-	void ShowDialog()
-	{
-		var dialogConfig = new DialogConfig()
-		{
-			Title = "Datalnet Modal component",
-			HasBackdrop = true,
-			HasTransparentBackdrop = false,
-			DisableBackdropClick = false,
-			Width = "500px",
-			Height = "400px"
-		};
-
-		var person = new Person()
-		{
-			Name = "Adrián",
-			LastName = "Mustelier"
-		};
-
-		var parameters = new Dictionary<string, object>();
-
-		parameters.Add("Person", person);
-		parameters.Add("SecuenceNumber", 0);
-
-		_dialogReference = DialogService.Open(typeof(DialogTestContent), parameters, dialogConfig);
-
-		_dialogReference.Close += CloseDialog;
-	}
-
-	void CloseDialog(OverlayResult overlayDataResult)
-	{
-		_dialogData = overlayDataResult.CloseReason == CloseReason.Ok ? overlayDataResult.ComponentData.ToString() : "";
-
-		InvokeAsync(StateHasChanged);
-	}
-
-	public void Dispose()
-	{
-		if (_dialogReference != null)
-		{
-			_dialogReference.Close -= CloseDialog;
-		}
-	}
+    public void Dispose()
+    {
+        _disposed = true;
+        if (_dialogReference is null) return;
+        _dialogReference.Close -= DialogClosed;
+        _dialogReference.Dispose();
+    }
 }
-
-
-

@@ -1,147 +1,183 @@
-﻿@page "/Chips"
-
-@using System.Drawing
-@using Dnet.App.Shared.Infrastructure.Entities
+@page "/Chips"
 @using Dnet.Blazor.Components.Chips
+@using Dnet.Blazor.Components.Button
 
-<div class="container-fluid" style="padding-top: 10px;">
-	<div class="d-flex dnet-m-l-30 dnet-m-t-20">
-		<span class="dnet-m-r-10 dnet-app-comp-name">Chips</span>
-	</div>
+<DemoPage Id="demo-chips" Title="Chips" Category="Selection controls"
+          Description="Keep choices compact, make filters easy to scan and give related items a clear place in your workspace."
+          Badge="Select · Remove · Customize">
+    <div class="demo-grid">
+        <DemoCard Id="chips-topics" Title="Filter by topic" Eyebrow="Multiple choices"
+                  Description="Choose the topics you want to follow. Select a chip again to remove it from your filters.">
+            <ChildContent>
+                <div class="demo-stack">
+                    <div class="chips-stage demo-preview" role="group" aria-label="Topic filters">
+                        <DnetChipList Multi="true" OnSelectionChange="TopicsChanged">
+                            @foreach (var topic in _topics)
+                            {
+                                <DnetChip @key="topic" Value="@topic" ChipSize="ChipSize.Large"
+                                          Selected="@_selectedTopics.Contains(topic)" Removable="false" />
+                            }
+                        </DnetChipList>
+                    </div>
+                    <div class="demo-actions">
+                        <DnetButton id="chips-clear-topics" disabled="@(_selectedTopics.Count == 0)" OnClick="ClearTopics">Clear filters</DnetButton>
+                    </div>
+                    <p class="demo-muted">Combine several topics without leaving this view.</p>
+                </div>
+            </ChildContent>
+            <Footer><span id="chips-topics-value" class="demo-value" role="status">@TopicSummary</span></Footer>
+        </DemoCard>
 
-	<div class="dnet-m-l-30 dnet-m-t-30">
-		<div class="dnet-m-b-30">
-			<span class="dnet-m-b-10" style="font-size:0.875rem">Large:</span>
-			<DnetChipList @ref="_listComponent" OnSelectionChange="SelectionChanged" Multi="true">
-				@foreach (var item in _items1)
-				{
-					<DnetChip ChipSize="ChipSize.Large" Value="@item.Name" OnRemoved="Removed">
-					</DnetChip>
-				}
-				<DnetChip ChipSize="ChipSize.Large" Value="MarineOperator 1" Selected="true" Removable="false">
-				</DnetChip>
-			</DnetChipList>
-		</div>
-		<div class="dnet-m-b-30">
-			<span class="dnet-m-b-10" style="font-size:0.875rem">Medium:</span>
-			<DnetChipList @ref="_listComponent" OnSelectionChange="SelectionChanged">
-				@foreach (var item in _items2)
-				{
-					<DnetChip ChipSize="ChipSize.Medium" Value="@item.Name">
-					</DnetChip>
-				}
-			</DnetChipList>
-		</div>
-		<div class="dnet-m-b-30">
-			<span class="dnet-m-b-10" style="font-size:0.875rem">Small:</span>
-			<DnetChipList @ref="_listComponent" OnSelectionChange="SelectionChanged">
-				@foreach (var item in _items2)
-				{
-					<DnetChip ChipSize="ChipSize.Small" Value="@item.Name">
-					</DnetChip>
-				}
-			</DnetChipList>
-		</div>
-		<div class="dnet-m-b-30">
-			<span class="dnet-m-b-10" style="font-size:0.875rem;">Extra Small:</span>
-			<DnetChipList @ref="_listComponent" OnSelectionChange="SelectionChanged">
-				@foreach (var item in _items2)
-				{
-					<DnetChip ChipSize="ChipSize.ExtraSmall" Value="@item.Name">
-					</DnetChip>
-				}
-			</DnetChipList>
-		</div>
-		<div class="dnet-m-b-30">
-			<span class="dnet-m-b-10" style="font-size:0.875rem">Custom remove icon:</span>
-			<DnetChipList @ref="_listComponent" OnSelectionChange="SelectionChanged">
-				@foreach (var item in _items2)
-				{
-					<DnetChip ChipSize="ChipSize.Small" Value="@item.Name" RemoveIcon="dnet-app-chips-remove">
-					</DnetChip>
-				}
-			</DnetChipList>
-		</div>
-		<div class="dnet-m-b-30">
-			<span class="dnet-m-b-10" style="font-size:0.875rem">Custom color:</span>
-			<DnetChipList @ref="_listComponent" OnSelectionChange="SelectionChanged">
-				@foreach (var item in _items2)
-				{
-					<DnetChip ChipSize="ChipSize.Small" Value="@item.Name" BackgroungColor="#42b0d5" Color="#FFFFFF" BackgroungColorSelected="red">
-					</DnetChip>
-				}
-			</DnetChipList>
-		</div>
-		<div class="dnet-m-b-30">
-			<span class="dnet-m-b-10" style="font-size:0.875rem">Custom color:</span>
-			<DnetChipList @ref="_listComponent" OnSelectionChange="SelectionChanged">
-				@foreach (var item in _items2)
-				{
-					<DnetChip ChipSize="ChipSize.Small" Value="@item.Name" BackgroungColor="#42b0d5" Color="#FFFFFF" AvatarIcon="dnet-app-chips-avatar">
-					</DnetChip>
-				}
-			</DnetChipList>
-		</div>
-	</div>
-</div>
+        <DemoCard Id="chips-priority" Title="Set a project priority" Eyebrow="Single choice"
+                  Description="Choose one priority for the project. Selecting the active chip again clears the choice.">
+            <ChildContent>
+                <div class="demo-stack">
+                    <div class="chips-stage demo-preview" role="group" aria-label="Project priority">
+                        <DnetChipList OnSelectionChange="PriorityChanged">
+                            @foreach (var priority in _priorities)
+                            {
+                                <DnetChip @key="priority" Value="@priority" ChipSize="ChipSize.Medium"
+                                          Selected="@(_priority == priority)" Removable="false" />
+                            }
+                        </DnetChipList>
+                    </div>
+                    <div class="chips-priority-preview">
+                        <span class="demo-info">Website launch</span>
+                        <p class="demo-value">Make room for the work that matters</p>
+                        <span class="demo-muted">Your choice stays visible in the project summary below.</span>
+                    </div>
+                </div>
+            </ChildContent>
+            <Footer><span id="chips-priority-value" class="demo-value" role="status">@(_priority.Length == 0 ? "No priority selected" : $"Priority: {_priority}")</span></Footer>
+        </DemoCard>
 
+        <DemoCard Id="chips-people" Title="People in this project" Eyebrow="Removable items"
+                  Description="Keep the project team in view. Remove a person with the trailing icon, then restore the example to try again.">
+            <ChildContent>
+                <div class="demo-stack">
+                    <div class="chips-stage demo-preview" role="group" aria-label="Project team">
+                        @if (_people.Count == 0)
+                        {
+                            <div id="chips-people-empty" class="chips-empty">
+                                <strong>No teammates yet</strong>
+                                <p class="demo-muted">Restore the team to bring everyone back.</p>
+                            </div>
+                        }
+                        <DnetChipList>
+                            @foreach (var person in _people)
+                            {
+                                <DnetChip @key="person.Name" Value="@person.Name" ChipSize="ChipSize.Medium"
+                                          Selectable="false" OnRemoved="RemovePerson"
+                                          RemoveIcon="@(person.Initials == "TM" ? "dnet-app-chips-remove" : null)">
+                                    <span class="chips-person"><span class="chips-person-avatar" aria-hidden="true">@person.Initials</span><span>@person.Name</span></span>
+                                </DnetChip>
+                            }
+                        </DnetChipList>
+                    </div>
+                    <div class="demo-actions">
+                        <DnetButton id="chips-restore-team" disabled="@(_people.Count == 3)" OnClick="RestorePeople">Restore team</DnetButton>
+                    </div>
+                    <p id="chips-people-action" class="demo-status" role="status">@_peopleAction</p>
+                </div>
+            </ChildContent>
+            <Footer><span id="chips-people-value" class="demo-value" role="status">@_people.Count @(_people.Count == 1 ? "teammate" : "teammates") in this project</span></Footer>
+        </DemoCard>
+
+        <DemoCard Id="chips-appearance" Title="Context at a glance" Eyebrow="Icons and states"
+                  Description="Add a recognizable symbol, give an item emphasis or explain why an option is unavailable.">
+            <div class="demo-stack">
+                <div class="chips-state-row">
+                    <DnetChipList>
+                        <DnetChip Value="Commerce" ChipSize="ChipSize.Small" Selectable="false" Removable="false"
+                                  AvatarIcon="dnet-app-chips-avatar"
+                                  BackgroungColor="var(--dnet-sys-primary-emphasis)" Color="var(--dnet-sys-on-primary)" />
+                    </DnetChipList>
+                    <p class="demo-info">A leading icon adds context to a category.</p>
+                </div>
+                <div class="chips-state-row">
+                    <span class="chips-disabled" aria-disabled="true">
+                        <DnetChipList>
+                            <DnetChip Value="Managed label" ChipSize="ChipSize.Small" Disabled="true" />
+                        </DnetChipList>
+                    </span>
+                    <p class="demo-info">This label is managed by the workspace owner. It cannot be selected or removed.</p>
+                </div>
+                <ul class="demo-bullets">
+                    <li>Use Enter or Space to select a focused chip.</li>
+                    <li>The trailing remove icon is a separate action.</li>
+                    <li>Keep labels short so choices are easy to compare.</li>
+                </ul>
+            </div>
+        </DemoCard>
+
+        <div class="demo-span-all">
+            <DemoCard Id="chips-sizes" Title="Find the right fit" Eyebrow="Four sizes"
+                      Description="Use the same label to compare each size. The large example shows the selected appearance.">
+                <div class="chips-sizes">
+                    @foreach (var size in _sizes)
+                    {
+                        <div class="chips-size-cell">
+                            <div class="chips-size-label"><strong>@size.Label</strong><span>@size.Abbreviation</span></div>
+                            <div class="chips-size-preview">
+                                <DnetChipList>
+                                    <DnetChip Value="Design" ChipSize="size.Size" Selected="@(size.Size == ChipSize.Large)"
+                                              Selectable="false" Removable="false" />
+                                </DnetChipList>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </DemoCard>
+        </div>
+    </div>
+</DemoPage>
 
 @code {
+    private readonly string[] _topics = ["Design", "Engineering", "Research", "Operations"];
+    private readonly string[] _priorities = ["Low", "Normal", "High"];
+    private HashSet<string> _selectedTopics = new(StringComparer.Ordinal);
+    private string _priority = string.Empty;
+    private List<Teammate> _people = CreatePeople();
+    private string _peopleAction = "Use the remove icon beside a name to update the team.";
+    private readonly SizeExample[] _sizes =
+    [
+        new(ChipSize.ExtraSmall, "Extra small", "XS"),
+        new(ChipSize.Small, "Small", "S"),
+        new(ChipSize.Medium, "Medium", "M"),
+        new(ChipSize.Large, "Large", "L")
+    ];
 
-	private bool _enablePagingination { get; set; } = false;
+    private string TopicSummary => _selectedTopics.Count == 0
+        ? "No topic filters applied"
+        : $"{_selectedTopics.Count} selected · {string.Join(", ", _topics.Where(_selectedTopics.Contains))}";
 
-	private bool _enableSearching { get; set; } = false;
+    // Page renders reapply Selected; discard stale list entries after clearing.
+    private void TopicsChanged(List<DnetChip> chips) => _selectedTopics = chips
+        .Where(chip => chip.IsSelected() && chip.Value is not null)
+        .Select(chip => chip.Value!).ToHashSet(StringComparer.Ordinal);
 
-	private bool _checkboxSelectionColumn { get; set; } = false;
+    private void ClearTopics() => _selectedTopics.Clear();
 
-	private bool _enableSorting { get; set; } = false;
+    private void PriorityChanged(List<DnetChip> chips) =>
+        _priority = chips.FirstOrDefault(chip => chip.IsSelected())?.Value ?? string.Empty;
 
-	private List<MarineOperator> _items1 = new List<MarineOperator>();
+    private void RemovePerson(DnetChip chip)
+    {
+        _people.RemoveAll(person => person.Name == chip.Value);
+        _peopleAction = $"{chip.Value} removed from the project.";
+    }
 
-	private List<MarineOperator> _items2 = new List<MarineOperator>();
+    private void RestorePeople()
+    {
+        _people = CreatePeople();
+        _peopleAction = "Team restored · everyone is back in the project.";
+    }
 
-	private DnetChipList _listComponent { get; set; }
+    private static List<Teammate> CreatePeople() =>
+    [
+        new("Taylor Morgan", "TM"), new("Alex Rivera", "AR"), new("Sam Chen", "SC")
+    ];
 
-	protected override void OnInitialized()
-	{
-		_items1 = GetVirtualScrollData();
-		_items2 = GetVirtualScrollData();
-	}
-
-	private List<MarineOperator> GetVirtualScrollData()
-	{
-		var items = new List<MarineOperator>();
-
-		var rnd = new Random();
-
-		for (int i = 1; i < 5; i++)
-		{
-			var item = new MarineOperator
-				{
-					MarineOperatorId = i,
-					Name = $"MarineOperator {i}",
-					Color = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256))
-				};
-
-			items.Add(item);
-		}
-
-		return items;
-	}
-
-	private void SelectionChanged(List<DnetChip> selectedItems)
-	{
-		var tt = selectedItems;
-	}
-
-	private void Removed(DnetChip chip)
-	{
-		var removedItem = _items1.FirstOrDefault(p => p.Name == chip.Value);
-
-		_items1.Remove(removedItem);
-
-		StateHasChanged();
-	}
+    private sealed record Teammate(string Name, string Initials);
+    private sealed record SizeExample(ChipSize Size, string Label, string Abbreviation);
 }
-
-

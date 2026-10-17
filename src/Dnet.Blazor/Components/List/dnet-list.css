@@ -62,6 +62,8 @@
 }
 
 .dnet-list-form {
+  height: auto;
+  flex-shrink: 0;
   padding: var(--dnet-list-padding-vertical, 4px) 20px;
 }
 .dnet-list-form .dnet-form-field-plain-wrapper {

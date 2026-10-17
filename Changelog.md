@@ -2,6 +2,122 @@
 
 ## Unreleased
 
+- Refreshed the ImageEditor sample with a responsive upload workspace, a local
+  demo image, editing guidance and a downloadable result with file details.
+  Added validation, cancel/reopen/reset flows and disposal of upload streams
+  after both edited and unchanged exports.
+- ImageEditor stacks its stage and editing panel on small screens, preserving
+  a usable image area and scroll access to all controls. Images that cannot
+  be decoded display an alert, and icon actions have accessible names.
+
+- Refreshed the Spoiler sample with responsive themed cards for editorial
+  content, shared expansion controls, dynamic descriptions, short content and
+  an initially expanded RTL story. An editable note demonstrates that content
+  and input state survive collapsing and reopening the details.
+
+- Refreshed the Timeline sample with themed example cards, responsive order
+  tracking, project milestones, team activity and right-to-left reading. The
+  order example can advance through delivery and reset, keeping event status,
+  accessible labels, dates and the progress summary in sync.
+
+- Refreshed the Double List sample with a responsive team assignment workspace,
+  keyboard-accessible transfer actions, local sample data, display preferences
+  and a live project roster. Fixed project leads cannot be transferred; moving
+  people resets searches and pending selections together.
+- Local List searches with no matches now remain empty, including after sorting,
+  rather than falling back to the full collection. Pressing Enter in the search
+  field no longer submits its form or reloads the page.
+
+- Refreshed the PickList sample with themed, responsive cards for local and
+  paged team selection, readable selection summaries, custom team templates
+  and a localized example with a protected selection.
+
+- Refreshed the Chips sample with topic filters, an optional project priority,
+  removable teammates, a four-size gallery and themed icon/disabled examples.
+  Selection summaries, clear filters and restore actions reflect the live state.
+
+- Refreshed eighteen component samples with shared page headers, themed example
+  cards, responsive layouts and live results: Dialog, Select, Connected Panel,
+  Floating Panel, DatePicker, TimePicker, Tabs, Stepper, DynamicStepper, Toast,
+  Tooltip, Spinner, List View, Tree View, Expansion Panel, Radio Button, Checkbox
+  and Slide Toggle. Profile editors and filters now return usable results, and
+  the loading example finishes cleanly and cancels pending work on navigation.
+  Tooltips retain their trigger positioning on mobile and tablet instead of
+  appearing at the top-left of the viewport.
+
+- Autocomplete and Select panels with an omitted width now follow the field's
+  width instead of resizing with virtualized results. Sizing remains stable
+  during filtering and scrolling, follows field resizing on desktop/tablet and
+  preserves explicit widths, size constraints and the mobile layout.
+
+- Redesigned the Autocomplete sample with separate example cards, live value
+  previews, richer result templates and a responsive usage guide. The basic and
+  detailed examples retain their shared value; the decorated example is independent.
+  External value changes now synchronize floating labels and clear actions
+  without remounting the autocomplete or emitting an extra value change.
+
+- Redesigned the Forms sample with grouped contact, date, numeric and address
+  fields, an integrated appearance picker and a responsive reference gallery.
+  Filled and transparent modes preserve the same input instances and values.
+
+- Redesigned the FormValidation sample with grouped employee details, address
+  cards, inline feedback, validation progress and clear save/reset actions.
+  Required-field validation now associates nested address errors with their
+  actual inputs and validates employee details consistently.
+
+- Added `DnetButton.Size` (`Small`, `Medium`, `Large`) and a decorative leading
+  `IconContent` slot. Heights are 32/40/56px, horizontal padding 12/16/24px,
+  icons 20/20/24px and icon-to-text gaps 4/8/8px for every button shape.
+  Medium (40px) is the default; explicit sizing and legacy tokens remain valid.
+
+- Buttons use a pill shape by default in every theme. Explicit radius tokens,
+  including the legacy button-radius token, still override the default.
+
+- Grid headers and rows reserve the same native scrollbar gutter, keeping
+  pinned columns aligned across scrollbar preferences. Horizontal scrolling
+  includes column borders so the final column can be revealed completely.
+
+- Checkbox controls are 18px and radio buttons 20px by default. Grid selection
+  checkboxes also use 18px; existing component size tokens remain supported.
+
+- Fixed overlapping labels and week values in DatePickerWeek fields. The weekly
+  selector uses the shared select layout and keeps the form's floating label in
+  sync with initial, selected and programmatically updated values.
+
+- Inline calendars, including the weekly calendar, use the same raised theme
+  background as popup panels and honor `--dnet-calendar-background` throughout.
+  Calendar borders match their background, including custom background colors.
+  The inline weekly calendar's outer background follows the calendar radius.
+
+- Redesigned the Theming sample with grouped appearance controls, live component
+  previews, color presets, shape options and a CSS export preview. Added reset,
+  accurate theme defaults and synchronization with the application theme picker.
+
+- Opened panels share the TimePicker surface: raised theme background, large
+  rounded corners and elevation 3. Applied to selects, autocomplete, calendars,
+  connected/floating panels, floating double lists, dialogs and Grid filters.
+  Explicit styling tokens remain supported.
+
+- Grid data rows are 56px high by default, with matching sample configurations
+  and text spacing. Explicit row-height settings remain supported.
+
+- Grid filter rows reserve the complete input height plus vertical spacing,
+  keeping pinned headers and the body aligned when form spacing is customized.
+
+- Form fields follow Material spacing: 56px minimum height, 16px text insets,
+  24px icon slots with 12px edge insets and 16px text gaps. Fill floats its label
+  inside the control; supporting text and character counts share a row 4px below
+  it. Added geometry tokens and a reference gallery in `/Forms`.
+- Added `DnetFormField.Appearance`, with a filled background by default and
+  transparent `Standard`/`Legacy` options. Fill adapts to the active theme,
+  including disabled fields. Added the `--dnet-form-field-background` styling
+  token, HTML attribute forwarding and a live appearance selector in `/Forms`.
+- Filled fields use the same color for their border and background, including
+  disabled states and custom background tokens.
+- Replaced the Select's filled triangle with the Bootstrap Icons down chevron,
+  preserving the foreground styling token and theme colors.
+- Fixed the calendar icon mask in DatePicker and DateRangePicker, and prevented
+  legacy sample styles from overriding the icon color in dark themes.
 - Added `DnetTimeline` and `DnetTimelineItem` to display activity with rich content,
   status markers, timestamps, custom bullets, RTL and responsive layouts.
 - Added `DnetSkeleton` for animated loading placeholders, circular variants and

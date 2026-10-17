@@ -1,47 +1,61 @@
-﻿@page "/RadioButton"
+@page "/RadioButton"
 
-@using System.Drawing
-@using Dnet.App.Shared.Infrastructure.Entities
 @using Dnet.Blazor.Components.RadioButton
-@using Microsoft.AspNetCore.Components;
-@using Microsoft.AspNetCore.Components.Web;
 
-<div class="container-fluid" style="padding-top: 10px;">
-	<div class="d-flex dnet-m-l-30 dnet-m-t-20">
-		<span class="dnet-m-r-10 dnet-app-comp-name">Radio Button</span>
-	</div>
+<DemoPage Id="demo-radio-button" Title="Radio button" Category="Selection controls"
+          Description="Present a small set of alternatives and let people choose exactly one."
+          Badge="Single choice">
+    <div class="demo-grid">
+        <DemoCard Id="radio-delivery" Title="Choose a delivery option"
+                  Description="Compare the available methods. Selecting another option updates your delivery summary.">
+            <ChildContent>
+                <fieldset class="radio-options">
+                    <legend>Delivery method</legend>
+                    <DnetInputRadioGroup Name="delivery-method" @bind-Value="_delivery">
+                        <div class="demo-option-row">
+                            <DnetInputRadioButton Name="delivery-method" Value="DeliveryMethod.Standard">Standard delivery</DnetInputRadioButton>
+                        </div>
+                        <p class="demo-info">Arrives in 3–5 business days · Free</p>
+                        <div class="demo-option-row">
+                            <DnetInputRadioButton Name="delivery-method" Value="DeliveryMethod.Express">Express delivery</DnetInputRadioButton>
+                        </div>
+                        <p class="demo-info">Arrives the next business day · €9.00</p>
+                        <div class="demo-option-row">
+                            <DnetInputRadioButton Name="delivery-method" Value="DeliveryMethod.Collection" Disabled="true" TextPlacedBefore="true">Collect in store</DnetInputRadioButton>
+                        </div>
+                        <p class="demo-info">Currently unavailable for this order.</p>
+                    </DnetInputRadioGroup>
+                </fieldset>
+            </ChildContent>
+            <Footer>
+                <span class="demo-value" role="status">Selected: @DeliveryLabel</span>
+            </Footer>
+        </DemoCard>
 
-	<div class="dnet-m-l-30 dnet-m-t-30">
-		<DnetInputRadioGroup Name="colors" @bind-Value="EngineC">
-			<div class="dnet-m-b-30">
-				<DnetInputRadioButton Name="colors" Value="Engine.Fusion" Disabled="@_disable2" TextPlacedBefore="true">Fusion</DnetInputRadioButton>
-			</div>
-			<div class="dnet-m-b-30">
-				<DnetInputRadioButton Name="colors" Value="Engine.Ion">Ion</DnetInputRadioButton>
-			</div>
-			<div class="dnet-m-b-30">
-				<DnetInputRadioButton Name="colors" Value="Engine.Plasma">Plasma</DnetInputRadioButton>
-			</div>
-		</DnetInputRadioGroup>
-	</div>
-</div>
-
+        <DemoCard Title="Delivery summary" Description="A single value represents the choice for the entire group.">
+            <div class="demo-stack">
+                <div class="demo-preview" role="status">
+                    <span class="demo-info">Your delivery</span>
+                    <p class="demo-value">@DeliveryLabel</p>
+                    <span class="demo-muted">@DeliveryDescription</span>
+                </div>
+                <ul class="demo-bullets">
+                    <li>Click an option or its label to select it.</li>
+                    <li>Choose one option from the group at a time.</li>
+                    <li>Use radio buttons when all alternatives should be visible.</li>
+                </ul>
+            </div>
+        </DemoCard>
+    </div>
+</DemoPage>
 
 @code {
+    private DeliveryMethod _delivery = DeliveryMethod.Standard;
 
-	private string _color { get; set; }
+    private string DeliveryLabel => _delivery == DeliveryMethod.Express ? "Express delivery" : "Standard delivery";
+    private string DeliveryDescription => _delivery == DeliveryMethod.Express
+        ? "Next business day · €9.00"
+        : "3–5 business days · Free";
 
-	private bool _disable2 { get; set; }
-
-	private Engine EngineC { get; set; }
-
-	protected override void OnInitialized()
-	{
-		_disable2 = true;
-	}
-
-	private enum Engine { Ion, Plasma, Fusion, Warp }
+    private enum DeliveryMethod { Standard, Express, Collection }
 }
-
-
-

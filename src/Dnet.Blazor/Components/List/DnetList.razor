@@ -22,7 +22,7 @@
 <div class="dnet-list-wrapper">
     @if (ListOptions.EnableSearching)
     {
-        <form class="dnet-list-form">
+        <form class="dnet-list-form" @onsubmit="PreventSearchSubmit" @onsubmit:preventDefault="true">
             <DnetFormField Label="@Label" UseClearButton="true" IsRequired="true">
                 <PrefixContent>
                     <span class="dnet-list-search-icon dnet-list-search-icon-default" unselectable="on"></span>
@@ -246,6 +246,8 @@
 
     private List<RowNode<TItem>> _filteredRowNodes = new List<RowNode<TItem>>();
 
+    private bool _hasLocalFilter;
+
     private List<RowNode<TItem>> _selectedRowNodes = new();
 
     private RowNode<TItem>? _previousSelectedRowNode;
@@ -331,6 +333,7 @@
         _rowNodes = new();
         _rowNodesBk = new();
         _filteredRowNodes = new();
+        _hasLocalFilter = false;
         _selectedRowNodes = new();
         _previousSelectedRowNode = null;
 
@@ -382,7 +385,7 @@
             var (startIndex, count) = PaginatorService.GetRangePage(_searchModel.PaginationModel.CurrentPage,
             _searchModel.PaginationModel.PageSize, _searchModel.PaginationModel.ItemsCount);
 
-            if (_filteredRowNodes.Any())
+            if (_hasLocalFilter)
             {
                 _rowNodes = _filteredRowNodes.Skip(startIndex).Take(count).ToList();
             }
@@ -397,7 +400,7 @@
         {
             _rowNodes = new List<RowNode<TItem>>();
 
-            if (_filteredRowNodes.Any())
+            if (_hasLocalFilter)
             {
                 _rowNodes.AddRange(_filteredRowNodes);
             }
@@ -517,7 +520,7 @@
         }
         else
         {
-            if (_filteredRowNodes.Any())
+            if (_hasLocalFilter)
             {
                 _filteredRowNodes = SortTexts(_filteredRowNodes);
             }
@@ -616,6 +619,8 @@
                 }
                 else
                 {
+                    _hasLocalFilter = !string.IsNullOrEmpty(_filter);
+
                     if (string.IsNullOrEmpty(_filter))
                     {
                         _filteredRowNodes.Clear();
@@ -841,6 +846,8 @@
 
         await OnTransfer.InvokeAsync(item.RowData);
     }
+
+    private static void PreventSearchSubmit() { }
 
     private Task ClearInput()
     {

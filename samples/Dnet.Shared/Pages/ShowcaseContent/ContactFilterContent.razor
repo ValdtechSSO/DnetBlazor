@@ -1,0 +1,27 @@
+@using Dnet.Blazor.Components.Button
+@using Dnet.Blazor.Components.Form
+@using Dnet.Blazor.Components.Select
+@using Dnet.Blazor.Components.ConnectedPanel.Infrastructure.Interfaces
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Enums
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Services
+@inject IConnectedPanelService ConnectedPanelService
+
+<div class="contact-filter" role="dialog" aria-labelledby="contact-filter-title">
+    <header><p>Directory settings</p><h2 id="contact-filter-title">Filter contacts</h2><span>Choose which team appears in the directory.</span></header>
+    <EditForm Model="_filter" OnSubmit="ApplyFilter">
+        <div class="contact-filter-field"><DnetFormField Label="Team"><ChildContent><DnetSelect TValue="string" TItem="string" @bind-Value="_filter.Department" Items="_teams" DisplayValueConverter="team => team" ValueConverter="team => team" ResponsiveLabel="Team" /></ChildContent></DnetFormField></div>
+        <footer><DnetButton OnClick="Cancel">Cancel</DnetButton><DnetButton id="connected-panel-apply" class="contact-filter-apply" ButtonType="submit">Apply filter</DnetButton></footer>
+    </EditForm>
+</div>
+
+@code {
+    [CascadingParameter] private int OverlayReferenceId { get; set; }
+    [Parameter] public string Department { get; set; } = "All teams";
+    private readonly List<string> _teams = ["All teams", "Design", "Engineering", "Operations"];
+    private readonly Filter _filter = new();
+    protected override void OnInitialized() => _filter.Department = Department;
+    private void ApplyFilter(EditContext _) => Close(CloseReason.Ok, _filter.Department);
+    private void Cancel() => Close(CloseReason.Cancel, null);
+    private void Close(CloseReason reason, string? value) => ConnectedPanelService.Close(new OverlayResult { OverlayReferenceId = OverlayReferenceId, CloseReason = reason, ComponentData = value! });
+    private sealed class Filter { public string Department { get; set; } = "All teams"; }
+}

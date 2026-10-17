@@ -1,0 +1,326 @@
+.button-showcase {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding: 32px 24px 48px;
+    color: var(--dnet-sys-on-surface);
+}
+
+.button-showcase-header,
+.button-gallery-header,
+.button-code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.button-showcase-header {
+    margin-block-end: 32px;
+}
+
+.button-eyebrow,
+.button-card-eyebrow {
+    margin: 0 0 8px;
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-sm);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.button-showcase h1 {
+    margin: 0;
+    color: var(--dnet-sys-on-surface-emphasis);
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    font-weight: 650;
+    line-height: 1.2;
+    letter-spacing: -0.035em;
+}
+
+.button-introduction {
+    max-width: 580px;
+    margin: 12px 0 0;
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-md);
+    line-height: 1.65;
+}
+
+.button-default-badge {
+    flex: 0 0 auto;
+    padding: 8px 12px;
+    border: 1px solid var(--dnet-sys-border);
+    border-radius: var(--dnet-sys-radius-pill);
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-sm);
+    white-space: nowrap;
+}
+
+.button-gallery {
+    min-width: 0;
+}
+
+.button-gallery-header {
+    margin-block-end: 20px;
+}
+
+.button-showcase h2 {
+    margin: 0;
+    color: var(--dnet-sys-on-surface-emphasis);
+    font-size: var(--dnet-sys-text-lg);
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.button-gallery-header p,
+.button-interaction-card > p:not(.button-card-eyebrow),
+.button-code-card > p {
+    margin: 6px 0 0;
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-sm);
+    line-height: 1.65;
+}
+
+.button-disable-control {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-sm);
+    cursor: pointer;
+}
+
+.button-disable-control input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: var(--dnet-sys-primary-strong);
+}
+
+.button-size-card {
+    display: grid;
+    grid-template-columns: 156px minmax(0, 1fr);
+    min-width: 0;
+    margin-block-end: 16px;
+    overflow: hidden;
+    border: 1px solid var(--dnet-sys-border);
+    border-radius: var(--dnet-sys-radius-lg);
+    background: var(--dnet-sys-surface-raised);
+}
+
+.button-size-description {
+    padding: 24px;
+    border-inline-end: 1px solid var(--dnet-sys-border);
+    background: color-mix(in srgb, var(--dnet-sys-on-surface) 2%, var(--dnet-sys-surface-raised));
+}
+
+.button-size-height {
+    display: block;
+    margin-block-end: 16px;
+    color: var(--dnet-sys-on-surface-emphasis);
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.04em;
+}
+
+.button-size-height span {
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-sm);
+    font-weight: 400;
+    letter-spacing: normal;
+}
+
+.button-showcase h3 {
+    margin: 0;
+    font-size: var(--dnet-sys-text-md);
+    font-weight: 600;
+}
+
+.button-size-description p {
+    margin: 8px 0 0;
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-sm);
+    line-height: 1.75;
+}
+
+.button-shape-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+    gap: 20px;
+    min-width: 0;
+    padding: 24px;
+}
+
+.button-shape-group {
+    min-width: 0;
+}
+
+.button-showcase h4 {
+    margin: 0 0 16px;
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-sm);
+    font-weight: 500;
+}
+
+.button-shape-examples {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.button-showcase ::deep .button-example {
+    --dnet-btn-background: var(--dnet-sys-on-surface-emphasis);
+    --dnet-btn-background-hover: color-mix(in srgb, var(--dnet-sys-on-surface-emphasis) 85%, var(--dnet-sys-surface-raised));
+    --dnet-btn-foreground: var(--dnet-sys-surface-raised);
+}
+
+.button-showcase ::deep .button-shape-round {
+    --dnet-btn-radius: var(--dnet-sys-radius-pill);
+}
+
+.button-showcase ::deep .button-shape-soft {
+    --dnet-btn-radius: 6px;
+}
+
+.button-showcase ::deep .button-shape-square {
+    --dnet-btn-radius: 0;
+}
+
+.button-showcase ::deep .button-example:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.button-details-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 24px;
+    margin-block-start: 28px;
+}
+
+.button-interaction-card,
+.button-code-card {
+    min-width: 0;
+    padding: 24px;
+    border: 1px solid var(--dnet-sys-border);
+    border-radius: var(--dnet-sys-radius-lg);
+    background: var(--dnet-sys-surface-raised);
+}
+
+.button-interaction-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-block: 24px;
+}
+
+.button-action-count {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-block-start: 20px;
+    border-block-start: 1px solid var(--dnet-sys-border);
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-sm);
+}
+
+.button-action-count output {
+    color: var(--dnet-sys-on-surface-emphasis);
+    font-size: var(--dnet-sys-text-xl);
+    font-weight: 600;
+}
+
+.button-code-header {
+    margin-block-end: 20px;
+}
+
+.button-code-language {
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-sm);
+}
+
+.button-code-card pre {
+    max-width: 100%;
+    margin: 0;
+    padding: 16px;
+    overflow-x: auto;
+    border-radius: var(--dnet-sys-radius-md);
+    background: color-mix(in srgb, var(--dnet-sys-on-surface) 4%, var(--dnet-sys-surface-raised));
+    color: var(--dnet-sys-on-surface);
+    font-size: var(--dnet-sys-text-sm);
+    line-height: 1.7;
+}
+
+.button-code-card > p {
+    margin-block-start: 16px;
+}
+
+@media (max-width: 1100px) {
+    .button-size-description,
+    .button-shape-grid {
+        padding: 20px;
+    }
+
+    .button-shape-grid {
+        gap: 16px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .button-size-card,
+    .button-details-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .button-size-description {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px 20px;
+        border-inline-end: 0;
+        border-block-end: 1px solid var(--dnet-sys-border);
+    }
+
+    .button-size-height,
+    .button-size-description p {
+        margin: 0;
+    }
+}
+
+@media (max-width: 1000px) {
+    .button-shape-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 28px;
+    }
+
+    .button-shape-examples {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+}
+
+@media (max-width: 700px) {
+    .button-showcase {
+        padding: 24px 16px 40px;
+    }
+
+    .button-showcase-header,
+    .button-gallery-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .button-interaction-card,
+    .button-code-card {
+        padding: 20px;
+    }
+}

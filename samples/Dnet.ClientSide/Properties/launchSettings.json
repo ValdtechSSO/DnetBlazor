@@ -10,7 +10,7 @@
   "profiles": {
     "Dnet.ClientSide": {
       "commandName": "Project",
-      "launchBrowser": false,
+      "launchBrowser": true ,
       "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
       "applicationUrl": "https://localhost:5101",
       "environmentVariables": {

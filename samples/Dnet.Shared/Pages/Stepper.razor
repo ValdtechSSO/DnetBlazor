@@ -1,152 +1,102 @@
-﻿@page "/Stepper"
+@page "/Stepper"
 @using Dnet.Blazor.Components.Stepper
 @using Dnet.Blazor.Components.Checkbox
+@using Dnet.Blazor.Components.Button
 
-<div class="container-fluid" style="padding-top: 10px;">
-	<div class="d-flex dnet-page-content-left-margin dnet-m-t-20">
-		<span class="dnet-m-r-10 dnet-app-comp-name">Stepper</span>
-	</div>
-	<div class="dnet-page-content-left-margin dnet-m-t-30">
-		<div class="row" style="height: calc(100% - 10px)">
-			<div class="col-6" style="height: calc(100% - 0px); margin-bottom: 30px">
-				<div style="display:flex;align-items:center;justify-content:flex-start">
-					<span style="font-size:14px;">Horizontal Stepper:</span>
-				</div>
-				<div style="height: calc(100% - 0px); width: 700px; background-color: #FFFFFF">
-					<DnetStepper dnet-align-tabs="start" OnSelectionChange="StepClicked" Orientation="(int)StepperOrientation.Horizontal">
-						<DnetStep Label="Stepper 1">
-							<span>Stepper Content 1</span>
-						</DnetStep>
-						<DnetStep Label="Stepper 2">
-							<span>Stepper Content 2</span>
-						</DnetStep>
-						<DnetStep Label="Stepper 3">
-							<span>Stepper Content 3</span>
-						</DnetStep>
-						<DnetStep Label="Stepper 4">
-							<span>Stepper Content 4</span>
-						</DnetStep>
-					</DnetStepper>
-				</div>
-			</div>
-		</div>
-		<div class="row" style="height: calc(100% - 10px)">
-			@* <div class="col-3" style="height: calc(100% - 0px);">
-				<div style="display:flex;align-items:center;justify-content:flex-start">
-					<span style="font-size:14px;">Vertical Stepper:</span>
-				</div>
-				<div style="height: calc(100% - 0px); width: 700px; background-color: #FFFFFF">
-					<DnetStepper dnet-align-tabs="start" OnSelectionChange="StepClicked" Orientation="(int)StepperOrientation.Vertical">
-						<DnetStep Label="Stepper 1">
-							<span>Stepper Content 1</span>
-						</DnetStep>
-						<DnetStep Label="Stepper 2">
-							<span>Stepper Content 2</span>
-						</DnetStep>
-						<DnetStep Label="Stepper 3">
-							<span>Stepper Content 3</span>
-						</DnetStep>
-						<DnetStep Label="Stepper 4">
-							<span>Stepper Content 4</span>
-						</DnetStep>
-					</DnetStepper>
-				</div>
-			</div> *@
-			<div class="col-3" style="height: calc(100% - 0px);">
-				<div style="display:flex;align-items:center;justify-content:flex-start;width:400px">
-					<span style="font-size:14px;">Vertical Stepper Custom Header Template:</span>
-				</div>
-				<div style="height: calc(100% - 0px); width: 700px; background-color: #FFFFFF">
-					<DnetStepper OnSelectionChange="StepClicked" Orientation="(int)StepperOrientation.Vertical" Linear="true">
-						<DnetStep Completed="_isCompletedStep1">
-							<StepHeaderTemplate>
-								<div class="dnet-step-icon dnet-step-icon-state-number">
-									<div class="dnet-app-stepper-icon-wrapper">
-										<span class="dnet-app-stepper-icon dnet-app-stepper-step1"></span>
-									</div>
-								</div>
-							</StepHeaderTemplate>
-							<ChildContent>
-								<div class="d-flex align-items-sm-center dnet-m-b-5">
-									<DnetInputCheckbox @bind-Value="_isCompletedStep1" class="dnet-m-r-5">Force Complete Step 1</DnetInputCheckbox>
-								</div>
-							</ChildContent>
-						</DnetStep>
-						<DnetStep Completed="_isCompletedStep2">
-							<StepHeaderTemplate>
-								<div class="dnet-step-icon dnet-step-icon-state-number">
-									<div class="dnet-app-stepper-icon-wrapper">
-										<span class="dnet-app-stepper-icon dnet-app-stepper-step2"></span>
-									</div>
-								</div>
-							</StepHeaderTemplate>
-							<ChildContent>
-								<div class="d-flex align-items-sm-center dnet-m-b-5">
-									<DnetInputCheckbox @bind-Value="_isCompletedStep2" class="dnet-m-r-5">Force Complete Step 2</DnetInputCheckbox>
-								</div>
-							</ChildContent>
-						</DnetStep>
-						<DnetStep Completed="_isCompletedStep3">
-							<StepHeaderTemplate>
-								<div class="dnet-step-icon dnet-step-icon-state-number">
-									<div class="dnet-app-stepper-icon-wrapper">
-										<span class="dnet-app-stepper-icon dnet-app-stepper-step3"></span>
-									</div>
-								</div>
-							</StepHeaderTemplate>
-							<ChildContent>
-								<div class="d-flex align-items-sm-center dnet-m-b-5">
-									<DnetInputCheckbox @bind-Value="_isCompletedStep3" class="dnet-m-r-5">Force Complete Step 3</DnetInputCheckbox>
-								</div>
-							</ChildContent>
-						</DnetStep>
-						<DnetStep Completed="_isCompletedStep4">
-							<StepHeaderTemplate>
-								<div class="dnet-step-icon dnet-step-icon-state-number">
-									<div class="dnet-app-stepper-icon-wrapper">
-										<span class="dnet-app-stepper-icon dnet-app-stepper-step4"></span>
-									</div>
-								</div>
-							</StepHeaderTemplate>
-							<ChildContent>
-								<div class="d-flex align-items-sm-center dnet-m-b-5">
-									<DnetInputCheckbox @bind-Value="_isCompletedStep4" class="dnet-m-r-5">Force Complete Step 4</DnetInputCheckbox>
-								</div>
-							</ChildContent>
-						</DnetStep>
-					</DnetStepper>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+<DemoPage Id="demo-stepper" Title="Stepper" Category="Navigation"
+          Description="Turn a longer task into focused stages, with flexible navigation or a guided sequence." Badge="Two orientations">
+    <div class="demo-stack">
+    <DemoCard Id="stepper-horizontal-card" Title="Plan a project" Eyebrow="Horizontal · Free navigation"
+              Description="Move between stages to review a project brief. Each stage keeps its place in the workflow.">
+        <ChildContent>
+            <div class="stepper-scroll" tabindex="0" aria-label="Project workflow; scroll horizontally on smaller screens">
+                <div class="stepper-horizontal-stage">
+                    <DnetStepper @ref="_horizontalStepper" id="stepper-horizontal" OnSelectionChange="HorizontalChanged"
+                                 Orientation="(int)StepperOrientation.Horizontal">
+                        @foreach (var stage in _stages)
+                        {
+                            <DnetStep Label="@stage.Title">
+                                <div class="stepper-content">
+                                    <p class="stepper-kicker">Project brief · @stage.Title</p>
+                                    <h3>@stage.Heading</h3>
+                                    <p class="demo-muted">@stage.Description</p>
+                                    <div class="stepper-detail"><span class="demo-info">Website launch</span><strong>@stage.Detail</strong></div>
+                                </div>
+                            </DnetStep>
+                        }
+                    </DnetStepper>
+                </div>
+            </div>
+            <div class="demo-actions">
+                <DnetButton id="stepper-horizontal-back" disabled="@(_horizontalStep == 1)" OnClick="() => MoveHorizontal(-1)">Previous stage</DnetButton>
+                <DnetButton id="stepper-horizontal-next" disabled="@(_horizontalStep == _stages.Length)" OnClick="() => MoveHorizontal(1)">Next stage</DnetButton>
+            </div>
+        </ChildContent>
+        <Footer><span id="stepper-horizontal-value" role="status">Stage @_horizontalStep of @_stages.Length · @_stages[_horizontalStep - 1].Title</span></Footer>
+    </DemoCard>
 
+    <div class="demo-grid">
+        <DemoCard Id="stepper-linear-card" Title="Launch checklist" Eyebrow="Vertical · Linear navigation"
+                  Description="Complete the current stage before moving forward. Earlier stages remain available for review.">
+            <ChildContent>
+                <DnetStepper @ref="_linearStepper" id="stepper-linear" OnSelectionChange="LinearChanged"
+                             Orientation="(int)StepperOrientation.Vertical" Linear="true">
+                    @foreach (var stage in _stages)
+                    {
+                        <DnetStep Completed="stage.Completed">
+                            <StepHeaderTemplate>
+                                <div class="dnet-step-icon dnet-step-icon-state-number"><span>@(stage.Index + 1)</span></div>
+                                <span class="stepper-custom-label">@stage.Title</span>
+                            </StepHeaderTemplate>
+                            <ChildContent>
+                                <div class="stepper-linear-content">
+                                    <p class="demo-muted">@stage.Checklist</p>
+                                    <DnetInputCheckbox id="@($"stepper-complete-{stage.Index + 1}")" @bind-Value="stage.Completed">Mark this stage complete</DnetInputCheckbox>
+                                </div>
+                            </ChildContent>
+                        </DnetStep>
+                    }
+                </DnetStepper>
+                <div class="demo-actions">
+                    <DnetButton id="stepper-linear-back" disabled="@(_linearStep == 1)" OnClick="() => MoveLinear(-1)">Back</DnetButton>
+                    <DnetButton id="stepper-linear-next" disabled="@(_linearStep == _stages.Length || !_stages[_linearStep - 1].Completed)" OnClick="() => MoveLinear(1)">Continue</DnetButton>
+                </div>
+            </ChildContent>
+            <Footer><span id="stepper-linear-value" role="status">@_stages.Count(stage => stage.Completed) of @_stages.Length stages complete · Current: @_stages[_linearStep - 1].Title</span></Footer>
+        </DemoCard>
+        <DemoCard Id="stepper-guide" Title="A clear path to launch" Description="A workflow can support exploration and still make progress visible.">
+            <ol class="demo-bullets">
+                <li><strong>Details:</strong> agree on the outcome and project scope.</li>
+                <li><strong>Team:</strong> confirm ownership and collaborators.</li>
+                <li><strong>Review:</strong> check the brief and gather approval.</li>
+                <li><strong>Launch:</strong> share the plan and begin delivery.</li>
+            </ol>
+            <div class="demo-preview"><span class="demo-info">Try the linear example</span><p class="demo-muted">Complete Details to enable Continue, then return to an earlier stage to review it.</p></div>
+        </DemoCard>
+    </div>
+    </div>
+</DemoPage>
 
 @code {
+    private DnetStepper? _horizontalStepper;
+    private DnetStepper? _linearStepper;
+    private int _horizontalStep = 1;
+    private int _linearStep = 1;
+    private readonly ProjectStage[] _stages =
+    [
+        new(0, "Details", "Start with a shared goal", "Create a focused brief before the team starts delivery.", "Refresh the customer experience", "Confirm the project goal, scope and success measures."),
+        new(1, "Team", "Bring the right people together", "Give every part of the project a clear owner.", "Design, engineering and product", "Confirm an owner and invite the people responsible for delivery."),
+        new(2, "Review", "Make the final checks", "Review the plan together and resolve any open questions.", "Ready for stakeholder review", "Review the brief, timeline and responsibilities with the team."),
+        new(3, "Launch", "Share the plan", "The team has the context it needs to begin the next phase.", "Kickoff scheduled for Monday", "Share the approved plan and confirm the kickoff date.")
+    ];
 
-	private int _selectedId;
+    private void HorizontalChanged(Tuple<int, int> change) => _horizontalStep = change.Item1;
+    private void LinearChanged(Tuple<int, int> change) => _linearStep = change.Item1;
+    private void MoveHorizontal(int direction) => _horizontalStepper?.GoToStep(_horizontalStep + direction);
+    private void MoveLinear(int direction) => _linearStepper?.GoToStep(_linearStep + direction);
 
-	private int _previousSelectedId;
-
-	private bool _isCompletedStep1 { get; set; }
-
-	private bool _isCompletedStep2 { get; set; }
-
-	private bool _isCompletedStep3 { get; set; }
-
-	private bool _isCompletedStep4 { get; set; }
-
-
-	public void StepClicked(Tuple<int, int> tabClikedEventData)
-	{
-		(_selectedId, _previousSelectedId) = tabClikedEventData;
-	}
-
-	RenderFragment CreateTemplate()
-	{
-		return @<span>Stepper 2 RF</span>;
-	}
+    private sealed record ProjectStage(int Index, string Title, string Heading, string Description, string Detail, string Checklist)
+    {
+        public bool Completed { get; set; }
+    }
 }
-
-
-

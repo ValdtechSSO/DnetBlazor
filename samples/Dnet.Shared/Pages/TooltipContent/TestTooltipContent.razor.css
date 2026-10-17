@@ -1,0 +1,6 @@
+.tooltip-person { display: flex; align-items: center; gap: 12px; min-width: 0; padding-block: 4px; }
+.tooltip-person-avatar { display: grid; place-items: center; flex: 0 0 36px; width: 36px; height: 36px; border: 1px solid currentColor; border-radius: var(--dnet-sys-radius-pill); font-size: var(--dnet-sys-text-sm); font-weight: 600; }
+.tooltip-person > div { display: grid; gap: 3px; min-width: 0; }
+.tooltip-person strong { font-size: var(--dnet-sys-text-md); font-weight: 600; line-height: 1.5; }
+.tooltip-person span:not(.tooltip-person-avatar), .tooltip-person small { font-size: var(--dnet-sys-text-sm); line-height: 1.5; opacity: .85; overflow-wrap: anywhere; }
+.tooltip-person small { font-size: var(--dnet-sys-text-xs); opacity: .7; }

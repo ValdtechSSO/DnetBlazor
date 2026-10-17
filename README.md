@@ -28,13 +28,16 @@ For browser and visual regression checks against the running sample, see the
 
 ## Running the samples in VS Code
 
-With the .NET SDK, Node.js, C# extension and Chrome installed, run `npm ci --ignore-scripts`
+With the .NET SDK, Node.js and C# extension installed, run `npm ci --ignore-scripts`
 once. Select **Dnet - ClientSide + KestrelServer** in Run and Debug and press **F5**.
 The compound configuration builds the library assets and solution once, then starts
 both sample projects:
 
-- ClientSide: `http://127.0.0.1:5101` (Blazor WebAssembly debugging in Chrome).
+- ClientSide: `http://127.0.0.1:5101`.
 - KestrelServer: `http://localhost:62297`.
+
+The browser does not open automatically. Open the ClientSide URL manually when
+you want to use the demo.
 
 Stopping either session stops both. Each project also has an individual launch
 configuration. Stop any sample already running on these ports before launching.
@@ -60,6 +63,14 @@ events. Its sample is available at `/Timeline`.
 
 [`DnetSkeleton`](docs/skeleton.md) provides animated loading placeholders and can
 cover existing content while preserving its state. Its sample is at `/Skeleton`.
+
+[`DnetFormField`](docs/forms.md) uses a filled background by default. Set
+`Appearance="FormAppearance.Standard"` for a transparent field, or compare both
+options using the live selector in `/Forms`.
+
+[`DnetButton`](docs/buttons.md) offers Small (32px), Medium (40px) and Large
+(56px) sizes, with matching padding and optional leading icons for every corner
+shape. Compare the variants in `/Buttons`.
 
 ## Installation
 

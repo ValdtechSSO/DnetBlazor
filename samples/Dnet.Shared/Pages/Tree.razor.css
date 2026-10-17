@@ -1,0 +1,6 @@
+.tree-actions { margin-bottom: 24px; }
+.tree-stage { min-height: 245px; max-width: 100%; overflow-x: auto; padding-block: 4px; }
+.tree-node-label { line-height: 1.5; overflow-wrap: anywhere; }
+.tree-empty { padding-block: 4px; }
+.tree-empty strong { font-size: 14px; }
+.tree-empty p { margin: 8px 0 0; }

@@ -1,0 +1,12 @@
+.dialog-profile { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.dialog-avatar { display: grid; place-items: center; flex: 0 0 48px; width: 48px; height: 48px; border-radius: var(--dnet-sys-radius-pill); background: var(--dnet-sys-state-selected); color: var(--dnet-sys-on-surface-emphasis); font-size: var(--dnet-sys-text-lg); font-weight: 600; }
+.dialog-profile > div { display: grid; gap: 4px; min-width: 0; }
+.dialog-profile strong { color: var(--dnet-sys-on-surface-emphasis); font-size: var(--dnet-sys-text-lg); font-weight: 600; }
+.dialog-profile span:not(.dialog-avatar), .dialog-profile small { color: var(--dnet-sys-on-surface-muted); font-size: var(--dnet-sys-text-sm); line-height: 1.5; overflow-wrap: anywhere; }
+.dialog-option { align-items: flex-start; gap: 12px; cursor: pointer; }
+.dialog-option input { flex: 0 0 18px; width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--dnet-sys-primary-strong); }
+.dialog-option input:focus-visible { box-shadow: 0 0 0 2px var(--dnet-sys-focus-ring); }
+.dialog-option span { display: grid; gap: 5px; min-width: 0; }
+.dialog-option strong { color: var(--dnet-sys-on-surface); font-size: var(--dnet-sys-text-md); font-weight: 500; }
+.dialog-option small { color: var(--dnet-sys-on-surface-muted); font-size: var(--dnet-sys-text-sm); line-height: 1.6; }
+#dialog-result { display: grid; gap: 6px; }

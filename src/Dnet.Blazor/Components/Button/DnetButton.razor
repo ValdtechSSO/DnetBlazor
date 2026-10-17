@@ -2,7 +2,13 @@
 @using Microsoft.AspNetCore.Components.Web
 
 <button @ref="_focusElement" type="@ButtonType" @onclick="ClickAsync" class="@_cssClasses" @attributes="FilteredAdditionalAttributes">
-	<span class="dnet-button-wrapper">@ChildContent</span>
+	<span class="dnet-button-wrapper">
+        @if (IconContent is not null)
+        {
+            <span class="dnet-button-icon" aria-hidden="true">@IconContent</span>
+        }
+        @ChildContent
+    </span>
 	<span class="dnet-button-focus-overlay"></span>
 </button>
 
@@ -11,6 +17,14 @@
 	/// <summary>Gets or sets whether the component receives focus after it is rendered.</summary>
 	[Parameter]
 	public bool InitialFocus { get; set; }
+
+    /// <summary>Gets or sets the button size. Medium is 40px high; Small is 32px and Large is 56px.</summary>
+    [Parameter]
+    public DnetButtonSize Size { get; set; } = DnetButtonSize.Medium;
+
+    /// <summary>Gets or sets a decorative leading icon, sized and spaced according to Size.</summary>
+    [Parameter]
+    public RenderFragment? IconContent { get; set; }
 
 	/// <summary>Gets or sets unmatched HTML attributes applied to the rendered element.</summary>
 	[Parameter(CaptureUnmatchedValues = true)]
@@ -40,12 +54,16 @@
 
     protected override void OnParametersSet()
 	{
+        if (!Enum.IsDefined(Size))
+            throw new ArgumentOutOfRangeException(nameof(Size), Size, "Unknown button size.");
+
 		_cssClasses = GetCssClasses();
 	}
 
 	private string GetCssClasses()
 	{
 		var classes = new CssBuilder("dnet-button")
+		.AddClass($"dnet-button-size-{Size.ToString().ToLowerInvariant()}")
 		.AddClass("dnet-button-initial-focus", when: InitialFocus);
 
         foreach (var item in (AdditionalAttributes ?? EmptyAttributes).Where(p => p.Key.Equals("class", StringComparison.OrdinalIgnoreCase)))

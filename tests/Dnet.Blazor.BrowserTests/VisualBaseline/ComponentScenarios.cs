@@ -117,7 +117,7 @@ public static class ComponentScenarios
         new(
             "checkbox",
             "/CheckBox",
-            ".dnet-checkbox:not(.dnet-checkbox-disabled)",
+            ".dnet-checkbox:not(.dnet-checkbox-disabled):not(.dnet-checkbox-checked)",
             [VisualState.Default, VisualState.Hover, VisualState.Selected],
             SelectedSelector: ".dnet-checkbox.dnet-checkbox-checked",
             SelectedCaptureSelector: ".dnet-checkbox.dnet-checkbox-checked",
@@ -161,8 +161,9 @@ public static class ComponentScenarios
         new(
             "stepper",
             "/Stepper",
-            ".dnet-stepper-horizontal",
-            [VisualState.Default, VisualState.Hover]),
+            ".stepper-scroll",
+            [VisualState.Default, VisualState.Hover],
+            HoverSelector: ".dnet-stepper-horizontal"),
 
         new(
             "dynamic-stepper",
@@ -202,7 +203,7 @@ public static class ComponentScenarios
         new(
             "spinner",
             "/Spinner",
-            "button:has-text(\"RunSpinner\")",
+            "#spinner-run",
             [VisualState.Default],
             PageCaptureStates: [VisualState.Default]), // the open spinner is timer-driven; not deterministic
 
@@ -232,11 +233,10 @@ public static class ComponentScenarios
         new(
             "tooltip",
             "/Tooltip",
-            "div[style*=\"4fc3f7\"]",
+            "#tooltip-basic-trigger",
             [VisualState.Default, VisualState.Hover],
-            HoverSelector: "div[style*=\"4fc3f7\"]",
-            PageCaptureStates: [VisualState.Hover],
-            SkipMobile: true), // the sample's absolutely-positioned targets overlap on narrow viewports
+            HoverSelector: "#tooltip-basic-trigger",
+            PageCaptureStates: [VisualState.Hover]),
 
         new(
             "tree",

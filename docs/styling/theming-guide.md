@@ -12,6 +12,9 @@ or scope it to a subtree with `data-dnet-theme="dark"`.
 
 Global override:
 
+Buttons have a pill shape by default. Set their radius token to choose another
+shape, for example square corners:
+
 ```css
 :root { --dnet-btn-radius: 0; }
 ```
@@ -36,3 +39,30 @@ their public configuration.
 
 Arbitrary inherited custom properties do not cross the portal. Set
 overlay-specific properties with `OverlayConfig.PanelStyle`.
+
+## Popup surfaces
+
+Opened panels share the TimePicker defaults: `--dnet-sys-surface-raised`,
+`--dnet-sys-radius-lg` and `--dnet-sys-elevation-3`. This applies to Select,
+Autocomplete, date and week pickers, connected and floating panels, floating
+double lists, dialogs and Grid advanced filters. List options use rounded rows
+with an inset and the theme's hover and selected state colors.
+
+Existing component overrides still take precedence, including
+`--dnet-list-background-color`, `--dnet-list-border-radius`,
+`--dnet-list-box-shadow`, `--dnet-calendar-background` and the Dialog surface
+properties. When opening a panel in a scoped theme, use `DnetThemeScope` or its
+configuration's `ThemeScope`; use `PanelStyle` for instance-specific tokens.
+
+
+## Theme studio sample
+
+Open `/theming` to choose a theme and adjust its primary color, spacing unit and
+button shape. The component preview inherits the same live values as the app;
+separate examples demonstrate subtree, instance and nested-theme overrides.
+The header and studio theme selectors stay synchronized, and the selected theme
+is retained across reloads.
+
+The CSS preview and **Copy CSS** export the values actually in use.
+**Reset changes** clears those three customizations and restores the currently
+selected theme's defaults. Other explicit styling properties remain intact.

@@ -2,30 +2,70 @@
 
 @using Dnet.Blazor.Components.SlideToggle
 
-<div class="container-fluid" style="padding-top: 10px;">
-    <div class="d-flex dnet-m-l-30 dnet-m-t-20">
-        <span class="dnet-m-r-10 dnet-app-comp-name">Slide Toggle</span>
-    </div>
+<DemoPage Id="demo-slide-toggle" Title="Slide toggle" Category="Selection controls"
+          Description="Turn a setting on or off with a switch that communicates its current state at a glance."
+          Badge="Instant settings">
+    <div class="demo-grid">
+        <DemoCard Id="toggle-preferences" Title="Workspace preferences"
+                  Description="These settings take effect as soon as you change them.">
+            <ChildContent>
+                <div class="demo-stack">
+                    <div>
+                        <div class="demo-option-row">
+                            <DnetSlideToggle @bind-Value="_notifications">Notifications</DnetSlideToggle>
+                        </div>
+                        <p class="demo-info">Receive a notification when someone mentions you.</p>
+                    </div>
+                    <div>
+                        <div class="demo-option-row">
+                            <DnetSlideToggle @bind-Value="_automaticUpdates" TextPlacedBefore="true">Automatic updates</DnetSlideToggle>
+                        </div>
+                        <p class="demo-info">Keep your workspace up to date automatically.</p>
+                    </div>
+                </div>
+            </ChildContent>
+            <Footer>
+                <span class="demo-value" role="status">Notifications @State(_notifications) · Automatic updates @State(_automaticUpdates)</span>
+            </Footer>
+        </DemoCard>
 
-    <div class="dnet-m-l-30 dnet-m-t-30" style="max-width: 420px;">
-        <div class="dnet-m-b-30">
-            <DnetSlideToggle @bind-Value="_notifications">Notifications</DnetSlideToggle>
-        </div>
-        <div class="dnet-m-b-30">
-            <DnetSlideToggle @bind-Value="_automaticUpdates" TextPlacedBefore="true">Automatic updates</DnetSlideToggle>
-        </div>
-        <div class="dnet-m-b-30">
-            <DnetSlideToggle @bind-Value="_fullWidth" FullWidth="true">Full-width setting</DnetSlideToggle>
-        </div>
-        <div class="dnet-m-b-30">
-            <DnetSlideToggle @bind-Value="_disabled" Disabled="true">Unavailable setting</DnetSlideToggle>
-        </div>
+        <DemoCard Title="Settings row" Description="A full-width switch keeps the setting name and its control aligned across a panel.">
+            <ChildContent>
+                <div class="demo-stack">
+                    <div>
+                        <div class="demo-option-row">
+                            <DnetSlideToggle @bind-Value="_fullWidth" FullWidth="true">Compact workspace</DnetSlideToggle>
+                        </div>
+                        <p class="demo-info">Use a denser layout for your workspace.</p>
+                    </div>
+                    <div>
+                        <div class="demo-option-row">
+                            <DnetSlideToggle @bind-Value="_disabled" Disabled="true">Account protection</DnetSlideToggle>
+                        </div>
+                        <p class="demo-info">Managed by your organization and always enabled.</p>
+                    </div>
+                </div>
+            </ChildContent>
+            <Footer>
+                <span class="demo-value" role="status">Compact workspace @State(_fullWidth) · Account protection on</span>
+            </Footer>
+        </DemoCard>
+
+        <DemoCard Title="Clear, immediate feedback" Description="Use a switch for an independent setting that takes effect immediately.">
+            <ul class="demo-bullets">
+                <li>Click the label or press Space while the switch has focus.</li>
+                <li>Describe the setting itself so the label works in either state.</li>
+                <li>Explain why a setting is disabled beside the control.</li>
+            </ul>
+        </DemoCard>
     </div>
-</div>
+</DemoPage>
 
 @code {
     private bool _notifications;
     private bool _automaticUpdates = true;
     private bool _fullWidth;
     private bool _disabled = true;
+
+    private static string State(bool value) => value ? "on" : "off";
 }

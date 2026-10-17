@@ -1,44 +1,64 @@
-﻿@page "/Checkbox"
+@page "/Checkbox"
 
-@using System.Drawing
-@using Dnet.App.Shared.Infrastructure.Entities
 @using Dnet.Blazor.Components.Checkbox
-@using Microsoft.AspNetCore.Components;
-@using Microsoft.AspNetCore.Components.Web;
 
-<div class="container-fluid" style="padding-top: 10px;">
-	<div class="d-flex dnet-m-l-30 dnet-m-t-20">
-		<span class="dnet-m-r-10 dnet-app-comp-name">Checkbox</span>
-	</div>
+<DemoPage Id="demo-checkbox" Title="Checkbox" Category="Selection controls"
+          Description="Let people choose several independent options, with a clear label for every choice."
+          Badge="Multiple choices">
+    <div class="demo-grid">
+        <DemoCard Id="checkbox-preferences" Title="Communication preferences"
+                  Description="Choose the updates you would like to receive. Your selection is reflected immediately.">
+            <ChildContent>
+                <fieldset class="checkbox-options">
+                    <legend>Keep in touch</legend>
+                    <div class="demo-option-row">
+                        <DnetInputCheckbox @bind-Value="_productUpdates">Product updates</DnetInputCheckbox>
+                    </div>
+                    <p class="demo-info">New features and improvements, delivered occasionally.</p>
+                    <div class="demo-option-row">
+                        <DnetInputCheckbox @bind-Value="_researchInvitations">Research invitations</DnetInputCheckbox>
+                    </div>
+                    <p class="demo-info">Help shape the next release by sharing your feedback.</p>
+                    <div class="demo-option-row">
+                        <DnetInputCheckbox @bind-Value="_securityAlerts" Disabled="true" TextPlacedBefore="true">Security alerts</DnetInputCheckbox>
+                    </div>
+                    <p class="demo-info">Required account notices are always enabled.</p>
+                </fieldset>
+            </ChildContent>
+            <Footer>
+                <span class="demo-value" role="status">@SelectedCount of 3 preferences enabled</span>
+            </Footer>
+        </DemoCard>
 
-	<div class="dnet-m-l-30 dnet-m-t-30">
-		<div class="dnet-m-b-30">
-			<DnetInputCheckbox @bind-Value="_disable" Disabled="@_disable2" TextPlacedBefore="true">Caramelo</DnetInputCheckbox>
-		</div>
-		<div class="dnet-m-b-30">
-			<DnetInputCheckbox @bind-Value="_disable1">Vainilla</DnetInputCheckbox>
-		</div>
-		<div class="dnet-m-b-30">
-			<DnetInputCheckbox @bind-Value="_disable3">Chocolate</DnetInputCheckbox>
-		</div>
-	</div>
-</div>
-
+        <DemoCard Title="Your preferences" Description="Independent choices can be combined; selecting one does not clear another.">
+            <div class="demo-stack">
+                <div class="demo-preview">
+                    <span class="demo-info">Optional communications</span>
+                    <p class="demo-value">@OptionalPreferences</p>
+                    <span class="demo-muted">Security alerts remain enabled for your account.</span>
+                </div>
+                <ul class="demo-bullets">
+                    <li>Click a label or use Space to change a focused checkbox.</li>
+                    <li>Disabled options explain a setting that cannot be changed.</li>
+                    <li>Use checkboxes when more than one answer can apply.</li>
+                </ul>
+            </div>
+        </DemoCard>
+    </div>
+</DemoPage>
 
 @code {
+    private bool _productUpdates = true;
+    private bool _researchInvitations;
+    private bool _securityAlerts = true;
 
-	private bool _disable { get; set; }
+    private int SelectedCount => (_productUpdates ? 1 : 0) + (_researchInvitations ? 1 : 0) + 1;
 
-	private bool _disable1 { get; set; }
-
-	private bool _disable2 { get; set; }
-
-	private bool _disable3 { get; set; } = true;
-
-	protected override void OnInitialized()
-	{
-		_disable2 = true;
-	}
+    private string OptionalPreferences => (_productUpdates, _researchInvitations) switch
+    {
+        (true, true) => "Product updates and research invitations",
+        (true, false) => "Product updates",
+        (false, true) => "Research invitations",
+        _ => "No optional communications"
+    };
 }
-
-

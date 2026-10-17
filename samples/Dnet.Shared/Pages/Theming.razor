@@ -1,125 +1,280 @@
 @page "/theming"
 @using Dnet.Blazor.Components.Button
+@using Dnet.Blazor.Components.Form
 @using Dnet.Blazor.Components.Theme
-
+@implements IAsyncDisposable
 @inject IJSRuntime JSRuntime
 
-<div class="container-fluid" style="padding-top: 10px;">
-    <div class="dnet-page-content-left-margin dnet-m-t-20" style="max-width: 720px; display: grid; gap: 20px;">
+<section id="theme-studio" class="theme-studio" aria-labelledby="theme-studio-title">
+    <header class="theme-studio-header">
         <div>
-            <span class="dnet-app-comp-name">Theming</span>
+            <p class="theme-eyebrow">Design system</p>
+            <h1 id="theme-studio-title" class="theme-title">Theme studio</h1>
+            <p class="theme-description">Customize colors, spacing and shape. Preview changes as you go.</p>
         </div>
-
-        <label>
-            Theme
-            <select value="@_theme" @onchange="ChangeTheme">
-                <option value="">Base</option>
-                <option value="dark">Dark</option>
-                <option value="compact">Compact</option>
-                <option value="high-contrast">High contrast</option>
-                <option value="modern">Modern</option>
-            </select>
-        </label>
-
-        <label>
-            Primary color
-            <input type="color" value="@_primaryColor" @onchange="ChangePrimaryColor" />
-        </label>
-
-        <label>
-            Density unit
-            <input type="number" min="2" max="8" value="@_spaceUnit" @onchange="ChangeSpaceUnit" /> px
-        </label>
-
-        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <DnetButton OnClick="SetGlobalRadius">Global radius</DnetButton>
-            <DnetButton OnClick="CopyTheme">Copy CSS</DnetButton>
-            <span>@_copyStatus</span>
+        <div class="theme-header-actions">
+            <DnetButton id="theme-reset" class="theme-secondary-action" OnClick="ResetTheme">Reset changes</DnetButton>
+            <DnetButton id="theme-copy" class="theme-primary-action" OnClick="CopyTheme" style="@PrimaryButtonStyle">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" /><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3" /></svg>
+                <span>@(_copyStatus.StartsWith("CSS copied", StringComparison.Ordinal) ? "Copied!" : "Copy CSS")</span>
+            </DnetButton>
         </div>
+    </header>
 
-        <DnetThemeScope Theme="@_theme" Class="theming-preview">
-            <div style="--dnet-btn-background: #dfeff7; --dnet-btn-foreground: #12334a; padding: 16px; border: 1px solid var(--dnet-sys-border);">
-                <DnetButton>Subtree override</DnetButton>
-                <DnetButton style="--dnet-btn-background: #a63636; --dnet-btn-foreground: #ffffff;">Instance override</DnetButton>
+    <div class="theme-studio-layout">
+        <aside class="theme-controls" aria-labelledby="theme-controls-title">
+            <div class="theme-card">
+                <div class="theme-card-header">
+                    <h2 id="theme-controls-title" class="theme-card-title">Appearance</h2>
+                    <p class="theme-card-description">Start with a theme, then make it yours.</p>
+                </div>
+                <div class="theme-control-group">
+                    <label class="theme-control-label" for="theme-select">Theme</label>
+                    <div class="theme-select-wrapper">
+                    <select id="theme-select" class="theme-select" value="@_theme" @onchange="ChangeTheme">
+                        <option value="">Light</option>
+                        <option value="dark">Dark</option>
+                        <option value="compact">Compact</option>
+                        <option value="high-contrast">High contrast</option>
+                        <option value="modern">Modern</option>
+                    </select>
+                    <svg class="theme-select-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="m3 6 5 5 5-5" /></svg>
+                    </div>
+                </div>
+                <div class="theme-control-group">
+                    <label class="theme-control-label" for="theme-primary-color">Primary color</label>
+                    <div class="theme-color-control">
+                        <input id="theme-primary-color" class="theme-color-input" type="color" value="@_primaryColor" @oninput="ChangePrimaryColor" />
+                        <span class="theme-color-value">@_primaryColor.ToUpperInvariant()</span>
+                    </div>
+                    <div class="theme-color-presets" aria-label="Color presets">
+                        @foreach (var preset in ColorPresets)
+                        {
+                            <button type="button" class="theme-color-preset" style="background-color:@preset.Color;"
+                                    aria-label="@preset.Name" aria-pressed="@(_primaryColor.Equals(preset.Color, StringComparison.OrdinalIgnoreCase) ? "true" : "false")"
+                                    @onclick="() => SetPrimaryColor(preset.Color)"></button>
+                        }
+                    </div>
+                </div>
+                <hr class="theme-control-divider" />
+                <div class="theme-control-group">
+                    <label class="theme-control-label" for="theme-density">Density unit <span class="theme-value-badge">@_spaceUnit px</span></label>
+                    <div class="theme-range-row">
+                        <input id="theme-density" class="theme-range" style="--_theme-density-fill:@((_spaceUnit - 2) * 100 / 6)%;" type="range" min="2" max="8" step="1" value="@_spaceUnit" @oninput="ChangeSpaceUnit" />
+                    </div>
+                    <div class="theme-range-labels"><span>Compact</span><span>Spacious</span></div>
+                </div>
+                <div class="theme-control-group">
+                    <span id="theme-shape-label" class="theme-control-label">Button shape <span class="theme-value-badge">@(_radius >= 100 ? "Pill" : $"{_radius} px")</span></span>
+                    <div class="theme-shape-options" role="group" aria-labelledby="theme-shape-label">
+                        <button id="theme-radius-square" type="button" class="theme-shape-option" aria-pressed="@(_radius == 0 ? "true" : "false")" @onclick="() => SetRadius(0)"><span class="theme-shape-sample theme-shape-square" aria-hidden="true"></span>Square</button>
+                        <button id="theme-radius-soft" type="button" class="theme-shape-option" aria-pressed="@(_radius > 0 && _radius < 100 ? "true" : "false")" @onclick="() => SetRadius(6)"><span class="theme-shape-sample theme-shape-soft" aria-hidden="true"></span>Soft</button>
+                        <button id="theme-radius-pill" type="button" class="theme-shape-option" aria-pressed="@(_radius >= 100 ? "true" : "false")" @onclick="() => SetRadius(999)"><span class="theme-shape-sample theme-shape-pill" aria-hidden="true"></span>Pill</button>
+                    </div>
+                </div>
             </div>
-        </DnetThemeScope>
+            <p class="theme-settings-note">Changes apply across the example app. Reset restores the selected theme's defaults.</p>
+        </aside>
 
-        <DnetThemeScope Theme="dark">
-            <div style="padding: 16px; border: 1px solid var(--dnet-sys-border);">
-                <DnetButton>Nested dark scope</DnetButton>
+        <div class="theme-preview-column">
+            <div class="theme-preview-header">
+                <span class="theme-preview-label">Component preview</span>
+                <span class="theme-live-badge"><span class="theme-live-dot" aria-hidden="true"></span>Live preview</span>
             </div>
-        </DnetThemeScope>
+            <div class="theming-preview theme-preview-surface">
+                <div class="theme-preview-toolbar">
+                    <div class="theme-preview-brand"><span class="theme-preview-logo" aria-hidden="true">D</span>Dnet workspace</div>
+                    <span class="theme-preview-theme">@ThemeName</span>
+                </div>
+                <div class="theme-preview-content">
+                    <h2 class="theme-preview-title">Workspace settings</h2>
+                    <p class="theme-preview-description">A few familiar components, styled with your current theme.</p>
+                    <div class="theme-preview-form">
+                        <DnetFormField Label="Workspace name">
+                            <ChildContent><DnetInputText @bind-Value="_workspaceName" aria-label="Workspace name" /></ChildContent>
+                        </DnetFormField>
+                        <DnetFormField Label="Contact email">
+                            <ChildContent><DnetInputText @bind-Value="_contactEmail" aria-label="Contact email" /></ChildContent>
+                        </DnetFormField>
+                    </div>
+                    <div class="theme-preview-actions">
+                        <DnetButton id="theme-preview-primary" class="theme-example-primary" OnClick="SavePreview" style="@PrimaryButtonStyle">Save changes</DnetButton>
+                        <DnetButton id="theme-preview-secondary" class="theme-example-secondary" OnClick="ResetPreview" style="--dnet-btn-background:var(--dnet-sys-state-hover);">Cancel</DnetButton>
+                        <span class="theme-preview-status" role="status">@_previewStatus</span>
+                    </div>
+                    <div class="theme-palette" aria-label="Theme palette">
+                        <div class="theme-palette-item"><div class="theme-palette-swatch" style="background:var(--dnet-sys-primary);"></div><span class="theme-palette-name">Primary</span><span class="theme-palette-value">@_primaryColor.ToUpperInvariant()</span></div>
+                        <div class="theme-palette-item"><div class="theme-palette-swatch" style="background:var(--dnet-sys-surface-raised);"></div><span class="theme-palette-name">Surface</span><span class="theme-palette-value">Raised</span></div>
+                        <div class="theme-palette-item"><div class="theme-palette-swatch" style="background:var(--dnet-sys-on-surface);"></div><span class="theme-palette-name">Content</span><span class="theme-palette-value">On surface</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="theme-scope-examples">
+                <article class="theme-scope-example">
+                    <h2 class="theme-scope-heading">Local overrides</h2>
+                    <p class="theme-scope-description">Customize a section or just one component.</p>
+                    <div class="theme-scope-actions" style="--dnet-btn-background:#dfeff7;--dnet-btn-foreground:#12334a;">
+                        <DnetButton>Subtree override</DnetButton>
+                        <DnetButton style="--dnet-btn-background:#a63636;--dnet-btn-foreground:#ffffff;">Instance override</DnetButton>
+                    </div>
+                </article>
+                <DnetThemeScope Theme="dark" Class="theme-dark-example">
+                    <article class="theme-scope-example">
+                    <h2 class="theme-scope-heading">An independent theme</h2>
+                    <p class="theme-scope-description">A dark section, even inside a light interface.</p>
+                    <div class="theme-scope-actions"><DnetButton style="--dnet-btn-background:var(--dnet-sys-state-selected);--dnet-btn-foreground:var(--dnet-sys-primary-strong);">Nested dark scope</DnetButton></div>
+                    </article>
+                </DnetThemeScope>
+            </div>
+
+            <section class="theme-code-card" aria-labelledby="theme-code-title">
+                <div class="theme-code-header">
+                    <h2 id="theme-code-title" class="theme-card-title">Your theme CSS</h2>
+                    <span class="theme-preview-badge">@ThemeName</span>
+                </div>
+                <pre id="theme-css-output" class="theme-code-output"><code>@ThemeCss</code></pre>
+                <div id="theme-copy-status" class="theme-copy-status" role="status" aria-live="polite">@_copyStatus</div>
+            </section>
+        </div>
     </div>
-</div>
+</section>
 
 @code {
     private const string ThemeStorageKey = "dnet.theme";
-
+    private static readonly (string Name, string Color)[] ColorPresets =
+    [
+        ("Sky blue", "#4fc3f7"), ("Indigo", "#5b5ce0"), ("Teal", "#0d9488"),
+        ("Rose", "#e11d48"), ("Amber", "#d97706")
+    ];
     private string _theme = "dark";
     private string _primaryColor = "#4fc3f7";
     private int _spaceUnit = 4;
+    private int _radius = 9999;
     private string _copyStatus = string.Empty;
+    private string _workspaceName = "Design system";
+    private string _contactEmail = "design@acme.com";
+    private string _previewStatus = string.Empty;
+    private IJSObjectReference? _module;
+    private DotNetObjectReference<Theming>? _reference;
+    private int _watchId;
 
-    private async Task ChangeTheme(ChangeEventArgs args)
+    private string ThemeName => _theme switch { "dark" => "Dark", "compact" => "Compact", "high-contrast" => "High contrast", "modern" => "Modern", _ => "Light" };
+    private string ThemeCss => $"{(string.IsNullOrEmpty(_theme) ? ":root" : $"[data-dnet-theme=\"{_theme}\"]")} {{\n  --dnet-sys-primary: {_primaryColor};\n  --dnet-sys-space-unit: {_spaceUnit}px;\n  --dnet-btn-radius: {_radius}px;\n}}";
+    private string PrimaryButtonStyle => $"--dnet-btn-background:var(--dnet-sys-primary);--dnet-btn-background-hover:color-mix(in srgb,var(--dnet-sys-primary) 85%,var(--dnet-sys-on-surface));--dnet-btn-foreground:{PrimaryForeground};--dnet-btn-height:40px;";
+    private string PrimaryForeground
     {
-        var theme = args.Value?.ToString() ?? string.Empty;
-        if (!IsSupportedTheme(theme))
+        get
         {
-            return;
+            static double Channel(int value) { var n = value / 255d; return n <= .04045 ? n / 12.92 : Math.Pow((n + .055) / 1.055, 2.4); }
+            if (!int.TryParse(_primaryColor.AsSpan(1), System.Globalization.NumberStyles.HexNumber, null, out var rgb)) return "#ffffff";
+            var luminance = .2126 * Channel((rgb >> 16) & 255) + .7152 * Channel((rgb >> 8) & 255) + .0722 * Channel(rgb & 255);
+            return luminance > .179 ? "#000000" : "#ffffff";
         }
-
-        _theme = theme;
-        await JSRuntime.InvokeVoidAsync("dnetinterop.setTheme", _theme);
-        await JSRuntime.InvokeVoidAsync("dnetinterop.set", ThemeStorageKey, _theme);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!firstRender)
-        {
-            return;
-        }
-
-        var persistedTheme = await JSRuntime.InvokeAsync<string?>("dnetinterop.get", ThemeStorageKey);
-        if (!IsSupportedTheme(persistedTheme))
-        {
-            return;
-        }
-
-        _theme = persistedTheme;
-        await JSRuntime.InvokeVoidAsync("dnetinterop.setTheme", _theme);
+        if (!firstRender) return;
+        _module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Dnet.App.Shared/js/theming-playground.js");
+        _reference = DotNetObjectReference.Create(this);
+        _watchId = await _module.InvokeAsync<int>("watchTheme", _reference);
+        await ReadSettings();
         StateHasChanged();
     }
 
-    private async Task SetGlobalRadius()
+    private async Task ReadSettings()
     {
-        await JSRuntime.InvokeVoidAsync("dnetinterop.setStyleProperty", "--dnet-btn-radius", "0");
+        if (_module is null) return;
+        var settings = await _module.InvokeAsync<ThemeSettings>("readSettings");
+        _theme = settings.Theme;
+        _primaryColor = settings.PrimaryColor;
+        _spaceUnit = settings.SpaceUnit;
+        _radius = settings.Radius;
     }
 
-    private async Task ChangePrimaryColor(ChangeEventArgs args)
+    [JSInvokable]
+    public async Task OnThemeChanged(string theme)
     {
-        _primaryColor = args.Value?.ToString() ?? _primaryColor;
+        if (!IsSupportedTheme(theme)) return;
+        await InvokeAsync(async () => { await ReadSettings(); _copyStatus = string.Empty; StateHasChanged(); });
+    }
+
+    private async Task ChangeTheme(ChangeEventArgs args)
+    {
+        var theme = args.Value?.ToString() ?? string.Empty;
+        if (!IsSupportedTheme(theme)) return;
+        _theme = theme;
+        await JSRuntime.InvokeVoidAsync("dnetinterop.setTheme", theme);
+        await JSRuntime.InvokeVoidAsync("dnetinterop.set", ThemeStorageKey, theme);
+        await ReadSettings();
+        _copyStatus = string.Empty;
+    }
+
+    private Task ChangePrimaryColor(ChangeEventArgs args) => SetPrimaryColor(args.Value?.ToString() ?? _primaryColor);
+    private async Task SetPrimaryColor(string color)
+    {
+        if (color.Length != 7 || color[0] != '#' || !int.TryParse(color.AsSpan(1), System.Globalization.NumberStyles.HexNumber, null, out _)) return;
+        _primaryColor = color.ToLowerInvariant();
         await JSRuntime.InvokeVoidAsync("dnetinterop.setStyleProperty", "--dnet-sys-primary", _primaryColor);
+        _copyStatus = string.Empty;
     }
 
     private async Task ChangeSpaceUnit(ChangeEventArgs args)
     {
-        if (!int.TryParse(args.Value?.ToString(), out var spaceUnit))
-        {
-            return;
-        }
-
-        _spaceUnit = Math.Clamp(spaceUnit, 2, 8);
+        if (!int.TryParse(args.Value?.ToString(), out var value)) return;
+        _spaceUnit = Math.Clamp(value, 2, 8);
         await JSRuntime.InvokeVoidAsync("dnetinterop.setStyleProperty", "--dnet-sys-space-unit", $"{_spaceUnit}px");
+        _copyStatus = string.Empty;
+    }
+
+    private async Task SetRadius(int radius)
+    {
+        _radius = radius;
+        await JSRuntime.InvokeVoidAsync("dnetinterop.setStyleProperty", "--dnet-btn-radius", $"{radius}px");
+        _copyStatus = string.Empty;
+    }
+
+    private async Task ResetTheme()
+    {
+        if (_module is null) return;
+        await _module.InvokeVoidAsync("resetOverrides");
+        await ReadSettings();
+        _copyStatus = "Theme defaults restored.";
     }
 
     private async Task CopyTheme()
     {
-        var selector = string.IsNullOrEmpty(_theme) ? ":root" : $"[data-dnet-theme=\"{_theme}\"]";
-        var css = $"{selector} {{\n  --dnet-sys-space-unit: {_spaceUnit}px;\n  --dnet-sys-primary: {_primaryColor};\n  --dnet-btn-radius: 0;\n}}";
-        await JSRuntime.InvokeVoidAsync("dnetinterop.copyText", css);
-        _copyStatus = "Copied";
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("dnetinterop.copyText", ThemeCss);
+            _copyStatus = "CSS copied to clipboard.";
+        }
+        catch (JSException)
+        {
+            _copyStatus = "Could not copy. Select the CSS above to copy it manually.";
+        }
     }
 
+    private void SavePreview() => _previewStatus = "Preview saved.";
+    private void ResetPreview() { _workspaceName = "Design system"; _contactEmail = "design@acme.com"; _previewStatus = string.Empty; }
     private static bool IsSupportedTheme(string? theme) => theme is "" or "dark" or "compact" or "high-contrast" or "modern";
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_module is not null)
+        {
+            try { await _module.InvokeVoidAsync("unwatchTheme", _watchId); await _module.DisposeAsync(); }
+            catch (JSDisconnectedException) { }
+        }
+        _reference?.Dispose();
+    }
+
+    private sealed class ThemeSettings
+    {
+        public string Theme { get; set; } = "dark";
+        public string PrimaryColor { get; set; } = "#4fc3f7";
+        public int SpaceUnit { get; set; } = 4;
+        public int Radius { get; set; } = 9999;
+    }
 }

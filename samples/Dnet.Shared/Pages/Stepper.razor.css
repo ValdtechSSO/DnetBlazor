@@ -1,0 +1,11 @@
+.stepper-scroll { max-width: 100%; overflow-x: auto; margin-bottom: 20px; border: 1px solid var(--dnet-sys-border); border-radius: var(--dnet-sys-radius-md); }
+.stepper-scroll:focus-visible { outline: 2px solid var(--dnet-sys-primary); outline-offset: 3px; }
+.stepper-horizontal-stage { min-width: 620px; }
+.stepper-content { min-height: 210px; max-width: min(540px, calc(100vw - 124px)); padding-top: 12px; }
+.stepper-content h3 { font-size: 22px; margin: 0 0 12px; }
+.stepper-kicker { color: var(--dnet-sys-primary); font-size: 12px; font-weight: 600; margin: 0 0 10px; }
+.stepper-detail { display: grid; gap: 6px; margin-top: 24px; }
+.stepper-detail strong { font-size: 14px; }
+.stepper-custom-label { font-size: 14px; font-weight: 600; }
+.stepper-linear-content { display: grid; gap: 12px; padding-bottom: 4px; }
+.stepper-linear-content p { margin: 0; }

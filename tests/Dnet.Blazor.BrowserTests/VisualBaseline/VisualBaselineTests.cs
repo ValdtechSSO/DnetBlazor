@@ -52,6 +52,9 @@ public sealed class VisualBaselineFixture : IAsyncLifetime
             ViewportSize = new ViewportSize { Width = width, Height = height },
         });
 
+        // Keep date-dependent samples stable while timers and animation frames keep running.
+        await page.Clock.SetFixedTimeAsync(new DateTime(2026, 10, 16, 12, 0, 0, DateTimeKind.Utc));
+
         // Deterministic rendering: reduced motion and no transitions/animations.
         await page.EmulateMediaAsync(new() { ReducedMotion = ReducedMotion.Reduce });
         await page.AddInitScriptAsync(

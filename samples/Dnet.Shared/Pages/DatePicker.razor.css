@@ -1,0 +1,47 @@
+.date-calendar-preview {
+    display: grid;
+    justify-items: center;
+    min-width: 0;
+}
+
+.date-picker-trigger {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+}
+
+.date-picker-trigger:focus-visible {
+    outline: 2px solid var(--dnet-sys-primary);
+    outline-offset: 3px;
+    border-radius: var(--dnet-sys-radius-sm);
+}
+
+.date-format-option {
+    min-height: 40px;
+    padding: 8px 14px;
+    border: 1px solid var(--dnet-sys-border);
+    border-radius: var(--dnet-sys-radius-md);
+    background: var(--dnet-sys-surface-raised);
+    color: var(--dnet-sys-on-surface);
+    font: inherit;
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+.date-format-option[aria-pressed="true"] {
+    border-color: var(--dnet-sys-primary);
+    background: var(--dnet-sys-state-selected);
+    color: var(--dnet-sys-on-surface-emphasis);
+}
+
+.date-format-option:hover {
+    background: var(--dnet-sys-state-hover);
+}
+
+.date-format-option:focus-visible {
+    outline: 2px solid var(--dnet-sys-primary);
+    outline-offset: 3px;
+}

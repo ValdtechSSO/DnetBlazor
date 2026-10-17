@@ -53,16 +53,16 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
-| `--dnet-list-background-color` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
-| `--dnet-list-border-color` | `#ebebeb` <br><sub>via `--dnet-sys-border`</sub> |
-| `--dnet-list-border-radius` | `5px` <br><sub>via `--dnet-sys-radius-md`</sub> |
-| `--dnet-list-box-shadow` | `0 2px 1px -1px var(--dnet-sys-shadow-color), 0 1px 2px 0 var(--dnet-sys-shadow-color), 0 1px 10px 0 var(--dnet-sys-shadow-color)` <br><sub>via `--dnet-sys-elevation-1`</sub> |
+| `--dnet-list-background-color` | `#ffffff` <br><sub>via `--dnet-sys-surface-raised`</sub> |
+| `--dnet-list-border-color` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
+| `--dnet-list-border-radius` | `10px` <br><sub>via `--dnet-sys-radius-lg`</sub> |
+| `--dnet-list-box-shadow` | `0 3px 5px -1px var(--dnet-sys-shadow-color), 0 6px 10px 0 var(--dnet-sys-shadow-color), 0 1px 18px 0 var(--dnet-sys-shadow-color)` <br><sub>via `--dnet-sys-elevation-3`</sub> |
 | `--dnet-list-check-width` | `24px` |
 | `--dnet-list-foreground` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
 | `--dnet-list-header-footer-height` | `50px` |
 | `--dnet-list-headline-font-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
-| `--dnet-list-headline-text-color` | `var(--_foreground)` |
-| `--dnet-list-hover-background-color` | `#f2f2f2` <br><sub>via `--dnet-sys-surface-hover`</sub> |
+| `--dnet-list-headline-text-color` | `#42b0d5` <br><sub>via `--dnet-sys-primary-strong`</sub> |
+| `--dnet-list-hover-background-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 8%, transparent)` <br><sub>via `--dnet-sys-state-hover`</sub> |
 | `--dnet-list-hover-border-radius` | `5px` <br><sub>via `--dnet-sys-radius-md`</sub> |
 | `--dnet-list-item-height` | `50px` <br><sub>via `--dnet-sys-control-height`</sub> |
 | `--dnet-list-padding-horizontal` | `5px` |
@@ -70,7 +70,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-list-prefix-suffix-min-width` | `40px` |
 | `--dnet-list-supporting-text-color` | `#666666` <br><sub>via `--dnet-sys-on-surface-muted`</sub> |
 | `--dnet-list-supporting-text-font-size` | `0.75rem` <br><sub>via `--dnet-sys-text-sm`</sub> |
-| `--dnet-list-wrapper-horizontal-padding` | `15px` |
+| `--dnet-list-wrapper-horizontal-padding` | `calc(var(--dnet-sys-space-unit) * 2)` <br><sub>via `--dnet-sys-space-2`</sub> |
 | `--dnet-select-foreground` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
 
 <details><summary>Legacy token names still honoured</summary>

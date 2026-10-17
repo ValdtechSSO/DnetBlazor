@@ -1,207 +1,162 @@
 @page "/List"
-
-@using System.Drawing
 @using Dnet.App.Shared.Infrastructure.Entities
-@using Dnet.App.Shared.Infrastructure.Models
 @using Dnet.App.Shared.Infrastructure.Services
-@using Dnet.Blazor.Components.Form
 @using Dnet.Blazor.Components.List
 @using Dnet.Blazor.Components.Checkbox
-@using System.Net.Http
-@using System.Net.Http.Json
-@using Dnet.Blazor.Components.Select
-@using Dnet.Blazor.Infrastructure.Models.SearchModels
+@using Dnet.Blazor.Components.Button
 
-@inject HttpClient HttpClient
-@inject IHttpClientFactory ClientFactory
 @inject IApplicationServiceService ApplicationServiceService
 
+<DemoPage Id="demo-list" Title="List" Category="Data display"
+          Description="Browse a contact directory, narrow the results and build a selection across pages." Badge="Search · Select · Page">
+    <div class="demo-grid">
+        <DemoCard Id="list-directory-card" Title="Contact directory" Eyebrow="Interactive list"
+                  Description="Search by name, select available contacts and use the footer to explore the directory.">
+            <ChildContent>
+                @if (_loading)
+                {
+                    <div class="list-loading" role="status">Loading contacts…</div>
+                }
+                else if (_loadFailed)
+                {
+                    <div class="list-loading" role="status">The contact directory could not be loaded.</div>
+                }
+                else
+                {
+                    <div id="list-directory" class="list-stage">
+                        <DnetList @key="_listRevision" TItem="Person" Items="_items" ListOptions="_listOptions"
+                                  Label="Search contacts" PlaceHolder="Type a name" OnSelectionChange="SelectionChanged">
+                            <ItemPrefixContent Context="person"><span class="list-avatar" aria-hidden="true">@Initials(person.Name)</span></ItemPrefixContent>
+                            <ListItemContent Context="person">
+                                <div class="list-contact" @onclick:stopPropagation="true">
+                                    <span class="dnet-list-item-headline @(person.IsActive ? "disabled" : null)">@person.Name</span>
+                                    <span class="dnet-list-item-supporting-text @(person.IsActive ? "disabled" : null)">@person.Address</span>
+                                </div>
+                            </ListItemContent>
+                        </DnetList>
+                    </div>
+                }
+            </ChildContent>
+            <Footer><span id="list-directory-value" role="status">@_items.Count contacts available · @_selectedItems.Count selected</span></Footer>
+        </DemoCard>
 
-<div class="container-fluid" style="padding-top: 10px;">
-    <div class="d-flex dnet-page-content-left-margin dnet-m-t-20">
-        <span class="dnet-m-r-10 dnet-app-comp-name">List View</span>
-    </div>
-    <div class="dnet-page-content-left-margin dnet-m-t-20">
-        <EditForm Model="@_formData1">
-            <DataAnnotationsValidator />
-            <div style="display: flex; flex-direction: column">
-                <div
-                    style="display:flex;align-items: center;flex-direction: row;justify-content:space-between;max-width: 300px;">
-                    <DnetFormField Label="List options" IsRequired="true">
-                        <ChildContent>
-                            <DnetSelect Value="@_formData1.Value" TValue="string"
-                                ValueChanged="@((string e) => MyValueChangeHandler(e))"
-                                ValueExpression="@( () => _formData1.Value )" Items="_features"
-                                TItem="KeyValueModel<int>" DisplayValueConverter="(value) => (value.Value)"
-                                OnSelectionChanged="SelectionChanged" InputTextToUpper="true"
-                                PlaceHolder="List features" MultiSelect="true"
-                                SelectedItems="@_selectedFeatures"
-                                IsSelectedFn="@( (item, itemSelected) => item.Key == itemSelected.Key )">
-                            </DnetSelect>
-                        </ChildContent>
-                        <ErrorContent>
-                            <ValidationMessage For="@(() => _formData1.Key)" />
-                        </ErrorContent>
-                    </DnetFormField>
+        <div class="demo-stack">
+            <DemoCard Id="list-options" Title="Make it your own" Description="Change the directory controls. Changing an option starts a fresh selection.">
+                <div class="list-option-grid">
+                    <div class="demo-option-row"><DnetInputCheckbox id="list-option-search" @bind-Value="_searching" @bind-Value:after="ApplyOptions">Search</DnetInputCheckbox></div>
+                    <div class="demo-option-row"><DnetInputCheckbox id="list-option-checkboxes" @bind-Value="_checkboxes" @bind-Value:after="ApplyOptions">Selection checkboxes</DnetInputCheckbox></div>
+                    <div class="demo-option-row"><DnetInputCheckbox id="list-option-sorting" @bind-Value="_sorting" @bind-Value:after="ApplyOptions">Sorting</DnetInputCheckbox></div>
+                    <div class="demo-option-row"><DnetInputCheckbox id="list-option-header" @bind-Value="_header" @bind-Value:after="ApplyOptions">Header</DnetInputCheckbox></div>
+                    <div class="demo-option-row"><DnetInputCheckbox id="list-option-pagination" @bind-Value="_pagination" @bind-Value:after="PaginationOptionChanged">Pagination</DnetInputCheckbox></div>
+                    <div class="demo-option-row"><DnetInputCheckbox id="list-option-footer" @bind-Value="_footer" @bind-Value:after="FooterOptionChanged">Footer</DnetInputCheckbox></div>
                 </div>
-            </div>
-        </EditForm>
+                <p class="demo-info">Select the Contacts header to change the sort order. Unavailable contacts appear dimmed.</p>
+            </DemoCard>
+            <DemoCard Id="list-selection" Title="Your selection" Description="Selected contacts appear here as you work through the directory.">
+                <ChildContent>
+                    @if (_selectedItems.Count == 0)
+                    {
+                        <div class="list-empty"><strong>No contacts selected</strong><p class="demo-muted">Choose a contact in the directory to build your selection.</p></div>
+                    }
+                    else
+                    {
+                        <ul id="list-selected-names" class="demo-bullets">
+                            @foreach (var person in _selectedItems.Take(6))
+                            {
+                                <li>@person.Name</li>
+                            }
+                        </ul>
+                        @if (_selectedItems.Count > 6)
+                        {
+                            <p class="demo-info">And @(_selectedItems.Count - 6) more contacts.</p>
+                        }
+                    }
+                    <div class="demo-actions list-selection-actions"><DnetButton id="list-reset" disabled="@(_loading || _loadFailed)" OnClick="ResetDirectory">Reset directory</DnetButton></div>
+                </ChildContent>
+                <Footer><span id="list-selected-count" role="status">@_selectedItems.Count selected</span></Footer>
+            </DemoCard>
+        </div>
     </div>
-    <div class="dnet-page-content-left-margin dnet-m-t-20 dnet-list-size">
-        <DnetList TItem="Person" @ref="_listComponent" Items="_items" OnPaginationChanged="PaginationChanged"
-            OnCheckboxClick="CheckboxClick" OnSelectionChange="SelectionChanged" ListOptions="@_listOptions">
-            @* <ListItemContent Context="Person">
-                <div style="display: flex; width: 100%; padding-right: 5px">
-                    <span>@Person.Name</span>
-                </div>
-            </ListItemContent> *@
-            <ItemPrefixContent Context="Person">
-                <div class="dnet-app-icon-wrapper">
-                    <span
-                        class="dnet-app-icon @(Person.Gender == "female" ? "dnet-app-formfield-female" : "dnet-app-formfield-male") "></span>
-                </div>
-            </ItemPrefixContent>
-        </DnetList>
-    </div>
-</div>
-
+</DemoPage>
 
 @code {
-
     private List<Person> _items = new();
-
-    private List<KeyValueModel<int>> _features = new();
-
-    private List<KeyValueModel<int>> _selectedFeatures = new();
-
-    private DnetList<Person> _listComponent { get; set; }
-
-    private KeyValueModel<int> _formData1 = new();
-
-    private ListOptions<Person> _listOptions { get; set; }
-
-    private SearchModel _searchModel { get; set; } = new();
-
-
-    protected override void OnInitialized()
-    {
-        _listOptions = GetListOptions();
-        _listOptions.HeaderText = "Availables";
-    }
+    private List<Person> _selectedItems = new();
+    private ListOptions<Person> _listOptions = new();
+    private bool _loading = true;
+    private bool _loadFailed;
+    private bool _searching = true;
+    private bool _checkboxes = true;
+    private bool _sorting = true;
+    private bool _header = true;
+    private bool _pagination = true;
+    private bool _footer = true;
+    private int _listRevision;
 
     protected override async Task OnInitializedAsync()
     {
-        var searchModel = new SearchModel
-            {
-                SortModel = new SortModel
-                {
-                    Order = SortOrder.Ascending,
-                    ColumnName = "Name"
-                },
-                PaginationModel = new PaginationModel()
-                {
-                    PageSize = _listOptions.PageSize,
-                    CurrentPage = 1,
-                }
-            };
-
-        _searchModel = searchModel;
-
-        var items = await GetPersons();
-
-        var paginatedItems = items.Skip((searchModel.PaginationModel.CurrentPage - 1) * searchModel.PaginationModel.PageSize)
-        .Take(searchModel.PaginationModel.PageSize).ToList();
-
-        _items.AddRange(items);
-
-        _listComponent.SetRowData(items, items.Count, 1);
-
-        _features = GetKeyValueModels();
-
-        _selectedFeatures = _features.Where(p => p.Key == 5 || p.Key == 6).Select(p => p).ToList();
-
-        StateHasChanged();
+        try
+        {
+            _items = (await ApplicationServiceService.GetPersons()).OrderBy(person => person.Name).ToList();
+            _listOptions = CreateOptions();
+        }
+        catch (HttpRequestException)
+        {
+            _loadFailed = true;
+        }
+        finally
+        {
+            _loading = false;
+        }
     }
 
-    private async Task<List<Person>> GetPersons()
+    private ListOptions<Person> CreateOptions() => new()
     {
-        var dataPersons = await ApplicationServiceService.GetPersons();
+        DisplayValueConverter = person => person.Name,
+        SupportTextValueConverter = person => person.Address,
+        SortedData = person => person.Name,
+        SearchValueConverter = person => person.Name,
+        DisableItem = person => person.IsActive,
+        HeaderText = "Contacts",
+        ItemSize = 56,
+        MultiSelect = true,
+        DebounceTime = 250,
+        EnableServerSide = false,
+        EnableSearching = _searching,
+        EnableSorting = _sorting,
+        PageSize = _pagination ? 5 : Math.Max(_items.Count, 1),
+        EnablePagingination = _pagination,
+        CheckboxSelectionColumn = _checkboxes,
+        ShowHeader = _header,
+        ShowFooter = _footer
+    };
 
-        return dataPersons;
-    }
+    private void SelectionChanged(List<Person> selected) => _selectedItems = selected;
 
-    private void SelectionChanged(List<Person> selectedItems)
+    private void ApplyOptions()
     {
-        var tt = selectedItems;
+        _listOptions = CreateOptions();
+        ResetDirectory();
     }
 
-    private async Task PaginationChanged(SearchModel searchModel)
+    private void PaginationOptionChanged()
     {
-        var items = await GetPersons();
-
-        var paginatedItems = items.Skip((searchModel.PaginationModel.CurrentPage - 1) * searchModel.PaginationModel.PageSize)
-        .Take(searchModel.PaginationModel.PageSize).ToList();
-
-        _listComponent.SetRowData(paginatedItems, items.Count);
+        if (_pagination) _footer = true;
+        ApplyOptions();
     }
 
-    private void CheckboxClick(Person item)
+    private void FooterOptionChanged()
     {
-
+        if (!_footer) _pagination = false;
+        ApplyOptions();
     }
 
-    private void MyValueChangeHandler(string item)
+    private void ResetDirectory()
     {
-        _formData1.Value = item;
+        _selectedItems = new();
+        _listRevision++;
     }
 
-    private void SelectionChanged(List<KeyValueModel<int>> items)
-    {
-        _listOptions.EnablePagingination = items.FirstOrDefault(p => p.Key == 1) != null;
-        _listOptions.EnableSearching = items.FirstOrDefault(p => p.Key == 2) != null;
-        _listOptions.CheckboxSelectionColumn = items.FirstOrDefault(p => p.Key == 3) != null;
-        _listOptions.ShowHeader = items.FirstOrDefault(p => p.Key == 5) != null;
-        _listOptions.ShowFooter = items.FirstOrDefault(p => p.Key == 6) != null;
-    }
-
-    private List<KeyValueModel<int>> GetKeyValueModels()
-    {
-        var keyValueModels = new List<KeyValueModel<int>>
-{
-new KeyValueModel<int> { Key = 1, Value = "Enable pagination" },
-new KeyValueModel<int> { Key = 2, Value = "Enable searching" },
-new KeyValueModel<int> { Key = 3, Value = "Enable checkbox selection" },
-new KeyValueModel<int> { Key = 4, Value = "Enable sorting" },
-new KeyValueModel<int> { Key = 5, Value = "Show header" },
-new KeyValueModel<int> { Key = 6, Value = "Show footer" }
-};
-
-        return keyValueModels;
-    }
-
-    private ListOptions<Person> GetListOptions()
-    {
-        return new ListOptions<Person>()
-            {
-                DisplayValueConverter = (value) => value.Name,
-                SupportTextValueConverter = (value) => value.Address,
-                SortedData = (value) => value.Name,
-                SearchValueConverter = (value) => value.Name,
-                DisableItem = (value) => value.IsActive,
-                HeaderText = "",
-                ItemSize = 40f,
-                MultiSelect = true,
-                DebounceTime = 250,
-                EnableServerSide = false,
-                EnableSearching = true,
-                EnableSorting = true,
-                PageSize = 5,
-                EnablePagingination = true,
-                CheckboxSelectionColumn = true,
-                ShowHeader = false,
-                ShowFooter = true,
-                ServerSideSearchColumns = new List<string>() { "Name", "LastName" },
-                ServerSideSortColumn = "Name"
-            };
-    }
+    private static string Initials(string name)
+        => string.Concat(name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(2).Select(part => part[0])).ToUpperInvariant();
 }

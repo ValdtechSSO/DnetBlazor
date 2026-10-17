@@ -1,14 +1,33 @@
 /*! Sass FloatingDoubleList (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 .dnet-connected-panel-container-dl {
+  --_panel-background: var(--dnet-sys-surface-raised);
+  --_radius: var(--dnet-dialog-border-radius, var(--dnet-sys-radius-lg));
+  --_elevation: var(--dnet-sys-elevation-3);
+
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  box-shadow: var(--dnet-sys-elevation-1);
-  background: var(--dnet-sys-surface);
+  overflow: hidden;
+  border: 0;
+  box-shadow: var(--_elevation);
+  background: var(--_panel-background);
   color: var(--dnet-sys-on-surface-emphasis);
   width: 100%;
   height: 100%;
   padding: 2px;
-  border-radius: var(--dnet-dialog-border-radius, var(--dnet-sys-radius-md));
+  border-radius: var(--_radius);
+}
+
+/* The surrounding panel owns the surface; explicit list customizations remain
+   available without adding another frame or elevation by default. */
+.dnet-connected-panel-container-dl .dnet-list-wrapper {
+  --_list-border: var(--dnet-list-border-color, var(--dnet-sys-transparent));
+  --_list-background: var(--dnet-list-background-color, transparent);
+  --_list-elevation: var(--dnet-list-box-shadow, none);
+
+  border-color: var(--_list-border);
+  background: var(--_list-background);
+  box-shadow: var(--_list-elevation);
 }
 
 .dnet-floating-doublelist-value-wrapper {

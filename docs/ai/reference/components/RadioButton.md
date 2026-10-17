@@ -41,7 +41,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-radio-button-background` | `#42b0d5` <br><sub>via `--dnet-sys-primary-strong`</sub> |
 | `--dnet-radio-button-border-width` | `1px` |
 | `--dnet-radio-button-font-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
-| `--dnet-radio-button-size` | `16px` |
+| `--dnet-radio-button-size` | `20px` |
 
 ```css
 :root { --dnet-radio-button-background: /* your value */; }

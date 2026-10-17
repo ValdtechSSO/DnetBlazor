@@ -1,180 +1,216 @@
-﻿@page "/DatePicker"
+@page "/DatePicker"
 
 @using System.ComponentModel.DataAnnotations
-@using Dnet.App.Shared.Infrastructure.Entities
+@using System.Globalization
 @using Dnet.Blazor.Components.DatePicker.Infrastructure.Models
 @using Dnet.Blazor.Components.DatePicker.Infrastructure.Enums
 @using Dnet.Blazor.Components.DatePicker
 @using Dnet.Blazor.Components.Form
-@using Dnet.Blazor.Components.DatePickerWeek.Infrastructure.Models
 @using Dnet.Blazor.Components.DatePickerWeek
-@using Dnet.Blazor.Components.DatePickerWeekRaw.Infrastructure.Models
 @using Dnet.Blazor.Components.DatePickerWeekRaw
+@using Dnet.Blazor.Infrastructure.Enums
 
-<div class="container-fluid" style="padding-top: 10px;">
-    <div class="dnet-page-content-left-margin" style="max-width: 300px;">
-        <div class="d-flex dnet-page-content-left-margin dnet-m-t-20">
-            <span class="dnet-m-r-10 dnet-app-comp-name">DatePicker</span>
-        </div>
-        <div class="dnet-m-t-30" style="flex-direction: column">
-            <DnetFormField Label="Date Format" UseClearButton="true">
-                <ChildContent>
-                    <DnetInputText @bind-Value="_datepickerFormat" PlaceHolder="Date Format"
-                        type="text">
-                    </DnetInputText>
-                </ChildContent>
-            </DnetFormField>
+<DemoPage Id="demo-date-picker" Title="Date picker" Category="Date and time"
+          Description="Choose a day, plan a date range or work with a whole week, using a popup or an integrated calendar."
+          Badge="Days, ranges & weeks">
+    <div class="demo-grid">
+        <DemoCard Id="date-picker-single" Title="Record a departure day"
+                  Description="Type a date or open the calendar. This example accepts dates up to and including today.">
+            <ChildContent>
+                <EditForm Model="_formData">
+                    <DataAnnotationsValidator />
+                    <div class="demo-stack">
+                        <DnetFormField Label="Departure day" UseClearButton="true" IsRequired="true">
+                            <ChildContent>
+                                <DnetDatePicker @bind-Value="_formData.DepartureDay"
+                                                OnDaySelected="DaySelected" PlaceHolder="Departure day"
+                                                aria-label="Departure day"
+                                                Format="@_datepickerFormat" MaxDayValue="DateTime.Today"
+                                                Formats="@_acceptedFormats" />
+                            </ChildContent>
+                            <SufixContent>
+                                <button class="dnet-datepicker-icon-wrapper date-picker-trigger" type="button" aria-label="Open departure calendar">
+                                    <span class="dnet-datepicker-icon" aria-hidden="true"></span>
+                                </button>
+                            </SufixContent>
+                            <ErrorContent>
+                                <ValidationMessage For="@(() => _formData.DepartureDay)" />
+                            </ErrorContent>
+                        </DnetFormField>
+                        <p class="demo-status" role="status">@_calendarSelectionStatus</p>
+                    </div>
+                </EditForm>
+            </ChildContent>
+            <Footer>
+                <span class="demo-value" role="status">Departure: @SelectedDateLabel</span>
+            </Footer>
+        </DemoCard>
 
-            <EditForm Model="@_formData">
-                <DataAnnotationsValidator />
-                <div class="d-flex flex-column dnet-m-b-20 dnet-m-t-20">
-                    <DnetFormField Label="Departure day" UseClearButton="true" IsRequired="true">
-                        <ChildContent>
-                            <DnetDatePicker @bind-Value="@_formData.DepartureDay"
-                                OnDaySelected="DaySelected" PlaceHolder="Departure day"
-                                Format="@_datepickerFormat" MaxDayValue="DateTime.Now"
-                                Formats="@(new string[] {"yyyy/MM/dd","yyyy/M/d","dd/MM/yyyy","d/M/yyyy"})"
-                                >
-                            </DnetDatePicker>
-                        </ChildContent>
-                        <SufixContent>
-                            <div class="dnet-datepicker-icon-wrapper">
-                                <span class="dnet-datepicker-icon dnet-datepicker-icon-default"
-                                    unselectable="on"></span>
-                            </div>
-                        </SufixContent>
-                        <ErrorContent>
-                            <ValidationMessage For="@(() => _formData.DepartureDay)" />
-                        </ErrorContent>
-                    </DnetFormField>
+        <DemoCard Id="date-picker-range" Title="Plan a trip"
+                  Description="Choose the start and end of an upcoming trip, then apply your selection in the calendar panel.">
+            <ChildContent>
+                <EditForm Model="_formData">
                     <DnetFormField Label="Travel dates" UseClearButton="true">
                         <ChildContent>
                             <DnetDateRangePicker @bind-Value="_formData.TravelRange"
-                                StartPlaceholder="Start"
-                                EndPlaceholder="End"
-                                Format="dd/MM/yyyy"
-                                Min="@DateOnly.FromDateTime(DateTime.Today)"
-                                ShowActions="true" />
+                                                 StartPlaceholder="Start" EndPlaceholder="End"
+                                                 Format="dd/MM/yyyy"
+                                                 Min="@DateOnly.FromDateTime(DateTime.Today)"
+                                                 ShowActions="true" />
                         </ChildContent>
                         <SufixContent>
-                            <div class="dnet-datepicker-icon-wrapper">
+                            <button class="dnet-datepicker-icon-wrapper date-picker-trigger" type="button" aria-label="Open travel dates calendar">
                                 <span class="dnet-datepicker-icon" aria-hidden="true"></span>
-                            </div>
+                            </button>
                         </SufixContent>
                     </DnetFormField>
+                </EditForm>
+            </ChildContent>
+            <Footer>
+                <span class="demo-value" role="status">@TravelRangeLabel</span>
+            </Footer>
+        </DemoCard>
+
+        <DemoCard Title="Calendar in the page"
+                  Description="Keep the month visible when choosing a day is the main task. Open the month heading to explore other months and years.">
+            <ChildContent>
+                <div class="date-calendar-preview">
+                    <DnetCalendar @bind-Value="_inlineDate"
+                                  StartAt="@(new DateOnly(2026, 8, 1))"
+                                  StartView="DnetCalendarView.Month"
+                                  DateClass="@(date => date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday ? "sample-weekend" : null)" />
                 </div>
-            </EditForm>
-            <div>
-                <span>@_dateSelected</span>
-            </div>
-        </div>
-        <div class="dnet-m-t-30" style="flex-direction: column">
-            <span class="dnet-app-comp-name">Inline calendar</span>
-            <div class="dnet-m-t-20">
-                <DnetCalendar @bind-Value="_inlineDate"
-                    StartAt="@(new DateOnly(2026, 8, 1))"
-                    StartView="DnetCalendarView.Month"
-                    DateClass="@(date => date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday ? "sample-weekend" : null)" />
-            </div>
-        </div>
-        <div class="dnet-m-t-30" style="flex-direction: column">
-            <EditForm Model="@_formData1">
-                <DataAnnotationsValidator />
-                <div class="d-flex flex-column dnet-m-b-20 dnet-m-t-20">
+            </ChildContent>
+            <Footer>
+                <span class="demo-value" role="status">Selected day: @(_inlineDate?.ToString("dd MMMM yyyy", CultureInfo.InvariantCulture) ?? "No date selected")</span>
+            </Footer>
+        </DemoCard>
+
+        <DemoCard Title="Choose the display format"
+                  Description="Change how the departure day is written. The travel range keeps its day/month/year format.">
+            <ChildContent>
+                <div class="demo-stack">
+                    <div class="demo-actions" role="group" aria-label="Departure date format">
+                        @foreach (var format in _displayFormats)
+                        {
+                            <button type="button" class="date-format-option"
+                                    aria-pressed="@(_datepickerFormat == format ? "true" : "false")"
+                                    @onclick="@(() => ChangeDateFormat(format))">@format</button>
+                        }
+                    </div>
+                    <div class="demo-preview">
+                        <span class="demo-info">Active format</span>
+                        <p class="demo-value">@_datepickerFormat</p>
+                        <span class="demo-muted">The selected day is preserved when you change the format.</span>
+                    </div>
+                </div>
+            </ChildContent>
+        </DemoCard>
+
+        <DemoCard Id="date-picker-week" Title="Select a whole week"
+                  Description="Open the week picker and choose a day to select its complete week.">
+            <ChildContent>
+                <EditForm Model="_weekFormData">
+                    <DataAnnotationsValidator />
                     <DnetFormField Label="Current week">
                         <ChildContent>
-                            <DnetDatePickerWeek @ref="_datepickerWeek" @bind-Value="_formData1.DepartureDay"
-                                Disabled="false" OnWeekSelected="DaySelectedWeek" PlaceHolder="Current week"
-                                Format="@_datepickerFormat" 
-                                
-                                FirstDayToShow="DateTime.Now"
-                                DatepickerFilter="(p) => { return p.DayIndex == 0; }"
-                                ComponentTheme="@Blazor.Infrastructure.Enums.ComponentTheme.Raw">
-                            </DnetDatePickerWeek>
+                            <DnetDatePickerWeek @bind-Value="_weekFormData.DepartureDay"
+                                                OnWeekSelected="DaySelectedWeek"
+                                                PlaceHolder="Current week" Format="@_datepickerFormat"
+                                                FirstDayToShow="DateTime.Today"
+                                                DatepickerFilter="@(day => day.DayIndex == 0)"
+                                                ComponentTheme="ComponentTheme.Raw" />
                         </ChildContent>
                         <ErrorContent>
-                            <ValidationMessage For="@(() => _formData1.DepartureDay)" />
+                            <ValidationMessage For="@(() => _weekFormData.DepartureDay)" />
                         </ErrorContent>
                     </DnetFormField>
-                </div>
-            </EditForm>
-        </div>
-        <div class="dnet-m-t-30" style="flex-direction: column">
-            <div class="d-flex flex-column dnet-m-b-20 dnet-m-t-20">
-                <EditForm Model="@_formData2">
-                    <DnetDatePickerWeekRaw @ref="_datepickerWeekRaw" OnWeekSelected="DaySelectedWeekRaw" Format="@_datepickerFormat">
-
-                    </DnetDatePickerWeekRaw>
                 </EditForm>
-            </div>
-        </div>
-    </div>
-</div>
+            </ChildContent>
+            <Footer>
+                <span class="demo-value" role="status">@_weekSelectionLabel</span>
+            </Footer>
+        </DemoCard>
 
+        <DemoCard Id="date-picker-week-inline" Title="Week calendar in the page"
+                  Description="Browse the calendar and select a week without opening a separate panel.">
+            <ChildContent>
+                <div class="date-calendar-preview">
+                    <DnetDatePickerWeekRaw OnWeekSelected="DaySelectedWeekRaw" Format="@_datepickerFormat" />
+                </div>
+            </ChildContent>
+            <Footer>
+                <span class="demo-value" role="status">@_inlineWeekSelectionLabel</span>
+            </Footer>
+        </DemoCard>
+    </div>
+</DemoPage>
 
 @code {
+    private readonly FormData _formData = new();
+    private readonly FormData _weekFormData = new();
+    private string _datepickerFormat = "dd/MM/yyyy";
+    private DateOnly? _inlineDate = new DateOnly(2026, 8, 15);
+    private string _calendarSelectionStatus = "Dates after today are unavailable.";
+    private string _weekSelectionLabel = "No week selected";
+    private string _inlineWeekSelectionLabel = string.Empty;
 
-    private FormData _formData = new FormData();
+    private readonly string[] _displayFormats = ["dd/MM/yyyy", "MM/dd/yyyy", "yyyy-MM-dd"];
+    private readonly string[] _acceptedFormats = ["dd/MM/yyyy", "d/M/yyyy", "MM/dd/yyyy", "yyyy-MM-dd", "yyyy/MM/dd", "yyyy/M/d"];
 
-    private FormData _formData1 = new FormData();
+    private string SelectedDateLabel => string.IsNullOrWhiteSpace(_formData.DepartureDay)
+        ? "No date selected" : _formData.DepartureDay;
 
-    private FormData _formData2 = new FormData();
-
-    private string _datepickerFormat { get; set; }
-
-    private string _dateSelected { get; set; }
-
-    private DnetDatePickerWeekRaw _datepickerWeekRaw { get; set; }
-
-    private DnetDatePickerWeek _datepickerWeek { get; set; }
-
-    private DateOnly? _inlineDate { get; set; } = new DateOnly(2026, 8, 15);
+    private string TravelRangeLabel
+    {
+        get
+        {
+            var range = _formData.TravelRange;
+            if (range is null || range.IsEmpty) return "No travel dates selected";
+            if (range.Start is null) return $"End: {range.End:dd MMM yyyy} · Choose a start date";
+            if (range.End is null) return $"Start: {range.Start:dd MMM yyyy} · Choose an end date";
+            return $"{range.Start:dd MMM yyyy} – {range.End:dd MMM yyyy}";
+        }
+    }
 
     protected override void OnInitialized()
     {
-        _datepickerFormat = "dd/MM/yyyy";
-
-        _formData.DepartureDay = DateTimeOffset.UtcNow.ToLocalTime().ToString(_datepickerFormat);
+        _formData.DepartureDay = DateTime.Today.ToString(_datepickerFormat, CultureInfo.InvariantCulture);
+        var today = DateTime.Today;
+        var monday = today.AddDays(-((int)today.DayOfWeek + 6) % 7);
+        _inlineWeekSelectionLabel = FormatWeek(monday, monday.AddDays(6));
+        _weekSelectionLabel = _inlineWeekSelectionLabel;
     }
 
-    private void MyValueChangeHandler(string item)
+    private void ChangeDateFormat(string format)
     {
-        _formData.FilterValue = item;
+        if (DateTime.TryParseExact(_formData.DepartureDay, _datepickerFormat, CultureInfo.InvariantCulture,
+                DateTimeStyles.None, out var selectedDate))
+        {
+            _formData.DepartureDay = selectedDate.ToString(format, CultureInfo.InvariantCulture);
+        }
+        _datepickerFormat = format;
     }
 
-    private void DaySelected(Blazor.Components.DatePicker.Infrastructure.Models.CalendarDay selecteDay)
+    private void DaySelected(Dnet.Blazor.Components.DatePicker.Infrastructure.Models.CalendarDay day) =>
+        _calendarSelectionStatus = $"Picked from the calendar: {day.FormattedDate}";
+
+    private void DaySelectedWeek(List<Dnet.Blazor.Components.DatePickerWeek.Infrastructure.Models.CalendarDay> days)
     {
-        _dateSelected = selecteDay.FormattedDate;
+        if (days.Count > 0) _weekSelectionLabel = FormatWeek(days.Min(day => day.Date), days.Max(day => day.Date));
     }
 
-    private void DaySelectedWeek(List<Blazor.Components.DatePickerWeek.Infrastructure.Models.CalendarDay> selecteDays)
+    private void DaySelectedWeekRaw(List<Dnet.Blazor.Components.DatePickerWeekRaw.Infrastructure.Models.CalendarDay> days)
     {
-        var firtsDay = selecteDays.FirstOrDefault();
-
-        var day = firtsDay.Date.ToString(_datepickerFormat);
-
-        // _datepickerWeekRaw.UpdateValue(day);
-
-        StateHasChanged();
+        if (days.Count > 0) _inlineWeekSelectionLabel = FormatWeek(days.Min(day => day.Date), days.Max(day => day.Date));
     }
 
-    private void DaySelectedWeekRaw(List<Blazor.Components.DatePickerWeekRaw.Infrastructure.Models.CalendarDay> selecteDays)
+    private static string FormatWeek(DateTime start, DateTime end) =>
+        $"{start.ToString("dd MMM yyyy", CultureInfo.InvariantCulture)} – {end.ToString("dd MMM yyyy", CultureInfo.InvariantCulture)}";
+
+    private sealed class FormData
     {
-        var firtsDay = selecteDays.FirstOrDefault();
-
-        var day = firtsDay.Date.ToString(_datepickerFormat);
-
-        // _datepickerWeek.UpdateValue(day);
-
-        StateHasChanged();
-    }
-
-    protected class FormData
-    {
-        [Required]
-        public string FilterValue { get; set; } = string.Empty;
-
-        [Required]
+        [Required(ErrorMessage = "Choose a departure day.")]
         public string DepartureDay { get; set; } = string.Empty;
 
         public DnetDateRange? TravelRange { get; set; }

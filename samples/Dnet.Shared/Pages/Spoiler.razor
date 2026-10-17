@@ -1,77 +1,141 @@
 @page "/Spoiler"
 @using Dnet.Blazor.Components.Spoiler
+@using Dnet.Blazor.Components.Button
+@using Dnet.Blazor.Components.Form
 
-<div class="container-fluid" style="padding-top: 10px;">
-    <div class="dnet-page-content-left-margin dnet-m-t-20" style="max-width: 800px;">
-        <h1 class="dnet-app-comp-name">Spoiler</h1>
-        <p>Una vista previa del contenido largo con controles para leerlo completo o volver a resumirlo.</p>
+<DemoPage Id="demo-spoiler" Title="Spoiler" Category="Contenido y lectura"
+          Description="Ofrece una primera mirada y deja que cada persona decida cuánto quiere leer. Los detalles, enlaces y anotaciones siguen en su sitio al abrir y cerrar el contenido."
+          Badge="Descubrir · Ampliar · Continuar">
+    <DemoCard Id="spoiler-article-card" Title="Un fin de semana para descubrir algo nuevo" Eyebrow="Lecturas para inspirarte"
+              Description="Una vista previa para despertar la curiosidad, con el artículo completo a un solo paso.">
+        <ChildContent>
+            <div class="spoiler-article-layout">
+                <div class="demo-stack">
+                    <div class="spoiler-article-meta"><span class="spoiler-tag">Escapadas con calma</span><span class="demo-muted">Equipo editorial · 16 oct 2026</span></div>
+                    <div class="spoiler-reading-preview">
+                        <DnetSpoiler MaxHeight="110" ShowLabel="Leer el artículo completo" HideLabel="Mostrar solo el resumen"
+                                     AriaLabel="Artículo de ejemplo" id="spoiler-basic">
+                            @Article
+                        </DnetSpoiler>
+                    </div>
+                </div>
+                <aside class="spoiler-reading-guide" aria-labelledby="spoiler-guide-title">
+                    <span class="spoiler-tag">Una pausa para leer</span>
+                    <h3 id="spoiler-guide-title">Ideas que dejan espacio</h3>
+                    <p class="demo-muted">Un paseo, una conversación y un plan compartido. A veces lo mejor del viaje aparece cuando dejamos de mirar el reloj.</p>
+                    <ul class="demo-bullets">
+                        <li>Encuentra una idea para el próximo fin de semana.</li>
+                        <li>Lee el artículo a tu ritmo.</li>
+                        <li>Vuelve al resumen para seguir explorando.</li>
+                    </ul>
+                </aside>
+            </div>
+        </ChildContent>
+        <Footer><span class="demo-info">El contenido se amplía en la misma página, sin interrumpir la lectura.</span></Footer>
+    </DemoCard>
 
-        <section class="dnet-m-t-20" aria-labelledby="spoiler-basic-title"
-                 style="padding: 24px; border-radius: 12px; background: var(--dnet-sys-surface);">
-            <h2 id="spoiler-basic-title" style="font-size: 1.125rem; margin-top: 0;">Un fin de semana para descubrir algo nuevo</h2>
-            <DnetSpoiler MaxHeight="110" ShowLabel="Leer el artículo completo" HideLabel="Mostrar solo el resumen"
-                         AriaLabel="Artículo de ejemplo" id="spoiler-basic">
-                @Article
-            </DnetSpoiler>
-        </section>
+    <div class="demo-grid">
+        <DemoCard Id="spoiler-details-card" Title="Los detalles, cuando los necesitas" Eyebrow="Controles que trabajan juntos"
+                  Description="Abre o cierra desde cualquiera de los dos controles. Al volver, tus enlaces y la nota siguen disponibles.">
+            <ChildContent>
+                <div class="demo-stack">
+                    <div class="demo-actions"><DnetButton id="spoiler-external-toggle" OnClick="ToggleDetails">@(_expanded ? "Cerrar detalles" : "Abrir detalles")</DnetButton></div>
+                    <div class="demo-preview">
+                        <DnetSpoiler MaxHeight="90" @bind-Expanded="_expanded" ShowLabel="Ver todos los detalles" HideLabel="Ocultar detalles"
+                                     AriaLabel="Detalles y enlaces" id="spoiler-controlled">
+                            <p class="spoiler-visible-resource"><a href="/PillTabs" id="spoiler-visible-link">Explorar Pill Tabs</a></p>
+                            <p class="spoiler-interactive-copy">Aquí puedes ampliar la información antes de continuar. Al abrir los detalles encontrarás más recursos y un espacio para guardar una idea mientras exploras.</p>
+                            <div class="spoiler-extra-details">
+                                <a href="/theming" id="spoiler-hidden-link">Explorar los temas de la librería</a>
+                                <DnetFormField Label="Una idea para recordar">
+                                    <DnetInputText id="spoiler-note" @bind-Value="_note" PlaceHolder="Escribe una nota" />
+                                </DnetFormField>
+                                <button type="button" inert id="spoiler-original-inert" class="spoiler-unavailable">Acción no disponible</button>
+                                <p class="demo-info">La nota se conserva al contraer el contenido durante esta visita.</p>
+                            </div>
+                        </DnetSpoiler>
+                    </div>
+                </div>
+            </ChildContent>
+            <Footer>
+                <div class="spoiler-state-summary">
+                    <span id="spoiler-controlled-state" class="demo-value" role="status">Estado: @(_expanded ? "expandido" : "contraído")</span>
+                    <span id="spoiler-note-value" class="demo-info">Nota: @(string.IsNullOrWhiteSpace(_note) ? "Sin anotaciones" : _note)</span>
+                </div>
+            </Footer>
+        </DemoCard>
 
-        <section class="dnet-m-t-20" aria-labelledby="spoiler-short-title">
-            <h2 id="spoiler-short-title" style="font-size: 1rem;">Si todo cabe, no aparece el control</h2>
-            <DnetSpoiler ShowLabel="Ver más" HideLabel="Ver menos" id="spoiler-short">
-                <p style="margin: 0;">Este contenido es breve y se muestra completo.</p>
-            </DnetSpoiler>
-        </section>
+        <DemoCard Id="spoiler-dynamic-card" Title="Una descripción que puede crecer" Eyebrow="Contenido dinámico"
+                  Description="Empieza con una nota breve y añade el artículo completo. El control aparece cuando hace falta más espacio.">
+            <ChildContent>
+                <div class="demo-stack">
+                    <div class="demo-actions"><DnetButton id="spoiler-change-content" OnClick="ChangeContent">@(_longContent ? "Mostrar texto corto" : "Añadir texto largo")</DnetButton></div>
+                    <div class="demo-preview">
+                        <DnetSpoiler MaxHeight="100" ShowLabel="Ver la descripción completa" HideLabel="Resumir descripción" id="spoiler-dynamic">
+                            @if (_longContent)
+                            {
+                                @Article
+                            }
+                            else
+                            {
+                                <p class="spoiler-short-copy">Todavía no hay detalles adicionales.</p>
+                            }
+                        </DnetSpoiler>
+                    </div>
+                    <p class="demo-status">Si ya habías abierto la descripción, seguirá abierta cuando vuelva el texto largo.</p>
+                </div>
+            </ChildContent>
+            <Footer><span id="spoiler-content-state" class="demo-value" role="status">@(_longContent ? "Artículo completo disponible" : "Descripción breve")</span></Footer>
+        </DemoCard>
 
-        <section class="dnet-m-t-20" aria-labelledby="spoiler-controlled-title">
-            <h2 id="spoiler-controlled-title" style="font-size: 1rem;">Selección controlada y contenido interactivo</h2>
-            <button type="button" class="dnet-button" id="spoiler-external-toggle" @onclick="() => _expanded = !_expanded">
-                @(_expanded ? "Contraer desde fuera" : "Expandir desde fuera")
-            </button>
-            <DnetSpoiler MaxHeight="90" @bind-Expanded="_expanded" ShowLabel="Ver todos los detalles" HideLabel="Ocultar detalles"
-                         AriaLabel="Detalles y enlaces" id="spoiler-controlled">
-                <p style="margin: 0 0 12px;"><a href="/PillTabs" id="spoiler-visible-link">Explorar Pill Tabs</a></p>
-                <p style="min-height: 110px; margin: 0;">Aquí puedes ampliar la información antes de continuar. Los enlaces que quedan fuera de la vista previa estarán disponibles al expandir el contenido.</p>
-                <a href="/theming" id="spoiler-hidden-link">Explorar los temas de la librería</a>
-                <button type="button" inert id="spoiler-original-inert">Control inactivo de ejemplo</button>
-            </DnetSpoiler>
-            <p id="spoiler-controlled-state">Estado: @(_expanded ? "expandido" : "contraído")</p>
-        </section>
+        <DemoCard Id="spoiler-short-card" Title="Cuando unas palabras bastan" Eyebrow="Contenido breve"
+                  Description="Todo el mensaje está a la vista. No necesitas abrir nada para terminar de leerlo.">
+            <ChildContent>
+                <div class="demo-stack">
+                    <span class="spoiler-tag">Lectura completa</span>
+                    <div class="demo-preview">
+                        <DnetSpoiler ShowLabel="Ver más" HideLabel="Ver menos" id="spoiler-short">
+                            <p class="spoiler-short-copy">Este contenido es breve y se muestra completo.</p>
+                        </DnetSpoiler>
+                    </div>
+                    <p class="demo-muted spoiler-short-note">El mismo componente se adapta a la cantidad de contenido y al espacio disponible.</p>
+                </div>
+            </ChildContent>
+            <Footer><span class="demo-info">Sin pasos adicionales para un mensaje corto.</span></Footer>
+        </DemoCard>
 
-        <section class="dnet-m-t-20" aria-labelledby="spoiler-dynamic-title">
-            <h2 id="spoiler-dynamic-title" style="font-size: 1rem;">Cambios de contenido y ancho</h2>
-            <button type="button" class="dnet-button" id="spoiler-change-content" @onclick="() => _longContent = !_longContent">
-                @(_longContent ? "Mostrar texto corto" : "Añadir texto largo")
-            </button>
-            <DnetSpoiler MaxHeight="100" ShowLabel="Ver la descripción completa" HideLabel="Resumir descripción" id="spoiler-dynamic">
-                @if (_longContent)
-                {
-                    @Article
-                }
-                else
-                {
-                    <p style="margin: 0;">Todavía no hay detalles adicionales.</p>
-                }
-            </DnetSpoiler>
-        </section>
-
-        <section class="dnet-m-t-20" aria-labelledby="spoiler-rtl-title">
-            <h2 id="spoiler-rtl-title" style="font-size: 1rem;">Dirección RTL y apertura inicial</h2>
-            <DnetSpoiler MaxHeight="70" DefaultExpanded="true" ShowLabel="Ver más" HideLabel="Ver menos" dir="rtl"
-                         style="--dnet-spoiler-gap: 12px;" id="spoiler-rtl">
-                @Article
-            </DnetSpoiler>
-        </section>
+        <DemoCard Id="spoiler-direction-card" Title="Una lectura abierta desde el inicio" Eyebrow="De derecha a izquierda"
+                  Description="Este texto en árabe empieza desplegado. La lectura y el control siguen la dirección del contenido.">
+            <ChildContent>
+                <div class="demo-preview">
+                    <DnetSpoiler MaxHeight="70" DefaultExpanded="true" ShowLabel="قراءة المزيد" HideLabel="عرض أقل"
+                                 AriaLabel="رحلة لاكتشاف أماكن جديدة" dir="rtl" lang="ar"
+                                 style="--dnet-spoiler-gap: 12px;" id="spoiler-rtl">
+                        <div class="spoiler-article-text">
+                            <p>تبدأ الرحلة بخطوات هادئة في شوارع لم نزرها من قبل. نترك وقتًا لاكتشاف الأماكن الصغيرة والاستماع إلى حكايات الناس الذين نلتقي بهم.</p>
+                            <p>بعد الظهر نجتمع حول مائدة واحدة، ونتبادل الأفكار ونختار معًا الوجهة التالية. لا نحتاج إلى جدول مزدحم لنصنع ذكريات جميلة.</p>
+                            <p>وفي نهاية اليوم نعود بصور جديدة وقصص نحب مشاركتها، ورغبة في تكرار هذه اللحظات البسيطة مع الأصدقاء.</p>
+                        </div>
+                    </DnetSpoiler>
+                </div>
+            </ChildContent>
+            <Footer><span class="demo-info">Puedes resumirlo y volver a abrirlo con el mismo control.</span></Footer>
+        </DemoCard>
     </div>
-</div>
+</DemoPage>
 
 @code {
     private bool _expanded;
     private bool _longContent;
+    private string _note = string.Empty;
 
-    private static RenderFragment Article => @<div style="line-height: 1.65;">
-        <p style="margin: 0 0 12px;">A veces basta con cambiar de camino para encontrar un lugar que no conocíamos. Un paseo sin prisas, una conversación junto al río y una mesa compartida pueden transformar un fin de semana corriente.</p>
-        <p style="margin: 0 0 12px;">La propuesta empieza por la mañana, con tiempo para recorrer las calles y detenerse donde apetezca. No hace falta completar una lista de visitas: lo interesante es dejar espacio para descubrir algo inesperado.</p>
-        <p style="margin: 0 0 12px;">Por la tarde podemos acercarnos al parque, preparar una pequeña merienda o reunir al grupo para decidir el siguiente plan. Cada persona aporta una idea y entre todos encontramos una forma distinta de disfrutar del día.</p>
-        <p style="margin: 0;">Al volver, quedan las fotografías, las anécdotas y las ganas de repetir. Los mejores recuerdos suelen estar en esos pequeños momentos que nadie había previsto.</p>
+    private void ToggleDetails() => _expanded = !_expanded;
+    private void ChangeContent() => _longContent = !_longContent;
+
+    private static RenderFragment Article => @<div class="spoiler-article-text">
+        <p>A veces basta con cambiar de camino para encontrar un lugar que no conocíamos. Un paseo sin prisas, una conversación junto al río y una mesa compartida pueden transformar un fin de semana corriente.</p>
+        <p>La propuesta empieza por la mañana, con tiempo para recorrer las calles y detenerse donde apetezca. No hace falta completar una lista de visitas: lo interesante es dejar espacio para descubrir algo inesperado.</p>
+        <p>Por la tarde podemos acercarnos al parque, preparar una pequeña merienda o reunir al grupo para decidir el siguiente plan. Cada persona aporta una idea y entre todos encontramos una forma distinta de disfrutar del día.</p>
+        <p>Al volver, quedan las fotografías, las anécdotas y las ganas de repetir. Los mejores recuerdos suelen estar en esos pequeños momentos que nadie había previsto.</p>
     </div>;
 }

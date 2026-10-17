@@ -3,7 +3,11 @@
 Shows a height-limited preview of long content with an expand/collapse button.
 The button only appears when the content exceeds `MaxHeight`. Content remains
 mounted in both states. Load the standard library CSS and JavaScript bundles.
-The sample page is `/Spoiler`.
+The sample page at `/Spoiler` presents editorial content, shared expansion
+controls, dynamic text, short content and an initially expanded RTL story in
+responsive themed cards. The shared-controls example includes a note that
+remains mounted and retains its value when the details are closed or reopened
+during the current visit.
 
 ```razor
 @using Dnet.Blazor.Components.Spoiler

@@ -1,0 +1,12 @@
+.profile-editor { box-sizing: border-box; min-width: 0; padding-block: 8px 12px; color: var(--dnet-sys-on-surface); }
+.profile-editor-floating { height: 100%; padding: 24px; overflow: auto; }
+.profile-editor-header { margin-block-end: 16px; }
+.profile-editor-header p { margin: 0 0 6px; color: var(--dnet-sys-on-surface-muted); font-size: var(--dnet-sys-text-xs); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+.profile-editor-header h2 { margin: 0; color: var(--dnet-sys-on-surface-emphasis); font-size: var(--dnet-sys-text-xl); font-weight: 600; }
+.profile-editor-description { margin: 0 0 24px; color: var(--dnet-sys-on-surface-muted); font-size: var(--dnet-sys-text-sm); line-height: 1.65; }
+.profile-editor-fields { display: grid; gap: 20px; min-width: 0; }
+.profile-editor-field { min-width: 0; }
+.profile-editor-field ::deep .dnet-form-field-plain-wrapper { margin-block-end: 0; }
+.profile-editor ::deep .validation-message { color: var(--dnet-sys-danger); font-size: var(--dnet-sys-text-sm); line-height: 1.5; }
+.profile-editor-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; margin-block-start: 24px; padding-block-start: 20px; border-block-start: 1px solid var(--dnet-sys-border); }
+.profile-editor-actions ::deep .profile-editor-save { --dnet-btn-background: var(--dnet-sys-on-surface-emphasis); --dnet-btn-foreground: var(--dnet-sys-surface-raised); --dnet-btn-background-hover: color-mix(in srgb, var(--dnet-sys-on-surface-emphasis) 85%, var(--dnet-sys-surface-raised)); }

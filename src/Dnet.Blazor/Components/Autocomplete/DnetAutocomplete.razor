@@ -193,6 +193,7 @@
     private AutoCompleteListService<TItem>? _autoCompleteListService;
 
     private string? _lastFilterValue;
+    private string? _lastNotifiedFormValue;
     private List<TItem>? _cachedFilteredItems;
 
     private bool _hasFocus { get; set; }
@@ -238,7 +239,8 @@
             if (_formEventService is not null) _formEventService.RaiseError(_hasErrors && EditContext.IsModified(FieldIdentifier));
         }
 
-        if (_formEventService is not null) _formEventService.RaiseCurrentValue(CurrentValueAsString);
+        _lastNotifiedFormValue = CurrentValueAsString;
+        if (_formEventService is not null) _formEventService.RaiseCurrentValue(_lastNotifiedFormValue);
 
         _clearContentHandler = () => _ = InvokeAsync(ClearInputAsync);
         if (_formEventService is not null) _formEventService.OnClearContent += _clearContentHandler;
@@ -272,6 +274,18 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
+
+        // Another bound input can change Value without producing a native input
+        // event here. Keep the form label and clear action in sync as well.
+        var formValue = CurrentValueAsString;
+        if (!string.Equals(_lastNotifiedFormValue, formValue, StringComparison.Ordinal))
+        {
+            // Store before notifying: the parent field rerenders on these events.
+            _lastNotifiedFormValue = formValue;
+            _hasFocus = !string.IsNullOrEmpty(formValue);
+            _formEventService?.RaiseCurrentValue(formValue);
+            _formEventService?.RaiseFocus(_hasFocus);
+        }
 
         if (_previousDisabled != Disabled)
         {

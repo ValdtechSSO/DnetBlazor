@@ -1,94 +1,78 @@
-﻿@page "/ConnectedPanel"
-
-@using Dnet.App.Shared.Infrastructure.Entities
-@using Dnet.App.Shared.Infrastructure.Models
-@using Dnet.App.Shared.Shared.CustomComponents
+@page "/ConnectedPanel"
+@using Dnet.App.Shared.Pages.ShowcaseContent
+@using Dnet.Blazor.Components.Button
+@using Dnet.Blazor.Components.ConnectedPanel.Infrastructure.Interfaces
 @using Dnet.Blazor.Components.ConnectedPanel.Infrastructure.Models
-@using Dnet.Blazor.Components.Grid.Infrastructure.Enums
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Enums
-@using Dnet.Blazor.Components.Overlay.Infrastructure.Interfaces
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Models
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Services
-@using Dnet.Blazor.Infrastructure.Models.SearchModels
-@using Dnet.Blazor.Infrastructure.Models.SearchModels.FilterModels
-@using Microsoft.AspNetCore.Components.Web
-@using Dnet.Blazor.Components.ConnectedPanel.Infrastructure.Interfaces
-
 @inject IConnectedPanelService ConnectedPanelService
-
 @implements IDisposable
 
-<div class="container-fluid" style="padding-top: 10px;">
-	<div class="d-flex dnet-page-content-left-margin dnet-m-t-20">
-		<span class="dnet-m-r-10  dnet-app-comp-name">Connected Panel</span>
-	</div>
-	 <div class="d-flex dnet-page-content-left-margin dnet-m-t-20 dnet-page-doc-text">
-        <span class="dnet-m-r-10">Connected Panel makes it easy to dynamically position a component relative to another element in the DOM used for reference. You can inject any blazor component inside the Connected Panel</span>
+<DemoPage Id="demo-connected-panel" Title="Connected panel" Category="Components / Overlays" Description="Keep a contextual action close to the control that opened it, without leaving the page." Badge="Anchored overlay">
+    <div class="demo-grid">
+        <DemoCard Id="connected-panel-basic" Title="A filter in the right place" Eyebrow="01 / Contact directory" Description="Open the filter beside its trigger and choose a team to update this directory.">
+            <ChildContent>
+                <div class="demo-stack">
+                    <div class="connected-toolbar"><div><strong>Team directory</strong><span>@FilteredContacts.Count() contacts · @_department</span></div><button id="connected-panel-trigger" class="connected-filter-button" type="button" @onclick="ToggleFilter" aria-label="Filter contacts" aria-haspopup="dialog" aria-expanded="@(_reference?.IsAttached == true ? "true" : "false")"><svg @ref="_trigger" class="bi bi-filter" width="24" height="24" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" /></svg></button></div>
+                    <div id="connected-panel-contacts" class="connected-contacts">
+                        @foreach (var contact in FilteredContacts)
+                        {
+                            <div class="connected-contact"><span class="connected-avatar" aria-hidden="true">@contact.Initials</span><div><strong>@contact.Name</strong><span>@contact.Team</span></div><small>@contact.Location</small></div>
+                        }
+                    </div>
+                    <div class="demo-actions"><DnetButton id="connected-panel-reset" OnClick="ResetFilter" disabled="@(_department == "All teams")">Reset filter</DnetButton></div>
+                </div>
+            </ChildContent>
+            <Footer><div id="connected-panel-result" class="demo-value" role="status"><span class="demo-muted">Active filter</span><strong>@_status</strong></div></Footer>
+        </DemoCard>
+        <DemoCard Id="connected-panel-guide" Title="Context stays in view" Eyebrow="02 / Interaction" Description="Connected panels work well for filters, quick settings and compact actions.">
+            <div class="demo-stack">
+                <div class="demo-info"><strong>Connected to the trigger</strong><p>The panel opens alongside the filter button and adapts its position to available space.</p></div>
+                <div class="demo-info"><strong>Apply with confidence</strong><p>Choose a team and select Apply filter. Cancel dismisses the panel without changing the directory.</p></div>
+                <div class="demo-info"><strong>Easy to leave</strong><p>Click outside the panel or press Escape to get back to your contacts.</p></div>
+            </div>
+        </DemoCard>
     </div>
-	<div class="d-flex dnet-page-content-left-margin dnet-m-t-30">
-		<span class="dnet-m-r-10">Click to show filter</span>
-		<svg @ref="_menuTrigger" 
-		     style="cursor: pointer" 
-		     @onclick="ToggleMenu" 
-		     class="bi bi-filter" 
-		     width="1.5em" 
-		     height="1.5em" 
-		     viewBox="0 0 16 16" 
-		     fill="currentColor" 
-		     xmlns="http://www.w3.org/2000/svg">
-			<path fill-rule="evenodd" d="M6 10.5a.5.5 0 01.5-.5h3a.5.5 0 010 1h-3a.5.5 0 01-.5-.5zm-2-3a.5.5 0 01.5-.5h7a.5.5 0 010 1h-7a.5.5 0 01-.5-.5zm-2-3a.5.5 0 01.5-.5h11a.5.5 0 010 1h-11a.5.5 0 01-.5-.5z" clip-rule="evenodd" />
-		</svg>
-	</div>
-</div>
-
+</DemoPage>
 
 @code {
+    private ElementReference _trigger;
+    private OverlayReference? _reference;
+    private string _department = "All teams";
+    private string _status = "Showing every team";
+    private bool _disposed;
+    private readonly Contact[] _contacts = [new("Taylor Morgan", "TM", "Design", "London"), new("Alex Rivera", "AR", "Engineering", "Madrid"), new("Sam Chen", "SC", "Operations", "Berlin")];
+    private IEnumerable<Contact> FilteredContacts => _department == "All teams" ? _contacts : _contacts.Where(contact => contact.Team == _department);
 
-	private ElementReference _menuTrigger;
+    private void ToggleFilter()
+    {
+        if (_reference?.IsAttached == true) { _reference.Detach(); return; }
+        _reference = ConnectedPanelService.Open(typeof(ContactFilterContent), new Dictionary<string, object> { ["Department"] = _department }, _trigger,
+            new ConnectedPanelConfig { Width = "320px", Height = "auto", MaxWidth = "calc(100vw - 32px)", MaxHeight = "calc(100dvh - 32px)" });
+        _reference.Close += FilterClosed;
+    }
 
-	private OverlayReference _overlayReference;
-
-	private void ToggleMenu()
-	{
-		var filterModel = new AdvancedFilterModel
-		{
-			AdditionalOperator = FilterOperator.None,
-			AdditionalValue = null,
-			Column = "Name",
-			Condition = FilterCondition.None,
-			Operator = FilterOperator.None,
-			Type = CellDataType.Date,
-			Value = null
-		};
-
-		var panelConfig = new ConnectedPanelConfig()
+    private void FilterClosed(OverlayResult result)
+    {
+        if (_reference is not null) _reference.Close -= FilterClosed;
+        _reference = null;
+        if (_disposed) return;
+        if (result.CloseReason == CloseReason.Ok)
         {
-            Width = "300px",
-            Height = "430px",
-			ConnectedPanelClasses = "test-class"
-        };
+            _department = result.ComponentData?.ToString() ?? "All teams";
+            _status = _department == "All teams" ? "Showing every team" : $"Showing the {_department} team";
+        }
+        _ = InvokeAsync(StateHasChanged);
+    }
 
-		var parameters = new Dictionary<string, object>();
-
-		parameters.Add("FilterData", filterModel);
-
-		_overlayReference = ConnectedPanelService.ToggleMenu(typeof(ConnectedPanelTestContent), parameters, _menuTrigger, panelConfig);
-
-		_overlayReference.Close += CloseConnectedPanel;
-	}
-
-	void CloseConnectedPanel(OverlayResult overlayDataResult)
-	{
-		var resultData = overlayDataResult.CloseReason == CloseReason.Ok ? overlayDataResult.ComponentData.ToString() : "";
-
-		StateHasChanged();
-	}
-
-	public void Dispose()
-	{
-		if (_overlayReference != null) _overlayReference.Close -= CloseConnectedPanel;
-	}
+    private void ResetFilter() { _department = "All teams"; _status = "Filter reset · showing every team"; }
+    public void Dispose()
+    {
+        _disposed = true;
+        if (_reference is null) return;
+        _reference.Close -= FilterClosed;
+        _reference.Dispose();
+    }
+    private sealed record Contact(string Name, string Initials, string Team, string Location);
 }
-
-
-

@@ -53,7 +53,10 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
-| `--dnet-dialog-border-radius` | `5px` <br><sub>via `--dnet-sys-radius-md`</sub> |
+| `--dnet-dialog-border-radius` | `10px` <br><sub>via `--dnet-sys-radius-lg`</sub> |
+| `--dnet-list-background-color` | `transparent` |
+| `--dnet-list-border-color` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
+| `--dnet-list-box-shadow` | `none` |
 
 ```css
 :root { --dnet-dialog-border-radius: /* your value */; }

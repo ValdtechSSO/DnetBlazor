@@ -21,6 +21,14 @@
   font-size: var(--dnet-sys-text-sm);
 }
 
+.dnet-image-editor-error {
+  margin: 0;
+  color: var(--dnet-sys-danger);
+  font-size: var(--dnet-sys-text-sm);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
 .dnet-image-editor-toolbar {
   display: flex;
   align-items: center;
@@ -169,6 +177,12 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--dnet-sys-space-2);
+}
+
+/* Contain the chip list's negative outer margin within the editor panel. */
+.dnet-image-editor-ratios {
+  min-width: 0;
+  padding-inline: 4px;
 }
 
 /* Sits inside the field's control, so it starts on the field's own left padding
@@ -511,4 +525,36 @@
   /*  &:hover {
         color: $secondary-reset;
     }*/
+}
+
+/* Stack the editor within narrow dialogs; their content owns the vertical
+   scroll, so the stage, editing fields and footer all remain reachable. */
+@media (max-width: 900px) {
+  .dnet-image-editor {
+    height: auto;
+    min-height: 100%;
+  }
+
+  .dnet-image-editor-body {
+    flex: 0 0 auto;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .dnet-image-editor-stage,
+  .dnet-image-editor-panel {
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .dnet-image-viewport {
+    flex: 0 0 auto;
+    height: min(var(--_editor-stage-height), 40dvh, 320px);
+  }
+
+  .dnet-image-editor-fields,
+  .dnet-image-editor-fields > * {
+    min-width: 0;
+  }
 }

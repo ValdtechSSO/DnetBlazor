@@ -70,8 +70,8 @@ public sealed class GridResponsiveLayoutTests
 
         Assert.Equal("none", checkboxAppearance.Appearance);
         Assert.Equal("none", checkboxAppearance.BoxShadow);
-        Assert.InRange(checkboxAppearance.Width, 13.5, 14.5);
-        Assert.InRange(checkboxAppearance.Height, 13.5, 14.5);
+        Assert.InRange(checkboxAppearance.Width, 17.5, 18.5);
+        Assert.InRange(checkboxAppearance.Height, 17.5, 18.5);
         Assert.Equal(0, checkboxAppearance.PaddingLeft);
         Assert.InRange(checkboxAppearance.CenterOffset, 0, 1);
 

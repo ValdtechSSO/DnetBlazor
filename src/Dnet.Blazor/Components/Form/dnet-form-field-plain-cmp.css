@@ -188,80 +188,183 @@ select.mat-input-element::-ms-value {
   margin-top: -10px;
 }
 
-.dnet-form-field-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.dnet-form-field-char-counter {
-  font-size: 0.75rem;
-}
-
 .dnet-form-field-plain-wrapper {
+  --_field-background: var(--dnet-form-field-background, color-mix(in srgb, var(--dnet-sys-on-surface) 12%, var(--dnet-sys-surface)));
+  --_field-disabled-background: color-mix(in srgb, var(--_field-background) 65%, var(--dnet-sys-surface));
+  --_field-border-color: var(--_field-background);
+  --_field-disabled-border-color: var(--_field-disabled-background);
+  --_field-min-height: var(--dnet-form-field-min-height, 56px);
+  --_field-padding-inline: var(--dnet-form-field-padding-inline, 16px);
+  --_field-icon-size: var(--dnet-form-field-icon-size, 24px);
+  --_field-icon-inset: var(--dnet-form-field-icon-inset, 12px);
+  --_field-icon-gap: var(--dnet-form-field-icon-gap, 16px);
+  --_field-font-size: var(--dnet-form-field-font-size, var(--dnet-sys-text-lg));
+  --_field-label-base-size: var(--dnet-form-field-plain-label-font-size, var(--dnet-sys-text-lg));
+  --_field-label-size: var(--_field-label-base-size);
+  --_field-label-line-height: calc(var(--_field-label-base-size) * 1.5);
+  --_field-label-top: max(8px, calc((var(--_field-min-height) - var(--_field-label-line-height)) / 2));
+  --_field-label-space: 0px;
+  --_field-placeholder-opacity: 1;
+  --_field-edge-start: var(--_field-padding-inline);
+  --_field-edge-end: var(--_field-padding-inline);
+  --_field-label-start: var(--_field-padding-inline);
+  --_field-label-end: var(--_field-padding-inline);
+  position: relative;
   display: flex;
   flex-direction: column;
-  margin-bottom: 10px;
-  width: 100%;
+  margin-block-end: 16px;
+  inline-size: 100%;
+  min-inline-size: 0;
+  font-size: var(--_field-font-size);
+  line-height: 1.5;
+}
+
+.dnet-form-field-header {
+  display: flex;
+  align-items: center;
+  min-inline-size: 0;
+  line-height: var(--_field-label-line-height);
 }
 
 .dnet-form-field-plain-label-wrapper {
-  padding-left: 3px;
+  display: flex;
+  align-items: baseline;
+  min-inline-size: 0;
+  font-size: var(--_field-label-size);
 }
 
 .dnet-form-field-plain-label {
-  font-size: var(--dnet-form-field-plain-label-font-size, var(--dnet-sys-text-sm));
-  color: var(--dnet-form-field-plain-label-color, var(--dnet-sys-on-surface-subtle));
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--_field-label-size);
+  color: var(--dnet-form-field-plain-label-color, var(--dnet-sys-on-surface-muted));
 }
 
 .dnet-form-field-plain-label-wrapper > label {
   font-weight: 400;
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
+}
+
+.dnet-form-field-appearance-fill > .dnet-form-field-header {
+  position: absolute;
+  inset-block-start: var(--_field-label-top);
+  inset-inline-start: var(--_field-label-start);
+  inset-inline-end: var(--_field-label-end);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Native date segments, date ranges and multiline fields need a permanent label
+   line. Other controls reserve it only while focused or populated. */
+.dnet-form-field-appearance-fill.dnet-form-field-has-label:is(
+  .dnet-form-field-label-raised,
+  :focus-within,
+  :has(textarea, .dnet-date-range-inputs, input:is([type=date], [type=time], [type=datetime-local], [type=month], [type=week]))
+) {
+  --_field-label-size: calc(var(--_field-label-base-size) * 0.75);
+  --_field-label-line-height: var(--_field-label-base-size);
+  --_field-label-top: max(8px, calc((var(--_field-min-height) - var(--_field-label-line-height) - var(--_field-font-size) * 1.5) / 2));
+  --_field-label-space: var(--_field-label-base-size);
 }
 
 .dnet-form-field-plain-control-container {
-  display: flex;
-  align-items: stretch;
-  min-height: var(--dnet-sys-text-input-min-height);
-  max-height: 272px;
-  margin-bottom: 3px;
-  border: 1px solid var(--dnet-sys-border);
-  border-radius: 5px;
-}
-.dnet-form-field-plain-control-container.dnet-control-disable {
-  background-color: var(--dnet-sys-state-hover);
-}
-
-.dnet-form-field-plain-prefix,
-.dnet-form-field-plain-suffix {
-  width: 34px;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: var(--_field-icon-gap);
+  min-block-size: var(--_field-min-height);
+  padding-block: 7px;
+  padding-inline-start: calc(var(--_field-edge-start) - 1px);
+  padding-inline-end: calc(var(--_field-edge-end) - 1px);
+  border: 1px solid var(--_field-border-color);
+  border-radius: 5px;
+  background-color: var(--_field-background);
+}
+.dnet-form-field-plain-control-container.dnet-control-disable {
+  background-color: var(--_field-disabled-background);
+  border-color: var(--_field-disabled-border-color);
+}
+
+/* Explicit consumer tokens still win in transparent appearances. */
+.dnet-form-field-appearance-standard,
+.dnet-form-field-appearance-legacy {
+  --_field-background: var(--dnet-form-field-background, var(--dnet-sys-transparent));
+  --_field-disabled-background: var(--dnet-sys-state-hover);
+  --_field-border-color: var(--dnet-sys-border);
+  --_field-disabled-border-color: var(--dnet-sys-border);
+  --_field-label-size: var(--dnet-form-field-plain-label-font-size, var(--dnet-sys-text-sm));
+  --_field-label-line-height: 16px;
+}
+
+:is(.dnet-form-field-appearance-standard, .dnet-form-field-appearance-legacy) > .dnet-form-field-header {
+  margin-block-end: 4px;
 }
 
 .dnet-form-field-plain-control {
-  flex-grow: 1;
+  box-sizing: border-box;
+  flex: 1 1 0%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-inline-size: 0;
+  padding-block-start: var(--_field-label-space);
+}
+
+.dnet-form-field-plain-control-container .mat-input-element {
+  box-sizing: border-box;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  font-size: var(--_field-font-size);
+  line-height: 1.5;
+}
+
+.dnet-form-field-plain-control-container .mat-input-element::placeholder {
+  color: var(--dnet-sys-on-surface-muted);
+  opacity: var(--_field-placeholder-opacity);
+}
+
+/* The legacy generated ::after creates an extra line in native date controls. */
+.dnet-form-field-plain-control-container input.mat-input-element:is([type=date], [type=time], [type=datetime-local], [type=month], [type=week]) {
+  block-size: calc(var(--_field-font-size) * 1.5);
+}
+.dnet-form-field-plain-control-container input.mat-input-element:is([type=date], [type=time], [type=datetime-local], [type=month], [type=week])::after {
+  content: none;
+}
+
+.dnet-form-field-appearance-fill.dnet-form-field-has-label:not(.dnet-form-field-label-raised):not(:focus-within):not(:has(textarea, .dnet-date-range-inputs, input:is([type=date], [type=time], [type=datetime-local], [type=month], [type=week]))) {
+  --_field-placeholder-opacity: 0;
+}
+
+.dnet-form-field-plain-wrapper:has(> .dnet-form-field-plain-control-container > .dnet-form-field-plain-prefix) {
+  --_field-edge-start: var(--_field-icon-inset);
+  --_field-label-start: calc(var(--_field-icon-inset) + var(--_field-icon-size) + var(--_field-icon-gap));
+}
+
+.dnet-form-field-plain-wrapper:has(> .dnet-form-field-plain-control-container > :is(.dnet-component-icon-wrapper, .dnet-form-field-plain-suffix), > .dnet-form-field-plain-control-container .dnet-plain-select) {
+  --_field-edge-end: var(--_field-icon-inset);
+  --_field-label-end: calc(var(--_field-icon-inset) + var(--_field-icon-size) + var(--_field-icon-gap));
+}
+
+.dnet-form-field-plain-wrapper:has(> .dnet-form-field-plain-control-container > .dnet-component-icon-wrapper + .dnet-form-field-plain-suffix) {
+  --_field-label-end: calc(var(--_field-icon-inset) + (var(--_field-icon-size) + var(--_field-icon-gap)) * 2);
+}
+
+.dnet-form-field-plain-prefix,
+.dnet-form-field-plain-suffix,
+.dnet-form-field-plain-control-container > .dnet-component-icon-wrapper {
+  box-sizing: border-box;
+  flex: 0 0 var(--_field-icon-size);
   display: flex;
   align-items: center;
-  padding-left: 10px;
-}
-
-.dnet-form-field-plain-prefix + .dnet-form-field-plain-control {
-  padding-left: 0px;
-}
-
-.dnet-form-field-plain-info {
-  font-size: 0.7rem;
-}
-
-.dnet-form-field-plain-clear {
-  width: 24px;
-  display: flex;
-  align-items: flex-end;
   justify-content: center;
-  padding-right: 5px;
+  inline-size: var(--_field-icon-size);
+  block-size: var(--_field-icon-size);
+  margin: 0;
+  padding: 0;
 }
 
 /* Icono funcional monocromo (R9): mask-image + background-color. */
@@ -279,22 +382,62 @@ select.mat-input-element::-ms-value {
   mask-size: 1em 1em;
 }
 
+.dnet-form-field-plain-control-container :is(.dnet-component-icon, .dnet-datepicker-icon, .dnet-timepicker-icon, .dnet-app-icon) {
+  inline-size: var(--_field-icon-size);
+  block-size: var(--_field-icon-size);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  background-size: contain;
+}
+
+.dnet-form-field-plain-control-container :is(.dnet-datepicker-icon-wrapper, .dnet-timepicker-icon-wrapper) {
+  inline-size: var(--_field-icon-size);
+  block-size: var(--_field-icon-size);
+}
+
+.dnet-form-field-plain-control-container .dnet-plain-select {
+  padding-right: 0;
+}
+.dnet-form-field-plain-control-container .dnet-plain-select-value {
+  opacity: var(--_field-placeholder-opacity);
+}
+.dnet-form-field-plain-control-container .dnet-plain-select-arrow-wrapper {
+  padding-inline-start: var(--_field-icon-gap);
+}
+.dnet-form-field-plain-control-container .dnet-plain-select-arrow {
+  width: var(--_field-icon-size);
+  height: var(--_field-icon-size);
+  margin: 0;
+  transform: translateY(calc(var(--_field-label-space) / -2));
+}
+
+.dnet-form-field-plain-info {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--_field-icon-gap);
+  min-block-size: 16px;
+  margin-block-start: 4px;
+  padding-inline: var(--_field-padding-inline);
+  font-size: var(--dnet-form-field-hint-font-size, var(--dnet-sys-text-sm));
+  line-height: 16px;
+}
+
+.dnet-form-field-char-counter {
+  white-space: nowrap;
+}
+
 .dnet-component-icon-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   width: 24px;
-  /* Breathing room between the trailing icon (clear button, search glyph) and
-     the field's right border. */
-  margin-right: 5px;
 }
 
 .dnet-floating-label--required::after {
-  margin-left: 2px;
-  margin-right: 0px;
+  margin-inline-start: 2px;
   content: "*";
-  font-size: var(--dnet-sys-text-xs);
+  font-size: inherit;
 }
 
 .dnet-component-clear-button {
@@ -313,12 +456,11 @@ select.mat-input-element::-ms-value {
 
 .dnet-form-field-hint-wrapper {
   display: flex;
-  padding-left: 3px;
 }
 
 .dnet-hint {
   color: var(--dnet-form-field-hint-color, var(--dnet-sys-on-surface-muted));
-  font-size: var(--dnet-form-field-hint-font-size, var(--dnet-sys-text-xs));
+  font-size: var(--dnet-form-field-hint-font-size, var(--dnet-sys-text-sm));
 }
 
 .dnet-property-form-group {

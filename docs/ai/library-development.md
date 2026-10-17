@@ -100,7 +100,33 @@ Regenerate the goldens under `tests/Dnet.Blazor.BrowserTests/VisualBaseline` and
 regenerated without justification turns the suite into a rubber stamp that
 approves anything.
 
-## These files
+## Sample pages
+
+Component showcase pages share `DemoPage` and `DemoCard` from
+`samples/Dnet.Shared/Shared/Showcase`. Keep one page heading, short descriptions
+and working examples with visible results. The helpers provide themed surfaces,
+spacing and responsive grids through `demo-grid`, `demo-stack`, `demo-actions`
+and `demo-preview`; page-specific scoped CSS should style the example content.
+Do not override library geometry to make a sample fit. Use public sizing APIs
+or a labelled local scroll region when a control needs more horizontal space.
+
+Preserve existing routes and stable interaction IDs when refreshing samples.
+Check all cards and opened overlays at desktop and mobile widths in both themes,
+including selected, disabled and empty states. Sample changes can intentionally
+change visual baselines; record before/after evidence and update the official
+Linux goldens in their matching environment.
+
+The `/DoubleList` sample composes two `DnetList` instances; run the `List` fact
+sheet for it. It is separate from `/FloatingDoubleList`, whose fact sheet and
+visual baseline cover a different control.
+
+The `/ImageEditor` sample validates PNG/JPEG uploads, offers the bundled logo
+and keeps the input stream alive until the dialog closes. An unchanged export
+may return that same stream; an edited export may return a different one. Dispose
+both owned streams after consuming the result, without losing the previous
+confirmed image when an edit is cancelled.
+
+## Reference files
 
 - `docs/ai/architecture.md` — the three layers, rules R1–R10, themes, the
   overlay portal, legacy compatibility, commands.
@@ -108,4 +134,3 @@ approves anything.
   and how to spot them. Read it in full the first time.
 - `tools/component-info.mjs` — fact sheet for any component, extracted from
   source on the spot.
-

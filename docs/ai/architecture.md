@@ -109,6 +109,19 @@ overlays write it into `OverlayConfig.ThemeScope`, and the host emits it.
 Arbitrary custom-property overrides **do not cross the portal** — a deliberate,
 documented limitation. Use `OverlayConfig.PanelStyle` for those.
 
+Connected Autocomplete and Select panels with no configured `Width` resolve it
+from the origin field. Their virtualized rows must never determine the pane's
+intrinsic width: it changes as rows enter and leave the DOM. `DnetOverlayPane`
+recalculates the origin width when the field resizes, including the centered
+tablet path. Explicit widths and min/max constraints remain effective, and the
+mobile layout keeps its responsive width and height.
+
+Tooltips keep `FlexibleConnectedTo` positioning on every device. Their service
+does not supply a global position: converting them to the centered mobile/tablet
+strategy places them at the viewport origin and drops trigger tracking. Keep the
+Tooltip exception in the pane aligned with the host's component-specific switch;
+connected resize/scroll handling must remain active.
+
 ## Visual safety net
 
 `tests/Dnet.Blazor.BrowserTests/VisualBaseline` holds reference screenshots

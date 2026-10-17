@@ -125,4 +125,8 @@ They inherit through the timeline and follow the active light or dark theme.
 The body, title and metadata wrap long text without expanding the page width.
 There are no animations or dependencies on icon fonts.
 
-The sample page is available at `/Timeline`.
+The sample page at `/Timeline` presents order tracking, alternating project
+milestones, team activity with custom bullets, and right-to-left reading in
+responsive themed cards. Advance the order to try every state, then reset it;
+event labels, progress and the current step update together. Completion leaves
+all four events completed with no current step. The other examples stay unchanged.

@@ -1,0 +1,17 @@
+.checkbox-options {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.checkbox-options legend {
+    margin-bottom: 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--dnet-sys-on-surface-muted);
+}
+
+.checkbox-options .demo-info {
+    margin: 8px 0 16px;
+}

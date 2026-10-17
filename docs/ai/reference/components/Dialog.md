@@ -21,10 +21,10 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
-| `--dnet-dialog-background` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
-| `--dnet-dialog-border-radius` | `5px` <br><sub>via `--dnet-sys-radius-md`</sub> |
+| `--dnet-dialog-background` | `#ffffff` <br><sub>via `--dnet-sys-surface-raised`</sub> |
+| `--dnet-dialog-border-radius` | `10px` <br><sub>via `--dnet-sys-radius-lg`</sub> |
 | `--dnet-dialog-button-margin` | `calc(var(--dnet-sys-space-unit) * 2)` <br><sub>via `--dnet-sys-space-2`</sub> |
-| `--dnet-dialog-elevation` | `0 11px 15px -7px var(--dnet-sys-shadow-color), 0 24px 38px 3px var(--dnet-sys-shadow-color), 0 9px 46px 8px var(--dnet-sys-shadow-color)` |
+| `--dnet-dialog-elevation` | `0 3px 5px -1px var(--dnet-sys-shadow-color), 0 6px 10px 0 var(--dnet-sys-shadow-color), 0 1px 18px 0 var(--dnet-sys-shadow-color)` <br><sub>via `--dnet-sys-elevation-3`</sub> |
 | `--dnet-dialog-foreground` | `color-mix(in srgb, var(--dnet-ref-neutral-1000) 87%, transparent)` <br><sub>via `--dnet-sys-on-surface-emphasis`</sub> |
 | `--dnet-dialog-header-margin-bottom` | `15px` |
 | `--dnet-dialog-height-compensation` | `4px` <br><sub>via `--dnet-sys-space-unit`</sub> |

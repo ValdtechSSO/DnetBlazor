@@ -1,0 +1,48 @@
+@using System.ComponentModel.DataAnnotations
+@using Dnet.Blazor.Components.Button
+@using Dnet.Blazor.Components.Form
+@using Dnet.Blazor.Components.Dialog.Infrastructure.Interfaces
+@using Dnet.Blazor.Components.FloatingPanel.Infrastructure.Interfaces
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Enums
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Services
+@inject IDialogService DialogService
+@inject IFloatingPanelService FloatingPanelService
+
+<div class="profile-editor @(Floating ? "profile-editor-floating" : string.Empty)">
+    @if (Floating)
+    {
+        <header class="profile-editor-header"><p>Contact details</p><h2>Edit profile</h2></header>
+    }
+    <p class="profile-editor-description">Keep this contact's details up to date. Changes are saved only when you choose Save profile.</p>
+    <EditForm Model="_profile" OnValidSubmit="SaveProfile" class="profile-editor-form">
+        <DataAnnotationsValidator />
+        <div class="profile-editor-fields">
+            <div class="profile-editor-field"><DnetFormField Label="Full name" IsRequired="true"><ChildContent><DnetInputText id="showcase-profile-name" @bind-Value="_profile.Name" aria-label="Full name" autocomplete="name" /></ChildContent><ErrorContent><ValidationMessage For="@(() => _profile.Name)" /></ErrorContent></DnetFormField></div>
+            <div class="profile-editor-field"><DnetFormField Label="Email address" IsRequired="true"><ChildContent><DnetInputText id="showcase-profile-email" @bind-Value="_profile.Email" aria-label="Email address" autocomplete="email" /></ChildContent><ErrorContent><ValidationMessage For="@(() => _profile.Email)" /></ErrorContent></DnetFormField></div>
+            <div class="profile-editor-field"><DnetFormField Label="Job title"><ChildContent><DnetInputText id="showcase-profile-role" @bind-Value="_profile.Role" aria-label="Job title" autocomplete="organization-title" /></ChildContent></DnetFormField></div>
+        </div>
+        <footer class="profile-editor-actions"><DnetButton OnClick="Cancel">Cancel</DnetButton><DnetButton id="showcase-profile-save" class="profile-editor-save" ButtonType="submit">Save profile</DnetButton></footer>
+    </EditForm>
+</div>
+
+@code {
+    [CascadingParameter] private int OverlayReferenceId { get; set; }
+    [Parameter] public bool Floating { get; set; }
+    private readonly Profile _profile = new();
+
+    private void SaveProfile() => Close(CloseReason.Ok, $"{_profile.Name} · {_profile.Email}");
+    private void Cancel() => Close(CloseReason.Cancel, null);
+    private void Close(CloseReason reason, string? value)
+    {
+        var result = new OverlayResult { OverlayReferenceId = OverlayReferenceId, CloseReason = reason, ComponentData = value! };
+        if (Floating) FloatingPanelService.Close(result);
+        else DialogService.Close(result);
+    }
+
+    private sealed class Profile
+    {
+        [Required(ErrorMessage = "Enter a full name.")] public string Name { get; set; } = "Taylor Morgan";
+        [Required(ErrorMessage = "Enter an email address."), EmailAddress(ErrorMessage = "Enter a valid email address.")] public string Email { get; set; } = "taylor.morgan@example.com";
+        public string Role { get; set; } = "Product designer";
+    }
+}

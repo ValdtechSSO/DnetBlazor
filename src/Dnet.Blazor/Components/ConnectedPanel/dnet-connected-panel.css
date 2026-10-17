@@ -1,14 +1,19 @@
 /*! ConnectedPanel — migrado a tokens (6.0). Generado una vez; se edita a mano. */
 
 .dnet-connected-panel-container {
-  --_background: var(--dnet-connected-panel-background, var(--dnet-sys-surface));
+  --_background: var(--dnet-connected-panel-background, var(--dnet-sys-surface-raised));
   --_padding: var(--dnet-connected-panel-padding, 2px);
+  --_radius: var(--dnet-dialog-border-radius, var(--dnet-sys-radius-lg));
+  --_elevation: var(--dnet-sys-elevation-3);
 
-  box-shadow: var(--dnet-sys-elevation-1);
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 0;
+  box-shadow: var(--_elevation);
   background: var(--_background);
   color: var(--dnet-sys-on-surface);
   width: 100%;
   height: 100%;
   padding: var(--_padding);
-  border-radius: var(--dnet-dialog-border-radius, var(--dnet-sys-radius-md));
+  border-radius: var(--_radius);
 }

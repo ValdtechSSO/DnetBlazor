@@ -1,0 +1,39 @@
+<section id="@Id" class="demo-card" data-demo-card="@Title" aria-labelledby="@TitleId">
+    @if (!string.IsNullOrWhiteSpace(Title))
+    {
+        <header class="demo-card-header">
+            @if (Icon is not null)
+            {
+                <span class="demo-card-icon" aria-hidden="true">@Icon</span>
+            }
+            <div>
+                @if (!string.IsNullOrWhiteSpace(Eyebrow))
+                {
+                    <p class="demo-card-eyebrow">@Eyebrow</p>
+                }
+                <h2 id="@TitleId">@Title</h2>
+                @if (!string.IsNullOrWhiteSpace(Description))
+                {
+                    <p class="demo-card-description">@Description</p>
+                }
+            </div>
+        </header>
+    }
+    <div class="demo-card-body">@ChildContent</div>
+    @if (Footer is not null)
+    {
+        <footer class="demo-card-footer">@Footer</footer>
+    }
+</section>
+
+@code {
+    [Parameter] public string Id { get; set; }
+    [Parameter] public string Title { get; set; } = string.Empty;
+    [Parameter] public string Description { get; set; } = string.Empty;
+    [Parameter] public string Eyebrow { get; set; } = string.Empty;
+    [Parameter] public RenderFragment Icon { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public RenderFragment Footer { get; set; }
+    private readonly string _generatedId = $"demo-card-{Guid.NewGuid():N}";
+    private string TitleId => $"{(string.IsNullOrEmpty(Id) ? _generatedId : Id)}-title";
+}

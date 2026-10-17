@@ -29,6 +29,7 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
+| `--dnet-calendar-background` | `#ffffff` <br><sub>via `--dnet-sys-surface-raised`</sub> |
 | `--dnet-datepickerweek-input-container-border` | `1px solid var(--dnet-sys-border)` |
 | `--dnet-datepickerweek-input-height` | `28px` |
 | `--dnet-datepickerweekca-day-disabled-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 60.5%, transparent)` |
@@ -46,5 +47,5 @@ working. Prefer the names above for new code; these go away in 7.0.
 </details>
 
 ```css
-:root { --dnet-datepickerweekca-day-disabled-color: /* your value */; }
+:root { --dnet-calendar-background: /* your value */; }
 ```

@@ -78,7 +78,7 @@
         return new GridOptions<Person>()
             {
                 HeaderHeight = 60,
-                RowHeight = 40,
+                RowHeight = 56,
                 GridClass = "cvs-bl-grid",
                 EnableSorting = true,
             };
@@ -88,7 +88,7 @@
     {
         return new GridColumn<Person>()
             {
-                Height = 40,
+                Height = 56,
                 Width = 200,
                 CanGrow = 0
             };
@@ -103,7 +103,7 @@
 
     private List<GridColumn<Person>> GetGridColumns()
     {
-        var height = 40;
+        var height = 56;
         var width = 200;
         var canGrow = 1;
 

@@ -208,18 +208,11 @@ public partial class BlgGrid<TItem>
 
     private string GetBlgViewPortHeight()
     {
-        var height = GridOptions.HeaderHeight;
+        var height = GridOptions.HeaderHeight + 15;
 
-        if (!GridOptions.SuppressFilterRow)
-        {
-            height = height + 55;
-        }
-        else
-        {
-            height = height + 15;
-        }
-
-        return $"calc(100% - {height}px)";
+        return GridOptions.SuppressFilterRow
+            ? $"calc(100% - {height}px)"
+            : $"calc(100% - {height}px - var(--_blg-filter-row-height))";
     }
 
     public async ValueTask DisposeAsync()

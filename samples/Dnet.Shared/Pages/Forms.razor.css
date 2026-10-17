@@ -1,0 +1,341 @@
+.forms-page {
+    --_forms-select-background: color-mix(in srgb, var(--dnet-sys-on-surface) 12%, var(--dnet-sys-surface));
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 1120px;
+    margin-inline: auto;
+    padding: 32px 24px 48px;
+    color: var(--dnet-sys-on-surface);
+    color-scheme: light;
+}
+
+/* Native date and select popups follow the app theme instead of the OS theme. */
+[data-dnet-theme="dark"] .forms-page {
+    color-scheme: dark;
+}
+
+.forms-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-block-end: 28px;
+}
+
+.forms-eyebrow {
+    margin: 0 0 8px;
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-sm);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.forms-title {
+    margin: 0;
+    color: var(--dnet-sys-on-surface-emphasis);
+    font-size: clamp(1.75rem, 3vw, 2.125rem);
+    font-weight: 650;
+    line-height: 1.2;
+    letter-spacing: -0.035em;
+}
+
+.forms-description {
+    max-width: 600px;
+    margin: 10px 0 0;
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-md);
+    line-height: 1.65;
+}
+
+.forms-validation-link {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
+    border: 1px solid var(--dnet-sys-border);
+    border-radius: var(--dnet-sys-radius-pill);
+    color: var(--dnet-sys-on-surface);
+    font-size: var(--dnet-sys-text-sm);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.forms-validation-link:hover {
+    background: var(--dnet-sys-state-hover);
+    color: var(--dnet-sys-on-surface-emphasis);
+    text-decoration: none;
+}
+
+.forms-validation-link svg,
+.forms-resource a svg {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+}
+
+.forms-validation-link:focus-visible,
+.forms-resource a:focus-visible {
+    box-shadow: 0 0 0 2px var(--dnet-sys-focus-ring);
+}
+
+.forms-appearance {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+    margin-block-end: 24px;
+    padding: 20px 24px;
+    border: 1px solid var(--dnet-sys-border);
+    border-radius: var(--dnet-sys-radius-lg);
+    background: var(--dnet-sys-surface-raised);
+}
+
+.forms-appearance-icon,
+.forms-card-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--dnet-sys-radius-md);
+    background: var(--dnet-sys-state-selected);
+    color: color-mix(in srgb, var(--dnet-sys-primary-strong) 65%, var(--dnet-sys-on-surface-emphasis));
+}
+
+.forms-appearance-icon svg,
+.forms-card-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.forms-appearance-copy {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.forms-appearance h2,
+.forms-card h2,
+.forms-resource h2 {
+    margin: 0;
+    color: var(--dnet-sys-on-surface-emphasis);
+    font-size: var(--dnet-sys-text-lg);
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.forms-appearance-copy p,
+.forms-card-header p:not(.forms-card-kicker),
+.forms-resource p {
+    margin: 6px 0 0;
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-sm);
+    line-height: 1.65;
+}
+
+.forms-appearance-control {
+    position: relative;
+    flex: 0 0 240px;
+    min-width: 0;
+}
+
+.forms-appearance-control label {
+    display: block;
+    margin: 0 0 6px;
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-sm);
+    line-height: 1.5;
+}
+
+.forms-appearance-control select {
+    box-sizing: border-box;
+    appearance: none;
+    display: block;
+    width: 100%;
+    height: 56px;
+    padding-block: 0;
+    padding-inline: 16px 48px;
+    border: 1px solid var(--_forms-select-background);
+    border-radius: 5px;
+    background: var(--_forms-select-background);
+    color: var(--dnet-sys-on-surface);
+    font: inherit;
+    font-size: var(--dnet-sys-text-lg);
+    cursor: pointer;
+}
+
+.forms-appearance-control::after {
+    position: absolute;
+    inset-inline-end: 20px;
+    inset-block-end: 25px;
+    width: 8px;
+    height: 8px;
+    border-inline-end: 1.5px solid var(--dnet-sys-on-surface-muted);
+    border-block-end: 1.5px solid var(--dnet-sys-on-surface-muted);
+    transform: rotate(45deg);
+    pointer-events: none;
+    content: "";
+}
+
+.forms-appearance-control select:focus-visible {
+    box-shadow: 0 0 0 2px var(--dnet-sys-focus-ring);
+}
+
+.forms-appearance-control option {
+    background: var(--dnet-sys-surface-raised);
+    color: var(--dnet-sys-on-surface);
+}
+
+/* The form is rendered by EditForm rather than by this page's scoped markup. */
+.forms-page ::deep .forms-example-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 24px;
+    min-width: 0;
+}
+
+.forms-card {
+    min-width: 0;
+    border: 1px solid var(--dnet-sys-border);
+    border-radius: var(--dnet-sys-radius-lg);
+    background: var(--dnet-sys-surface-raised);
+}
+
+.forms-address-card {
+    grid-column: 1 / -1;
+}
+
+.forms-card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 24px;
+    border-block-end: 1px solid var(--dnet-sys-border);
+}
+
+.forms-card-kicker {
+    margin: 0 0 5px;
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-xs);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.forms-card-body {
+    padding: 24px;
+}
+
+.forms-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 24px 16px;
+    min-width: 0;
+}
+
+.forms-field {
+    min-width: 0;
+}
+
+.forms-field-wide {
+    grid-column: 1 / -1;
+}
+
+.forms-field ::deep .dnet-form-field-plain-wrapper,
+.forms-reference-grid ::deep > .dnet-form-field-plain-wrapper {
+    margin-block-end: 0;
+}
+
+.forms-page ::deep .validation-message {
+    color: color-mix(in srgb, var(--dnet-sys-danger) 70%, var(--dnet-sys-on-surface-emphasis));
+    font-size: var(--dnet-sys-text-sm);
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.forms-reference {
+    margin-block-start: 24px;
+}
+
+.forms-reference-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+    gap: 28px 24px;
+    min-width: 0;
+}
+
+.forms-resource {
+    margin-block-start: 28px;
+    padding-block-start: 24px;
+    border-block-start: 1px solid var(--dnet-sys-border);
+}
+
+.forms-resource p {
+    max-width: 660px;
+}
+
+.forms-resource a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-block-start: 12px;
+    border-radius: var(--dnet-sys-radius-sm);
+    color: color-mix(in srgb, var(--dnet-sys-primary-strong) 60%, var(--dnet-sys-on-surface-emphasis));
+    font-size: var(--dnet-sys-text-sm);
+    font-weight: 500;
+    line-height: 1.5;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+@media (max-width: 1180px) {
+    .forms-page ::deep .forms-example-form {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .forms-reference-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 1000px) {
+    .forms-appearance {
+        flex-wrap: wrap;
+    }
+
+    .forms-appearance-copy {
+        flex-basis: calc(100% - 56px);
+    }
+
+    .forms-appearance-control {
+        flex-basis: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    .forms-page {
+        padding: 24px 16px 40px;
+    }
+
+    .forms-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 16px;
+        margin-block-end: 24px;
+    }
+
+    .forms-appearance,
+    .forms-card-header,
+    .forms-card-body {
+        padding: 20px;
+    }
+
+    .forms-fields,
+    .forms-reference-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

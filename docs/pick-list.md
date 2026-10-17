@@ -96,7 +96,8 @@ provider window without unnecessarily requesting cached counts.
 
 ## Complete example matrix
 
-The sample page at `/PickList` covers all v1 scenarios:
+The sample page at `/PickList` uses themed, responsive example cards with live
+selection summaries. It covers all v1 scenarios:
 
 1. basic local collection;
 2. local search;
@@ -107,6 +108,10 @@ The sample page at `/PickList` covers all v1 scenarios:
 7. Clear selection;
 8. custom `ItemTemplate`;
 9. instance-localized `PickListStrings`.
+
+The Spanish example also shows a protected, preselected team using
+`IsItemDisabled`. Clearing the list retains that team. Search by a team name or
+city to try the no-results state; selections persist across searches and pages.
 
 The `/PickList/controlled-rejection` fixture is intentionally minimal and is
 used by the browser regression test for rejected checkbox and search changes.

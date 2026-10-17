@@ -1,59 +1,77 @@
-﻿@page "/Expansion"
-@using Dnet.Blazor.Components.Checkbox
+@page "/Expansion"
+@using Dnet.Blazor.Components.Button
 @using Dnet.Blazor.Components.ExpansionPanel
 
-<div class="container-fluid" style="padding-top: 10px;">
-	<div class="d-flex dnet-page-content-left-margin dnet-m-t-20">
-		<span class="dnet-m-r-10 dnet-app-comp-name">Expansion Panel</span>
-	</div>
-	<div class="dnet-page-content-left-margin dnet-m-t-30">
-		<div class="dnet-m-b-15" style="display:flex;align-items:center;justify-content:flex-start">
-			<span style="font-size:14px;">Expansion Panel:</span>
-		</div>
-		<div class="dnet-page-content-width">
-			<div style="display: flex; align-items: center; margin-bottom: 20px;">
-				<DnetInputCheckbox Value="@_isExpanded" ValueChanged="Expand" ValueExpression="() => _isExpanded"
-					class="dnet-m-r-5">Toggle Expand</DnetInputCheckbox>
-			</div>
-			<DnetExpansionPanel @ref="_dnetExpansionPanel" OnExpandedChanged="ExpandedChanged"
-				ExpansionPanelDisplayMode="@(ExpansionPanelDisplayMode.Spacing)">
-				<DnetExpansionPanelItem Title="ExpansionPanel 1" Description="Description for ExpansionPanel 1">
-					<span>Expansion Panel Content 1</span>
-				</DnetExpansionPanelItem>
-				<DnetExpansionPanelItem Title="ExpansionPanel 2" Description="Description for ExpansionPanel 2">
-					<span>Expansion Panel Content 2</span>
-				</DnetExpansionPanelItem>
-				<DnetExpansionPanelItem Title="ExpansionPanel 3" Description="Description for ExpansionPanel 3">
-					<span>Expansion Panel Content 3</span>
-				</DnetExpansionPanelItem>
-				<DnetExpansionPanelItem Title="ExpansionPanel 4" Description="Description for ExpansionPanel 4">
-					<span>Expansion Panel Content 4</span>
-				</DnetExpansionPanelItem>
-			</DnetExpansionPanel>
-		</div>
-	</div>
-</div>
+<DemoPage Id="demo-expansion" Title="Expansion panels" Category="Disclosure"
+          Description="Reveal supporting details when they are needed, while keeping the main view easy to scan." Badge="Multiple or single open">
+    <div class="demo-stack">
+    <DemoCard Id="expansion-faq-card" Title="Workspace questions" Eyebrow="Multiple panels"
+              Description="Open several answers at once, or use the controls to show and hide every answer.">
+        <ChildContent>
+            <div class="demo-actions expansion-actions">
+                <DnetButton id="expansion-expand-all" OnClick="() => ExpandAll(true)">Expand all</DnetButton>
+                <DnetButton id="expansion-collapse-all" OnClick="() => ExpandAll(false)">Collapse all</DnetButton>
+            </div>
+            <DnetExpansionPanel @ref="_faqPanel" id="expansion-faq" OnExpandedChanged="ExpandedChanged"
+                                ExpansionPanelDisplayMode="ExpansionPanelDisplayMode.Spacing">
+                <DnetExpansionPanelItem Title="Invite your team" Description="Members">
+                    <div class="expansion-answer"><p>Invite collaborators from the Members section of your workspace. Each invitation includes a role so everyone knows what they can access.</p><ul class="demo-bullets"><li>Editors can contribute to project work.</li><li>Viewers can follow progress and read shared updates.</li></ul></div>
+                </DnetExpansionPanelItem>
+                <DnetExpansionPanelItem Title="Change your plan" Description="Billing">
+                    <div class="expansion-answer"><p>Workspace owners can review plans from Billing. Your current projects stay available while you choose the capacity your team needs.</p></div>
+                </DnetExpansionPanelItem>
+                <DnetExpansionPanelItem Title="Keep files organized" Description="Files">
+                    <div class="expansion-answer"><p>Group related resources by project and use clear names so the team can find the latest version. Archive completed work when a project ends.</p></div>
+                </DnetExpansionPanelItem>
+                <DnetExpansionPanelItem Title="Manage notifications" Description="Preferences">
+                    <div class="expansion-answer"><p>Choose the project updates you want to receive. Keep mentions and approvals enabled for work that needs your attention.</p></div>
+                </DnetExpansionPanelItem>
+            </DnetExpansionPanel>
+        </ChildContent>
+        <Footer><span id="expansion-faq-value" role="status">@_faqStatus</span></Footer>
+    </DemoCard>
 
+    <div class="demo-grid">
+        <DemoCard Id="expansion-single-card" Title="Account preferences" Eyebrow="One panel at a time"
+                  Description="Opening a preference closes the previous one. Restricted settings remain visible.">
+            <DnetExpansionPanel id="expansion-single" Multi="false" OnExpandedChanged="PreferenceChanged">
+                <DnetExpansionPanelItem Title="Profile" Description="Personal">
+                    <div class="expansion-answer"><p>Your name and profile photo help colleagues recognize you across the workspace.</p></div>
+                </DnetExpansionPanelItem>
+                <DnetExpansionPanelItem Title="Security" Description="Access">
+                    <div class="expansion-answer"><p>Review active sessions and keep your sign-in details up to date.</p></div>
+                </DnetExpansionPanelItem>
+                <DnetExpansionPanelItem Title="Advanced access" Description="Restricted" Disabled="true">
+                    <div class="expansion-answer"><p>This setting is managed by your administrator.</p></div>
+                </DnetExpansionPanelItem>
+            </DnetExpansionPanel>
+            <p id="expansion-single-value" class="demo-info expansion-preference-status" role="status">@_preferenceStatus</p>
+        </DemoCard>
+        <DemoCard Id="expansion-guide" Title="Details at the right moment" Description="Use expansion panels for related information that does not need to stay open.">
+            <ul class="demo-bullets">
+                <li>Allow several panels when people need to compare answers.</li>
+                <li>Use a single open panel for a focused sequence of settings.</li>
+                <li>Keep titles specific so the content is easy to find.</li>
+            </ul>
+        </DemoCard>
+    </div>
+    </div>
+</DemoPage>
 
 @code {
+    private DnetExpansionPanel? _faqPanel;
+    private string _faqStatus = "Choose a question to read its answer.";
+    private string _preferenceStatus = "No preference is open.";
 
-	private int _selectedId;
+    private void ExpandAll(bool expand)
+    {
+        _faqPanel?.ExpandAll(expand);
+        _faqStatus = expand ? "All four answers are expanded." : "All answers are collapsed.";
+    }
 
-	private int _previousSelectedId;
+    private void ExpandedChanged(DnetExpansionPanelItem panel)
+        => _faqStatus = $"{panel.Title}: {(panel.IsExpanded() ? "expanded" : "collapsed")}.";
 
-	private DnetExpansionPanel _dnetExpansionPanel;
-
-	private bool _isExpanded { get; set; }
-
-
-	public void ExpandedChanged(DnetExpansionPanelItem expansionPanelItem)
-	{
-		var panel = expansionPanelItem;
-	}
-
-	private void Expand()
-	{
-		_isExpanded = !_isExpanded;
-		_dnetExpansionPanel.ExpandAll(_isExpanded);
-	}
+    private void PreferenceChanged(DnetExpansionPanelItem panel)
+        => _preferenceStatus = panel.IsExpanded() ? $"Open preference: {panel.Title}." : "No preference is open.";
 }

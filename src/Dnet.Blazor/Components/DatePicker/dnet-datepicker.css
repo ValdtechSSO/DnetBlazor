@@ -1,7 +1,7 @@
 .dnet-datepicker-content,
 .dnet-calendar {
   --_day-size: var(--dnet-calendar-day-height, 40px);
-  --_background: var(--dnet-calendar-background, var(--dnet-sys-surface));
+  --_background: var(--dnet-calendar-background, var(--dnet-sys-surface-raised));
   --_foreground: var(--dnet-sys-on-surface-emphasis);
   --_subtle: var(--dnet-sys-on-surface-subtle);
   --_disabled: var(--dnet-calendar-day-disabled-color, var(--dnet-sys-state-disabled-fg));
@@ -15,12 +15,14 @@
 }
 
 .dnet-datepicker-content {
+  --_background: var(--dnet-calendar-background, var(--dnet-sys-surface-raised));
+
   box-sizing: border-box;
   width: 100%;
   overflow: hidden;
-  border: var(--dnet-sys-border-width) solid var(--dnet-sys-border);
+  border: 0;
   border-radius: var(--_radius);
-  box-shadow: var(--dnet-sys-elevation-2);
+  box-shadow: var(--dnet-sys-elevation-3);
   background: var(--_background);
   color: var(--_foreground);
 }
@@ -30,7 +32,7 @@
   width: 100%;
   min-width: 280px;
   padding: 8px;
-  border: var(--dnet-sys-border-width) solid var(--dnet-sys-border);
+  border: var(--dnet-sys-border-width) solid var(--_background);
   border-radius: var(--_radius);
   background: var(--_background);
   color: var(--_foreground);
@@ -38,6 +40,8 @@
 }
 
 .dnet-datepicker-content > .dnet-calendar {
+  --_background: var(--dnet-calendar-background, var(--dnet-sys-surface-raised));
+
   border: 0;
   border-radius: 0;
 }
@@ -392,7 +396,7 @@
   background-color: var(--_icon-color);
   cursor: pointer;
   -webkit-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1zm1-3a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M3.5 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5zm9 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5z'/></svg>") center / 1em 1em no-repeat;
-  mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1zm1-3a2 2 0 0 0-2 2v11a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M3.5 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5zm9 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5z'/></svg>") center / 1em 1em no-repeat;
+  mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1zm1-3a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M3.5 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5zm9 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5z'/></svg>") center / 1em 1em no-repeat;
 }
 
 .dnet-datepicker-reset-button {

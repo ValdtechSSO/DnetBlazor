@@ -27,7 +27,14 @@
 
 <div class="dnet-image-editor">
     <div class="dnet-image-editor-header">
-        <span class="dnet-image-editor-subtitle">@_subtitle</span>
+        @if (!string.IsNullOrEmpty(_initializationError))
+        {
+            <p class="dnet-image-editor-error" role="alert">@_initializationError</p>
+        }
+        else
+        {
+            <span class="dnet-image-editor-subtitle">@_subtitle</span>
+        }
     </div>
 
     <div class="dnet-image-editor-toolbar">
@@ -43,7 +50,7 @@
         @if (ShowControl(ImageEditorControlType.RotateCounterClockWise))
         {
             <span @ref="_rotateLeftTrigger" @onmouseenter='() => ShowTooltip("Rotate left", _rotateLeftTrigger)' @onmouseleave="HideTooltip">
-                <DnetButton OnClick="OnRotateLeft" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)">
+                <DnetButton OnClick="OnRotateLeft" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)" aria-label="Rotate left">
                     <span class="dnet-icon dnet-icon-rotate-left" unselectable="on"></span>
                 </DnetButton>
             </span>
@@ -51,7 +58,7 @@
         @if (ShowControl(ImageEditorControlType.RotateClockWise))
         {
             <span @ref="_rotateRightTrigger" @onmouseenter='() => ShowTooltip("Rotate right", _rotateRightTrigger)' @onmouseleave="HideTooltip">
-                <DnetButton OnClick="OnRotateRight" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)">
+                <DnetButton OnClick="OnRotateRight" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)" aria-label="Rotate right">
                     <span class="dnet-icon dnet-icon-rotate-right" unselectable="on"></span>
                 </DnetButton>
             </span>
@@ -59,7 +66,7 @@
         @if (ShowControl(ImageEditorControlType.FlipHorizontal))
         {
             <span @ref="_flipHorizontalTrigger" @onmouseenter='() => ShowTooltip("Flip horizontal", _flipHorizontalTrigger)' @onmouseleave="HideTooltip">
-                <DnetButton OnClick="OnFlipHorizontal" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)">
+                <DnetButton OnClick="OnFlipHorizontal" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)" aria-label="Flip horizontal">
                     <span class="dnet-icon dnet-icon-flip-h" unselectable="on"></span>
                 </DnetButton>
             </span>
@@ -67,7 +74,7 @@
         @if (ShowControl(ImageEditorControlType.FlipVertical))
         {
             <span @ref="_flipVerticalTrigger" @onmouseenter='() => ShowTooltip("Flip vertical", _flipVerticalTrigger)' @onmouseleave="HideTooltip">
-                <DnetButton OnClick="OnFlipVertical" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)">
+                <DnetButton OnClick="OnFlipVertical" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)" aria-label="Flip vertical">
                     <span class="dnet-icon dnet-icon-flip-v" unselectable="on"></span>
                 </DnetButton>
             </span>
@@ -111,13 +118,13 @@
 
             <div class="dnet-image-editor-zoom">
                 <span @ref="_zoomOutTrigger" @onmouseenter='() => ShowTooltip("Zoom out", _zoomOutTrigger)' @onmouseleave="HideTooltip">
-                    <DnetButton OnClick="OnZoomOut" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)">
+                    <DnetButton OnClick="OnZoomOut" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)" aria-label="Zoom out">
                         <span class="dnet-icon dnet-icon-zoom-out" unselectable="on"></span>
                     </DnetButton>
                 </span>
                 <span class="dnet-image-editor-zoom-value">@_zoomLabel</span>
                 <span @ref="_zoomInTrigger" @onmouseenter='() => ShowTooltip("Zoom in", _zoomInTrigger)' @onmouseleave="HideTooltip">
-                    <DnetButton OnClick="OnZoomIn" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)">
+                    <DnetButton OnClick="OnZoomIn" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)" aria-label="Zoom in">
                         <span class="dnet-icon dnet-icon-zoom-in" unselectable="on"></span>
                     </DnetButton>
                 </span>
@@ -135,12 +142,14 @@
 
             <section class="dnet-image-editor-section">
                 <h2 class="dnet-image-editor-section-title">Ratio</h2>
-                <DnetChipList @key="_ratioRevision" OnSelectionChange="OnRatioChanged">
-                    @foreach (var option in RatioOptions)
-                    {
-                        <DnetChip ChipSize="ChipSize.Small" Value="@RatioValue(option)" Removable="false" Selected="@(_ratio == option)">@RatioLabel(option)</DnetChip>
-                    }
-                </DnetChipList>
+                <div class="dnet-image-editor-ratios">
+                    <DnetChipList @key="_ratioRevision" OnSelectionChange="OnRatioChanged">
+                        @foreach (var option in RatioOptions)
+                        {
+                            <DnetChip ChipSize="ChipSize.Small" Value="@RatioValue(option)" Removable="false" Selected="@(_ratio == option)" Disabled="@(!_isImageEditorReady)">@RatioLabel(option)</DnetChip>
+                        }
+                    </DnetChipList>
+                </div>
             </section>
 
             <section class="dnet-image-editor-section">
@@ -283,6 +292,8 @@
 
     private string _subtitle { get; set; } = string.Empty;
 
+    private string? _initializationError { get; set; }
+
     private string _selectionLabel { get; set; } = string.Empty;
 
     private string _previewCaption { get; set; } = string.Empty;
@@ -380,6 +391,9 @@
         catch (Exception exception)
         {
             Console.WriteLine($"Dnet.Blazor: the image editor could not load the image. {exception.Message}");
+            _initializationError = "The image could not be opened. Cancel and select another image.";
+            _isImageEditorReady = false;
+            StateHasChanged();
             return;
         }
 

@@ -1,0 +1,210 @@
+.doublelist-workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: start;
+    gap: 20px;
+}
+
+.doublelist-column {
+    min-width: 0;
+}
+
+.doublelist-column-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.doublelist-column-heading h3 {
+    margin: 0;
+    color: var(--dnet-sys-on-surface-emphasis);
+    font-size: var(--dnet-sys-text-lg);
+    font-weight: 600;
+}
+
+.doublelist-count {
+    display: grid;
+    place-items: center;
+    min-width: 28px;
+    height: 28px;
+    padding-inline: 8px;
+    border-radius: var(--dnet-sys-radius-pill);
+    background: var(--dnet-sys-state-selected);
+    color: var(--dnet-sys-on-surface-emphasis);
+    font-size: var(--dnet-sys-text-sm);
+    font-weight: 600;
+}
+
+.doublelist-column-description {
+    margin: 8px 0 16px;
+}
+
+.doublelist-stage {
+    position: relative;
+    height: 440px;
+    min-width: 0;
+}
+
+.doublelist-avatar {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: var(--dnet-sys-radius-pill);
+    background: var(--dnet-sys-state-selected);
+    color: var(--dnet-sys-on-surface-emphasis);
+    font-size: 10px;
+    font-weight: 650;
+}
+
+.doublelist-avatar-muted {
+    opacity: 0.5;
+}
+
+.doublelist-transfer-controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    align-self: center;
+    gap: 12px;
+}
+
+.doublelist-transfer-controls > span {
+    max-width: 112px;
+    text-align: center;
+}
+
+.doublelist-view-switch,
+.doublelist-mobile-action {
+    display: none;
+}
+
+.doublelist-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+}
+
+.doublelist-metrics strong {
+    color: var(--dnet-sys-on-surface-emphasis);
+}
+
+.doublelist-options-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 20px;
+}
+
+.doublelist-roster {
+    display: grid;
+    gap: 12px;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    list-style: none;
+}
+
+.doublelist-roster li {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4px 12px;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    color: var(--dnet-sys-on-surface-emphasis);
+    font-size: var(--dnet-sys-text-sm);
+    line-height: 1.6;
+    cursor: default;
+}
+
+.doublelist-fixed {
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: 12px;
+}
+
+.doublelist-reset-action {
+    margin-block-start: 24px;
+}
+
+.doublelist-empty {
+    position: absolute;
+    inset: 40% 24px auto;
+    display: grid;
+    gap: 8px;
+    text-align: center;
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-sm);
+    line-height: 1.6;
+    pointer-events: none;
+}
+
+.doublelist-empty strong {
+    color: var(--dnet-sys-on-surface-emphasis);
+}
+
+@media (max-width: 1180px) {
+    .doublelist-workspace {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .doublelist-column:not(.doublelist-active),
+    .doublelist-transfer-controls {
+        display: none;
+    }
+
+    .doublelist-mobile-action {
+        display: flex;
+        flex-wrap: wrap;
+        margin-block-start: 16px;
+    }
+
+    .doublelist-view-switch {
+        display: flex;
+        gap: 4px;
+        padding: 4px;
+        border: 1px solid var(--dnet-sys-border);
+        border-radius: var(--dnet-sys-radius-pill);
+        background: var(--dnet-sys-surface);
+    }
+
+    .doublelist-view-switch button {
+        flex: 1;
+        min-width: 0;
+        padding: 10px 12px;
+        border: 0;
+        border-radius: var(--dnet-sys-radius-pill);
+        background: var(--dnet-sys-transparent);
+        color: var(--dnet-sys-on-surface-muted);
+        font: inherit;
+        font-size: var(--dnet-sys-text-sm);
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .doublelist-view-switch button[aria-pressed="true"] {
+        background: var(--dnet-sys-state-selected);
+        color: var(--dnet-sys-on-surface-emphasis);
+    }
+
+    .doublelist-view-switch button:focus-visible {
+        outline: 2px solid var(--dnet-sys-primary);
+        outline-offset: 2px;
+    }
+}
+
+@media (max-width: 600px) {
+    .doublelist-options-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 550px) {
+    .doublelist-stage ::deep .dnet-list-wrapper .dnet-checkbox {
+        display: inline-flex;
+    }
+}

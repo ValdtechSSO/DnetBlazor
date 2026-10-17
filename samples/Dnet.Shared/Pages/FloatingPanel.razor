@@ -1,174 +1,83 @@
-﻿@page "/FloatingPanel"
-
-@using Dnet.App.Shared.Infrastructure.Entities
-@using Dnet.App.Shared.Infrastructure.Models
-@using Dnet.App.Shared.Shared.CustomComponents
+@page "/FloatingPanel"
+@using Dnet.App.Shared.Pages.ShowcaseContent
 @using Dnet.Blazor.Components.Button
 @using Dnet.Blazor.Components.Form
-@using Dnet.Blazor.Components.Overlay.Infrastructure.Enums
-@using Dnet.Blazor.Components.Overlay.Infrastructure.Interfaces
-@using Dnet.Blazor.Components.Overlay.Infrastructure.Models
-@using Dnet.Blazor.Components.Overlay.Infrastructure.Services
+@using Dnet.Blazor.Components.Select
 @using Dnet.Blazor.Components.FloatingPanel.Infrastructure.Enums
 @using Dnet.Blazor.Components.FloatingPanel.Infrastructure.Interfaces
 @using Dnet.Blazor.Components.FloatingPanel.Infrastructure.Models
-@using Dnet.Blazor.Components.Select
-
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Enums
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Models
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Services
 @inject IFloatingPanelService FloatingPanelService
-
 @implements IDisposable
 
-<div class="container-fluid" style="padding-top: 10px;">
-    <div class="d-flex dnet-page-content-left-margin dnet-m-t-20">
-        <span class="dnet-m-r-10 dnet-app-comp-name">Floating Panel</span>
-    </div>
-    <div class="dnet-page-content-left-margin dnet-m-t-30">
-        <EditForm Model="@_formData1">
-            <DataAnnotationsValidator />
-            <div style="display: flex; flex-direction: column">
-                <div style="display:flex;align-items: center;flex-direction: row;justify-content:space-between;width: 250px;">
-                    <DnetFormField Label="Panel position" IsRequired="true" UseClearButton="true">
-                        <ChildContent>
-                            <DnetSelect Value="@_formData1.Value"
-                                        TValue="string"
-                                        ValueChanged="@((string e) => MyValueChangeHandler(e))"
-                                        ValueExpression="@( () => _formData1.Value )"
-                                        Items="_features"
-                                        TItem="KeyValueModel<FloatingPanelPostion>"
-                                        DisplayValueConverter="(value) => (value.Value)"
-                                        ValueConverter="(value) => (value.Value)"
-                                        OnItemSelected="ItemSelected"
-                                        InputTextToUpper="true"
-                                        PlaceHolder="Panel position"
-                                        >
-                            </DnetSelect>
-                        </ChildContent>
-                        <ErrorContent>
-                            <ValidationMessage For="@(() => _formData1.Key)" />
-                        </ErrorContent>
-                    </DnetFormField>
-                </div>
-            </div>
-        </EditForm>
-    </div>
-    <div class="dnet-page-content-left-margin dnet-m-t-30">
-        <DnetButton OnClick="ShowFloatingPanel" InitialFocus="true" class="dnet-m-r-10">Show Panel</DnetButton>
-    </div>
-    <div class="dnet-page-content-left-margin dnet-m-t-30">
-        <span>Dialog Ok result: </span>
-        <span>@_floatingPanelResultData</span>
-    </div>
-</div>
+@* This instance class lives in the portal, outside the page's scoped styles. *@
+<style>
+    .dnet-floating-panel-container.showcase-profile-floating-panel { height: 100%; }
+</style>
 
+<DemoPage Id="demo-floating-panel" Title="Floating panel" Category="Components / Overlays" Description="Make room for a focused task while keeping the current page as the backdrop." Badge="Flexible placement">
+    <div class="demo-grid">
+        <DemoCard Id="floating-panel-basic" Title="An editor at your side" Eyebrow="01 / Placement" Description="Choose an edge, then open the same profile editor in a floating panel.">
+            <ChildContent>
+                <div class="demo-stack">
+                    <div class="floating-placement-demo demo-preview" aria-hidden="true"><div class="floating-placement-canvas"><span></span><span></span><span></span><div class="floating-placement-panel @PlacementClass"><i></i><i></i><i></i></div></div><span>@_settings.Position placement</span></div>
+                    <EditForm Model="_settings"><DnetFormField Label="Panel position"><ChildContent><DnetSelect TValue="string" TItem="string" @bind-Value="_settings.Position" Items="_positions" DisplayValueConverter="position => position" ValueConverter="position => position" ResponsiveLabel="Panel position" /></ChildContent></DnetFormField></EditForm>
+                    <div class="demo-actions"><DnetButton id="floating-panel-open" OnClick="ShowFloatingPanel">Show Panel</DnetButton></div>
+                </div>
+            </ChildContent>
+            <Footer><div id="floating-panel-result" class="demo-value" role="status"><span class="demo-muted">Latest result</span><strong>@_result</strong></div></Footer>
+        </DemoCard>
+        <DemoCard Id="floating-panel-guide" Title="Space for the task" Eyebrow="02 / Interaction" Description="Use a floating panel for details that belong alongside the main view.">
+            <div class="demo-stack">
+                <div class="demo-info"><strong>One editor, four positions</strong><p>Move between left, right, top and bottom placement to suit the task and screen.</p></div>
+                <div class="demo-info"><strong>A clear outcome</strong><p>Save profile returns the edited details here. Cancel closes the panel without saving.</p></div>
+                <div class="demo-info"><strong>Comfortable on smaller screens</strong><p>The editor stays within the viewport and scrolls when it needs more space.</p></div>
+            </div>
+        </DemoCard>
+    </div>
+</DemoPage>
 
 @code {
+    private readonly Settings _settings = new();
+    private readonly List<string> _positions = ["Right", "Left", "Top", "Bottom"];
+    private OverlayReference? _reference;
+    private bool _disposed;
+    private string _result = "No changes yet";
+    private string PlacementClass => $"is-{_settings.Position.ToLowerInvariant()}";
 
-    string _floatingPanelResultData;
-
-    private OverlayReference _overlayReference;
-
-    private int? _width { get; set; } = 400;
-
-    private int? _height { get; set; } = null;
-
-    private KeyValueModel<FloatingPanelPostion> _formData1 = new();
-
-    private List<KeyValueModel<FloatingPanelPostion>> _features = new();
-
-
-    protected override void OnInitialized()
+    private void ShowFloatingPanel()
     {
-        _features = GetKeyValueModels();
-
-        _formData1 = _features.FirstOrDefault();
-    }
-
-    void ShowFloatingPanel()
-    {
-        ChangePosition();
-
-        var floatingPanelConfig = new FloatingPanelConfig
-            {
-                HasBackdrop = true,
-                HasTransparentBackdrop = true,
-                DisableBackdropClick = false,
-                Postion = _formData1.Key,
-                Width = _width,
-                Height = _height
-            };
-
-        var person = new Person()
-            {
-                Name = "John",
-                LastName = "Doe",
-                Email = "john.doe@datalnet.com",
-                Phone = "678 89 90 09",
-                Age = 34,
-                Company = "Datalnet",
-                Balance = "80000",
-                Address = "597 Frost Street, Brogan, Indiana, 8687",
-                Birthday = DateTime.Now
-            };
-
-        var parameters = new Dictionary<string, object>();
-
-        parameters.Add("Person", person);
-
-        _overlayReference = FloatingPanelService.Show(typeof(FloatingPanelTestContent), parameters, floatingPanelConfig);
-
-        _overlayReference.Close += CloseFloatingPanel;
-    }
-
-    private void ChangePosition()
-    {
-        switch (_formData1.Key)
+        if (_reference?.IsAttached == true) return;
+        var position = _settings.Position switch { "Left" => FloatingPanelPostion.TopLeft, "Top" => FloatingPanelPostion.TopCenter, "Bottom" => FloatingPanelPostion.BottomCenter, _ => FloatingPanelPostion.TopRight };
+        _reference = FloatingPanelService.Show(typeof(ProfileEditorContent), new Dictionary<string, object> { ["Floating"] = true }, new FloatingPanelConfig
         {
-            case FloatingPanelPostion.TopRight:
-            case FloatingPanelPostion.TopLeft:
-                _width = 400;
-                _height = null;
-                break;
-            case FloatingPanelPostion.BottomCenter:
-            case FloatingPanelPostion.TopCenter:
-                _width = 500;
-                _height = 100;
-                break;
-        }
+            Postion = position, Width = 440, Height = 560, FloatingPanelClass = "showcase-profile-floating-panel",
+            OffsetTop = 16, OffsetBottom = 16, OffsetLeft = 16, OffsetRight = 16,
+            HasBackdrop = true, HasTransparentBackdrop = false,
+            Role = "dialog", AriaLabel = "Edit profile", TrapFocus = true,
+            InitialFocusSelector = "#showcase-profile-name",
+            PanelStyle = "max-width:calc(100vw - 32px);max-height:calc(100dvh - 32px);"
+        });
+        _reference.Close += PanelClosed;
     }
 
-    void CloseFloatingPanel(OverlayResult overlayDataResult)
+    private void PanelClosed(OverlayResult result)
     {
-        _floatingPanelResultData = overlayDataResult.CloseReason == CloseReason.Ok ? overlayDataResult.ComponentData.ToString() : "";
-
-        InvokeAsync(StateHasChanged);
-    }
-
-    private void MyValueChangeHandler(string item)
-    {
-        //_formData1.Value = item;
-    }
-
-    private void ItemSelected(KeyValueModel<FloatingPanelPostion> ItemSelected)
-    {
-        _formData1 = ItemSelected;
-    }
-
-    private List<KeyValueModel<FloatingPanelPostion>> GetKeyValueModels()
-    {
-        var keyValueModels = new List<KeyValueModel<FloatingPanelPostion>>
-        {
-            new KeyValueModel<FloatingPanelPostion> { Key = FloatingPanelPostion.TopRight, Value = "Right" },
-            new KeyValueModel<FloatingPanelPostion> { Key = FloatingPanelPostion.TopLeft, Value = "Left" },
-            new KeyValueModel<FloatingPanelPostion> { Key = FloatingPanelPostion.BottomCenter, Value = "BottomCenter" },
-            new KeyValueModel<FloatingPanelPostion> { Key = FloatingPanelPostion.TopCenter, Value = "TopCenter" },
-        };
-
-        return keyValueModels;
+        if (_reference is not null) _reference.Close -= PanelClosed;
+        _reference = null;
+        if (_disposed) return;
+        _result = result.CloseReason == CloseReason.Ok ? $"Saved: {result.ComponentData}" : "Panel dismissed · no changes saved";
+        _ = InvokeAsync(StateHasChanged);
     }
 
     public void Dispose()
     {
-        if (_overlayReference != null) _overlayReference.Close -= CloseFloatingPanel;
+        _disposed = true;
+        if (_reference is null) return;
+        _reference.Close -= PanelClosed;
+        _reference.Dispose();
     }
-
+    private sealed class Settings { public string Position { get; set; } = "Right"; }
 }

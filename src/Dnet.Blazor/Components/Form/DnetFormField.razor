@@ -2,12 +2,13 @@
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.AspNetCore.Components
 @using System.Linq.Expressions
+@using Dnet.Blazor.Infrastructure.Forms
 
 @implements IDisposable
 
 @inject IFormEventService FormEventService
 
-<div class="dnet-form-field-plain-wrapper">
+<div @attributes="AdditionalAttributes" class="@CssClass">
     @if (!string.IsNullOrEmpty(Label))
     {
         <div class="dnet-form-field-header">
@@ -20,15 +21,9 @@
                     </span>
                 }
             </div>
-            @if (_maxCharacters > 0)
-            {
-                <div class="dnet-form-field-char-counter">
-                    @_characterCount / @_maxCharacters
-                </div>
-            }
         </div>
     }
-    <div class="dnet-form-field-plain-control-container @(_disabled ? "dnet-control-disable" : null)" @ref="_formField">
+    <div class="dnet-form-field-plain-control-container @(_disabled ? "dnet-control-disable" : null)" @ref="_formField" @oninput="HandleInput">
         @if (PrefixContent != null)
         {
             <div class="dnet-form-field-plain-prefix">
@@ -65,25 +60,42 @@
             </div>
         }
     </div>
-    <div class="dnet-form-field-plain-info">
-        @if (_hasErrors)
-        {
-            <div class="dnet-error">
-                @ErrorContent
-            </div>
-        }
-        else
-        {
-            <div class="dnet-form-field-hint-wrapper">
-                <div class="dnet-hint">
-                    @HintContent
+    @if (HintContent != null || ErrorContent != null || _maxCharacters > 0)
+    {
+        <div class="dnet-form-field-plain-info">
+            @if (_hasErrors)
+            {
+                <div class="dnet-error">
+                    @ErrorContent
                 </div>
-            </div>
-        }
-    </div>
+            }
+            else
+            {
+                <div class="dnet-form-field-hint-wrapper">
+                    <div class="dnet-hint">
+                        @HintContent
+                    </div>
+                </div>
+            }
+            @if (_maxCharacters > 0)
+            {
+                <div class="dnet-form-field-char-counter">
+                    @_characterCount / @_maxCharacters
+                </div>
+            }
+        </div>
+    }
 </div>
 
 @code {
+
+    /// <summary>Gets or sets the field background appearance. Fill is the default; Standard and Legacy use a transparent background.</summary>
+    [Parameter]
+    public FormAppearance Appearance { get; set; } = FormAppearance.Fill;
+
+    /// <summary>Gets or sets unmatched HTML attributes, including class, style and id, on the field wrapper.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
 
     /// <summary>Gets or sets the child content rendered by the component.</summary>
     [Parameter]
@@ -124,6 +136,12 @@
 
     private string? _currentValue { get; set; }
 
+    // Observe native edits immediately, while child components retain their own
+    // binding/debounce behavior and authoritative programmatic value events.
+    private string? _liveInputValue;
+    private bool _hasLiveInputValue;
+    private string? DisplayedValue => _hasLiveInputValue ? _liveInputValue : _currentValue;
+
     private bool _hasErrors { get; set; }
 
     private bool _hasFocus { get; set; }
@@ -132,15 +150,24 @@
 
     private bool _disabled { get; set; }
 
-    private Tuple<int, int> _countData { get; set; } = new Tuple<int, int>(0, 0);
-
     private ElementReference _formField;
 
     private FormFieldCascadingValues? _formFieldCascadingValues { get; set; }
 
-    private int _characterCount => _currentValue?.Length ?? 0;
+    private int _characterCount => DisplayedValue?.Length ?? 0;
 
     private int _maxCharacters { get; set; }
+
+    private string CssClass => DnetAttributeUtilities.CombineClassNames(AdditionalAttributes,
+        $"dnet-form-field-plain-wrapper dnet-form-field-appearance-{Appearance.ToString().ToLowerInvariant()}" +
+        (!string.IsNullOrEmpty(Label) ? " dnet-form-field-has-label" : "") +
+        (_hasFocus || !string.IsNullOrEmpty(DisplayedValue) ? " dnet-form-field-label-raised" : ""));
+
+    protected override void OnParametersSet()
+    {
+        if (!Enum.IsDefined(Appearance))
+            throw new ArgumentOutOfRangeException(nameof(Appearance), Appearance, "Unknown form field appearance.");
+    }
 
 
     protected override void OnInitialized()
@@ -187,8 +214,15 @@
     private void HandleCurrentValue(string? currentValue)
     {
         _currentValue = currentValue;
+        _hasLiveInputValue = false;
 
         StateHasChanged();
+    }
+
+    private void HandleInput(ChangeEventArgs args)
+    {
+        _liveInputValue = args.Value?.ToString();
+        _hasLiveInputValue = true;
     }
 
     private void ClearInput()

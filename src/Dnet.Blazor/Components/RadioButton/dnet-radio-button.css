@@ -1,7 +1,7 @@
 /*! RadioButton — migrado a tokens (6.0). Generado una vez; se edita a mano. */
 
 .dnet-radio-button {
-  --_size: var(--dnet-radio-button-size, 16px);
+  --_size: var(--dnet-radio-button-size, 20px);
   --_border-width: var(--dnet-radio-button-border-width, 1px);
   --_checked-background: var(--dnet-radio-button-background, var(--dnet-sys-primary-strong));
   --_font-size: var(--dnet-radio-button-font-size, var(--dnet-sys-text-md));

@@ -1093,15 +1093,16 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-autocomplete-list-wrapper {
-  --_border-color: var(--dnet-list-border-color, var(--dnet-autocomplete-list-border-color, var(--dnet-sys-border)));
-  --_radius: var(--dnet-list-border-radius, var(--dnet-autocomplete-list-border-radius, var(--dnet-sys-radius-sm)));
-  --_wrapper-padding: var(--dnet-list-wrapper-horizontal-padding, var(--dnet-autocomplete-list-wrapper-horizontal-padding, 15px));
-  --_background: var(--dnet-list-background-color, var(--dnet-autocomplete-list-background-color, var(--dnet-sys-surface)));
-  --_shadow: var(--dnet-list-box-shadow, var(--dnet-autocomplete-list-box-shadow, var(--dnet-sys-elevation-1)));
+  --_border-color: var(--dnet-list-border-color, var(--dnet-autocomplete-list-border-color, var(--dnet-sys-transparent)));
+  --_radius: var(--dnet-list-border-radius, var(--dnet-autocomplete-list-border-radius, var(--dnet-sys-radius-lg)));
+  --_wrapper-padding: var(--dnet-list-wrapper-horizontal-padding, var(--dnet-autocomplete-list-wrapper-horizontal-padding, var(--dnet-sys-space-2)));
+  --_background: var(--dnet-list-background-color, var(--dnet-autocomplete-list-background-color, var(--dnet-sys-surface-raised)));
+  --_shadow: var(--dnet-list-box-shadow, var(--dnet-autocomplete-list-box-shadow, var(--dnet-sys-elevation-3)));
 
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-height: 0;
   width: 100%;
   border: 1px solid var(--_border-color);
   border-radius: var(--_radius);
@@ -1110,12 +1111,13 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   transition: opacity 0.5s ease-in-out;
   background-color: var(--_background);
   box-shadow: var(--_shadow);
+  overflow: hidden;
 }
 .dnet-autocomplete-list-wrapper .dnet-item-fadeout {
   opacity: 0 !important;
 }
 
-.dnet-autocomplete-list-wrapper:has(.dnet-autocomplete-list-footer) {
+.dnet-autocomplete-list-wrapper:has(.dnet-autocomplete-list-footer:not(:empty)) {
   padding-bottom: 0px;
 }
 
@@ -1125,6 +1127,10 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 
 .dnet-autocomplete-list-wrapper:has(.dnet-autocomplete-list-form + .dnet-autocomplete-list-header) {
   padding-top: var(--_wrapper-padding);
+}
+
+.dnet-autocomplete-list-footer:empty {
+  display: none;
 }
 
 .dnet-autocomplete-list-form,
@@ -1147,18 +1153,19 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-autocomplete-list-form {
-  padding: var(--dnet-list-padding-vertical, var(--dnet-autocomplete-list-padding-vertical, 4px)) 20px;
+  height: auto;
+  flex-shrink: 0;
+  padding: var(--dnet-list-padding-vertical, var(--dnet-autocomplete-list-padding-vertical, 4px)) var(--_wrapper-padding);
 }
 .dnet-autocomplete-list-form .dnet-form-field-plain-wrapper {
   margin-bottom: 0px;
 }
 .dnet-autocomplete-list-form .dnet-form-field-plain-control-container {
-  border-radius: 15px;
+  border-radius: var(--dnet-sys-radius-md);
 }
 
 .dnet-autocomplete-list-header {
-  padding-left: 20px;
-  padding-right: 15px;
+  padding-inline: var(--dnet-sys-space-3);
 }
 
 .dnet-autocomplete-list-header-content {
@@ -1180,39 +1187,39 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-autocomplete-list-items {
-  --_padding-horizontal: var(--dnet-list-padding-horizontal, var(--dnet-autocomplete-list-padding-horizontal, 5px));
+  --_padding-horizontal: var(--dnet-list-padding-horizontal, var(--dnet-autocomplete-list-padding-horizontal, var(--dnet-sys-space-2)));
 
   flex-grow: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: 0 var(--_padding-horizontal);
+  overscroll-behavior: contain;
+  scrollbar-color: var(--dnet-sys-border-strong) transparent;
 }
 
 .dnet-autocomplete-list-item {
   --_item-height: var(--dnet-list-item-height, var(--dnet-autocomplete-list-item-height, var(--dnet-sys-control-height)));
   --_padding-vertical: var(--dnet-list-padding-vertical, var(--dnet-autocomplete-list-padding-vertical, 4px));
-  --_padding-horizontal: var(--dnet-list-padding-horizontal, var(--dnet-autocomplete-list-padding-horizontal, 5px));
+  --_padding-horizontal: var(--dnet-list-padding-horizontal, var(--dnet-autocomplete-list-padding-horizontal, var(--dnet-sys-space-3)));
+  --_hover-background: var(--dnet-list-hover-background-color, var(--dnet-autocomplete-list-hover-background-color, var(--dnet-sys-state-hover)));
+  --_hover-radius: var(--dnet-list-hover-border-radius, var(--dnet-autocomplete-list-hover-border-radius, var(--dnet-sys-radius-md)));
 
   display: flex;
   align-items: center;
   height: var(--_item-height);
-  padding-left: 15px;
-  padding-right: var(--_padding-vertical);
-  padding-top: var(--_padding-horizontal);
-  padding-bottom: var(--_padding-horizontal);
+  padding: var(--_padding-vertical) var(--_padding-horizontal);
+  border-radius: var(--_hover-radius);
   overflow: hidden;
   transition: background-color 0.3s, border-radius 0.3s;
 }
 
 .dnet-autocomplete-list-item:has(.dnet-autocomplete-list-item-prefix) {
-  padding-left: 0px;
+  -webkit-padding-start: 0px;
+          padding-inline-start: 0px;
 }
 
 .dnet-autocomplete-list-item:hover {
-  --_hover-background: var(--dnet-list-hover-background-color, var(--dnet-autocomplete-list-hover-background-color, var(--dnet-sys-surface-hover)));
-  --_hover-radius: var(--dnet-list-hover-border-radius, var(--dnet-autocomplete-list-hover-border-radius, var(--dnet-sys-radius-lg)));
-
   background-color: var(--_hover-background);
-  border-radius: var(--_hover-radius);
 }
 
 .dnet-autocomplete-list-item-prefix,
@@ -1247,7 +1254,9 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
-  padding-right: 10px;
+  min-width: 0;
+  -webkit-padding-end: 10px;
+          padding-inline-end: 10px;
 }
 .dnet-autocomplete-list-item-content.disabled {
   pointer-events: none;
@@ -1462,7 +1471,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 /*! Checkbox — migrado a tokens (6.0). Generado una vez; se edita a mano. */
 
 .dnet-checkbox {
-  --_size: var(--dnet-checkbox-size, 14px);
+  --_size: var(--dnet-checkbox-size, 18px);
   --_radius: var(--dnet-checkbox-border-radius, 0px);
   --_border-color: var(--dnet-checkbox-border-color,
     color-mix(in srgb, var(--dnet-sys-on-surface-subtle) 57.2%, var(--dnet-sys-surface)));
@@ -1803,22 +1812,27 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 /*! ConnectedPanel — migrado a tokens (6.0). Generado una vez; se edita a mano. */
 
 .dnet-connected-panel-container {
-  --_background: var(--dnet-connected-panel-background, var(--dnet-sys-surface));
+  --_background: var(--dnet-connected-panel-background, var(--dnet-sys-surface-raised));
   --_padding: var(--dnet-connected-panel-padding, 2px);
+  --_radius: var(--dnet-dialog-border-radius, var(--dnet-sys-radius-lg));
+  --_elevation: var(--dnet-sys-elevation-3);
 
-  box-shadow: var(--dnet-sys-elevation-1);
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 0;
+  box-shadow: var(--_elevation);
   background: var(--_background);
   color: var(--dnet-sys-on-surface);
   width: 100%;
   height: 100%;
   padding: var(--_padding);
-  border-radius: var(--dnet-dialog-border-radius, var(--dnet-sys-radius-md));
+  border-radius: var(--_radius);
 }
 
 .dnet-datepicker-content,
 .dnet-calendar {
   --_day-size: var(--dnet-calendar-day-height, 40px);
-  --_background: var(--dnet-calendar-background, var(--dnet-sys-surface));
+  --_background: var(--dnet-calendar-background, var(--dnet-sys-surface-raised));
   --_foreground: var(--dnet-sys-on-surface-emphasis);
   --_subtle: var(--dnet-sys-on-surface-subtle);
   --_disabled: var(--dnet-calendar-day-disabled-color, var(--dnet-sys-state-disabled-fg));
@@ -1832,12 +1846,14 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-datepicker-content {
+  --_background: var(--dnet-calendar-background, var(--dnet-sys-surface-raised));
+
   box-sizing: border-box;
   width: 100%;
   overflow: hidden;
-  border: var(--dnet-sys-border-width) solid var(--dnet-sys-border);
+  border: 0;
   border-radius: var(--_radius);
-  box-shadow: var(--dnet-sys-elevation-2);
+  box-shadow: var(--dnet-sys-elevation-3);
   background: var(--_background);
   color: var(--_foreground);
 }
@@ -1847,7 +1863,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   width: 100%;
   min-width: 280px;
   padding: 8px;
-  border: var(--dnet-sys-border-width) solid var(--dnet-sys-border);
+  border: var(--dnet-sys-border-width) solid var(--_background);
   border-radius: var(--_radius);
   background: var(--_background);
   color: var(--_foreground);
@@ -1855,6 +1871,8 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-datepicker-content > .dnet-calendar {
+  --_background: var(--dnet-calendar-background, var(--dnet-sys-surface-raised));
+
   border: 0;
   border-radius: 0;
 }
@@ -2213,7 +2231,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   background-color: var(--_icon-color);
   cursor: pointer;
   -webkit-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1zm1-3a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M3.5 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5zm9 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5z'/></svg>") center / 1em 1em no-repeat;
-  mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1zm1-3a2 2 0 0 0-2 2v11a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M3.5 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5zm9 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5z'/></svg>") center / 1em 1em no-repeat;
+  mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1zm1-3a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z'/><path fill-rule='evenodd' clip-rule='evenodd' d='M3.5 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5zm9 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5z'/></svg>") center / 1em 1em no-repeat;
 }
 
 .dnet-datepicker-reset-button {
@@ -2247,13 +2265,10 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 .dnet-dialog-container {
   --_padding-block: var(--dnet-dialog-padding-top-bottom, 10px);
   --_padding-inline: var(--dnet-dialog-padding-left-right, 24px);
-  --_radius: var(--dnet-dialog-border-radius, var(--dnet-sys-radius-md));
+  --_radius: var(--dnet-dialog-border-radius, var(--dnet-sys-radius-lg));
   --_max-height: var(--dnet-dialog-max-height, 100%);
-  --_elevation: var(--dnet-dialog-elevation,
-    0 11px 15px -7px var(--dnet-sys-shadow-color),
-    0 24px 38px 3px var(--dnet-sys-shadow-color),
-    0 9px 46px 8px var(--dnet-sys-shadow-color));
-  --_background: var(--dnet-dialog-background, var(--dnet-sys-surface));
+  --_elevation: var(--dnet-dialog-elevation, var(--dnet-sys-elevation-3));
+  --_background: var(--dnet-dialog-background, var(--dnet-sys-surface-raised));
   --_foreground: var(--dnet-dialog-foreground, var(--dnet-sys-on-surface-emphasis));
   --_title-font-size: var(--dnet-dialog-title-font-size, var(--dnet-sys-text-xl));
   --_header-margin-bottom: var(--dnet-dialog-header-margin-bottom, 15px);
@@ -2508,14 +2523,20 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 /*! FloatingPanel — migrado a tokens (6.0). Generado una vez; se edita a mano. */
 
 .dnet-floating-panel-container {
+  --_background: var(--dnet-sys-surface-raised);
+  --_radius: var(--dnet-sys-radius-lg);
+  --_elevation: var(--dnet-sys-elevation-3);
+
   display: flex;
   flex-direction: row;
-  border-radius: 0;
+  border: 0;
+  border-radius: var(--_radius);
   box-sizing: border-box;
+  overflow: hidden;
   width: 100%;
   height: calc(100dvh - 0px);
-  box-shadow: var(--dnet-sys-elevation-1);
-  background: var(--dnet-sys-surface);
+  box-shadow: var(--_elevation);
+  background: var(--_background);
   color: var(--dnet-sys-on-surface-emphasis);
 }
 
@@ -2650,6 +2671,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 
 .blg-root {
   --_blg-horizontal-offset: 0px;
+  --_blg-filter-row-height: calc(var(--dnet-form-field-min-height, 56px) + 18px);
   --_blg-responsive-center-width: 100%;
   --_blg-responsive-canvas-width: 100%;
 }
@@ -2662,7 +2684,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 
 .blg-header {
   display: flex;
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   width: 100%;
   white-space: nowrap;
 }
@@ -2693,6 +2715,21 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   overflow: hidden;
   flex: 1 0 0;
   border: 1px solid var(--dnet-grid-border-color, var(--blg-border-color, var(--dnet-sys-border)));
+}
+
+.blg-filter-cell {
+  box-sizing: border-box;
+  block-size: var(--_blg-filter-row-height);
+  padding-block: 8px;
+}
+
+.blg-filter-cell .blg-header-cell-container {
+  align-items: center;
+}
+
+.blg-filter-cell .blg-filter-field {
+  -webkit-margin-after: 0;
+          margin-block-end: 0;
 }
 
 .blg-header-cell-container {
@@ -2844,12 +2881,12 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   cursor: pointer;
   display: inline-grid;
   flex: 0 0 auto;
-  height: 0.875rem;
+  height: 18px;
   margin: 0;
   padding: 0;
   place-content: center;
   position: relative;
-  width: 0.875rem;
+  width: 18px;
 }
 
 [type="checkbox"].blg-checkbox-no-label.negative {
@@ -2892,6 +2929,21 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 [type="checkbox"].blg-checkbox-no-label:disabled {
   cursor: default;
   opacity: 0.38;
+}
+
+/* Let the browser reserve the same vertical scrollbar space for every desktop
+   partition, including overlay scrollbars and user scrollbar preferences. */
+@media only screen and (min-width: 769px) {
+  .blg-header,
+  .blg-viewport,
+  .blg-body-horizontal-scroll {
+    scrollbar-gutter: stable;
+  }
+
+  .blg-header,
+  .blg-body-horizontal-scroll {
+    overflow: hidden;
+  }
 }
 
 /* Responsive styles for small screens */
@@ -3087,8 +3139,10 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .blg-advanced-filter-container {
-  box-shadow: var(--dnet-sys-elevation-1);
-  background: var(--dnet-sys-surface);
+  border-radius: var(--dnet-sys-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--dnet-sys-elevation-3);
+  background: var(--dnet-sys-surface-raised);
   color: var(--dnet-sys-on-surface-emphasis);
 }
 
@@ -3363,7 +3417,6 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   font-size: var(--dnet-grid-secondary-font-size, var(--blg-secondary-font-size, var(--dnet-sys-text-md)));
   font-family: var(--dnet-grid-secondary-font-family, var(--blg-secondary-font-family, var(--dnet-sys-font)));
   border-bottom: 1px solid var(--dnet-grid-border-color, var(--blg-border-color, var(--dnet-sys-border)));
-  padding-right: var(--dnet-grid-grid-scroll-width, var(--blg-grid-scroll-width, 6px));
 }
 .blg-arcadia-theme .blg-pinned-left-header .blg-header-cell:last-child {
   border: none;
@@ -3402,7 +3455,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   border-top-width: 0;
 }
 .blg-arcadia-theme .blg-cell {
-  line-height: calc(var(--dnet-grid-row-height, var(--blg-row-height, 40px)) - 2px);
+  line-height: calc(var(--dnet-grid-row-height, var(--blg-row-height, 56px)) - 2px);
   padding-left: var(--dnet-grid-cell-horizontal-padding, var(--blg-cell-horizontal-padding, 12px));
   padding-right: var(--dnet-grid-cell-horizontal-padding, var(--blg-cell-horizontal-padding, 12px));
   border: 1px solid transparent;
@@ -3460,6 +3513,14 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 .dnet-image-editor-subtitle {
   color: var(--dnet-sys-on-surface-muted);
   font-size: var(--dnet-sys-text-sm);
+}
+
+.dnet-image-editor-error {
+  margin: 0;
+  color: var(--dnet-sys-danger);
+  font-size: var(--dnet-sys-text-sm);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .dnet-image-editor-toolbar {
@@ -3610,6 +3671,12 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--dnet-sys-space-2);
+}
+
+/* Contain the chip list's negative outer margin within the editor panel. */
+.dnet-image-editor-ratios {
+  min-width: 0;
+  padding-inline: 4px;
 }
 
 /* Sits inside the field's control, so it starts on the field's own left padding
@@ -3953,6 +4020,38 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
     }*/
 }
 
+/* Stack the editor within narrow dialogs; their content owns the vertical
+   scroll, so the stage, editing fields and footer all remain reachable. */
+@media (max-width: 900px) {
+  .dnet-image-editor {
+    height: auto;
+    min-height: 100%;
+  }
+
+  .dnet-image-editor-body {
+    flex: 0 0 auto;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .dnet-image-editor-stage,
+  .dnet-image-editor-panel {
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .dnet-image-viewport {
+    flex: 0 0 auto;
+    height: min(var(--_editor-stage-height), 40dvh, 320px);
+  }
+
+  .dnet-image-editor-fields,
+  .dnet-image-editor-fields > * {
+    min-width: 0;
+  }
+}
+
 /*! List — migrado a tokens (6.0). Generado una vez; se edita a mano.
    Tokens unificados bajo --dnet-list-* (ADR-04a); los nombres legacy de
    Select/Autocomplete son eslabones en sus propios ficheros. */
@@ -4017,6 +4116,8 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-list-form {
+  height: auto;
+  flex-shrink: 0;
   padding: var(--dnet-list-padding-vertical, 4px) 20px;
 }
 .dnet-list-form .dnet-form-field-plain-wrapper {
@@ -4920,7 +5021,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 /*! RadioButton — migrado a tokens (6.0). Generado una vez; se edita a mano. */
 
 .dnet-radio-button {
-  --_size: var(--dnet-radio-button-size, 16px);
+  --_size: var(--dnet-radio-button-size, 20px);
   --_border-width: var(--dnet-radio-button-border-width, 1px);
   --_checked-background: var(--dnet-radio-button-background, var(--dnet-sys-primary-strong));
   --_font-size: var(--dnet-radio-button-font-size, var(--dnet-sys-text-md));
@@ -6266,15 +6367,22 @@ ul[role=tree] li ul {
 /*! Sass DatePickerWeek (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 .dnet-datepickerweek-content {
   --_week-day-size: var(--dnet-datepickerweekca-day-height, var(--dnet-calendar-day-height, 40px));
+  --_week-background: var(--dnet-calendar-background, var(--dnet-sys-surface-raised));
 
+  box-sizing: border-box;
   width: 100%;
-  box-shadow: var(--dnet-sys-elevation-1);
-  background: var(--dnet-sys-surface);
+  overflow: hidden;
+  border-radius: var(--dnet-sys-radius-lg);
+  box-shadow: var(--dnet-sys-elevation-3);
+  background: var(--_week-background);
   color: var(--dnet-sys-on-surface-emphasis);
 }
 
-.dnet-datepickerweek-calendar {
+.dnet-datepickerweek-content > .dnet-datepickerweek-calendar {
   height: auto;
+  border: 0;
+  border-radius: 0;
+  background: var(--_week-background);
 }
 
 .dnet-datepickerweek-input-container {
@@ -6703,10 +6811,12 @@ button[disabled].dnet-datepickerweekca-next-button::after {
 /*! Sass DatePickerWeekRaw (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 .dnet-datepickerweek-raw-content {
   --_week-raw-day-size: var(--dnet-datepickerweekca-raw-day-height, var(--dnet-calendar-day-height, 40px));
+  --_week-raw-background: var(--dnet-calendar-background, var(--dnet-sys-surface-raised));
 
   width: 100%;
+  border-radius: var(--dnet-sys-radius-lg);
   box-shadow: none;
-  background: var(--dnet-sys-surface);
+  background: var(--_week-raw-background);
   color: var(--dnet-sys-on-surface-emphasis);
 }
 
@@ -7045,15 +7155,34 @@ button[disabled].dnet-datepickerweekca-raw-next-button::after {
 
 /*! Sass FloatingDoubleList (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 .dnet-connected-panel-container-dl {
+  --_panel-background: var(--dnet-sys-surface-raised);
+  --_radius: var(--dnet-dialog-border-radius, var(--dnet-sys-radius-lg));
+  --_elevation: var(--dnet-sys-elevation-3);
+
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  box-shadow: var(--dnet-sys-elevation-1);
-  background: var(--dnet-sys-surface);
+  overflow: hidden;
+  border: 0;
+  box-shadow: var(--_elevation);
+  background: var(--_panel-background);
   color: var(--dnet-sys-on-surface-emphasis);
   width: 100%;
   height: 100%;
   padding: 2px;
-  border-radius: var(--dnet-dialog-border-radius, var(--dnet-sys-radius-md));
+  border-radius: var(--_radius);
+}
+
+/* The surrounding panel owns the surface; explicit list customizations remain
+   available without adding another frame or elevation by default. */
+.dnet-connected-panel-container-dl .dnet-list-wrapper {
+  --_list-border: var(--dnet-list-border-color, var(--dnet-sys-transparent));
+  --_list-background: var(--dnet-list-background-color, transparent);
+  --_list-elevation: var(--dnet-list-box-shadow, none);
+
+  border-color: var(--_list-border);
+  background: var(--_list-background);
+  box-shadow: var(--_list-elevation);
 }
 
 .dnet-floating-doublelist-value-wrapper {
@@ -7342,80 +7471,193 @@ select.mat-input-element::-ms-value {
   margin-top: -10px;
 }
 
-.dnet-form-field-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.dnet-form-field-char-counter {
-  font-size: 0.75rem;
-}
-
 .dnet-form-field-plain-wrapper {
+  --_field-background: var(--dnet-form-field-background, color-mix(in srgb, var(--dnet-sys-on-surface) 12%, var(--dnet-sys-surface)));
+  --_field-disabled-background: color-mix(in srgb, var(--_field-background) 65%, var(--dnet-sys-surface));
+  --_field-border-color: var(--_field-background);
+  --_field-disabled-border-color: var(--_field-disabled-background);
+  --_field-min-height: var(--dnet-form-field-min-height, 56px);
+  --_field-padding-inline: var(--dnet-form-field-padding-inline, 16px);
+  --_field-icon-size: var(--dnet-form-field-icon-size, 24px);
+  --_field-icon-inset: var(--dnet-form-field-icon-inset, 12px);
+  --_field-icon-gap: var(--dnet-form-field-icon-gap, 16px);
+  --_field-font-size: var(--dnet-form-field-font-size, var(--dnet-sys-text-lg));
+  --_field-label-base-size: var(--dnet-form-field-plain-label-font-size, var(--dnet-sys-text-lg));
+  --_field-label-size: var(--_field-label-base-size);
+  --_field-label-line-height: calc(var(--_field-label-base-size) * 1.5);
+  --_field-label-top: max(8px, calc((var(--_field-min-height) - var(--_field-label-line-height)) / 2));
+  --_field-label-space: 0px;
+  --_field-placeholder-opacity: 1;
+  --_field-edge-start: var(--_field-padding-inline);
+  --_field-edge-end: var(--_field-padding-inline);
+  --_field-label-start: var(--_field-padding-inline);
+  --_field-label-end: var(--_field-padding-inline);
+  position: relative;
   display: flex;
   flex-direction: column;
-  margin-bottom: 10px;
-  width: 100%;
+  -webkit-margin-after: 16px;
+          margin-block-end: 16px;
+  inline-size: 100%;
+  min-inline-size: 0;
+  font-size: var(--_field-font-size);
+  line-height: 1.5;
+}
+
+.dnet-form-field-header {
+  display: flex;
+  align-items: center;
+  min-inline-size: 0;
+  line-height: var(--_field-label-line-height);
 }
 
 .dnet-form-field-plain-label-wrapper {
-  padding-left: 3px;
+  display: flex;
+  align-items: baseline;
+  min-inline-size: 0;
+  font-size: var(--_field-label-size);
 }
 
 .dnet-form-field-plain-label {
-  font-size: var(--dnet-form-field-plain-label-font-size, var(--dnet-sys-text-sm));
-  color: var(--dnet-form-field-plain-label-color, var(--dnet-sys-on-surface-subtle));
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--_field-label-size);
+  color: var(--dnet-form-field-plain-label-color, var(--dnet-sys-on-surface-muted));
 }
 
 .dnet-form-field-plain-label-wrapper > label {
   font-weight: 400;
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
+}
+
+.dnet-form-field-appearance-fill > .dnet-form-field-header {
+  position: absolute;
+  inset-block-start: var(--_field-label-top);
+  inset-inline-start: var(--_field-label-start);
+  inset-inline-end: var(--_field-label-end);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Native date segments, date ranges and multiline fields need a permanent label
+   line. Other controls reserve it only while focused or populated. */
+.dnet-form-field-appearance-fill.dnet-form-field-has-label:is(
+  .dnet-form-field-label-raised,
+  :focus-within,
+  :has(textarea, .dnet-date-range-inputs, input:is([type=date], [type=time], [type=datetime-local], [type=month], [type=week]))
+) {
+  --_field-label-size: calc(var(--_field-label-base-size) * 0.75);
+  --_field-label-line-height: var(--_field-label-base-size);
+  --_field-label-top: max(8px, calc((var(--_field-min-height) - var(--_field-label-line-height) - var(--_field-font-size) * 1.5) / 2));
+  --_field-label-space: var(--_field-label-base-size);
 }
 
 .dnet-form-field-plain-control-container {
-  display: flex;
-  align-items: stretch;
-  min-height: var(--dnet-sys-text-input-min-height);
-  max-height: 272px;
-  margin-bottom: 3px;
-  border: 1px solid var(--dnet-sys-border);
-  border-radius: 5px;
-}
-.dnet-form-field-plain-control-container.dnet-control-disable {
-  background-color: var(--dnet-sys-state-hover);
-}
-
-.dnet-form-field-plain-prefix,
-.dnet-form-field-plain-suffix {
-  width: 34px;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: var(--_field-icon-gap);
+  min-block-size: var(--_field-min-height);
+  padding-block: 7px;
+  -webkit-padding-start: calc(var(--_field-edge-start) - 1px);
+          padding-inline-start: calc(var(--_field-edge-start) - 1px);
+  -webkit-padding-end: calc(var(--_field-edge-end) - 1px);
+          padding-inline-end: calc(var(--_field-edge-end) - 1px);
+  border: 1px solid var(--_field-border-color);
+  border-radius: 5px;
+  background-color: var(--_field-background);
+}
+.dnet-form-field-plain-control-container.dnet-control-disable {
+  background-color: var(--_field-disabled-background);
+  border-color: var(--_field-disabled-border-color);
+}
+
+/* Explicit consumer tokens still win in transparent appearances. */
+.dnet-form-field-appearance-standard,
+.dnet-form-field-appearance-legacy {
+  --_field-background: var(--dnet-form-field-background, var(--dnet-sys-transparent));
+  --_field-disabled-background: var(--dnet-sys-state-hover);
+  --_field-border-color: var(--dnet-sys-border);
+  --_field-disabled-border-color: var(--dnet-sys-border);
+  --_field-label-size: var(--dnet-form-field-plain-label-font-size, var(--dnet-sys-text-sm));
+  --_field-label-line-height: 16px;
+}
+
+:is(.dnet-form-field-appearance-standard, .dnet-form-field-appearance-legacy) > .dnet-form-field-header {
+  -webkit-margin-after: 4px;
+          margin-block-end: 4px;
 }
 
 .dnet-form-field-plain-control {
-  flex-grow: 1;
+  box-sizing: border-box;
+  flex: 1 1 0%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-inline-size: 0;
+  -webkit-padding-before: var(--_field-label-space);
+          padding-block-start: var(--_field-label-space);
+}
+
+.dnet-form-field-plain-control-container .mat-input-element {
+  box-sizing: border-box;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  font-size: var(--_field-font-size);
+  line-height: 1.5;
+}
+
+.dnet-form-field-plain-control-container .mat-input-element::-moz-placeholder {
+  color: var(--dnet-sys-on-surface-muted);
+  opacity: var(--_field-placeholder-opacity);
+}
+
+.dnet-form-field-plain-control-container .mat-input-element::placeholder {
+  color: var(--dnet-sys-on-surface-muted);
+  opacity: var(--_field-placeholder-opacity);
+}
+
+/* The legacy generated ::after creates an extra line in native date controls. */
+.dnet-form-field-plain-control-container input.mat-input-element:is([type=date], [type=time], [type=datetime-local], [type=month], [type=week]) {
+  block-size: calc(var(--_field-font-size) * 1.5);
+}
+.dnet-form-field-plain-control-container input.mat-input-element:is([type=date], [type=time], [type=datetime-local], [type=month], [type=week])::after {
+  content: none;
+}
+
+.dnet-form-field-appearance-fill.dnet-form-field-has-label:not(.dnet-form-field-label-raised):not(:focus-within):not(:has(textarea, .dnet-date-range-inputs, input:is([type=date], [type=time], [type=datetime-local], [type=month], [type=week]))) {
+  --_field-placeholder-opacity: 0;
+}
+
+.dnet-form-field-plain-wrapper:has(> .dnet-form-field-plain-control-container > .dnet-form-field-plain-prefix) {
+  --_field-edge-start: var(--_field-icon-inset);
+  --_field-label-start: calc(var(--_field-icon-inset) + var(--_field-icon-size) + var(--_field-icon-gap));
+}
+
+.dnet-form-field-plain-wrapper:has(> .dnet-form-field-plain-control-container > :is(.dnet-component-icon-wrapper, .dnet-form-field-plain-suffix), > .dnet-form-field-plain-control-container .dnet-plain-select) {
+  --_field-edge-end: var(--_field-icon-inset);
+  --_field-label-end: calc(var(--_field-icon-inset) + var(--_field-icon-size) + var(--_field-icon-gap));
+}
+
+.dnet-form-field-plain-wrapper:has(> .dnet-form-field-plain-control-container > .dnet-component-icon-wrapper + .dnet-form-field-plain-suffix) {
+  --_field-label-end: calc(var(--_field-icon-inset) + (var(--_field-icon-size) + var(--_field-icon-gap)) * 2);
+}
+
+.dnet-form-field-plain-prefix,
+.dnet-form-field-plain-suffix,
+.dnet-form-field-plain-control-container > .dnet-component-icon-wrapper {
+  box-sizing: border-box;
+  flex: 0 0 var(--_field-icon-size);
   display: flex;
   align-items: center;
-  padding-left: 10px;
-}
-
-.dnet-form-field-plain-prefix + .dnet-form-field-plain-control {
-  padding-left: 0px;
-}
-
-.dnet-form-field-plain-info {
-  font-size: 0.7rem;
-}
-
-.dnet-form-field-plain-clear {
-  width: 24px;
-  display: flex;
-  align-items: flex-end;
   justify-content: center;
-  padding-right: 5px;
+  inline-size: var(--_field-icon-size);
+  block-size: var(--_field-icon-size);
+  margin: 0;
+  padding: 0;
 }
 
 /* Icono funcional monocromo (R9): mask-image + background-color. */
@@ -7433,22 +7675,66 @@ select.mat-input-element::-ms-value {
   mask-size: 1em 1em;
 }
 
+.dnet-form-field-plain-control-container :is(.dnet-component-icon, .dnet-datepicker-icon, .dnet-timepicker-icon, .dnet-app-icon) {
+  inline-size: var(--_field-icon-size);
+  block-size: var(--_field-icon-size);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  background-size: contain;
+}
+
+.dnet-form-field-plain-control-container :is(.dnet-datepicker-icon-wrapper, .dnet-timepicker-icon-wrapper) {
+  inline-size: var(--_field-icon-size);
+  block-size: var(--_field-icon-size);
+}
+
+.dnet-form-field-plain-control-container .dnet-plain-select {
+  padding-right: 0;
+}
+.dnet-form-field-plain-control-container .dnet-plain-select-value {
+  opacity: var(--_field-placeholder-opacity);
+}
+.dnet-form-field-plain-control-container .dnet-plain-select-arrow-wrapper {
+  -webkit-padding-start: var(--_field-icon-gap);
+          padding-inline-start: var(--_field-icon-gap);
+}
+.dnet-form-field-plain-control-container .dnet-plain-select-arrow {
+  width: var(--_field-icon-size);
+  height: var(--_field-icon-size);
+  margin: 0;
+  transform: translateY(calc(var(--_field-label-space) / -2));
+}
+
+.dnet-form-field-plain-info {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  -moz-column-gap: var(--_field-icon-gap);
+       column-gap: var(--_field-icon-gap);
+  min-block-size: 16px;
+  -webkit-margin-before: 4px;
+          margin-block-start: 4px;
+  padding-inline: var(--_field-padding-inline);
+  font-size: var(--dnet-form-field-hint-font-size, var(--dnet-sys-text-sm));
+  line-height: 16px;
+}
+
+.dnet-form-field-char-counter {
+  white-space: nowrap;
+}
+
 .dnet-component-icon-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   width: 24px;
-  /* Breathing room between the trailing icon (clear button, search glyph) and
-     the field's right border. */
-  margin-right: 5px;
 }
 
 .dnet-floating-label--required::after {
-  margin-left: 2px;
-  margin-right: 0px;
+  -webkit-margin-start: 2px;
+          margin-inline-start: 2px;
   content: "*";
-  font-size: var(--dnet-sys-text-xs);
+  font-size: inherit;
 }
 
 .dnet-component-clear-button {
@@ -7467,12 +7753,11 @@ select.mat-input-element::-ms-value {
 
 .dnet-form-field-hint-wrapper {
   display: flex;
-  padding-left: 3px;
 }
 
 .dnet-hint {
   color: var(--dnet-form-field-hint-color, var(--dnet-sys-on-surface-muted));
-  font-size: var(--dnet-form-field-hint-font-size, var(--dnet-sys-text-xs));
+  font-size: var(--dnet-form-field-hint-font-size, var(--dnet-sys-text-sm));
 }
 
 .dnet-property-form-group {
@@ -7507,16 +7792,17 @@ select.mat-input-element::-ms-value {
 }
 
 .dnet-select-list-wrapper {
-  --_border-color: var(--dnet-list-border-color, var(--dnet-select-list-border-color, var(--dnet-sys-border)));
-  --_radius: var(--dnet-list-border-radius, var(--dnet-select-list-border-radius, var(--dnet-sys-radius-md)));
-  --_wrapper-padding: var(--dnet-list-wrapper-horizontal-padding, var(--dnet-select-list-wrapper-horizontal-padding, 15px));
-  --_background: var(--dnet-list-background-color, var(--dnet-sys-surface));
+  --_border-color: var(--dnet-list-border-color, var(--dnet-select-list-border-color, var(--dnet-sys-transparent)));
+  --_radius: var(--dnet-list-border-radius, var(--dnet-select-list-border-radius, var(--dnet-sys-radius-lg)));
+  --_wrapper-padding: var(--dnet-list-wrapper-horizontal-padding, var(--dnet-select-list-wrapper-horizontal-padding, var(--dnet-sys-space-2)));
+  --_background: var(--dnet-list-background-color, var(--dnet-sys-surface-raised));
   --_foreground: var(--dnet-list-foreground, var(--dnet-select-list-foreground, var(--dnet-sys-on-surface)));
-  --_shadow: var(--dnet-list-box-shadow, var(--dnet-sys-elevation-1));
+  --_shadow: var(--dnet-list-box-shadow, var(--dnet-sys-elevation-3));
 
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-height: 0;
   width: 100%;
   border: 1px solid var(--_border-color);
   border-radius: var(--_radius);
@@ -7526,12 +7812,13 @@ select.mat-input-element::-ms-value {
   background-color: var(--_background);
   color: var(--_foreground);
   box-shadow: var(--_shadow);
+  overflow: hidden;
 }
 .dnet-select-list-wrapper .dnet-item-fadeout {
   opacity: 0 !important;
 }
 
-.dnet-select-list-wrapper:has(.dnet-select-list-footer) {
+.dnet-select-list-wrapper:has(.dnet-select-list-footer:not(:empty)) {
   padding-bottom: 0px;
 }
 
@@ -7541,6 +7828,10 @@ select.mat-input-element::-ms-value {
 
 .dnet-select-list-wrapper:has(.dnet-select-list-form + .dnet-select-list-header) {
   padding-top: var(--_wrapper-padding);
+}
+
+.dnet-select-list-footer:empty {
+  display: none;
 }
 
 .dnet-select-list-form,
@@ -7559,18 +7850,19 @@ select.mat-input-element::-ms-value {
 }
 
 .dnet-select-list-form {
-  padding: var(--dnet-list-padding-vertical, var(--dnet-select-list-padding-vertical, 4px)) 20px;
+  height: auto;
+  flex-shrink: 0;
+  padding: var(--dnet-list-padding-vertical, var(--dnet-select-list-padding-vertical, 4px)) var(--_wrapper-padding);
 }
 .dnet-select-list-form .dnet-form-field-plain-wrapper {
   margin-bottom: 0px;
 }
 .dnet-select-list-form .dnet-form-field-plain-control-container {
-  border-radius: 15px;
+  border-radius: var(--dnet-sys-radius-md);
 }
 
 .dnet-select-list-header {
-  padding-left: 20px;
-  padding-right: 15px;
+  padding-inline: var(--dnet-sys-space-3);
 }
 
 .dnet-select-list-header-content {
@@ -7585,39 +7877,53 @@ select.mat-input-element::-ms-value {
 }
 
 .dnet-select-list-items {
-  --_padding-horizontal: var(--dnet-list-padding-horizontal, var(--dnet-select-list-padding-horizontal, 5px));
+  --_padding-horizontal: var(--dnet-list-padding-horizontal, var(--dnet-select-list-padding-horizontal, var(--dnet-sys-space-2)));
 
   flex-grow: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: 0 var(--_padding-horizontal);
+  overscroll-behavior: contain;
+  scrollbar-color: var(--dnet-sys-border-strong) transparent;
 }
 
 .dnet-select-list-item {
   --_item-height: var(--dnet-list-item-height, var(--dnet-select-list-item-height, var(--dnet-sys-control-height)));
   --_padding-vertical: var(--dnet-list-padding-vertical, var(--dnet-select-list-padding-vertical, 4px));
-  --_padding-horizontal: var(--dnet-list-padding-horizontal, var(--dnet-select-list-padding-horizontal, 5px));
+  --_padding-horizontal: var(--dnet-list-padding-horizontal, var(--dnet-select-list-padding-horizontal, var(--dnet-sys-space-3)));
+  --_hover-background: var(--dnet-list-hover-background-color, var(--dnet-select-list-hover-background-color, var(--dnet-sys-state-hover)));
+  --_hover-radius: var(--dnet-list-hover-border-radius, var(--dnet-select-list-hover-border-radius, var(--dnet-sys-radius-md)));
 
   display: flex;
   align-items: center;
   height: var(--_item-height);
-  padding-left: 15px;
-  padding-right: var(--_padding-vertical);
-  padding-top: var(--_padding-horizontal);
-  padding-bottom: var(--_padding-horizontal);
+  padding: var(--_padding-vertical) var(--_padding-horizontal);
+  border-radius: var(--_hover-radius);
   overflow: hidden;
   transition: background-color 0.3s, border-radius 0.3s;
 }
 
 .dnet-select-list-item:has(.dnet-select-list-item-prefix) {
-  padding-left: 0px;
+  -webkit-padding-start: 0px;
+          padding-inline-start: 0px;
 }
 
 .dnet-select-list-item:hover {
-  --_hover-background: var(--dnet-list-hover-background-color, var(--dnet-select-list-hover-background-color, var(--dnet-sys-surface-hover)));
-  --_hover-radius: var(--dnet-list-hover-border-radius, var(--dnet-select-list-hover-border-radius, var(--dnet-sys-radius-md)));
-
   background-color: var(--_hover-background);
-  border-radius: var(--_hover-radius);
+}
+
+.dnet-select-list-item:has(input[type="checkbox"]:checked) {
+  background-color: var(--dnet-sys-state-selected);
+  color: var(--dnet-sys-primary-strong);
+  font-weight: 600;
+}
+
+.dnet-select-list-item:has(input[type="checkbox"]:checked) .dnet-select-list-item-headline {
+  --_headline-color: var(--dnet-list-headline-text-color, var(--dnet-select-list-headline-text-color, var(--dnet-sys-primary-strong)));
+}
+
+.dnet-select-list-item:has(input[type="checkbox"]:checked):hover {
+  background-color: color-mix(in srgb, var(--dnet-sys-primary-strong) 18%, var(--_background));
 }
 
 .dnet-select-list-item-prefix,
@@ -7652,7 +7958,9 @@ select.mat-input-element::-ms-value {
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
-  padding-right: 10px;
+  min-width: 0;
+  -webkit-padding-end: 10px;
+          padding-inline-end: 10px;
 }
 .dnet-select-list-item-content.disabled {
   pointer-events: none;
@@ -7730,12 +8038,13 @@ select.mat-input-element::-ms-value {
 }
 
 .dnet-plain-select-arrow {
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 5px solid var(--_foreground);
+  --_arrow-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-chevron-down' viewBox='0 0 16 16'> <path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/> </svg>");
+  width: 1em;
+  height: 1em;
   margin: 0 4px;
+  background-color: var(--_foreground);
+  -webkit-mask: var(--_arrow-mask) center / contain no-repeat;
+  mask: var(--_arrow-mask) center / contain no-repeat;
 }
 
 .dnet-plain-select-value-text {
@@ -8658,15 +8967,17 @@ select.mat-input-element::-ms-value {
 
 /*! Button (recorte por offset; editado a mano en 6.0) — generado una vez; a partir de aquí se edita a mano. */
 .dnet-button, .dnet-icon-button {
+  --_icon-size: 20px;
+  --_icon-gap: 8px;
   --_background: var(--dnet-btn-background, var(--dnet-button-background-color, var(--dnet-sys-transparent)));
   --_hover: var(--dnet-btn-background-hover, var(--dnet-button-hover-color, var(--dnet-sys-state-hover)));
   --_foreground: var(--dnet-btn-foreground, var(--dnet-sys-on-surface));
   --_focus-overlay: var(--dnet-btn-focus-overlay, var(--dnet-sys-state-pressed));
   --_font-size: var(--dnet-btn-font-size, var(--dnet-button-font-size, var(--dnet-sys-text-md)));
   --_min-width: var(--dnet-btn-min-width, var(--dnet-button-min-width, 64px));
-  --_radius: var(--dnet-btn-radius, var(--dnet-button-border-radius, var(--dnet-sys-radius-sm)));
-  --_height: var(--dnet-btn-height, var(--dnet-button-line-height, 36px));
-  --_padding: var(--dnet-btn-padding, var(--dnet-button-padding, 0 var(--dnet-sys-space-4)));
+  --_radius: var(--dnet-btn-radius, var(--dnet-button-border-radius, var(--dnet-sys-radius-pill)));
+  --_height: var(--dnet-btn-height, var(--dnet-button-line-height, 40px));
+  --_padding: var(--dnet-btn-padding, var(--dnet-button-padding, 0 16px));
   --_margin: var(--dnet-btn-margin, var(--dnet-button-margin, 0));
   box-sizing: border-box;
   position: relative;
@@ -8677,13 +8988,16 @@ select.mat-input-element::-ms-value {
   outline: none;
   border: none;
   -webkit-tap-highlight-color: transparent;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   white-space: nowrap;
   text-decoration: none;
   vertical-align: baseline;
   text-align: center;
   margin: var(--_margin);
   min-width: var(--_min-width);
+  height: var(--_height);
   line-height: var(--_height);
   padding: var(--_padding);
   border-radius: var(--_radius);
@@ -8691,6 +9005,37 @@ select.mat-input-element::-ms-value {
   font-size: var(--_font-size);
   background: var(--_background);
   color: var(--_foreground);
+}
+
+.dnet-button-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--_icon-gap);
+  line-height: 1.5;
+}
+
+.dnet-button-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 var(--_icon-size);
+  width: var(--_icon-size);
+  height: var(--_icon-size);
+  font-size: var(--_icon-size);
+  line-height: 1;
+}
+
+.dnet-button-icon > :is(svg, img) {
+  width: 100%;
+  height: 100%;
+}
+
+/* Existing inline SVG/image icons in ChildContent share the same sizing. */
+.dnet-button-wrapper > :is(svg, img) {
+  flex: 0 0 var(--_icon-size);
+  width: var(--_icon-size);
+  height: var(--_icon-size);
 }
 .dnet-button.dnet-button-initial-focus, .dnet-icon-button.dnet-button-initial-focus {
   background-color: var(--_background);
@@ -8722,9 +9067,8 @@ select.mat-input-element::-ms-value {
   --_padding: var(--dnet-btn-padding, 0);
   --_min-width: var(--dnet-btn-min-width, 0);
   --_radius: var(--dnet-btn-radius, var(--dnet-sys-radius-pill));
-  --_height: var(--dnet-btn-height, 40px);
-  width: 40px;
-  height: 40px;
+  width: var(--_height);
+  height: var(--_height);
   flex-shrink: 0;
   outline: none;
 }
@@ -8740,6 +9084,29 @@ select.mat-input-element::-ms-value {
 .dnet-ripple {
   overflow: hidden;
   position: relative;
+}
+
+/* Size variants come last: private defaults change while explicit public and
+   legacy token overrides retain precedence through the base read chains. */
+.dnet-button-size-small {
+  --_height: var(--dnet-btn-height, var(--dnet-button-line-height, 32px));
+  --_padding: var(--dnet-btn-padding, var(--dnet-button-padding, 0 12px));
+  --_icon-size: 20px;
+  --_icon-gap: 4px;
+}
+
+.dnet-button-size-medium {
+  --_height: var(--dnet-btn-height, var(--dnet-button-line-height, 40px));
+  --_padding: var(--dnet-btn-padding, var(--dnet-button-padding, 0 16px));
+  --_icon-size: 20px;
+  --_icon-gap: 8px;
+}
+
+.dnet-button-size-large {
+  --_height: var(--dnet-btn-height, var(--dnet-button-line-height, 56px));
+  --_padding: var(--dnet-btn-padding, var(--dnet-button-padding, 0 24px));
+  --_icon-size: 24px;
+  --_icon-gap: 8px;
 }
 
 /*! DynamicStepper — migrado a tokens (6.0). Generado una vez; se edita a mano. */

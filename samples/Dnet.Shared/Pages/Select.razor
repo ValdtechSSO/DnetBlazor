@@ -1,378 +1,169 @@
-﻿@page "/Select"
+@page "/Select"
 
 @using System.ComponentModel.DataAnnotations
-@using Dnet.App.Shared.Infrastructure.Entities
-@using Dnet.App.Shared.Infrastructure.Services
-@using Dnet.App.Shared.Shared.CustomComponents
-@using Dnet.Blazor.Components.Select
-@using Dnet.Blazor.Components.Checkbox
-@using System.Drawing
 @using Dnet.Blazor.Components.Form
-@using System.Net.Http
-@using System.Net.Http.Json
-@using System.ComponentModel
+@using Dnet.Blazor.Components.Select
 
-@inject HttpClient HttpClient
-@inject IHttpClientFactory ClientFactory
-@inject IApplicationServiceService ApplicationServiceService
-
-<div class="container-fluid" style="padding-top: 10px;">
-    <div class="d-flex dnet-page-content-left-margin dnet-m-t-20">
-        <span class="dnet-m-r-10  dnet-app-comp-name">Select</span>
-    </div>
-
-    <div class="dnet-page-content-left-margin" style="max-width: 300px;">
-       @*  <div class="dnet-m-t-30">
-            <EditForm Model="@_formData">
-                <DataAnnotationsValidator />
-                <div style="display: flex; flex-direction: column">
-                    <div style="display:flex;align-items: center;flex-direction: row;justify-content:space-between">
-                        <DnetFormField Label="Name" IsRequired="true">
+<DemoPage Id="demo-select" Title="Select" Category="Selection controls"
+          Description="Choose from a focused list of options, connect dependent fields and bind the selected value to the type you need."
+          Badge="Typed selections">
+    <div class="demo-grid">
+        <DemoCard Id="select-dependent" Title="Connected selections"
+                  Description="Choose an API resource first, then select one of the resource types that belong to it.">
+            <ChildContent>
+                <EditForm Model="_right">
+                    <DataAnnotationsValidator />
+                    <div class="demo-stack">
+                        <DnetFormField Label="API resource" IsRequired="true">
                             <ChildContent>
-                                <DnetSelect Value="@_formData.Email" 
-                                            TValue="string"
-                                            ValueChanged="@((string e) => MyValueChangeHandler(e))"
-                                            ValueExpression="@( () => _formData.Email )" 
-                                            Items="_items" 
-                                            TItem="Person"
-                                            DisplayValueConverter="(value) => (value.Name)"
-                                            SupportTextValueConverter="(value) => (value.Address)"
-                                            ValueConverter="(value) => (value.Email)" 
-                                            OnItemSelected="ItemSelected"
-                                            InputTextToUpper="true" 
-                                            ItemHeight="50"
-                                            Disabled="true"
-                                            >
-                                </DnetSelect>
+                                <DnetSelect Value="@_right.ApiResourceName" TValue="string"
+                                            ValueChanged="ApiResourceChangeHandler"
+                                            ValueExpression="@(() => _right.ApiResourceName)"
+                                            Items="_apiResources" TItem="ApiResourceDto"
+                                            DisplayValueConverter="@(value => value.Name)"
+                                            ValueConverter="@(value => value.Name)"
+                                            OnItemSelected="ApiResourceItemSelected"
+                                            PlaceHolder="Select a resource" />
                             </ChildContent>
-                            <HintContent>You can add the country prefix</HintContent>
                             <ErrorContent>
-                                <ValidationMessage For="@(() => _formData.Name)" />
+                                <ValidationMessage For="@(() => _right.ApiResourceName)" />
                             </ErrorContent>
-                            <SufixContent>
-                                <div class="dnet-app-icon-wrapper">
-                                    <span class="dnet-app-icon dnet-app-formfield-headphones"></span>
-                                </div>
-                            </SufixContent>
                         </DnetFormField>
-                    </div>
-                    <div style="display: flex;align-items: center;">
-                        <span class="dnet-m-r-10" style="font-size:0.875rem">Value selected:</span>
-                        <span>@_formData.Name</span>
-                    </div>
-                </div>
-            </EditForm>
-        </div> *@
-       @*  <div class="dnet-m-t-30">
-            <EditForm Model="@_formData1">
-                <DataAnnotationsValidator />
-                <div style="display: flex; flex-direction: column">
-                    <div style="display:flex;align-items: center;flex-direction: row;justify-content:space-between">
-                        <DnetFormField Label="Name" IsRequired="true">
+
+                        <DnetFormField Label="Resource type" IsRequired="true">
                             <ChildContent>
-                                <DnetSelect Value="@_formData1.Name" TValue="string"
-                                            ValueChanged="@((string e) => MyValueChangeHandler(e))"
-                                            ValueExpression="@( () => _formData1.Name )" Items="_items"
-                                            SelectedItems="_selectedItems" TItem="Person"
-                                            DisplayValueConverter="(value) => (value.Name)"
-                                            ValueConverter="(value) => (value.Name)" OnItemSelected="ItemSelected"
-                                            OnSelectionChanged="SelectionChanged" InputTextToUpper="true" PlaceHolder="Name"
-                                            MultiSelect="true"
-                                            IsSelectedFn="(item1, item2) => item1.Name == item2.Name"
-                                            OverlayPanelClass="vyn-text-class">
-                                </DnetSelect>
+                                <DnetSelect Value="@_right.ResourceType" TValue="string"
+                                            ValueChanged="ApiResourceObjectChangeHandler"
+                                            ValueExpression="@(() => _right.ResourceType)"
+                                            Items="_apiResourceObjects" TItem="ApiResourceObjectDto"
+                                            DisplayValueConverter="@(value => value.Name)"
+                                            ValueConverter="@(value => value.Name)"
+                                            OnItemSelected="ApiResourceObjectItemSelected"
+                                            PlaceHolder="Select a resource type"
+                                            @ref="_apiResourceObjectReference" />
                             </ChildContent>
-                            <HintContent>You can add the country prefix</HintContent>
                             <ErrorContent>
-                                <ValidationMessage For="@(() => _formData1.Name)" />
+                                <ValidationMessage For="@(() => _right.ResourceType)" />
                             </ErrorContent>
-                            <PrefixContent>
-                                <div class="dnet-app-icon-wrapper">
-                                    <span class="dnet-app-icon dnet-app-formfield-headphones"></span>
-                                </div>
-                            </PrefixContent>
                         </DnetFormField>
+                        <p class="demo-muted">Changing the resource clears the previous resource type so the choices stay consistent.</p>
                     </div>
-                    <div style="display: flex;align-items: center;">
-                        <span class="dnet-m-r-10" style="font-size:0.875rem">Value selected:</span>
-                        <span>@multiValue</span>
-                    </div>
-                </div>
-            </EditForm>
-        </div> *@
-        <div class="dnet-m-t-50" style="">
-            <div class="dnet-m-b-10">Nested selects</div>
-            <EditForm EditContext="@_editContext" style="display: flex;flex-direction:column">
-                <DataAnnotationsValidator />
-                <DnetFormField Label="Api Resource" IsRequired="true">
-                    <ChildContent>
-                        <DnetSelect Value="@_right.ApiResourceName" TValue="string"
-                                    ValueChanged="@((string e) => ApiResourceChangeHandler(e))"
-                                    ValueExpression="@( () => _right.ApiResourceName)" Items="_apiResources"
-                                    TItem="ApiResourceDto" DisplayValueConverter="(value) => (value.Name)"
-                                    ValueConverter="(value) => (value.Name)" OnItemSelected="ApiResourceItemSelected"
-                                    InputTextToUpper="true" PlaceHolder="Api Resource">
-                        </DnetSelect>
-                    </ChildContent>
-                    <ErrorContent>
-                        <ValidationMessage For="@(() => _right.ApiResourceName)" />
-                    </ErrorContent>
-                </DnetFormField>
-                <DnetFormField Label="ResourceType" IsRequired="true">
-                    <ChildContent>
-                        <DnetSelect Value="@_right.ResourceType" TValue="string"
-                                    ValueChanged="@((string e) => ApiResourceObjectChangeHandler(e))"
-                                    ValueExpression="@( () => _right.ResourceType)" Items="_apiResourceObjects"
-                                    TItem="ApiResourceObjectDto" DisplayValueConverter="(value) => (value.Name)"
-                                    ValueConverter="(value) => (value.Name)" OnItemSelected="ApiResourceObjectItemSelected"
-                                    InputTextToUpper="true" PlaceHolder="ResourceType"
-                                    @ref="_apiResourceObjectReference">
-                        </DnetSelect>
-                    </ChildContent>
-                    <ErrorContent>
-                        <ValidationMessage For="@(() => _right.ResourceType)" />
-                    </ErrorContent>
-                </DnetFormField>
-            </EditForm>
-        </div>
-        <div class="dnet-m-t-30" style="">
-            <div class="dnet-m-b-10">Generic select number key</div>
-            <EditForm EditContext="@_editContext1" style="display: flex;flex-direction:column">
-                <DataAnnotationsValidator />
-                <DnetFormField Label="Api Resource" IsRequired="true">
-                    <ChildContent>
-                        <DnetSelect TValue="int" @bind-Value="_right1.ApiResourceId" Items="_apiResources"
-                                    TItem="ApiResourceDto" DisplayValueConverter="(value) => (value.Name)"
-                                    ValueConverter="(value) => (value.ApiResourceId)" OnItemSelected="ApiResource1ItemSelected"
-                                    PlaceHolder="Api Resource">
+                </EditForm>
+            </ChildContent>
+            <Footer>
+                <span class="demo-value" role="status">Resource: @SelectionLabel(_right.ApiResourceName) · Type: @SelectionLabel(_right.ResourceType)</span>
+            </Footer>
+        </DemoCard>
 
-                        </DnetSelect>
-                    </ChildContent>
-                    <ErrorContent>
-                        <ValidationMessage For="@(() => _right1.ApiResourceId)" />
-                    </ErrorContent>
-                </DnetFormField>
-            </EditForm>
-        </div>
+        <DemoCard Id="select-numeric" Title="Display a name, store an ID"
+                  Description="Show the same readable options while binding an integer resource identifier.">
+            <ChildContent>
+                <EditForm Model="_numericSelection">
+                    <DataAnnotationsValidator />
+                    <div class="demo-stack">
+                        <DnetFormField Label="API resource" IsRequired="true">
+                            <ChildContent>
+                                <DnetSelect TValue="int" @bind-Value="_numericSelection.ApiResourceId"
+                                            Items="_apiResources" TItem="ApiResourceDto"
+                                            DisplayValueConverter="@(value => value.Name)"
+                                            ValueConverter="@(value => value.ApiResourceId)"
+                                            PlaceHolder="Select a resource" />
+                            </ChildContent>
+                            <ErrorContent>
+                                <ValidationMessage For="@(() => _numericSelection.ApiResourceId)" />
+                            </ErrorContent>
+                        </DnetFormField>
+                        <div class="demo-preview">
+                            <span class="demo-info">Selected resource</span>
+                            <p class="demo-value">@NumericResourceName</p>
+                            <span class="demo-muted">The form value is the numeric identifier, rather than the display name.</span>
+                        </div>
+                    </div>
+                </EditForm>
+            </ChildContent>
+            <Footer>
+                <span class="demo-value" role="status">Resource ID: @(_numericSelection.ApiResourceId == 0 ? "Not selected" : _numericSelection.ApiResourceId.ToString())</span>
+            </Footer>
+        </DemoCard>
+
+        <DemoCard Title="A focused choice" Description="Use a select when people need one value from a list and space is limited.">
+            <ul class="demo-bullets">
+                <li>Open a field to browse its available options.</li>
+                <li>Use the arrow keys to move, Enter to select and Escape to close.</li>
+                <li>Dependent options are refreshed when the parent selection changes.</li>
+            </ul>
+        </DemoCard>
     </div>
-</div>
-
+</DemoPage>
 
 @code {
+    private readonly ResourceSelection _right = new();
+    private readonly NumericResourceSelection _numericSelection = new();
+    private DnetSelect<ApiResourceObjectDto, string>? _apiResourceObjectReference;
+    private List<ApiResourceObjectDto> _apiResourceObjects = [];
 
-    private List<Person> _items = new();
+    private readonly List<ApiResourceDto> _apiResources =
+    [
+        new() { ApiResourceId = 1, Name = "APi_1" },
+        new() { ApiResourceId = 2, Name = "APi_2" }
+    ];
 
-    private List<Person> _selectedItems = new();
+    private readonly List<ApiResourceObjectDto> _allResourceObjects =
+    [
+        new() { ApiResourceObjectId = 1, Name = "ApiResourceObject1_1", ApiResourceId = 1 },
+        new() { ApiResourceObjectId = 2, Name = "ApiResourceObject1_2", ApiResourceId = 1 },
+        new() { ApiResourceObjectId = 3, Name = "ApiResourceObject2_1", ApiResourceId = 2 },
+        new() { ApiResourceObjectId = 4, Name = "ApiResourceObject2_2", ApiResourceId = 2 }
+    ];
 
-    private Person _formData = new();
+    private string NumericResourceName => _apiResources
+        .FirstOrDefault(resource => resource.ApiResourceId == _numericSelection.ApiResourceId)?.Name ?? "No resource selected";
 
-    private Person _formData1 = new();
+    private static string SelectionLabel(string? value) => string.IsNullOrWhiteSpace(value) ? "Not selected" : value;
 
-    private Person person = new();
+    private void ApiResourceChangeHandler(string? value) => _right.ApiResourceName = value ?? string.Empty;
 
-    private EditContext? _editContext;
-
-    private EditContext? _editContext1;
-
-    private EditContext? _editContext2;
-
-    private EditContext? _editContext3;
-
-    private bool _formInvalid = true;
-
-    private ValidationMessageStore? messageStore;
-
-    private RightDto _right { get; set; } = new();
-
-    private RightDto _right1 { get; set; } = new();
-
-    private RightDto _right2 { get; set; } = new();
-
-    private List<ApiResourceDto> _apiResources = new();
-
-    private List<ApiResourceObjectDto> _apiResourceObjects { get; set; } = new();
-
-    private List<ApiResourceObjectDto> _apiResourceObjectsFromDb { get; set; } = new();
-
-    private string multiValue { get; set; }
-
-    private DnetSelect<ApiResourceObjectDto, string> _apiResourceObjectReference;
-
-
-    protected override async Task OnInitializedAsync()
-    {
-        _editContext = new EditContext(_right);
-        _editContext1 = new EditContext(_right1);
-        _editContext2 = new EditContext(_right2);
-        _editContext3 = new EditContext(person);
-
-        ConfigureEditContext(_editContext);
-        ConfigureEditContext(_editContext1);
-        ConfigureEditContext(_editContext2);
-        ConfigureEditContext(_editContext3);
-
-        _items = await GetPersons();
-
-        _selectedItems = _items.Take(3).ToList();
-
-        var selectedPerson = _items.FirstOrDefault();
-
-        _formData.Email = selectedPerson.Email;
-
-        _apiResources = new List<ApiResourceDto>()
-        {
-            new()
-            {
-                ApiResourceId = 1,
-                Name = "APi_1"
-            },
-            new()
-            {
-                ApiResourceId = 2,
-                Name = "APi_2"
-            }
-        };
-
-        _apiResourceObjectsFromDb = new List<ApiResourceObjectDto>()
-        {
-            new()
-            {
-                ApiResourceObjectId = 1,
-                Name = "ApiResourceObject1_1",
-                ApiResourceId = 1
-            },
-            new()
-            {
-                ApiResourceObjectId = 2,
-                Name = "ApiResourceObject1_1",
-                ApiResourceId = 1
-            },
-            new()
-            {
-                ApiResourceObjectId = 3,
-                Name = "ApiResourceObject2_1",
-                ApiResourceId = 2
-            },
-            new()
-            {
-                ApiResourceObjectId = 4,
-                Name = "ApiResourceObject2_1",
-                ApiResourceId = 2
-            }
-        };
-
-    }
-
-    private void ConfigureEditContext(EditContext editContext)
-    {
-        editContext.OnValidationRequested += (_, _) =>
-        {
-            messageStore?.Clear();
-            StateHasChanged();
-        };
-    }
-
-    private async Task<List<Person>> GetPersons()
-    {
-        var dataPersons = await ApplicationServiceService.GetPersons();
-
-        return dataPersons;
-    }
-
-    private void ItemSelected(Person item)
-    {
-
-    }
-
-    private void SelectionChanged(List<Person> items)
-    {
-
-        multiValue = String.Join("-", items.Select(p => p.Name).ToList());
-
-    }
-
-    private void MyValueChangeHandler(string item)
-    {
-
-        _formData.Name = item;
-
-    }
+    private void ApiResourceObjectChangeHandler(string? value) => _right.ResourceType = value ?? string.Empty;
 
     private void ApiResourceItemSelected(ApiResourceDto item)
     {
-
         _right.ApiResourceName = item.Name;
-
-        _apiResourceObjects = new();
-
-        _apiResourceObjects = _apiResourceObjectsFromDb.Where(p => p.ApiResourceId == item.ApiResourceId).Select(p => p).ToList();
-
-        _apiResourceObjectReference.RefreshData(_apiResourceObjects);
+        _right.ResourceType = string.Empty;
+        _right.ApiResourceObjectId = null;
+        _apiResourceObjects = _allResourceObjects.Where(resource => resource.ApiResourceId == item.ApiResourceId).ToList();
+        _apiResourceObjectReference?.RefreshData(_apiResourceObjects);
     }
 
-    private void ApiResource1ItemSelected(ApiResourceDto item)
-    {
-        _right1.ApiResourceId = item.ApiResourceId;
-    }
-
-    private void ApiResource2ItemSelected(ApiResourceDto item)
-    {
-        _right1.ApiResourceName = item.Name;
-    }
-
-    private void ApiResourceChangeHandler(string item)
-    {
-        _right.ApiResourceName = item;
-    }
-
-    private void ApiResourceGenChangeHandler(int item)
-    {
-        _right.ApiResourceId = item;
-    }
-
-    private void ApiResourceObjectItemSelected(ApiResourceObjectDto item)
-    {
+    private void ApiResourceObjectItemSelected(ApiResourceObjectDto item) =>
         _right.ApiResourceObjectId = item.ApiResourceObjectId;
-    }
 
-    private void ApiResourceObjectChangeHandler(string item)
-    {
-        _right.ResourceType = item;
-    }
-
-    public class ApiResourceDto
+    public sealed class ApiResourceDto
     {
         public int ApiResourceId { get; set; }
-
-        [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 
-    public class ApiResourceObjectDto
+    public sealed class ApiResourceObjectDto
     {
         public int ApiResourceObjectId { get; set; }
-
-        [Required]
-        public string Name { get; set; }
-
+        public string Name { get; set; } = string.Empty;
         public int ApiResourceId { get; set; }
     }
 
-    public class RightDto
+    public sealed class ResourceSelection
     {
-        public int ApplicationRightId { get; set; }
-
-        public int ApiResourceId { get; set; }
+        [Required]
+        public string ApiResourceName { get; set; } = string.Empty;
 
         [Required]
-        public string ApiResourceName { get; set; }
-
-        [Required]
-        public string Name { get; set; }
-
-        [Required]
-        public string ResourceType { get; set; }
+        public string ResourceType { get; set; } = string.Empty;
 
         public int? ApiResourceObjectId { get; set; }
+    }
+
+    public sealed class NumericResourceSelection
+    {
+        [Range(1, int.MaxValue, ErrorMessage = "Choose an API resource.")]
+        public int ApiResourceId { get; set; }
     }
 }

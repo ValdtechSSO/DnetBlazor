@@ -1,220 +1,291 @@
-﻿@page "/FormValidation"
-
-@using System.Drawing
-@using Dnet.App.Shared.Infrastructure.Entities
-@using Dnet.App.Shared.Infrastructure.Models
-@using Dnet.App.Shared.Infrastructure.Services
-@using Dnet.Blazor.Components.Button
-@using Dnet.Blazor.Components.FloatingDoubleList.Infrastructure.Models
-@using Dnet.Blazor.Components.Form
-@using Dnet.Blazor.Components.List
-@using Dnet.Blazor.Components.Select
-@using Dnet.Blazor.Components.Autocomplete
-@using Dnet.Blazor.Components.DatePicker
-@using Dnet.Blazor.Components.FloatingDoubleList
-@using Dnet.Blazor.Infrastructure.Models.SearchModels
-@using Dnet.Blazor.Infrastructure.Services
-@using Microsoft.AspNetCore.Components;
-@using Microsoft.AspNetCore.Components.Web;
+@page "/FormValidation"
 @using System.ComponentModel.DataAnnotations
+@using Dnet.Blazor.Components.Button
+@using Dnet.Blazor.Components.Form
+@implements IDisposable
 
-@inject IApplicationServiceService ApplicationServiceService
+<div id="validation-page" class="validation-page" aria-labelledby="validation-title">
+    <header class="validation-header">
+        <div>
+            <p class="validation-eyebrow">Forms / Validation</p>
+            <h1 id="validation-title" class="validation-title">Employee profile</h1>
+            <p class="validation-description">Keep employee details and addresses in one place. Fields marked with * are required.</p>
+        </div>
+        <span class="validation-status-pill @(_saved ? "is-saved" : _formInvalid ? "is-invalid" : "is-valid")">
+            @(_saved ? "Saved" : _formInvalid ? "Needs attention" : "Ready to save")
+        </span>
+    </header>
 
-
-<div class="container-fluid" style="padding-top: 10px;">
-    <div class="d-flex dnet-page-content-left-margin dnet-m-t-20">
-        <span class="dnet-m-r-10 dnet-app-comp-name">Forms</span>
-    </div>
-    <EditForm EditContext="@_editContext" style="display: flex;flex-direction:column; width:300px" class="dnet-page-content-left-margin dnet-m-t-20">
-        <CustomValidation @ref="customValidation" />
-        <MyValidationSummary />
-
-        <PropertyDisplay Property="Display Component">
-            Display Component
-        </PropertyDisplay>
-
-        <DnetFormField Label="Name" UseClearButton="true" IsRequired="true">
-            <ChildContent>
-                <DnetInputText @bind-Value="_worker.Name" PlaceHolder="" type="text">
-                </DnetInputText>
-            </ChildContent>
-            <ErrorContent>
-                <ValidationMessage For="@(() => _worker.Name)" />
-            </ErrorContent>
-        </DnetFormField>
-
-        <DnetFormField Label="LastName" UseClearButton="true" IsRequired="true">
-            <ChildContent>
-                <DnetInputText @bind-Value="_worker.LastName" PlaceHolder="" type="text">
-                </DnetInputText>
-            </ChildContent>
-            <ErrorContent>
-                <ValidationMessage For="@(() => _worker.LastName)" />
-            </ErrorContent>
-        </DnetFormField>
-
-        <DnetFormField Label="JobTitle" UseClearButton="true" IsRequired="true">
-            <ChildContent>
-                <DnetInputText @bind-Value="_worker.JobTitle" PlaceHolder="" type="text">
-                </DnetInputText>
-            </ChildContent>
-            <ErrorContent>
-                <ValidationMessage For="@(() => _worker.JobTitle)" />
-            </ErrorContent>
-        </DnetFormField>
-
-        @foreach (var address in _worker.Addresses)
-        {
-            <div>
-                <h5>Address @_worker.Addresses.IndexOf(address)</h5>
-                <div>
-                    <DnetFormField Label="City" UseClearButton="true">
-                        <ChildContent>
-                            <DnetInputText @bind-Value="address.City" PlaceHolder="" type="text">
-                            </DnetInputText>
-                        </ChildContent>
-                    </DnetFormField>
+    <EditForm @key="_editContext" id="validation-form" EditContext="_editContext" OnSubmit="SaveProfile" class="validation-layout" novalidate="true">
+        <div class="validation-main">
+            <section id="validation-personal" class="validation-card" aria-labelledby="validation-personal-title">
+                <div class="validation-card-header">
+                    <span class="validation-heading-icon" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.5" /><path d="M5 21v-2a7 7 0 0 1 14 0v2" /></svg>
+                    </span>
+                    <div><h2 id="validation-personal-title">Personal details</h2><p>The essentials for an employee profile.</p></div>
                 </div>
-                <div>
-                    <DnetFormField Label="Town" UseClearButton="true">
-                        <ChildContent>
-                            <DnetInputText @bind-Value="address.Town" PlaceHolder="" type="text">
-                            </DnetInputText>
-                        </ChildContent>
-                    </DnetFormField>
+                <div class="validation-card-body validation-fields">
+                    <div class="validation-field">
+                        <DnetFormField Label="First name" UseClearButton="true" IsRequired="true">
+                            <ChildContent><DnetInputText @ref='_requiredInputs["validation-first-name"]' id="validation-first-name" @bind-Value="_worker.Name" aria-label="First name" aria-required="true" aria-invalid="@InvalidAttribute(_worker, nameof(Worker.Name))" aria-describedby="validation-first-name-help" autocomplete="given-name" /></ChildContent>
+                        </DnetFormField>
+                        <div id="validation-first-name-help" class="validation-field-note"><ValidationMessage For="@(() => _worker.Name)" /></div>
+                    </div>
+                    <div class="validation-field">
+                        <DnetFormField Label="Last name" UseClearButton="true" IsRequired="true">
+                            <ChildContent><DnetInputText @ref='_requiredInputs["validation-last-name"]' id="validation-last-name" @bind-Value="_worker.LastName" aria-label="Last name" aria-required="true" aria-invalid="@InvalidAttribute(_worker, nameof(Worker.LastName))" aria-describedby="validation-last-name-help" autocomplete="family-name" /></ChildContent>
+                        </DnetFormField>
+                        <div id="validation-last-name-help" class="validation-field-note"><ValidationMessage For="@(() => _worker.LastName)" /></div>
+                    </div>
+                    <div class="validation-field validation-field-wide">
+                        <DnetFormField Label="Job title" UseClearButton="true" IsRequired="true">
+                            <ChildContent><DnetInputText @ref='_requiredInputs["validation-job-title"]' id="validation-job-title" @bind-Value="_worker.JobTitle" aria-label="Job title" aria-required="true" aria-invalid="@InvalidAttribute(_worker, nameof(Worker.JobTitle))" aria-describedby="validation-job-title-help" autocomplete="organization-title" /></ChildContent>
+                        </DnetFormField>
+                        <div id="validation-job-title-help" class="validation-field-note">
+                            <ValidationMessage For="@(() => _worker.JobTitle)" />
+                            @if (!HasError(_worker, nameof(Worker.JobTitle))) { <span>Use the employee's current role.</span> }
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <DnetFormField Label="PostalCode" UseClearButton="true" IsRequired="true">
-                        <ChildContent>
-                            <DnetInputText @bind-Value="address.PostalCode" PlaceHolder="" type="text">
-                            </DnetInputText>
-                        </ChildContent>
-                        <ErrorContent>
-                            <ValidationMessage For="@(() => address.PostalCode)" />
-                        </ErrorContent>
-                    </DnetFormField>
+            </section>
+
+            <section id="validation-addresses" class="validation-card" aria-labelledby="validation-addresses-title">
+                <div class="validation-card-header">
+                    <span class="validation-heading-icon" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z" /><circle cx="12" cy="10" r="2.5" /></svg>
+                    </span>
+                    <div><h2 id="validation-addresses-title">Addresses</h2><p>Add a postal code for each address. City and town are optional.</p></div>
+                </div>
+                <div class="validation-card-body validation-address-grid">
+                    @for (var index = 0; index < _worker.Addresses.Count; index++)
+                    {
+                        var address = _worker.Addresses[index];
+                        var addressNumber = index + 1;
+                        var prefix = $"validation-address-{index}";
+                        <article @key="address" class="validation-address-card" aria-labelledby="@(prefix + "-title")">
+                            <div class="validation-address-header">
+                                <h3 id="@(prefix + "-title")">Address @addressNumber</h3>
+                                <span class="validation-address-badge">@(index == 0 ? "Primary" : "Additional")</span>
+                            </div>
+                            <p class="validation-address-description">@(index == 0 ? "The main contact location." : "An additional contact location.")</p>
+                            <div class="validation-fields">
+                                <div class="validation-field">
+                                    <DnetFormField Label="City" UseClearButton="true">
+                                        <ChildContent><DnetInputText id="@(prefix + "-city")" @bind-Value="address.City" aria-label="@($"City, address {addressNumber}")" aria-describedby="@(prefix + "-city-help")" autocomplete="address-level2" /></ChildContent>
+                                    </DnetFormField>
+                                    <div id="@(prefix + "-city-help")" class="validation-field-note"><span>Optional</span></div>
+                                </div>
+                                <div class="validation-field">
+                                    <DnetFormField Label="Town" UseClearButton="true">
+                                        <ChildContent><DnetInputText id="@(prefix + "-town")" @bind-Value="address.Town" aria-label="@($"Town, address {addressNumber}")" aria-describedby="@(prefix + "-town-help")" autocomplete="address-level3" /></ChildContent>
+                                    </DnetFormField>
+                                    <div id="@(prefix + "-town-help")" class="validation-field-note"><span>Optional</span></div>
+                                </div>
+                                <div class="validation-field validation-field-wide">
+                                    <DnetFormField Label="Postal code" UseClearButton="true" IsRequired="true">
+                                        <ChildContent><DnetInputText @ref='_requiredInputs[prefix + "-postal"]' id="@(prefix + "-postal")" @bind-Value="address.PostalCode" aria-label="@($"Postal code, address {addressNumber}")" aria-required="true" aria-invalid="@InvalidAttribute(address, nameof(Address.PostalCode))" aria-describedby="@(prefix + "-postal-help")" autocomplete="postal-code" /></ChildContent>
+                                    </DnetFormField>
+                                    <div id="@(prefix + "-postal-help")" class="validation-field-note">
+                                        <ValidationMessage For="@(() => address.PostalCode)" />
+                                        @if (!HasError(address, nameof(Address.PostalCode))) { <span>Include letters or spaces if needed.</span> }
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    }
+                </div>
+            </section>
+
+            <div id="validation-actions" class="validation-actions">
+                <div class="validation-action-copy">
+                    <strong>@(_formInvalid ? "A few details are still missing" : "Everything is ready")</strong>
+                    <span>@(_formInvalid ? "Complete the required fields to save." : "Review the profile, then save your changes.")</span>
+                </div>
+                <div class="validation-action-buttons">
+                    <DnetButton id="validation-reset" class="validation-reset" OnClick="ResetForm">Reset</DnetButton>
+                    <DnetButton id="validation-save" class="validation-save" ButtonType="submit" disabled="@_formInvalid">
+                        <IconContent><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg></IconContent>
+                        <ChildContent>Save profile</ChildContent>
+                    </DnetButton>
                 </div>
             </div>
-        }
+            <p id="validation-status" class="validation-feedback" role="status" aria-live="polite">@_saveStatus</p>
+        </div>
 
+        <aside class="validation-sidebar" aria-label="Profile validation">
+            <section id="validation-overview" class="validation-card validation-overview" aria-labelledby="validation-overview-title">
+                <h2 id="validation-overview-title">Validation overview</h2>
+                <p class="validation-overview-intro">A quick check before saving.</p>
+                <div class="validation-completion"><strong>@CompletedRequiredFields <span>/ @RequiredFieldCount</span></strong><span>required fields complete</span></div>
+                <progress class="validation-progress" value="@CompletedRequiredFields" max="@RequiredFieldCount" aria-label="Required fields completed"></progress>
+                <ul class="validation-checklist">
+                    <li class="@(PersonalDetailsComplete ? "is-complete" : null)"><span aria-hidden="true">@(PersonalDetailsComplete ? "✓" : "○")</span>Personal details</li>
+                    @for (var index = 0; index < _worker.Addresses.Count; index++)
+                    {
+                        var complete = !string.IsNullOrWhiteSpace(_worker.Addresses[index].PostalCode);
+                        <li class="@(complete ? "is-complete" : null)"><span aria-hidden="true">@(complete ? "✓" : "○")</span>Address @(index + 1)</li>
+                    }
+                </ul>
+                <div id="validation-summary" class="validation-summary">
+                    @if (_formInvalid)
+                    {
+                        <h3>@_issues.Count @(_issues.Count == 1 ? "field needs" : "fields need") attention</h3>
+                        <ul>
+                            @foreach (var issue in _issues)
+                            {
+                                <li><a href="@($"FormValidation#{issue.InputId}")" @onclick="() => FocusIssue(issue)">@issue.Label</a><span>@issue.Message</span></li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="validation-ready">All required fields are complete.</p>
+                    }
+                </div>
+            </section>
+            <section class="validation-note-card" aria-labelledby="validation-note-title">
+                <h3 id="validation-note-title">What is checked?</h3>
+                <p>First name, last name, job title and each postal code are required. Feedback updates as you edit.</p>
+                <p>This is a demo form. Saving confirms the details locally.</p>
+            </section>
+        </aside>
     </EditForm>
-    <DnetButton OnClick="CloseOverlay" InitialFocus="true" class="dnet-m-r-10" disabled="@_formInvalid">Save</DnetButton>
 </div>
 
 @code {
+    private Worker _worker = new();
+    private EditContext _editContext = default!;
+    private ValidationMessageStore _messages = default!;
+    private readonly List<ValidationIssue> _issues = [];
+    private readonly Dictionary<string, DnetInputText> _requiredInputs = [];
+    private bool _saved;
+    private string _saveStatus = string.Empty;
 
-    private Worker _worker { get; set; } = new Worker()
-        {
-            Name = "John",
-            LastName = "Doe",
-            JobTitle = "Software developer",
-            Addresses = new List<Address>
-            {
-                new Address(),
-                new Address()
-            }
-        };
+    private bool _formInvalid => _issues.Count > 0;
+    private bool PersonalDetailsComplete => !string.IsNullOrWhiteSpace(_worker.Name)
+        && !string.IsNullOrWhiteSpace(_worker.LastName) && !string.IsNullOrWhiteSpace(_worker.JobTitle);
+    private int RequiredFieldCount => 3 + _worker.Addresses.Count;
+    private int CompletedRequiredFields => new[] { _worker.Name, _worker.LastName, _worker.JobTitle }
+        .Count(value => !string.IsNullOrWhiteSpace(value))
+        + _worker.Addresses.Count(address => !string.IsNullOrWhiteSpace(address.PostalCode));
 
-    private EditContext? _editContext;
+    protected override void OnInitialized() => ResetForm();
 
-    private ValidationMessageStore? messageStore;
-
-    private bool _formInvalid => _editContext.GetValidationMessages().Any();
-
-    private CustomValidation customValidation;
-
-
-    protected override void OnInitialized()
+    private void ResetForm()
     {
+        DetachContext();
+        _requiredInputs.Clear();
+        _worker = new Worker
+        {
+            Name = "John", LastName = "Doe", JobTitle = "Software developer",
+            Addresses = [new Address(), new Address()]
+        };
         _editContext = new EditContext(_worker);
-
-        messageStore = new(_editContext);
-
-        _editContext.OnFieldChanged += (data, eventArgs) =>
-        {
-            messageStore?.Clear();
-
-            ValidateAllAddresses();
-
-            StateHasChanged();
-        };
-
-        _editContext.OnValidationRequested += (data, eventArgs) =>
-        {
-            messageStore?.Clear();
-
-            StateHasChanged();
-        };
+        _messages = new ValidationMessageStore(_editContext);
+        _editContext.OnFieldChanged += FieldChanged;
+        _editContext.OnValidationRequested += ValidationRequested;
+        _saved = false;
+        _saveStatus = string.Empty;
+        ValidateProfile();
     }
 
-    protected override void OnAfterRender(bool firstRender)
+    private void FieldChanged(object sender, FieldChangedEventArgs args)
     {
-        if (firstRender)
-        {
-            //Force initial validation
-            _editContext.Validate();
-
-            ValidateAllAddresses();
-
-            StateHasChanged();
-        }
+        if (!ReferenceEquals(sender, _editContext)) return;
+        _saved = false;
+        _saveStatus = string.Empty;
+        ValidateProfile();
+        StateHasChanged();
     }
 
-    private void CloseOverlay()
+    private void ValidationRequested(object sender, ValidationRequestedEventArgs args)
     {
-        var isValid = _editContext.Validate();
+        if (ReferenceEquals(sender, _editContext)) ValidateProfile();
     }
 
-    private void ValidateAllAddresses()
+    private void ValidateProfile()
     {
-        customValidation.ClearErrors();
+        _messages.Clear();
+        _issues.Clear();
+        ValidateObject(_worker);
+        foreach (var address in _worker.Addresses) ValidateObject(address);
+        _editContext.NotifyValidationStateChanged();
+    }
 
-        var errors = new Dictionary<string, List<string>>();
-
-        foreach (var address in _worker.Addresses)
+    private void ValidateObject(object model)
+    {
+        var results = new List<ValidationResult>();
+        Validator.TryValidateObject(model, new ValidationContext(model), results, validateAllProperties: true);
+        foreach (var result in results)
         {
-            var validationContext = new ValidationContext(address);
-            var results = new List<ValidationResult>();
-            Validator.TryValidateObject(address, validationContext, results, true);
-
-            foreach (var validationResult in results)
+            foreach (var member in result.MemberNames.DefaultIfEmpty(string.Empty))
             {
-                foreach (var memberName in validationResult.MemberNames)
-                {
-                    var field = $"Addresses[{_worker.Addresses.IndexOf(address)}].{memberName}";
-                    if (!errors.ContainsKey(field))
-                    {
-                        errors[field] = new List<string>();
-                    }
-                    errors[field].Add(validationResult.ErrorMessage);
-                }
+                var message = result.ErrorMessage ?? "Check this field.";
+                _messages.Add(new FieldIdentifier(model, member), message);
+                var (inputId, label) = FieldDetails(model, member);
+                _issues.Add(new ValidationIssue(inputId, label, message));
             }
         }
-
-        customValidation.DisplayErrors(errors);
     }
 
-    public class Address
+    private (string InputId, string Label) FieldDetails(object model, string member)
     {
-        public string City { get; set; }
-
-        public string Town { get; set; }
-
-        [Required(ErrorMessage = "PostalCode is required")]
-        public string PostalCode { get; set; }
+        if (ReferenceEquals(model, _worker))
+            return member switch
+            {
+                nameof(Worker.Name) => ("validation-first-name", "First name"),
+                nameof(Worker.LastName) => ("validation-last-name", "Last name"),
+                nameof(Worker.JobTitle) => ("validation-job-title", "Job title"),
+                _ => ("validation-personal", "Personal details")
+            };
+        var index = _worker.Addresses.IndexOf((Address)model);
+        return ($"validation-address-{index}-postal", $"Postal code · Address {index + 1}");
     }
 
-    public class Worker
+    private bool HasError(object model, string member) => _editContext.GetValidationMessages(new FieldIdentifier(model, member)).Any();
+    private string InvalidAttribute(object model, string member) => HasError(model, member) ? "true" : "false";
+
+    private async Task FocusIssue(ValidationIssue issue)
     {
-        [Required(ErrorMessage = "Name is required")]
-        public string Name { get; set; }
+        if (_requiredInputs.TryGetValue(issue.InputId, out var input) && input.__inputReference is { } element)
+            await element.FocusAsync();
+    }
 
-        [Required(ErrorMessage = "LastName is required")]
-        public string LastName { get; set; }
+    private async Task SaveProfile(EditContext context)
+    {
+        if (!await context.ValidateAsync()) return;
+        _saved = true;
+        _saveStatus = "Profile saved in this demo.";
+    }
 
-        [Required(ErrorMessage = "JobTitle is required")]
-        public string JobTitle { get; set; }
+    private void DetachContext()
+    {
+        if (_editContext is null) return;
+        _editContext.OnFieldChanged -= FieldChanged;
+        _editContext.OnValidationRequested -= ValidationRequested;
+    }
 
-        public List<Address> Addresses { get; set; } = new List<Address>();
+    public void Dispose() => DetachContext();
+
+    private sealed record ValidationIssue(string InputId, string Label, string Message);
+
+    public sealed class Address
+    {
+        public string City { get; set; } = string.Empty;
+        public string Town { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Postal code is required.")]
+        public string PostalCode { get; set; } = string.Empty;
+    }
+
+    public sealed class Worker
+    {
+        [Required(ErrorMessage = "First name is required.")]
+        public string Name { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Last name is required.")]
+        public string LastName { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Job title is required.")]
+        public string JobTitle { get; set; } = string.Empty;
+        public List<Address> Addresses { get; set; } = [];
     }
 }

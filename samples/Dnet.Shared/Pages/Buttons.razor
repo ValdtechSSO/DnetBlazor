@@ -1,0 +1,120 @@
+@page "/Buttons"
+@using Dnet.Blazor.Components.Button
+
+<main id="button-showcase" class="button-showcase">
+    <header class="button-showcase-header">
+        <div>
+            <p class="button-eyebrow">Components / Actions</p>
+            <h1>Buttons</h1>
+            <p class="button-introduction">Compare spacing, icons and corner shapes across three button sizes.</p>
+        </div>
+        <span class="button-default-badge">Medium · Pill by default</span>
+    </header>
+
+    <section class="button-gallery" aria-labelledby="button-gallery-title">
+        <div class="button-gallery-header">
+            <div>
+                <h2 id="button-gallery-title">Size and shape</h2>
+                <p>Each example uses the same label, with and without an icon.</p>
+            </div>
+            <label class="button-disable-control" for="button-disable-toggle">
+                <input id="button-disable-toggle" type="checkbox" @bind="_disabled" />
+                Disable examples
+            </label>
+        </div>
+
+        @foreach (var size in Sizes)
+        {
+            var sizeKey = size.Value.ToString().ToLowerInvariant();
+            <section class="button-size-card" aria-labelledby="@($"button-size-{sizeKey}")">
+                <div class="button-size-description">
+                    <span class="button-size-height">@size.Height <span>px</span></span>
+                    <h3 id="@($"button-size-{sizeKey}")">@size.Label</h3>
+                    <p>@size.Padding px padding<br />@size.Icon px icon · @size.Gap px gap</p>
+                </div>
+                <div class="button-shape-grid">
+                    @foreach (var shape in Shapes)
+                    {
+                        <div class="button-shape-group">
+                            <h4>@shape.Label</h4>
+                            <div class="button-shape-examples">
+                                <DnetButton id="@($"button-{sizeKey}-{shape.Key}-text")" Size="size.Value"
+                                            class="@($"button-example button-shape-{shape.Key}")" disabled="@_disabled">
+                                    Common button
+                                </DnetButton>
+                                <DnetButton id="@($"button-{sizeKey}-{shape.Key}")" Size="size.Value"
+                                            class="@($"button-example button-shape-{shape.Key}")" disabled="@_disabled">
+                                    <IconContent>
+                                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+                                            <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                                        </svg>
+                                    </IconContent>
+                                    <ChildContent>Common button</ChildContent>
+                                </DnetButton>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </section>
+        }
+    </section>
+
+    <div class="button-details-grid">
+        <section class="button-interaction-card" aria-labelledby="button-interaction-title">
+            <p class="button-card-eyebrow">Try it</p>
+            <h2 id="button-interaction-title">Ready for an action</h2>
+            <p>The default button uses the medium size. Activate it with a click, Enter or Space.</p>
+            <div class="button-interaction-actions">
+                <DnetButton id="button-click-demo" class="button-example" OnClick="IncrementCount">Try a button</DnetButton>
+                <DnetButton id="button-disabled-demo" class="button-example" OnClick="IncrementCount" disabled="true">Disabled</DnetButton>
+            </div>
+            <div class="button-action-count">
+                <span>Actions completed</span>
+                <output id="button-click-count" role="status" aria-live="polite">@_clickCount</output>
+            </div>
+        </section>
+
+        <section class="button-code-card" aria-labelledby="button-code-title">
+            <div class="button-code-header">
+                <div>
+                    <p class="button-card-eyebrow">Usage</p>
+                    <h2 id="button-code-title">Add a leading icon</h2>
+                </div>
+                <span class="button-code-language">Razor</span>
+            </div>
+            <pre><code>@UsageExample</code></pre>
+            <p>The icon follows the selected size. Corner shapes are controlled through <code>--dnet-btn-radius</code>.</p>
+        </section>
+    </div>
+</main>
+
+@code {
+    private bool _disabled;
+    private int _clickCount;
+
+    private static readonly (DnetButtonSize Value, string Label, int Height, int Padding, int Icon, int Gap)[] Sizes =
+    [
+        (DnetButtonSize.Small, "Small", 32, 12, 20, 4),
+        (DnetButtonSize.Medium, "Medium", 40, 16, 20, 8),
+        (DnetButtonSize.Large, "Large", 56, 24, 24, 8)
+    ];
+
+    private static readonly (string Key, string Label)[] Shapes =
+    [
+        ("round", "Pill"), ("soft", "Soft"), ("square", "Square")
+    ];
+
+    private const string UsageExample = """
+        <DnetButton Size="DnetButtonSize.Large">
+            <IconContent>
+                <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M12 5v14M5 12h14"
+                          stroke="currentColor" />
+                </svg>
+            </IconContent>
+            <ChildContent>Common button</ChildContent>
+        </DnetButton>
+        """;
+
+    private void IncrementCount() => _clickCount++;
+}

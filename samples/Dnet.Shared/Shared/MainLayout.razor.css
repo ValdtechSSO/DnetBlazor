@@ -1,0 +1,21 @@
+/* The sample header keeps its theme control accessible on narrow screens. */
+@media (max-width: 550px) {
+    .dnet-desktop-header-content {
+        min-width: 0;
+    }
+
+    .dnet-desktop-header-left,
+    .dnet-dashboard-user-data {
+        display: none;
+    }
+
+    .dnet-desktop-header-right {
+        flex: 1 1 auto;
+        min-width: 0;
+        padding-right: 12px;
+    }
+
+    .dnet-dashboard-right-container {
+        min-width: 0;
+    }
+}

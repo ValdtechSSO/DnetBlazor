@@ -1,76 +1,71 @@
-﻿@page "/DynamicStepper"
+@page "/DynamicStepper"
 @using Dnet.Blazor.Components.DynamicStepper
-@using Dnet.Blazor.Components.Stepper
 @using Dnet.Blazor.Components.Checkbox
 
-<div class="container-fluid" style="padding-top: 10px;">
-    <div class="d-flex dnet-page-content-left-margin dnet-m-t-20">
-        <span class="dnet-m-r-10 dnet-app-comp-name">Stepper</span>
-    </div>
-    <div class="dnet-page-content-left-margin dnet-m-t-30">
-        <div class="dnet-app-dstepper-container">
-            <DnetDynamicStepper dnet-align-tabs="start" OnSelectionChange="StepClicked">
-                <DnetDynamicStep Label="Stepper 1">
-                    <span>Stepper Content 1</span>
-                </DnetDynamicStep>
-                <DnetDynamicStep Label="Stepper 2">
-                    <span>Stepper Content 2</span>
-                </DnetDynamicStep>
-                <DnetDynamicStep Label="Stepper 3">
-                    <span>Stepper Content 3</span>
-                </DnetDynamicStep>
-                <DnetDynamicStep Label="Stepper 4">
-                    <span>Stepper Content 4</span>
-                </DnetDynamicStep>
-                <DnetDynamicStep Label="Stepper 5">
-                    <span>Stepper Content 5</span>
-                </DnetDynamicStep>
-                <DnetDynamicStep Label="Stepper 6">
-                    <span>Stepper Content 6</span>
-                </DnetDynamicStep>
-                <DnetDynamicStep Label="Stepper 7">
-                    <span>Stepper Content 7</span>
-                </DnetDynamicStep>
-                <DnetDynamicStep Label="Stepper 8">
-                    <span>Stepper Content 8</span>
-                </DnetDynamicStep>
-                <DnetDynamicStep Label="Stepper 9">
-                    <span>Stepper Content 9</span>
-                </DnetDynamicStep>
-                <DnetDynamicStep Label="Stepper 10">
-                    <span>Stepper Content 10</span>
-                </DnetDynamicStep>
-            </DnetDynamicStepper>
+<DemoPage Id="demo-dynamic-stepper" Title="Dynamic stepper" Category="Navigation"
+          Description="Keep a longer workflow compact. The visible steps move with you as you work toward the final stage." Badge="10 stages">
+    <div class="demo-stack">
+        <DemoCard Id="dynamic-stepper-workflow" Title="From brief to release" Eyebrow="Adaptive step window"
+                  Description="Use Next and Previous, or choose a visible stage. More steps appear as you move through the workflow.">
+            <ChildContent>
+                <div class="dnet-app-dstepper-container dynamic-stepper-stage">
+                    <DnetDynamicStepper ShowButtons="_showButtons" Editable="@(!_locked)" OnSelectionChange="StepChanged">
+                        @foreach (var stage in _stages)
+                        {
+                            <DnetDynamicStep Label="@stage.Title">
+                                <div class="dynamic-stepper-content">
+                                    <span class="dynamic-stepper-kicker">Release workflow · Stage @(stage.Index + 1)</span>
+                                    <h3>@stage.Heading</h3>
+                                    <p class="demo-muted">@stage.Description</p>
+                                    <div class="dynamic-stepper-owner"><span class="demo-info">Responsible team</span><strong>@stage.Owner</strong></div>
+                                </div>
+                            </DnetDynamicStep>
+                        }
+                    </DnetDynamicStepper>
+                </div>
+            </ChildContent>
+            <Footer>
+                <div class="dynamic-stepper-progress">
+                    <span id="dynamic-stepper-value" role="status">Stage @_selectedStep of @_stages.Length · @_stages[_selectedStep - 1].Title</span>
+                    <progress value="@_selectedStep" max="@_stages.Length" aria-label="Current workflow position"></progress>
+                </div>
+            </Footer>
+        </DemoCard>
+        <div class="demo-grid">
+            <DemoCard Id="dynamic-stepper-options" Title="Navigation options" Description="Explore how the same workflow responds to different controls.">
+                <div class="demo-option-row"><DnetInputCheckbox id="dynamic-stepper-show-buttons" @bind-Value="_showButtons">Show Previous and Next</DnetInputCheckbox></div>
+                <div class="demo-option-row"><DnetInputCheckbox id="dynamic-stepper-lock" @bind-Value="_locked">Lock the current stage</DnetInputCheckbox></div>
+                <p id="dynamic-stepper-options-value" class="demo-info" role="status">@(_locked ? "Navigation is locked at the current stage." : "Navigation is available between stages.")</p>
+            </DemoCard>
+            <DemoCard Id="dynamic-stepper-guide" Title="A compact view of a longer journey" Description="A sliding step window keeps the current stage within reach.">
+                <ul class="demo-bullets">
+                    <li>The header shows as many stages as the available space allows.</li>
+                    <li>Moving near an edge reveals the next part of the workflow.</li>
+                    <li>Previous and Next become unavailable at the first and last stages.</li>
+                </ul>
+            </DemoCard>
         </div>
     </div>
-</div>
-
+</DemoPage>
 
 @code {
+    private int _selectedStep = 1;
+    private bool _showButtons = true;
+    private bool _locked;
+    private readonly ReleaseStage[] _stages =
+    [
+        new(0, "Brief", "Define the outcome", "Agree on the audience, the problem and the result this release should deliver.", "Product"),
+        new(1, "Research", "Understand the context", "Bring customer insight and the current experience into the project brief.", "Research"),
+        new(2, "Scope", "Choose the right work", "Decide what belongs in this release and what can follow later.", "Product and engineering"),
+        new(3, "Design", "Shape the experience", "Turn the agreed scope into a clear flow the team can evaluate.", "Design"),
+        new(4, "Review", "Get the team aligned", "Review the proposed experience and resolve open questions before delivery.", "Project team"),
+        new(5, "Build", "Bring the plan to life", "Implement the agreed experience with regular checkpoints along the way.", "Engineering"),
+        new(6, "Test", "Check the complete journey", "Verify the key paths and make sure the release is ready for customers.", "Quality assurance"),
+        new(7, "Approve", "Confirm release readiness", "Gather the final approval and confirm that the team is ready to publish.", "Release owner"),
+        new(8, "Release", "Share the finished work", "Publish the release and give the team the context they need to support it.", "Operations"),
+        new(9, "Learn", "Close the feedback loop", "Review the launch, capture what changed and plan the next improvement.", "Project team")
+    ];
 
-    private int _selectedId;
-
-    private int _previousSelectedId;
-
-    private bool _isCompletedStep1 { get; set; }
-
-    private bool _isCompletedStep2 { get; set; }
-
-    private bool _isCompletedStep3 { get; set; }
-
-    private bool _isCompletedStep4 { get; set; }
-
-
-    public void StepClicked(Tuple<int, int> tabClikedEventData)
-    {
-        (_selectedId, _previousSelectedId) = tabClikedEventData;
-    }
-
-    RenderFragment CreateTemplate()
-    {
-        return @<span>Stepper 2 RF</span>;
-    }
+    private void StepChanged(Tuple<int, int> change) => _selectedStep = change.Item1;
+    private sealed record ReleaseStage(int Index, string Title, string Heading, string Description, string Owner);
 }
-
-
-

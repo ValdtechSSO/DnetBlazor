@@ -1,7 +1,7 @@
 /*! Checkbox — migrado a tokens (6.0). Generado una vez; se edita a mano. */
 
 .dnet-checkbox {
-  --_size: var(--dnet-checkbox-size, 14px);
+  --_size: var(--dnet-checkbox-size, 18px);
   --_radius: var(--dnet-checkbox-border-radius, 0px);
   --_border-color: var(--dnet-checkbox-border-color,
     color-mix(in srgb, var(--dnet-sys-on-surface-subtle) 57.2%, var(--dnet-sys-surface)));

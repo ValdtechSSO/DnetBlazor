@@ -148,7 +148,7 @@
 {
     @if (GridOptions.CheckboxSelectionColumn && CheckboxSelectionPinned)
     {
-        <div class="blg-header-cell" style="flex:0 0 40px; height: 40px; border: none">
+        <div class="blg-header-cell blg-filter-cell" style="flex:0 0 40px; border: none">
             <div class="blg-header-cell-container">
                 <div class="blg-header-cell-label">
                     <span class="blg-header-cell-text"></span>
@@ -160,9 +160,8 @@
     @if (HasGrouping && GridColumns.Any() && Pinned == Pinned.None)
     {
         var width = GroupGridColumn.Width + "px";
-        var height = GroupGridColumn.Height + "px";
 
-        <div class="blg-header-cell" style="flex: @GroupGridColumn.CanGrow @GroupGridColumn.CanShrink auto; height: @height; width: @width;">
+        <div class="blg-header-cell blg-filter-cell" style="flex: @GroupGridColumn.CanGrow @GroupGridColumn.CanShrink auto; width: @width;">
             <div class="blg-header-cell-container">
                 <div class="blg-header-cell-label">
                     <span class="blg-header-cell-text"></span>
@@ -173,7 +172,7 @@
 
     @if (GridOptions.IsDebugMode && GridColumns.Any())
     {
-        <div class="blg-header-cell" style="flex: 0 0 120px;height: 40px;">
+        <div class="blg-header-cell blg-filter-cell" style="flex: 0 0 120px;">
             <div class="blg-header-cell-container">
                 <div class="blg-header-cell-label">
                     <span class="blg-header-cell-text"></span>
@@ -185,7 +184,7 @@
     @foreach (var header in GridColumns.FindAll(p => !p.Hide))
     {
 
-        <div class="blg-header-cell">
+        <div class="blg-header-cell blg-filter-cell">
             <div class="blg-header-cell-container">
                 @if (header.CellDataType != CellDataType.None && header.EnableSimpleFilter == true)
                 {
@@ -195,7 +194,7 @@
                         case CellDataType.Boolean:
                         case CellDataType.Text:
                             <EditForm Model="@header" style="width:100%">
-                                <DnetFormField UseClearButton="true" EmptyIconClass="dnet-component-search-icon">
+                                <DnetFormField class="blg-filter-field" UseClearButton="true" EmptyIconClass="dnet-component-search-icon">
                                     <ChildContent>
                                         <DnetInputText @bind-Value="@header.Filter" type="text" OnStopTyping="StopTyping" OnClearInput="StopTyping">
                                         </DnetInputText>
@@ -205,7 +204,7 @@
                             break;
                         case CellDataType.Date:
                             <EditForm Model="@header" style="width:100%">
-                                <DnetFormField Label="Name" IsRequired="true" UseClearButton="true">
+                                <DnetFormField class="blg-filter-field" Label="Name" IsRequired="true" UseClearButton="true">
                                     <ChildContent>
                                         <DnetDatePicker @bind-Value="@header.Filter"
                                                            Disabled="false"

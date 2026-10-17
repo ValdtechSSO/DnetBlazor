@@ -1,92 +1,123 @@
 @page "/PickList"
 @using Dnet.Blazor.Components.PickList
 
-<div class="container-fluid" style="padding-top: 10px;">
-    <div class="d-flex dnet-page-content-left-margin dnet-m-t-20">
-        <span class="dnet-m-r-10 dnet-app-comp-name">PickList</span>
-    </div>
+<DemoPage Id="demo-picklist" Title="PickList" Category="Selection controls"
+          Description="Turn a long list into a focused selection. Find teams, choose a page at a time and keep your shortlist as you explore."
+          Badge="Search · Select · Keep">
+    <div class="demo-grid">
+        <DemoCard Id="picklist-local" Title="Choose participating teams" Eyebrow="Local collection"
+                  Description="Build the lineup for your next competition. Search by team or city, or select every team on the current page.">
+            <ChildContent>
+                <div class="demo-stack">
+                    <div class="picklist-context"><span class="picklist-tag">Season 2026</span><span class="demo-muted">7 teams available</span></div>
+                    <PickList TItem="Team" TKey="int" Items="@_teams"
+                              ItemKey="team => team.Id" SearchTextSelector="SearchableText"
+                              @bind-SelectedKeys="_localSelectedKeys" PageSize="4">
+                        <ItemTemplate Context="team">
+                            <span class="picklist-team">
+                                <span class="picklist-avatar" aria-hidden="true">@team.Initials</span>
+                                <span class="picklist-copy"><span class="picklist-name">@team.Name</span><span class="picklist-city">@team.City</span></span>
+                            </span>
+                        </ItemTemplate>
+                    </PickList>
+                    <p class="demo-status">Your selection stays with you when you search or change pages.</p>
+                </div>
+            </ChildContent>
+            <Footer>
+                <div id="picklist-local-value" class="picklist-summary" role="status">
+                    <span class="demo-info">@SelectionCount(_localSelectedKeys.Count)</span>
+                    <span class="demo-value">@SelectionSummary(_localSelectedKeys)</span>
+                </div>
+            </Footer>
+        </DemoCard>
 
-    <div class="dnet-page-content-left-margin dnet-m-t-20">
-        <h5>1–2. Basic local collection and local search</h5>
-        <p>Starts with preselected keys and exposes the page-scoped selection and clear actions.</p>
-        <div class="pick-list-demo">
-            <PickList TItem="Team"
-                      TKey="int"
-                      Items="@_teams"
-                      ItemKey="team => team.Id"
-                      SearchTextSelector="team => team.Name"
-                      @bind-SelectedKeys="_localSelectedKeys">
-                <ItemTemplate Context="team">
-                    <span class="pick-list-demo-copy">
-                        <span class="pick-list-demo-title">@team.Name</span>
-                        <span class="pick-list-demo-supporting">@team.City</span>
-                    </span>
-                </ItemTemplate>
-            </PickList>
-        </div>
-        <p>4, 6–7. Preselected keys, Select page and Clear: @string.Join(", ", _localSelectedKeys.Order())</p>
-    </div>
+        <DemoCard Id="picklist-provider" Title="Explore the team directory" Eyebrow="Paged collection"
+                  Description="Browse the directory three teams at a time. Keep a single shortlist across pages and search results.">
+            <ChildContent>
+                <div class="demo-stack">
+                    <div class="picklist-context"><span class="picklist-tag">League directory</span><span class="demo-muted">3 teams per page</span></div>
+                    <PickList TItem="Team" TKey="int" ItemsProvider="LoadTeamsAsync"
+                              ItemKey="team => team.Id" @bind-SelectedKeys="_providerSelectedKeys" PageSize="3">
+                        <ItemTemplate Context="team">
+                            <span class="picklist-team">
+                                <span class="picklist-avatar" aria-hidden="true">@team.Initials</span>
+                                <span class="picklist-copy"><span class="picklist-name">@team.Name</span><span class="picklist-city">@team.City</span></span>
+                            </span>
+                        </ItemTemplate>
+                    </PickList>
+                    <p id="picklist-provider-note" class="demo-status">@(_providerSelectedKeys.Contains(99)
+                        ? "An archived team is still on your shortlist. Clear the selection to remove it."
+                        : "Selections remain available even when their teams are outside the current results.")</p>
+                </div>
+            </ChildContent>
+            <Footer>
+                <div id="picklist-provider-value" class="picklist-summary" role="status">
+                    <span class="demo-info">@SelectionCount(_providerSelectedKeys.Count)</span>
+                    <span class="demo-value">@SelectionSummary(_providerSelectedKeys)</span>
+                </div>
+            </Footer>
+        </DemoCard>
 
-    <div class="dnet-page-content-left-margin dnet-m-t-20">
-        <h5>3 and 5. Server-side provider with a selected key that is not loaded</h5>
-        <div class="pick-list-demo">
-            <PickList TItem="Team"
-                      TKey="int"
-                      ItemsProvider="LoadTeamsAsync"
-                      ItemKey="team => team.Id"
-                      @bind-SelectedKeys="_providerSelectedKeys"
-                      PageSize="3">
-                <ItemTemplate Context="team">
-                    <span class="pick-list-demo-copy">
-                        <span class="pick-list-demo-title">@team.Name</span>
-                        <span class="pick-list-demo-supporting">@team.City</span>
-                    </span>
-                </ItemTemplate>
-            </PickList>
+        <div class="demo-span-all">
+            <DemoCard Id="picklist-localized" Title="Una selección para tu liga" Eyebrow="Localized experience"
+                      Description="Every search, action and page control can speak your users' language. A protected team stays included while the rest remain editable.">
+                <ChildContent>
+                    <div class="picklist-localized-layout">
+                        <div class="demo-stack">
+                            <PickList TItem="Team" TKey="int" Items="@_teams" ItemKey="team => team.Id"
+                                      SearchTextSelector="SearchableText" IsItemDisabled="team => team.Id == 1"
+                                      @bind-SelectedKeys="_localizedSelectedKeys" Strings="@SpanishStrings" PageSize="4">
+                                <ItemTemplate Context="team">
+                                    <span class="picklist-team">
+                                        <span class="picklist-avatar" aria-hidden="true">@team.Initials</span>
+                                        <span class="picklist-copy"><span class="picklist-name">@team.Name</span><span class="picklist-city">@team.City</span></span>
+                                        @if (team.Id == 1)
+                                        {
+                                            <span class="picklist-locked">Fijo</span>
+                                        }
+                                    </span>
+                                </ItemTemplate>
+                            </PickList>
+                        </div>
+                        <aside class="picklist-guide" aria-labelledby="picklist-guide-title">
+                            <span class="picklist-tag">Listo para tu equipo</span>
+                            <h3 id="picklist-guide-title">Tu liga, tus equipos</h3>
+                            <p class="demo-muted">Busca por nombre o ciudad y reúne los equipos que participarán esta temporada.</p>
+                            <ul class="demo-bullets">
+                                <li>Seleccionar página añade los equipos visibles.</li>
+                                <li>Los equipos elegidos se conservan al buscar.</li>
+                                <li>Alicante Thunder es fijo y permanece seleccionado al limpiar.</li>
+                            </ul>
+                            <p class="demo-info">Sin coincidencias, la lista muestra un mensaje en español para ayudarte a continuar.</p>
+                        </aside>
+                    </div>
+                </ChildContent>
+                <Footer>
+                    <div id="picklist-localized-value" class="picklist-summary" role="status">
+                        <span class="demo-info">@_localizedSelectedKeys.Count @(_localizedSelectedKeys.Count == 1 ? "equipo seleccionado" : "equipos seleccionados") · 1 fijo</span>
+                        <span class="demo-value">@SelectionSummary(_localizedSelectedKeys)</span>
+                    </div>
+                </Footer>
+            </DemoCard>
         </div>
-        <p>Selected provider keys (99 is intentionally absent): @string.Join(", ", _providerSelectedKeys.Order())</p>
     </div>
-
-    <div class="dnet-page-content-left-margin dnet-m-t-20">
-        <h5>8–9. Custom template and localized strings</h5>
-        <div class="pick-list-demo">
-            <PickList TItem="Team"
-                      TKey="int"
-                      Items="@_teams"
-                      ItemKey="team => team.Id"
-                      SearchTextSelector="SearchableText"
-                      @bind-SelectedKeys="_localizedSelectedKeys"
-                      Strings="@SpanishStrings"
-                      PageSize="4">
-                <ItemTemplate Context="team">
-                    <span class="pick-list-demo-item">
-                        <span class="pick-list-demo-icon" aria-hidden="true">🏀</span>
-                        <span class="pick-list-demo-copy">
-                            <span class="pick-list-demo-title">@team.Name</span>
-                            <span class="pick-list-demo-supporting">@team.City</span>
-                        </span>
-                    </span>
-                </ItemTemplate>
-            </PickList>
-        </div>
-    </div>
-</div>
+</DemoPage>
 
 @code {
     private readonly List<Team> _teams =
     [
-        new(1, "Alicante Thunder", "Alicante"),
-        new(2, "Bilbao Titans", "Bilbao"),
-        new(3, "Burgos Bears", "Burgos"),
-        new(4, "Cádiz Sharks", "Cádiz"),
-        new(5, "Denia Waves", "Denia"),
-        new(6, "Ebro Wolves", "Zaragoza"),
-        new(7, "Faro Eagles", "Huelva")
+        new(1, "Alicante Thunder", "Alicante", "AT"),
+        new(2, "Bilbao Titans", "Bilbao", "BT"),
+        new(3, "Burgos Bears", "Burgos", "BB"),
+        new(4, "Cádiz Sharks", "Cádiz", "CS"),
+        new(5, "Denia Waves", "Denia", "DW"),
+        new(6, "Ebro Wolves", "Zaragoza", "EW"),
+        new(7, "Faro Eagles", "Huelva", "FE")
     ];
 
     private IReadOnlySet<int> _localSelectedKeys = new HashSet<int> { 1, 4 };
     private IReadOnlySet<int> _providerSelectedKeys = new HashSet<int> { 2, 99 };
-    private IReadOnlySet<int> _localizedSelectedKeys = new HashSet<int>();
+    private IReadOnlySet<int> _localizedSelectedKeys = new HashSet<int> { 1 };
 
     private static PickListStrings SpanishStrings { get; } = new()
     {
@@ -108,14 +139,21 @@
     };
 
     private static string SearchableText(Team team) => $"{team.Name} {team.City}";
+    private static string SelectionCount(int count) => count == 1 ? "1 team selected" : $"{count} teams selected";
+
+    private string SelectionSummary(IReadOnlySet<int> keys)
+    {
+        if (keys.Count == 0) return "No teams selected";
+        var names = _teams.Where(team => keys.Contains(team.Id)).Select(team => team.Name);
+        return string.Join(", ", keys.Contains(99) ? names.Append("Archived team") : names);
+    }
 
     private async ValueTask<PickListItemsProviderResult<Team>> LoadTeamsAsync(PickListItemsProviderRequest request)
     {
         await Task.Delay(180, request.CancellationToken);
-
         var filtered = string.IsNullOrWhiteSpace(request.SearchText)
             ? _teams
-            : _teams.Where(team => team.Name.Contains(request.SearchText, StringComparison.OrdinalIgnoreCase)).ToList();
+            : _teams.Where(team => SearchableText(team).Contains(request.SearchText, StringComparison.OrdinalIgnoreCase)).ToList();
 
         return new PickListItemsProviderResult<Team>(
             filtered.Skip(request.PageIndex * request.PageSize).Take(request.PageSize).ToArray(),
@@ -123,5 +161,5 @@
             request.RequestFilteredCount ? filtered.Count : null);
     }
 
-    private sealed record Team(int Id, string Name, string City);
+    private sealed record Team(int Id, string Name, string City, string Initials);
 }

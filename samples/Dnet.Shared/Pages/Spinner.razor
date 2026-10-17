@@ -1,83 +1,100 @@
-﻿@page "/Spinner"
-
-@using System.Timers
+@page "/Spinner"
+@using System.Threading
 @using Dnet.Blazor.Components.Button
 @using Dnet.Blazor.Components.Spinner.Infrastructure.Interfaces
-
-
 @inject ISpinnerService SpinnerService
+@implements IDisposable
 
-<div class="container-fluid" style="padding-top: 10px;">
-	<div class="d-flex dnet-m-l-30 dnet-m-t-20">
-		<span class="dnet-m-r-10 dnet-app-comp-name">Spinner</span>
-	</div>
-	<div class="dnet-m-l-30 dnet-m-t-30">
-		<DnetButton OnClick="RunSpinner" InitialFocus="true" class="dnet-m-r-10">RunSpinner</DnetButton>
-	</div>
-</div>
-
+<DemoPage Id="demo-spinner" Title="Spinner" Category="Components / Feedback" Description="Make short waits understandable, from a single action to several requests that finish at different times." Badge="Loading feedback">
+    <div class="demo-grid">
+        <DemoCard Id="spinner-basic" Title="A short, clear wait" Eyebrow="01 / One operation" Description="Simulate saving a workspace. The loading indicator clears automatically when the operation finishes.">
+            <ChildContent>
+                <div class="demo-stack">
+                    <div class="spinner-workspace demo-preview"><span class="spinner-workspace-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="3" /><path d="M3 9h18M8 9v11M12 13h5m-5 3h3" /></svg></span><div><strong>Design workspace</strong><p>Your layout, filters and preferences.</p></div><span class="spinner-duration">2 seconds</span></div>
+                    <div class="demo-actions"><DnetButton id="spinner-run" OnClick="RunSpinner" disabled="@_running">Save workspace</DnetButton></div>
+                    <p class="demo-muted">A subtle mask keeps the focus on the operation. The page becomes available again as soon as saving is complete.</p>
+                </div>
+            </ChildContent>
+            <Footer><p id="spinner-status" class="spinner-status" role="status">@_status</p></Footer>
+        </DemoCard>
+        <DemoCard Id="spinner-batch" Title="Ready when everything is ready" Eyebrow="02 / Coordinated requests" Description="Load three parts of a dashboard together. The indicator remains until the last request completes.">
+            <ChildContent>
+                <div class="demo-stack">
+                    <div class="spinner-requests">
+                        <div><span class="spinner-request-number">01</span><div><strong>Profile details</strong><span>Ready after 0.8 seconds</span></div></div>
+                        <div><span class="spinner-request-number">02</span><div><strong>Recent activity</strong><span>Ready after 1.6 seconds</span></div></div>
+                        <div><span class="spinner-request-number">03</span><div><strong>Workspace settings</strong><span>Ready after 2.4 seconds</span></div></div>
+                    </div>
+                    <div class="demo-actions"><DnetButton id="spinner-run-batch" OnClick="RunBatch" disabled="@_running">Load dashboard</DnetButton></div>
+                </div>
+            </ChildContent>
+            <Footer><p id="spinner-batch-status" class="spinner-status" role="status">@_batchStatus</p></Footer>
+        </DemoCard>
+    </div>
+</DemoPage>
 
 @code {
+    private CancellationTokenSource? _operationCancellation;
+    private int _activeRequests;
+    private int _completedRequests;
+    private bool _running;
+    private bool _disposed;
+    private string _status = "Ready to save your workspace";
+    private string _batchStatus = "Three requests, one loading indicator";
 
-	private Timer _timer;
+    private Task RunSpinner() => RunOperationsAsync([2000], false);
+    private Task RunBatch() => RunOperationsAsync([800, 1600, 2400], true);
 
-	private Timer _timer1;
+    private async Task RunOperationsAsync(int[] durations, bool batch)
+    {
+        if (_running || _disposed) return;
+        _running = true;
+        _completedRequests = 0;
+        var cancellation = _operationCancellation = new CancellationTokenSource();
+        if (batch) _batchStatus = "Loading dashboard · 0 of 3 requests complete";
+        else _status = "Saving workspace…";
+        _activeRequests = durations.Length;
+        SpinnerService.UpdateCounter(_activeRequests);
+        try
+        {
+            await Task.WhenAll(durations.Select(duration => CompleteRequestAsync(duration, cancellation.Token, batch)));
+            if (!_disposed)
+            {
+                if (batch) _batchStatus = "Dashboard ready · all 3 requests completed";
+                else _status = "Workspace saved · you're ready to continue";
+            }
+        }
+        catch (OperationCanceledException) { }
+        finally
+        {
+            _running = false;
+            if (ReferenceEquals(_operationCancellation, cancellation)) _operationCancellation = null;
+            cancellation.Dispose();
+        }
+    }
 
-	private Timer _timer2;
+    private async Task CompleteRequestAsync(int duration, CancellationToken cancellationToken, bool batch)
+    {
+        try
+        {
+            await Task.Delay(duration, cancellationToken);
+            if (!_disposed)
+            {
+                _completedRequests++;
+                if (batch) _batchStatus = $"Loading dashboard · {_completedRequests} of 3 requests complete";
+                StateHasChanged();
+            }
+        }
+        finally
+        {
+            if (_activeRequests > 0) { _activeRequests--; SpinnerService.Hide(); }
+        }
+    }
 
-	protected override void OnInitialized()
-	{
-		_timer = new Timer(1_000);
-
-		_timer.Elapsed += OnOperationFinish;
-
-		_timer.AutoReset = false;
-
-
-		_timer1 = new Timer(2_000);
-
-		_timer1.Elapsed += OnOperationFinish1;
-
-		_timer1.AutoReset = false;
-
-
-		_timer2 = new Timer(5_000);
-
-		_timer2.Elapsed += OnOperationFinish2;
-
-		_timer2.AutoReset = false;
-	}
-
-	private void RunSpinner()
-	{
-		_timer.Start();
-		SpinnerService.Show();
-
-		_timer1.Start();
-		SpinnerService.Show();
-
-		_timer2.Start();
-		SpinnerService.Show();
-	}
-
-	private void OnOperationFinish(Object source, ElapsedEventArgs e)
-	{
-		_timer.Stop();
-		SpinnerService.Hide();
-	}
-
-	private void OnOperationFinish1(Object source, ElapsedEventArgs e)
-	{
-		_timer.Stop();
-		SpinnerService.Hide();
-	}
-
-	private void OnOperationFinish2(Object source, ElapsedEventArgs e)
-	{
-		_timer.Stop();
-		SpinnerService.Hide();
-	}
-
-
+    public void Dispose()
+    {
+        _disposed = true;
+        _operationCancellation?.Cancel();
+        if (_activeRequests > 0) { SpinnerService.UpdateCounter(-_activeRequests); _activeRequests = 0; }
+    }
 }
-

@@ -10,6 +10,8 @@
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
+| `Appearance` | `FormAppearance` | `FormAppearance.Fill` | Gets or sets the field background appearance. Fill is the default; Standard and Legacy use a transparent background. |
+| `AdditionalAttributes` | `IReadOnlyDictionary<string, object>?` | — | Gets or sets unmatched HTML attributes, including class, style and id, on the field wrapper. |
 | `ChildContent` | `RenderFragment?` | — | Gets or sets the child content rendered by the component. |
 | `PrefixContent` | `RenderFragment?` | — | Gets or sets content rendered before the main control content. |
 | `SufixContent` | `RenderFragment?` | — | Gets or sets content rendered after the main control content. |
@@ -111,11 +113,18 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
+| `--dnet-form-field-background` | `color-mix(in srgb, var(--dnet-sys-on-surface) 12%, var(--dnet-sys-surface))` |
+| `--dnet-form-field-font-size` | `1rem` <br><sub>via `--dnet-sys-text-lg`</sub> |
 | `--dnet-form-field-hint-color` | `#666666` <br><sub>via `--dnet-sys-on-surface-muted`</sub> |
-| `--dnet-form-field-hint-font-size` | `0.625rem` <br><sub>via `--dnet-sys-text-xs`</sub> |
-| `--dnet-form-field-plain-label-color` | `#757575` <br><sub>via `--dnet-sys-on-surface-subtle`</sub> |
-| `--dnet-form-field-plain-label-font-size` | `0.75rem` <br><sub>via `--dnet-sys-text-sm`</sub> |
+| `--dnet-form-field-hint-font-size` | `0.75rem` <br><sub>via `--dnet-sys-text-sm`</sub> |
+| `--dnet-form-field-icon-gap` | `16px` |
+| `--dnet-form-field-icon-inset` | `12px` |
+| `--dnet-form-field-icon-size` | `24px` |
+| `--dnet-form-field-min-height` | `56px` |
+| `--dnet-form-field-padding-inline` | `16px` |
+| `--dnet-form-field-plain-label-color` | `#666666` <br><sub>via `--dnet-sys-on-surface-muted`</sub> |
+| `--dnet-form-field-plain-label-font-size` | `1rem` <br><sub>via `--dnet-sys-text-lg`</sub> |
 
 ```css
-:root { --dnet-form-field-hint-color: /* your value */; }
+:root { --dnet-form-field-background: /* your value */; }
 ```

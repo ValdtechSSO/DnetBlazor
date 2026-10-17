@@ -20,23 +20,23 @@
 
 @inject IOverlayService OverlayService
 
-<div class="mat-select" @onclick="ToggleMenu">
+<div class="mat-select dnet-plain-select" @onclick="ToggleMenu">
     <div @ref="_menuTrigger"
-         class="mat-select-trigger">
-        <div class="mat-select-value">
-            @if (string.IsNullOrEmpty(CurrentValue) && !string.IsNullOrEmpty(_placeHolder))
+         class="mat-select-trigger dnet-plain-select-trigger">
+        <div class="mat-select-value dnet-plain-select-value">
+            @if (string.IsNullOrEmpty(CurrentValue) && !string.IsNullOrEmpty(PlaceHolder))
             {
-                <span class="mat-select-placeholder mat-select-min-line">@_placeHolder</span>
+                <span class="mat-select-placeholder mat-select-min-line">@PlaceHolder</span>
             }
             @if (!string.IsNullOrEmpty(CurrentValue))
             {
-                <span class="mat-select-value-text">
+                <span class="mat-select-value-text dnet-plain-select-value-text">
                     <span class="mat-select-min-line">@BindConverter.FormatValue(CurrentValue)</span>
                 </span>
             }
         </div>
-        <div class="mat-select-arrow-wrapper">
-            <div class="mat-select-arrow"></div>
+        <div class="mat-select-arrow-wrapper dnet-plain-select-arrow-wrapper">
+            <div class="mat-select-arrow dnet-plain-select-arrow"></div>
         </div>
     </div>
 </div>
@@ -119,6 +119,8 @@
     private IFormEventService? _formEventService { get; set; }
 
     private bool _previousDisabled;
+    private string? _reportedValue;
+    private bool _hasReportedValue;
 
     private string _inputTextClass =>
         new CssBuilder("mat-input-element")
@@ -163,6 +165,8 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
+
+        NotifyCurrentValue();
 
         if (_previousDisabled != Disabled)
         {
@@ -301,6 +305,8 @@
         var value = GetWeekInterval(days);
 
         CurrentValue = value;
+
+        NotifyCurrentValue();
 
         _hasFocus = !string.IsNullOrEmpty(CurrentValue) ? true : false;
 
@@ -511,6 +517,8 @@
 
             CurrentValue = GetWeekInterval(_selectedDays);
 
+            NotifyCurrentValue();
+
             StateHasChanged();
         }
     }
@@ -520,5 +528,15 @@
         _formEventService?.RaiseDisabledEvent(Disabled);
 
         StateHasChanged();
+    }
+
+    private void NotifyCurrentValue()
+    {
+        if (_hasReportedValue && _reportedValue == CurrentValue) return;
+
+        // The field rerenders when notified; only announce actual value changes.
+        _reportedValue = CurrentValue;
+        _hasReportedValue = true;
+        _formEventService?.RaiseCurrentValue(CurrentValue);
     }
 }

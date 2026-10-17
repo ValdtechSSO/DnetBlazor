@@ -12,7 +12,7 @@ namespace Dnet.Blazor.Components.Grid.Infrastructure.Entities
 
         public int HeaderRowHeight { get; set; } = 40;
 
-        public int RowHeight { get; set; } = 40;
+        public int RowHeight { get; set; } = 56;
 
         public List<string> RowStyle { get; set; } = new();
 

@@ -3,13 +3,10 @@
 .dnet-dialog-container {
   --_padding-block: var(--dnet-dialog-padding-top-bottom, 10px);
   --_padding-inline: var(--dnet-dialog-padding-left-right, 24px);
-  --_radius: var(--dnet-dialog-border-radius, var(--dnet-sys-radius-md));
+  --_radius: var(--dnet-dialog-border-radius, var(--dnet-sys-radius-lg));
   --_max-height: var(--dnet-dialog-max-height, 100%);
-  --_elevation: var(--dnet-dialog-elevation,
-    0 11px 15px -7px var(--dnet-sys-shadow-color),
-    0 24px 38px 3px var(--dnet-sys-shadow-color),
-    0 9px 46px 8px var(--dnet-sys-shadow-color));
-  --_background: var(--dnet-dialog-background, var(--dnet-sys-surface));
+  --_elevation: var(--dnet-dialog-elevation, var(--dnet-sys-elevation-3));
+  --_background: var(--dnet-dialog-background, var(--dnet-sys-surface-raised));
   --_foreground: var(--dnet-dialog-foreground, var(--dnet-sys-on-surface-emphasis));
   --_title-font-size: var(--dnet-dialog-title-font-size, var(--dnet-sys-text-xl));
   --_header-margin-bottom: var(--dnet-dialog-header-margin-bottom, 15px);

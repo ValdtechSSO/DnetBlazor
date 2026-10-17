@@ -106,13 +106,10 @@
 }
 
 /*
- * Optional: pill-shaped chips and buttons.
- * Not part of the base theme because it's a stronger stylistic statement than
- * the rest — delete this block if you want rounded rectangles everywhere.
+ * Optional: pill-shaped chips. Buttons use the library's pill default.
  */
 [data-dnet-theme="modern"] {
   --dnet-chips-radius: var(--dnet-sys-radius-pill);
-  --dnet-btn-radius: var(--dnet-sys-radius-md);
 }
 
 /*

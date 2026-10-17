@@ -145,6 +145,7 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
+| `--dnet-form-field-min-height` | `56px` |
 | `--dnet-grid-background-color` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
 | `--dnet-grid-border-color` | `#ebebeb` <br><sub>via `--dnet-sys-border`</sub> |
 | `--dnet-grid-cell-border-bottom` | `1px solid var(--dnet-sys-border)` |
@@ -169,7 +170,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-grid-odd-row-background-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 2%, var(--dnet-sys-surface))` |
 | `--dnet-grid-range-selection-background-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 40%, transparent)` |
 | `--dnet-grid-root-wrapper-border` | `1px solid var(--dnet-sys-transparent)` |
-| `--dnet-grid-row-height` | `40px` |
+| `--dnet-grid-row-height` | `56px` |
 | `--dnet-grid-secondary-font-family` | `"Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif` <br><sub>via `--dnet-sys-font`</sub> |
 | `--dnet-grid-secondary-font-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
 | `--dnet-grid-secondary-font-weight` | `400` |

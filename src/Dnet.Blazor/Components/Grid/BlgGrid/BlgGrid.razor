@@ -29,7 +29,7 @@
         var pinnedColumnsLeft = layout.PinnedLeftColumns;
         var pinnedColumnsRight = layout.PinnedRightColumns;
         var leftSpacerWith = layout.PinnedLeftWidth;
-        var rightSpacerWith = layout.PinnedRightWidth + GridOptions.ScrollWidth;
+        var rightSpacerWith = layout.PinnedRightWidth;
         if (_activeGroups > 0 && GroupGridColumn.Width <= 0)
         {
             GroupGridColumn.Width = 200;
@@ -105,7 +105,7 @@
 
                             if (!GridOptions.SuppressFilterRow)
                             {
-                                gridTemplateRowsLeft1 = gridTemplateRowsLeft1 + " " + $"40px";
+                                gridTemplateRowsLeft1 = gridTemplateRowsLeft1 + " var(--_blg-filter-row-height)";
                             }
 
                             <div class="blg-pinned-left-header"
@@ -135,7 +135,7 @@
 
                                 if (!GridOptions.SuppressFilterRow)
                                 {
-                                    gridTemplateRowsLeft2 = gridTemplateRowsLeft2 + " " + $"40px";
+                                    gridTemplateRowsLeft2 = gridTemplateRowsLeft2 + " var(--_blg-filter-row-height)";
                                 }
 
                                 <div @ref="_eHeaderContainer" id="blgHeaderConatiner"
@@ -173,7 +173,7 @@
 
                             if (!GridOptions.SuppressFilterRow)
                             {
-                                gridTemplateRowsLeft3 = gridTemplateRowsLeft3 + " " + $"40px";
+                                gridTemplateRowsLeft3 = gridTemplateRowsLeft3 + " var(--_blg-filter-row-height)";
                             }
 
                             <div class="blg-pinned-right-header"

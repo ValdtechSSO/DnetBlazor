@@ -1,15 +1,22 @@
 /*! Sass DatePickerWeek (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 .dnet-datepickerweek-content {
   --_week-day-size: var(--dnet-datepickerweekca-day-height, var(--dnet-calendar-day-height, 40px));
+  --_week-background: var(--dnet-calendar-background, var(--dnet-sys-surface-raised));
 
+  box-sizing: border-box;
   width: 100%;
-  box-shadow: var(--dnet-sys-elevation-1);
-  background: var(--dnet-sys-surface);
+  overflow: hidden;
+  border-radius: var(--dnet-sys-radius-lg);
+  box-shadow: var(--dnet-sys-elevation-3);
+  background: var(--_week-background);
   color: var(--dnet-sys-on-surface-emphasis);
 }
 
-.dnet-datepickerweek-calendar {
+.dnet-datepickerweek-content > .dnet-datepickerweek-calendar {
   height: auto;
+  border: 0;
+  border-radius: 0;
+  background: var(--_week-background);
 }
 
 .dnet-datepickerweek-input-container {

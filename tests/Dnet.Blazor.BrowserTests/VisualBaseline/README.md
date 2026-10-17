@@ -22,6 +22,8 @@ que una migración no avance a ciegas con el CI en verde.
 - Las páginas con datos resuelven `sample-data/person_500.json` contra el
   fixture local (`Fixtures/person_500.json`); los goldens nunca dependen de la
   red ni del contenido remoto.
+- El reloj de fecha se fija en `2026-10-16T12:00:00Z` para estabilizar las muestras
+  que usan el día actual. Los temporizadores y las esperas siguen funcionando.
 - Los estados `open` que renderizan en el portal global de `Overlay`
   (Select, Autocomplete, DatePicker, Dialog, Tooltip, Toast, paneles…) se
   capturan como página completa; el resto como elemento.
@@ -92,9 +94,9 @@ List, Toast, Tooltip, Tree, Grid, Forms (sin migrar).
 
 Exclusiones deliberadas (documentadas, no olvidadas):
 
-- **ImageEditor**: renderizado por canvas con imagen remota; no determinista
-  entre plataformas ni con la red. Cuando el componente migre, decidir si se
-  congela un golden con imagen local fija.
+- **ImageEditor**: sin escenario golden registrado. La muestra usa el logo
+  local y admite archivos PNG/JPEG; las pruebas funcionales comprueban carga,
+  edición, exportación y cancelación. Las capturas de revisión se guardan aparte.
 - **DatePickerWeek / DatePickerWeekRaw**: sin página de muestra en
   `Dnet.ClientSide`.
 - **Paginator**: sin instancia propia en las páginas sample (se ejercita dentro
@@ -114,9 +116,9 @@ Exclusiones deliberadas (documentadas, no olvidadas):
 - **DatePicker (estado abierto)**: el calendario muestra variación subpixel
   intermitente en la columna de días (diffs de 200-400 px entre ejecuciones);
   se captura solo el input.
-- **Tooltip y AdminLayout en móvil**: los targets de la página de Tooltip
-  están posicionados en absoluto y se solapan en viewport estrecho; el sidebar
-  de AdminLayout colapsa a un drawer. El golden de escritorio cubre el shell.
+- **AdminLayout en móvil**: el sidebar colapsa a un drawer. El golden de
+  escritorio cubre el shell. Tooltip sí se captura en móvil: sus controles
+  están dentro de tarjetas adaptables y los hints conservan su anclaje.
 
 El Grid espera a que las filas estén renderizadas (`ReadyFunction`) y el
 harness espera `document.fonts.ready` en cada captura para evitar el jitter de
