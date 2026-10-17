@@ -1,6 +1,12 @@
 name: Build and test
 
 on:
+  workflow_dispatch:
+    inputs:
+      test_filter:
+        description: "Optional test filter for diagnosing a failure; leave empty for the full suite"
+        required: false
+        type: string
   pull_request:
   push:
     branches:
@@ -37,12 +43,16 @@ jobs:
         run: tests/Dnet.Blazor.BrowserTests/install-playwright.sh --with-deps chromium
       - name: Test
         run: |
+          test_args=()
+          if [ -n "$DNET_TEST_FILTER" ]; then
+            test_args+=(--filter "$DNET_TEST_FILTER")
+          fi
           dotnet run --project samples/Dnet.ClientSide/Dnet.App.ClientSide.csproj --configuration Release --no-build --no-launch-profile --urls http://127.0.0.1:5101 > /tmp/dnetblazor-sample.log 2>&1 &
           sample_pid=$!
           trap 'kill "$sample_pid" 2>/dev/null || true' EXIT
           for attempt in {1..60}; do
             if curl --fail --silent http://127.0.0.1:5101/ > /dev/null; then
-              dotnet test DnetBlazorComponents.sln --configuration Release --no-build --no-restore --verbosity normal
+              dotnet test DnetBlazorComponents.sln --configuration Release --no-build --no-restore --verbosity normal --logger trx --results-directory artifacts/ci-results "${test_args[@]}"
               exit $?
             fi
             sleep 1
@@ -50,6 +60,18 @@ jobs:
           cat /tmp/dnetblazor-sample.log
           exit 1
         env:
+          DNET_TEST_FILTER: ${{ inputs.test_filter || '' }}
           DNET_BLAZOR_BROWSER_TESTS: "true"
           DNET_BLAZOR_VISUAL_TESTS: "true"
           DNET_BLAZOR_BASE_URL: http://127.0.0.1:5101
+      - name: Preserve test diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-diagnostics-${{ github.run_id }}
+          path: |
+            artifacts/ci-results/
+            tests/Dnet.Blazor.BrowserTests/VisualBaseline/goldens/linux/*.actual.png
+            /tmp/dnetblazor-sample.log
+          retention-days: 7
+          if-no-files-found: ignore

@@ -33,6 +33,8 @@ public sealed class SampleScreenLocalizationTests
         page.Console += (_, message) => { if (message.Type == "error" && message.Text.Contains("Microsoft.AspNetCore.Components")) errors.Add(message.Text); };
         await page.RouteAsync("https://fonts.googleapis.com/**", route => route.AbortAsync());
         var persons = await File.ReadAllTextAsync(Path.Combine(AppContext.BaseDirectory, "Fixtures", "person_500.json"));
+        using var fixture = System.Text.Json.JsonDocument.Parse(persons);
+        var personCount = fixture.RootElement.GetArrayLength().ToString();
         await page.RouteAsync("**/sample-data/person_500.json", route => route.FulfillAsync(new() { ContentType = "application/json", Body = persons }));
         await page.RouteAsync("**/api/person/searchpersons", route => route.FulfillAsync(new() { ContentType = "application/json", Body = "{\"persons\":" + persons + ",\"totalItems\":500}" }));
         var initialTheme = System.Text.Json.JsonSerializer.Serialize(theme);
@@ -44,6 +46,12 @@ public sealed class SampleScreenLocalizationTests
             await Assertions.Expect(content).ToBeVisibleAsync();
             if (route == "PickList")
                 await Assertions.Expect(page.Locator("#picklist-provider .dnet-paginator-range-label")).ToContainTextAsync("de 7");
+            if (route.Contains("Example") || route == "BlGrid")
+                await page.Locator(".blg-center-cols-container [role=gridcell]").First.WaitForAsync(new() { State = WaitForSelectorState.Attached });
+            if (route == "List")
+                await Assertions.Expect(page.Locator("#list-directory-value")).ToContainTextAsync(personCount);
+            if (route == "Autocomplete")
+                await Assertions.Expect(page.Locator(".autocomplete-count")).ToContainTextAsync(personCount);
             var spanish = await content.InnerTextAsync();
             Assert.False(string.IsNullOrWhiteSpace(spanish), route);
             var menu = await page.Locator(".dnet-left-column").InnerTextAsync();
