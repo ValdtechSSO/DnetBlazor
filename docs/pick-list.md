@@ -70,6 +70,10 @@ are the fallback. Pagination reuses the library's `DnetPaginator`; its visible
 `Page`/`of` text and all navigation labels are supplied by the same
 `PickListStrings` instance.
 
+Register library services with `builder.Services.AddDnetBlazor()` before rendering
+PickList; its shared search field uses the form event service. Searching and
+clearing only filter the list and do not mark a surrounding `EditForm` modified.
+
 ## Selection and controlled inputs
 
 `SelectedKeys` is the only source of truth. The component always emits a new
@@ -147,7 +151,12 @@ PickList reads these optional public custom properties from any ancestor:
 `--pick-list-*` names remain as fallback links for this major version. Defaults
 then inherit the equivalent `--dnet-list-*` tokens and finally semantic tokens,
 so List and PickList keep the same visual language when an application theme
-changes them. The component occupies the available width; constrain it in the
+changes them. The default background follows `--dnet-list-background-color`
+and is transparent when unset, matching List. The search field composes
+`DnetFormField` and `DnetInputText`, with the shared search icon, floating label
+and clear action. Form field tokens also apply to it; the existing
+`--dnet-picklist-search-radius` override remains supported.
+The component occupies the available width; constrain it in the
 consuming layout when a narrower panel is desired. The footer inherits the shared paginator tokens, including
 `--dnet-icon-button-size`, so paginator sizing stays consistent with `List` and
 `DoubleList`.

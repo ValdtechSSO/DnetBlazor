@@ -20,6 +20,8 @@ namespace Dnet.Blazor.UnitTests;
 
 public sealed class ControlLocalizationTests : BunitContext
 {
+    public ControlLocalizationTests() => Services.AddTransient<IFormEventService, FormEventService>();
+
     [Fact]
     public void Presentational_controls_have_Spanish_defaults_without_localization_registration()
     {
@@ -51,7 +53,7 @@ public sealed class ControlLocalizationTests : BunitContext
                 ClearLabel = "My clear"
             }));
         var instance = cut.Instance;
-        Assert.Equal("Search", cut.Find("input[type=search]").GetAttribute("placeholder"));
+        Assert.Equal("Search", cut.Find("input[role=searchbox]").GetAttribute("placeholder"));
         Assert.Contains("Global selection: 1 / 3", cut.Markup);
         Assert.Contains("Seleccionar página", cut.Markup);
         Assert.Contains("My clear", cut.Markup);
@@ -61,8 +63,8 @@ public sealed class ControlLocalizationTests : BunitContext
         await cut.InvokeAsync(() => Services.GetRequiredService<IDnetLocalizer>().SetCulture("en-US"));
 
         cut.WaitForAssertion(() => Assert.Contains("Select page", cut.Markup));
-        Assert.Equal("Search", cut.Find("input[type=search]").GetAttribute("placeholder"));
-        Assert.Equal("br", cut.Find("input[type=search]").GetAttribute("value"));
+        Assert.Equal("Search", cut.Find("input[role=searchbox]").GetAttribute("placeholder"));
+        Assert.Equal("br", cut.Find("input[role=searchbox]").GetAttribute("value"));
         Assert.Contains("Global selection: 1 / 3", cut.Markup);
         Assert.Contains("My clear", cut.Markup);
         Assert.Same(instance, cut.Instance);
@@ -90,7 +92,7 @@ public sealed class ControlLocalizationTests : BunitContext
 
         await cut.InvokeAsync(() => Services.GetRequiredService<IDnetLocalizer>().SetCulture("en"));
 
-        cut.WaitForAssertion(() => Assert.Equal("Search", cut.Find("input[type=search]").GetAttribute("placeholder")));
+        cut.WaitForAssertion(() => Assert.Equal("Search", cut.Find("input[role=searchbox]").GetAttribute("placeholder")));
         Assert.Equal(1, requests);
         Assert.Equal(3, cut.FindAll("input[type=checkbox]").Count);
     }

@@ -59,7 +59,7 @@
                         </DnetStep>
                     }
                 </DnetStepper>
-                <div class="demo-actions">
+                <div class="stepper-linear-actions">
                     <DnetButton Variant="DnetButtonVariant.Outlined" id="stepper-linear-back" disabled="@(_linearStep == 1)" OnClick="() => MoveLinear(-1)">@S["Stepper.Back"]</DnetButton>
                     <DnetButton id="stepper-linear-next" disabled="@(_linearStep == _stages.Length || !_stages[_linearStep - 1].Completed)" OnClick="() => MoveLinear(1)">@S["Stepper.Continue"]</DnetButton>
                 </div>

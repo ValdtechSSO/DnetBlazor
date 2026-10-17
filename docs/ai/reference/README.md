@@ -19,8 +19,7 @@ npx degit ValdtechSSO/DnetBlazor/docs/ai/reference docs/dnet-blazor
 ```
 
 The library version is recorded in `component-index.md`. The repository can also
-contain unreleased additions listed in `Changelog.md`; Spoiler, Timeline and
-Skeleton are currently unreleased. For a NuGet application, use the reference
+contain unreleased additions listed in `Changelog.md`. For a NuGet application, use the reference
 archive attached to the matching release. Refresh it when upgrading the package.
 
 ## What's here

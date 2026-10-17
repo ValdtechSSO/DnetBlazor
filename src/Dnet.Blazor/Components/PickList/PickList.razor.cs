@@ -414,9 +414,8 @@ public partial class PickList<TItem, TKey> : ComponentBase, IDisposable
 
     private bool IsSelectionDisabled(TItem item) => IsItemDisabled?.Invoke(item) is true;
 
-    private async Task SetSearchTextAsync(ChangeEventArgs args)
+    private async Task SetSearchTextAsync(string? value)
     {
-        var value = args.Value?.ToString();
         if (IsSearchControlled)
         {
             _pendingSearchText = value;

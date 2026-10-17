@@ -9,3 +9,13 @@
 .stepper-custom-label { font-size: 14px; font-weight: 600; }
 .stepper-linear-content { display: grid; gap: 12px; padding-bottom: 4px; }
 .stepper-linear-content p { margin: 0; }
+.stepper-linear-actions {
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 20px 24px 24px;
+    background: var(--dnet-sys-surface);
+}

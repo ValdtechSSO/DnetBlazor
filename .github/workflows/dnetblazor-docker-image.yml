@@ -119,7 +119,7 @@ jobs:
               exit 1
             fi
 
-            docker compose -f dnetblazor-docker-compose.yaml up -d --force-recreate --pull never
+            docker compose -f dnetblazor-docker-compose.yaml up -d --no-deps --no-build --force-recreate --pull never blazorclient
 
             container_id="$(docker compose -f dnetblazor-docker-compose.yaml ps -q blazorclient)"
             running_image_id="$(docker inspect --format '{{.Image}}' "$container_id")"
@@ -129,7 +129,21 @@ jobs:
               exit 1
             fi
 
+            if [ "$(docker inspect --format '{{.State.Running}}' "$container_id")" != "true" ]; then
+              docker logs --tail 80 "$container_id"
+              exit 1
+            fi
+
+            attempt=0
+            until curl --fail --silent --connect-timeout 2 --max-time 5 --output /dev/null http://127.0.0.1:5001/; do
+              attempt=$((attempt + 1))
+              if [ "$attempt" -ge 30 ]; then
+                echo "DnetBlazor did not become ready on port 5001"
+                docker logs --tail 80 "$container_id"
+                exit 1
+              fi
+              sleep 2
+            done
+
             echo "Deployed commit $SOURCE_COMMIT using $DNETBLAZOR_IMAGE"
-            docker container prune -f
-            docker image prune -f
             docker logout ghcr.io

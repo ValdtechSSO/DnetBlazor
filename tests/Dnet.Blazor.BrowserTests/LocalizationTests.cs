@@ -19,7 +19,7 @@ public sealed class LocalizationTests
         await ExpectLanguageAsync(page, "es");
         await CaptureAsync(page, theme, width, "default-es");
         var picklist = page.Locator("#localization-picklist");
-        var search = picklist.Locator("input[type=search]");
+        var search = picklist.Locator("input[role=searchbox]");
         await Toggle(picklist, "Alex Rivera").CheckAsync();
         await search.FillAsync("Riley");
         await Assertions.Expect(picklist.Locator(".dnet-pick-list-item")).ToHaveCountAsync(1);
@@ -109,7 +109,7 @@ public sealed class LocalizationTests
 
         await page.ReloadAsync();
         await ExpectLanguageAsync(page, "en");
-        await Assertions.Expect(page.Locator("#localization-picklist input[type=search]")).ToHaveAttributeAsync("aria-label", "Search");
+        await Assertions.Expect(page.Locator("#localization-picklist input[role=searchbox]")).ToHaveAttributeAsync("aria-label", "Search");
         await Assertions.Expect(page.Locator("#localization-custom-picklist").GetByRole(AriaRole.Button,
             new() { Name = "Vaciar mi selección", Exact = true })).ToBeVisibleAsync();
         await CheckLayoutAsync(page);

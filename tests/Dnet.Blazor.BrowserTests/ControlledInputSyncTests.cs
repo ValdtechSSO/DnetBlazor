@@ -39,16 +39,16 @@ public sealed class ControlledInputSyncTests
         await checkbox.PressAsync("Space");
         await Assertions.Expect(checkbox).Not.ToBeCheckedAsync();
 
-        var search = rejected.Locator("input[type=search]");
+        var search = rejected.Locator("input[role=searchbox]");
         await search.FillAsync("rejected value");
         await Assertions.Expect(search).ToHaveValueAsync(string.Empty);
         await Assertions.Expect(page.Locator("#controlled-probe-state"))
             .ToContainTextAsync("Selected: 0; Search:");
 
         await AssertTypingKeepsFocusAsync(
-            page.Locator("#accepted-controlled-search input[type=search]"));
+            page.Locator("#accepted-controlled-search input[role=searchbox]"));
         await AssertTypingKeepsFocusAsync(
-            page.Locator("#uncontrolled-search input[type=search]"));
+            page.Locator("#uncontrolled-search input[role=searchbox]"));
     }
 
     private static async Task AssertTypingKeepsFocusAsync(ILocator search)

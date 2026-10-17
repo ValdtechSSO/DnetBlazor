@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+## Version 6.0.19-rc.2 (October 2026)
+
+- PickList searching and clearing do not mark a surrounding EditForm modified
+  or trigger validation for an internal search field.
+- Checkboxes and radio buttons leave 10px between their indicator and label,
+  preserving the existing geometry of indicators without a label.
+- List uses a common 20px inset and 20px between search, header, items and
+  pagination, with aligned avatars and checkboxes. Its responsive paginator and
+  count-only footer follow the same spacing, including in composed double lists.
+- The linear Stepper example keeps its action buttons on the same surface,
+  aligned to the right with padded edges and 10px between actions.
+- Tabs add 24px of inner spacing, reduced to 20px on mobile, around navigation
+  and content. The `--dnet-tabs-padding` token customizes this inset.
+- Shared form fields use an outlined circle with an X in a subdued theme color
+  for the clear action.
+- PickList inherits the List background and uses the shared form field and text
+  input for searching, including its floating label and clear action.
+- PickList selection actions use the shared 40px button size with 10px spacing.
+  Search, actions, rows and pagination share aligned insets, with 20px between
+  sections.
+
 ## Version 6.0.18-rc.2 (October 2026)
 
 - Reduced the sample header spacing between user details and the account icon.

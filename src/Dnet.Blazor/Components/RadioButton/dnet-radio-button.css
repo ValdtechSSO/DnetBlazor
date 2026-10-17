@@ -5,6 +5,7 @@
   --_border-width: var(--dnet-radio-button-border-width, 1px);
   --_checked-background: var(--dnet-radio-button-background, var(--dnet-sys-primary-strong));
   --_font-size: var(--dnet-radio-button-font-size, var(--dnet-sys-text-md));
+  --_label-gap: 10px;
   --_disabled-fg: color-mix(in srgb, var(--dnet-sys-on-surface-subtle) 70.3%, var(--dnet-sys-surface));
 
   display: inline-block;
@@ -34,7 +35,7 @@
   font-size: var(--_font-size);
   display: grid;
   align-items: center;
-  gap: 5px;
+  gap: var(--_label-gap);
 }
 .dnet-radio-label.text-after {
   grid-template-areas: "one two";
@@ -179,4 +180,9 @@
   padding-right: 0;
   grid-area: two;
   padding-top: 1px;
+}
+
+/* Keep label-free indicators at their existing size. Variants follow the base. */
+.dnet-radio-no-label {
+  --_label-gap: 5px;
 }

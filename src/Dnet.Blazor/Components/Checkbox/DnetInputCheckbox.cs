@@ -102,6 +102,7 @@ namespace Dnet.Blazor.Components.Checkbox
 
         private string _dnetCheckboxClass =>
         new CssBuilder("dnet-checkbox dnet-accent")
+            .AddClass("dnet-checkbox-no-label", ChildContent is null)
             .AddClass("dnet-checkbox-checked", CurrentValue == true)
             .AddClass("dnet-checkbox-disabled", Disabled)
         .Build();

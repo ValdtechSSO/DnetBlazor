@@ -9,6 +9,7 @@
   --_checked-background: var(--dnet-checkbox-background, var(--dnet-sys-primary));
   --_font-size: var(--dnet-checkbox-font-size, var(--dnet-sys-text-md));
   --_check-color: var(--dnet-checkbox-checkmark-path, var(--dnet-sys-surface));
+  --_label-gap: 10px;
 
   display: inline-block;
   transition: background 400ms cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -37,7 +38,7 @@
   display: grid;
   align-items: center;
   justify-content: start;
-  gap: 5px;
+  gap: var(--_label-gap);
 }
 .dnet-checkbox-layout.text-after {
   grid-template-areas: "one two";
@@ -188,6 +189,11 @@
 
 .dnet-ripple:not(:empty) {
   transform: translateZ(0);
+}
+
+/* Keep label-free indicators at their existing size. Variants follow the base. */
+.dnet-checkbox-no-label {
+  --_label-gap: 5px;
 }
 
 .dnet-focus-indicator, .dnet-mdc-focus-indicator {

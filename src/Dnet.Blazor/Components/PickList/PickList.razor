@@ -1,37 +1,47 @@
 @using Dnet.Blazor.Localization
 @namespace Dnet.Blazor.Components.PickList
 @using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Forms
 @using Dnet.Blazor.Components.Paginator
 @using Dnet.Blazor.Components.Button
 @using Dnet.Blazor.Components.SlideToggle
+@using Dnet.Blazor.Components.Form
 @typeparam TItem
 @typeparam TKey where TKey : notnull
 
 <DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
 
 <section class="dnet-pick-list" aria-busy="@_isLoading">
-    <label class="dnet-pick-list-search">
-        <span class="dnet-pick-list-sr-only">@EffectiveStrings.SearchPlaceholder</span>
-        <span class="dnet-pick-list-search-icon" aria-hidden="true"></span>
-        <input @key="_searchRenderGeneration"
-               type="search"
-               value="@EffectiveSearchText"
-               placeholder="@EffectiveStrings.SearchPlaceholder"
-               aria-label="@EffectiveStrings.SearchPlaceholder"
-               @oninput="SetSearchTextAsync" />
-    </label>
+    <div class="dnet-pick-list-search">
+        @* Filtering is internal UI state and must not mark a surrounding form as modified. *@
+        <CascadingValue TValue="EditContext" Value="@((EditContext?)null)" IsFixed="true">
+            <DnetFormField @key="_searchRenderGeneration" Label="@EffectiveStrings.SearchPlaceholder" UseClearButton="true">
+                <PrefixContent>
+                    <span class="dnet-list-search-icon dnet-list-search-icon-default" aria-hidden="true"></span>
+                </PrefixContent>
+                <ChildContent>
+                    <DnetInputText Value="@EffectiveSearchText"
+                                   ValueChanged="SetSearchTextAsync"
+                                   ValueExpression="@(() => EffectiveSearchText!)"
+                                   PlaceHolder="@EffectiveStrings.SearchPlaceholder"
+                                   role="searchbox"
+                                   aria-label="@EffectiveStrings.SearchPlaceholder" />
+                </ChildContent>
+            </DnetFormField>
+        </CascadingValue>
+    </div>
 
     <div class="dnet-pick-list-toolbar">
         <output class="dnet-pick-list-counter">
             @EffectiveStrings.SelectedLabel: @SelectedKeys.Count / @(_totalCount?.ToString() ?? "—")
         </output>
         <div class="dnet-pick-list-actions">
-            <DnetButton Size="DnetButtonSize.Small" Variant="DnetButtonVariant.Outlined"
+            <DnetButton Size="DnetButtonSize.Medium" Variant="DnetButtonVariant.Outlined"
                         disabled="@(!CanSelectVisible)"
                         OnClick="SelectVisibleAsync">
                 @EffectiveStrings.SelectVisibleLabel
             </DnetButton>
-            <DnetButton Size="DnetButtonSize.Small" Variant="DnetButtonVariant.Outlined"
+            <DnetButton Size="DnetButtonSize.Medium" Variant="DnetButtonVariant.Outlined"
                         disabled="@(SelectedKeys.Count == 0)"
                         OnClick="ClearSelectionAsync">
                 @EffectiveStrings.ClearLabel
@@ -76,6 +86,7 @@
 
     <footer class="dnet-pick-list-footer">
         <DnetPaginator CurrentPage="@(_pageIndex + 1)"
+                       GridGap="8"
                        PageSize="@PageSize"
                        TotalItems="@(_filteredCount ?? 0)"
                        Disabled="@(_isLoading || !HasKnownPages || PageCount == 0)"

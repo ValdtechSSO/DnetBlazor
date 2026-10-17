@@ -1,4 +1,4 @@
-.list-stage { height: 480px; width: 100%; min-width: 0; }
+.list-stage { height: 500px; width: 100%; min-width: 0; }
 .list-loading { display: grid; place-items: center; min-height: 260px; color: var(--dnet-sys-on-surface-muted); font-size: 14px; }
 .list-avatar { display: grid; place-items: center; width: 32px; height: 32px; border-radius: var(--dnet-sys-radius-pill); background: var(--dnet-sys-state-selected); color: var(--dnet-sys-primary-content); font-size: 11px; font-weight: 650; }
 .list-option-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 16px; }
@@ -9,7 +9,7 @@
 .list-contact { display: flex; flex-direction: column; min-width: 0; width: 100%; }
 @media (max-width: 600px) {
     .list-option-grid { grid-template-columns: 1fr; }
-    .list-stage { height: 460px; }
+    .list-stage { height: 520px; }
 }
 @media (max-width: 550px) {
     .list-stage ::deep .dnet-list-wrapper .dnet-checkbox { display: inline-flex; }

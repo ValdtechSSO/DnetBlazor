@@ -31,7 +31,7 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
-| `--dnet-picklist-background` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
+| `--dnet-picklist-background` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
 | `--dnet-picklist-border` | `#ebebeb` <br><sub>via `--dnet-sys-border`</sub> |
 | `--dnet-picklist-check-width` | `24px` |
 | `--dnet-picklist-footer-height` | `50px` <br><sub>via `--dnet-sys-control-height`</sub> |
@@ -48,14 +48,14 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-picklist-radius` | `10px` <br><sub>via `--dnet-sys-radius-lg`</sub> |
 | `--dnet-picklist-scrollbar` | `#e1e3e1` <br><sub>via `--dnet-sys-border-strong`</sub> |
 | `--dnet-picklist-scrollbar-track` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
-| `--dnet-picklist-search-radius` | `9999px` <br><sub>via `--dnet-sys-radius-pill`</sub> |
+| `--dnet-picklist-search-radius` | `15px` |
 
 <details><summary>Legacy token names still honoured</summary>
 
 Kept as intermediate links in the fallback chains so 5.x overrides keep
 working. Prefer the names above for new code; these go away in 7.0.
 
-`--dnet-list-border-color`, `--dnet-list-border-radius`, `--dnet-list-check-width`, `--dnet-list-header-footer-height`, `--dnet-list-hover-background-color`, `--dnet-list-hover-border-radius`, `--dnet-list-item-height`, `--dnet-list-supporting-text-color`, `--pick-list-background`, `--pick-list-border`, `--pick-list-footer-height`, `--pick-list-foreground`, `--pick-list-header-height`, `--pick-list-item-background`, `--pick-list-item-height`, `--pick-list-item-hover`, `--pick-list-item-selected`, `--pick-list-items-max-height`, `--pick-list-muted`, `--pick-list-primary`, `--pick-list-radius`, `--pick-list-scrollbar`
+`--dnet-list-background-color`, `--dnet-list-border-color`, `--dnet-list-border-radius`, `--dnet-list-check-width`, `--dnet-list-header-footer-height`, `--dnet-list-hover-background-color`, `--dnet-list-hover-border-radius`, `--dnet-list-item-height`, `--dnet-list-supporting-text-color`, `--pick-list-background`, `--pick-list-border`, `--pick-list-footer-height`, `--pick-list-foreground`, `--pick-list-header-height`, `--pick-list-item-background`, `--pick-list-item-height`, `--pick-list-item-hover`, `--pick-list-item-selected`, `--pick-list-items-max-height`, `--pick-list-muted`, `--pick-list-primary`, `--pick-list-radius`, `--pick-list-scrollbar`
 
 </details>
 

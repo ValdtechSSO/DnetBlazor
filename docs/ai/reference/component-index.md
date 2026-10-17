@@ -1,6 +1,6 @@
 # Component index
 
-Dnet.Blazor 6.0.18-rc.2. One file per component under `components/`.
+Dnet.Blazor 6.0.19-rc.2. One file per component under `components/`.
 Open only the one you need.
 
 | Component | Use in markup | Parameters | Styling tokens |
@@ -36,7 +36,7 @@ Open only the one you need.
 | [Spinner](components/Spinner.md) | `<DnetSpinner>` | 4 | 2 |
 | [Spoiler](components/Spoiler.md) | `<DnetSpoiler>` | 11 | 5 |
 | [Stepper](components/Stepper.md) | `<DnetStep>`, `<DnetStepper>` | 13 | 1 |
-| [Tabs](components/Tabs.md) | `<DnetTab>`, `<DnetTabBody>`, `<DnetTabGroup>` | 12 | 4 |
+| [Tabs](components/Tabs.md) | `<DnetTab>`, `<DnetTabBody>`, `<DnetTabGroup>` | 12 | 5 |
 | [Theme](components/Theme.md) | `<DnetThemeScope>` | 3 | — |
 | [TimePicker](components/TimePicker.md) | `<DnetTimePicker>` | 19 | 5 |
 | [Timeline](components/Timeline.md) | `<DnetTimeline>`, `<DnetTimelineItem>` | 13 | 12 |

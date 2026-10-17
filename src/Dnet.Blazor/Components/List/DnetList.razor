@@ -159,7 +159,7 @@
         <div class="dnet-list-footer">
             @if (ListOptions.EnablePagingination == true)
             {
-                <DnetPaginator @ref="_paginator" OnGoToFirstPage="GoToFirstPage" OnGoToPreviousPage="GoToPreviousPage"
+                <DnetPaginator @ref="_paginator" GridGap="8" OnGoToFirstPage="GoToFirstPage" OnGoToPreviousPage="GoToPreviousPage"
                     OnGoToNextPage="GoToNextPage" OnGoToLastPage="GoToLastPage" OnGoToSpecificPage="GoToSpecificPage"
                     CurrentPage="_searchModel.PaginationModel.CurrentPage" PageSize="_searchModel.PaginationModel.PageSize"
                     TotalItems="_searchModel.PaginationModel.ItemsCount">
@@ -167,9 +167,7 @@
             }
             else
             {
-                <div style="display: flex; justify-content: flex-end; width: 100%; padding: 15px 15px 15px 15px">
-                    <span style="font-size:.675rem">@Localizer.Format("List.Count", _rowNodes.Count)</span>
-                </div>
+                <span class="dnet-list-count">@Localizer.Format("List.Count", _rowNodes.Count)</span>
             }
         </div>
     }

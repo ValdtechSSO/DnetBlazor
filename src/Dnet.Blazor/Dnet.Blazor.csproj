@@ -10,16 +10,17 @@
 		<Description>Set of Components for Blazor Framework</Description>
 		<Copyright>Datalnet</Copyright>
 		<PackageTags>Blazor-Components-Datalnet</PackageTags>
-		<PackageVersion>6.0.18-rc.2</PackageVersion>
+		<PackageVersion>6.0.19-rc.2</PackageVersion>
 		<PackageProjectUrl>https://datalnet.com/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ValdtechSSO/DnetBlazor</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
-			- Added Spoiler, Timeline and Skeleton components.
-			- Added live Spanish and English control localization, preserving values, selections and explicit labels.
-			- Added filled form fields, consistent control sizing and Filled/Outlined button variants.
-			- Improved grid filters, alignment, responsive panels, lists and component showcases.
-			- Added optional application text localization callbacks for open dialogs and toasts.
+			- PickList uses the shared search field and List background, with controlled input synchronization.
+			- PickList searching and clearing preserve the state of a containing EditForm.
+			- List and PickList use consistent spacing, aligned controls and responsive pagination.
+			- Form clear actions use a subtle outlined circle with an X.
+			- Tabs add configurable inner padding, and Stepper examples provide a padded action footer.
+			- Checkboxes and radio buttons add 10px between indicators and text while preserving unlabeled controls.
 			- Targets .NET 11 RC2.
 		</PackageReleaseNotes>
 	</PropertyGroup>

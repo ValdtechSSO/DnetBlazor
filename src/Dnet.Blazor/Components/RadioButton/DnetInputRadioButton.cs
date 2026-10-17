@@ -122,6 +122,7 @@ namespace Dnet.Blazor.Components.RadioButton
 
         private string _dnetRadioButtonClass =>
         new CssBuilder("dnet-radio-button dnet-accent")
+            .AddClass("dnet-radio-no-label", ChildContent is null)
             .AddClass("dnet-radio-checked", (bool)Context.CurrentValue?.Equals(Value))
             .AddClass("dnet-radio-disabled", Disabled)
         .Build();

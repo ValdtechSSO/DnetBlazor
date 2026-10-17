@@ -1,7 +1,9 @@
 using Dnet.Blazor.Localization;
 using Bunit;
 using Dnet.Blazor.Components.PickList;
+using Dnet.Blazor.Components.Form;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -9,7 +11,11 @@ namespace Dnet.Blazor.UnitTests;
 
 public sealed class PickListTests : BunitContext
 {
-    public PickListTests() => Services.AddDnetLocalization(options => options.DefaultCulture = "en-US");
+    public PickListTests()
+    {
+        Services.AddDnetLocalization(options => options.DefaultCulture = "en-US");
+        Services.AddTransient<IFormEventService, FormEventService>();
+    }
 
     [Fact]
     public async Task Local_search_and_toggle_use_real_dom_events_without_mutating_the_input_set()
@@ -26,7 +32,7 @@ public sealed class PickListTests : BunitContext
         Assert.All(cut.FindAll("input[type=checkbox]"), input =>
             Assert.Equal("switch", input.GetAttribute("role")));
 
-        await cut.Find("input[type=search]").InputAsync("burgos");
+        await cut.Find("input[role=searchbox]").InputAsync("burgos");
 
         Assert.Contains("Burgos", cut.Markup);
         Assert.DoesNotContain("Alicante", cut.Markup);
@@ -36,6 +42,82 @@ public sealed class PickListTests : BunitContext
         Assert.Equal(new[] { 1, 3, 4 }, emitted!.OrderBy(value => value));
         Assert.Equal(new[] { 1, 4 }, selected.OrderBy(value => value));
         Assert.NotSame(selected, emitted);
+    }
+
+    [Fact]
+    public async Task Clearing_library_search_restores_items_without_clearing_selection()
+    {
+        var selected = new HashSet<int> { 1, 4 };
+        var cut = RenderLocal(selected, _ => { });
+
+        await cut.Find("input[role=searchbox]").InputAsync("burgos");
+        await cut.Find("input[role=searchbox]").KeyUpAsync(new Microsoft.AspNetCore.Components.Web.KeyboardEventArgs { Key = "s" });
+        Assert.Single(cut.FindAll(".dnet-pick-list-item"));
+        await cut.WaitForElement(".dnet-component-clear-button").ParentElement!.ClickAsync();
+
+        cut.WaitForAssertion(() =>
+        {
+            Assert.True(string.IsNullOrEmpty(cut.Find("input[role=searchbox]").GetAttribute("value")));
+            Assert.Contains("Alicante", cut.Markup);
+            Assert.Contains("Selected: 2 / 5", cut.Markup);
+        });
+        Assert.Equal(new[] { 1, 4 }, selected.OrderBy(value => value));
+    }
+
+    [Fact]
+    public async Task Searching_and_clearing_do_not_modify_a_surrounding_form()
+    {
+        var editContext = new EditContext(new object());
+        var fieldChanges = new List<FieldIdentifier>();
+        editContext.OnFieldChanged += (_, args) => fieldChanges.Add(args.FieldIdentifier);
+        IReadOnlySet<int> selected = new HashSet<int> { 1, 4 };
+        var selectionChanges = 0;
+        RenderFragment<EditContext> content = _ => builder =>
+        {
+            builder.OpenComponent<PickList<Team, int>>(0);
+            builder.AddAttribute(1, nameof(PickList<Team, int>.Items), Teams);
+            builder.AddAttribute(2, nameof(PickList<Team, int>.ItemKey), (Func<Team, int>)(team => team.Id));
+            builder.AddAttribute(3, nameof(PickList<Team, int>.ItemTemplate), TeamTemplate);
+            builder.AddAttribute(4, nameof(PickList<Team, int>.SearchTextSelector), (Func<Team, string?>)(team => team.Name));
+            builder.AddAttribute(5, nameof(PickList<Team, int>.SelectedKeys), selected);
+            builder.AddAttribute(6, nameof(PickList<Team, int>.SelectedKeysChanged),
+                EventCallback.Factory.Create<IReadOnlySet<int>>(this, value =>
+                {
+                    selected = value;
+                    selectionChanges++;
+                }));
+            builder.CloseComponent();
+        };
+        var cut = Render<EditForm>(parameters => parameters
+            .Add(component => component.EditContext, editContext)
+            .Add(component => component.ChildContent, content));
+
+        await cut.Find("input[role=searchbox]").InputAsync("burgos");
+        await cut.Find("input[role=searchbox]").KeyUpAsync(new Microsoft.AspNetCore.Components.Web.KeyboardEventArgs { Key = "s" });
+
+        Assert.Single(cut.FindAll(".dnet-pick-list-item"));
+        Assert.Contains("Burgos", cut.Markup);
+        Assert.False(editContext.IsModified());
+        Assert.Empty(fieldChanges);
+
+        await cut.WaitForElement(".dnet-component-clear-button").ParentElement!.ClickAsync();
+
+        cut.WaitForAssertion(() =>
+        {
+            Assert.True(string.IsNullOrEmpty(cut.Find("input[role=searchbox]").GetAttribute("value")));
+            Assert.Equal(Teams.Length, cut.FindAll(".dnet-pick-list-item").Count);
+            Assert.False(editContext.IsModified());
+            Assert.Empty(fieldChanges);
+        });
+        Assert.Equal(new[] { 1, 4 }, selected.OrderBy(value => value));
+        Assert.Equal(0, selectionChanges);
+
+        // Selection retains its existing integration with the surrounding form.
+        await cut.FindAll("input[type=checkbox]")[1].ChangeAsync(true);
+        Assert.Equal(new[] { 1, 2, 4 }, selected.OrderBy(value => value));
+        Assert.Equal(1, selectionChanges);
+        Assert.True(editContext.IsModified());
+        Assert.NotEmpty(fieldChanges);
     }
 
     [Fact]
@@ -59,7 +141,7 @@ public sealed class PickListTests : BunitContext
                     EventCallback.Factory.Create<string?>(this, value => emittedSearch = value));
         });
 
-        await controlled.Find("input[type=search]").InputAsync("denia");
+        await controlled.Find("input[role=searchbox]").InputAsync("denia");
         Assert.Equal("denia", emittedSearch);
         Assert.Contains("Alicante", controlled.Markup);
 
@@ -111,7 +193,7 @@ public sealed class PickListTests : BunitContext
         await cut.Find("button[aria-label='Next page']").ClickAsync();
         await cut.Find("input[type=checkbox]").ChangeAsync(true);
         cut.Render(parameters => parameters.Add(component => component.SelectedKeys, selected));
-        await cut.Find("input[type=search]").InputAsync("denia");
+        await cut.Find("input[role=searchbox]").InputAsync("denia");
 
         Assert.Equal(new[] { 1, 3 }, selected.OrderBy(value => value));
         Assert.Contains("Selected: 2 / 5", cut.Markup);
@@ -134,7 +216,7 @@ public sealed class PickListTests : BunitContext
         Assert.False(requests[1].RequestFilteredCount);
         Assert.Equal(1, requests[1].PageIndex);
 
-        await cut.Find("input[type=search]").InputAsync("burgos");
+        await cut.Find("input[role=searchbox]").InputAsync("burgos");
         Assert.Equal(3, requests.Count);
         Assert.False(requests[2].RequestTotalCount);
         Assert.True(requests[2].RequestFilteredCount);
@@ -201,7 +283,7 @@ public sealed class PickListTests : BunitContext
             provider,
             selected: new HashSet<int> { 99 },
             onSelectionChanged: value => emittedSelection = value);
-        var search = cut.Find("input[type=search]");
+        var search = cut.Find("input[role=searchbox]");
         var slowEvent = search.InputAsync("slow");
         var slowToken = await slowStarted.Task.WaitAsync(TimeSpan.FromSeconds(2));
 
@@ -283,7 +365,7 @@ public sealed class PickListTests : BunitContext
         Assert.Contains("Selected: 1 / 0", empty.Markup);
 
         var noResults = RenderLocal(new HashSet<int> { 99 }, _ => { });
-        noResults.Find("input[type=search]").Input("not-found");
+        noResults.Find("input[role=searchbox]").Input("not-found");
         Assert.Contains("No results", noResults.Markup);
         Assert.Contains("Selected: 1 / 5", noResults.Markup);
     }

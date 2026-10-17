@@ -44,12 +44,12 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-list-hover-background-color` | `#f2f2f2` <br><sub>via `--dnet-sys-surface-hover`</sub> |
 | `--dnet-list-hover-border-radius` | `10px` <br><sub>via `--dnet-sys-radius-lg`</sub> |
 | `--dnet-list-item-height` | `50px` <br><sub>via `--dnet-sys-control-height`</sub> |
-| `--dnet-list-padding-horizontal` | `5px` |
-| `--dnet-list-padding-vertical` | `4px` |
+| `--dnet-list-padding-horizontal` | `0px` |
+| `--dnet-list-padding-vertical` | `0px` |
 | `--dnet-list-prefix-suffix-min-width` | `40px` |
 | `--dnet-list-supporting-text-color` | `#666666` <br><sub>via `--dnet-sys-on-surface-muted`</sub> |
 | `--dnet-list-supporting-text-font-size` | `0.75rem` <br><sub>via `--dnet-sys-text-sm`</sub> |
-| `--dnet-list-wrapper-horizontal-padding` | `15px` |
+| `--dnet-list-wrapper-horizontal-padding` | `20px` |
 
 ```css
 :root { --dnet-list-background-color: /* your value */; }
