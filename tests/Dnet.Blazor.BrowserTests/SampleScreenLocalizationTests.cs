@@ -49,7 +49,10 @@ public sealed class SampleScreenLocalizationTests
             if (route.Contains("Example") || route == "BlGrid")
                 await page.Locator(".blg-center-cols-container [role=gridcell]").First.WaitForAsync(new() { State = WaitForSelectorState.Attached });
             if (route == "List")
+            {
                 await Assertions.Expect(page.Locator("#list-directory-value")).ToContainTextAsync(personCount);
+                await Assertions.Expect(page.Locator("#list-directory-card .dnet-list-item")).ToHaveCountAsync(Math.Min(5, fixture.RootElement.GetArrayLength()));
+            }
             if (route == "Autocomplete")
                 await Assertions.Expect(page.Locator(".autocomplete-count")).ToContainTextAsync(personCount);
             var spanish = await content.InnerTextAsync();
