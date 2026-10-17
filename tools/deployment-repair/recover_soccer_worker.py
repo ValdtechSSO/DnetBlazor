@@ -24,6 +24,7 @@ import subprocess
 import tempfile
 import time
 from urllib.parse import urlsplit
+import allocate_proxy_ips as allocation
 
 
 
@@ -352,6 +353,10 @@ def recover(baseline_path, apply):
         require(restored_app['Id'] == app['Id'], 'Unexpected DnetBlazor recreation')
         verify_proxy()
         require(REGISTRY.read_bytes() == registry_bytes, 'Central reservations changed unexpectedly during recovery')
+        registry_state = json.loads(registry_bytes)
+        registry_state['allocations'][RESERVATION_KEY]['state'] = 'active'
+        registry_state['allocations'][RESERVATION_KEY]['verified_at_utc'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        allocation.atomic_json(REGISTRY, registry_state)
         result = {'status': 'recovered', 'verified_at_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
                   'worker': {'name': WORKER_NAME, 'ip': WORKER_IP, 'image': worker['Config']['Image'],
                              'image_id': restored_worker['Image'], 'id': restored_worker['Id']},
@@ -359,7 +364,7 @@ def recover(baseline_path, apply):
                   'proxy': {'name': PROXY_NAME, 'id': proxy['Id'], 'status': 'unchanged'},
                   'http_redirect': 'verified', 'tls_sni': 'www.datalnet.com and console.valdtech.com verified',
                   'dnetblazor_http_https': '200 with application shell',
-                  'central_reservations': 'unchanged', 'backup': str(backup_file), 'rollback': str(rollback)}
+                  'central_reservations': 'worker marked active; other reservations unchanged', 'backup': str(backup_file), 'rollback': str(rollback)}
         (backup / 'result.json').write_text(json.dumps(result, indent=2) + '\n')
         print(json.dumps(result, indent=2), flush=True)
 
