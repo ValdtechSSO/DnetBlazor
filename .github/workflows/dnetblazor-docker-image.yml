@@ -86,6 +86,25 @@ jobs:
               docker network inspect --format '{{range .Containers}}{{if eq .IPv4Address "192.168.0.3/24"}}IP owner: {{.Name}} {{.IPv4Address}}{{end}}{{end}}' "$network_id"
             done
             ss -ltn '( sport = :5001 )' || true
+            python3 - <<'PY'
+            import copy, http.client, json, subprocess
+            def query(*args): return json.loads(subprocess.check_output(args, text=True))
+            worker=query('docker','inspect','soccer-integration-worker-prod')[0]
+            image=query('docker','image','inspect',worker['Config']['Image'])[0]
+            original='/home/docker/.proxy-recovery-backups/20261017T144744Z-462764/worker.compose.original'
+            before=query('docker','compose','-p','docker','--project-directory','/home/docker','-f',original,'config','--format','json')
+            service=before['services']['soccerintegrationworkerprod']
+            parse=lambda values:dict(value.split('=',1) for value in values or [])
+            expected=parse(image['Config'].get('Env'));expected.update(service.get('environment') or {})
+            current=parse(worker['Config'].get('Env'))
+            print(json.dumps({'worker_running':worker['State']['Running'],'worker_ip':worker['NetworkSettings']['Networks']['docker_datalnet']['IPAddress'],'image_unchanged':worker['Image']==image['Id'],'environment_values_unchanged':current==expected,'restart_count':worker['RestartCount']}))
+            for name,host,port in [('soccer-mng','192.168.0.27',5002),('soccer-public','192.168.0.28',5007)]:
+              connection=http.client.HTTPConnection(host,port,timeout=5)
+              try:
+                connection.request('GET','/swagger/v1/swagger.json');response=connection.getresponse()
+                print(json.dumps({'api':name,'http_status':response.status}))
+              finally: connection.close()
+            PY
             docker inspect --format 'Proxy image={{.Config.Image}} mounts={{range .Mounts}}{{.Source}} -> {{.Destination}}; {{end}}' docker-webproxy-1
             docker exec docker-webproxy-1 sh -c 'ls -1 /app/appsettings*.json'
             docker exec docker-webproxy-1 cat /app/appsettings.Production.json | python3 -c '
