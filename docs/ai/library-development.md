@@ -110,6 +110,15 @@ and `demo-preview`; page-specific scoped CSS should style the example content.
 Do not override library geometry to make a sample fit. Use public sizing APIs
 or a labelled local scroll region when a control needs more horizontal space.
 
+Action buttons use `DnetButtonVariant.Filled` by default, with the theme's
+primary color (`#5B5CE0` in the default theme). Use `Outlined` for secondary
+commands such as Cancel, Back, Reset and Clear. Its foreground adapts to the
+surface through `--dnet-sys-primary-content` for contrast. Keep primary-colored
+text on that role; primary fills continue pairing primary/strong with on-primary.
+Keep raw calendar/tab navigation separate: those controls
+share base styles but do not carry action-variant classes. Public and legacy
+button token overrides apply to both variants.
+
 Preserve existing routes and stable interaction IDs when refreshing samples.
 Check all cards and opened overlays at desktop and mobile widths in both themes,
 including selected, disabled and empty states. Sample changes can intentionally
@@ -119,12 +128,48 @@ Linux goldens in their matching environment.
 The `/DoubleList` sample composes two `DnetList` instances; run the `List` fact
 sheet for it. It is separate from `/FloatingDoubleList`, whose fact sheet and
 visual baseline cover a different control.
+The FloatingDoubleList sample keeps snapshots of both lists from
+`OnSelectionChanged` so closing and reopening preserves transfers. Treat that
+event as the assignment source; the legacy string `Value` alone does not track
+transferred items. Local searches filter each side without replacing its data.
+The sample's reset recreates the field to clear panel state, and the first
+editable trigger has the stable ID `floating-doublelist-field`.
+
+Grid filter panels compose `DnetFormField` and the library's Select, text,
+numeric and date controls. Keep enum models behind integer Select option IDs:
+the Select formatter does not support enum values directly. Dates display the
+column format and store invariant ISO values for the filtering engine; numeric
+advanced filters currently use integers. A simple filter needs both the grid's
+`EnableFilter` flag and the column's `EnableSimpleFilter` plus `CellDataType`.
 
 The `/ImageEditor` sample validates PNG/JPEG uploads, offers the bundled logo
 and keeps the input stream alive until the dialog closes. An unchanged export
 may return that same stream; an edited export may return a different one. Dispose
 both owned streams after consuming the result, without losing the previous
 confirmed image when an edit is cancelled.
+
+## Localization
+
+Control-owned text uses `Dnet.Blazor.Localization.IDnetLocalizer`, automatically
+registered scoped by `AddDnetBlazor`. Spanish (`es-ES`) is the default; English
+and regional variants are supported. Resources live in `Localization/DnetStrings`
+(`.resx` Spanish neutral, `.en.resx` English). Keep both catalogs complete.
+
+Razor controls resolve the service via `DnetLocalization.Get(IServiceProvider)`
+to preserve no-DI use of presentational controls. A `DnetLocalizationObserver`
+calls the owner's refresh callback without rendering DOM. Dispose subscriptions;
+do not reset values, selection or search when the culture changes. Open overlay
+content must observe localization itself: passing a resolved label/culture at
+creation freezes it. Pass explicit overrides through and resolve defaults at the
+rendering component. Refresh the overlay's ARIA metadata when it changes.
+
+Explicit labels win over translations. Preserve partial `Strings`/`Labels`
+overrides by tracking assignment per property, never by comparing text with an
+English default. PickList/Toast retain instance → DI → catalog precedence.
+Use scoped `Localizer.Culture` for human-visible formats; keep HTML number/date
+wire values and grid filter/sort serialization invariant. Do not set global or
+ambient cultures to change a user's language. Caller-owned business content stays
+in the application's resources. See `docs/localization.md` for public usage.
 
 ## Reference files
 

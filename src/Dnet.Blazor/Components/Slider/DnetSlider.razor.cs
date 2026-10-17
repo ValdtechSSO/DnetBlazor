@@ -1,3 +1,4 @@
+using Dnet.Blazor.Localization;
 using System.Globalization;
 using System.Linq.Expressions;
 using Dnet.Blazor.Infrastructure.Services.CssBuilder;
@@ -482,8 +483,10 @@ public partial class DnetSlider : IDisposable
         return hasErrors ? "true" : null;
     }
 
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+
     private string FormatValue(double value)
-        => DisplayWith?.Invoke(value) ?? value.ToString("0.########", CultureInfo.CurrentCulture);
+        => DisplayWith?.Invoke(value) ?? value.ToString("0.########", Localizer.Culture);
 
     private static string FormatNumber(double value)
         => value.ToString("0.################", CultureInfo.InvariantCulture);

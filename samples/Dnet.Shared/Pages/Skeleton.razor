@@ -1,5 +1,6 @@
 @page "/Skeleton"
 @using Dnet.Blazor.Components.Skeleton
+@using Dnet.Blazor.Components.Button
 
 <div class="container-fluid" style="padding-top: 10px;">
     <div class="dnet-page-content-left-margin dnet-m-t-20" style="max-width: 800px;">
@@ -22,9 +23,9 @@
 
         <section class="dnet-m-t-20" aria-labelledby="skeleton-content-title">
             <h2 id="skeleton-content-title" style="font-size: 1.125rem;">Del estado de carga al contenido</h2>
-            <button type="button" class="dnet-button" id="skeleton-loading-toggle" @onclick="() => _loading = !_loading">
+            <DnetButton Variant="DnetButtonVariant.Outlined" id="skeleton-loading-toggle" OnClick="() => _loading = !_loading">
                 @(_loading ? "Mostrar contenido" : "Simular carga")
-            </button>
+            </DnetButton>
             <p id="skeleton-loading-status" role="status">@(_loading ? "Cargando el perfil…" : "Perfil disponible")</p>
             <div style="width: 128px; margin-bottom: 16px;">
                 <DnetSkeleton Circle="true" Height="50%" Visible="_loading" id="skeleton-circle-wrapped">
@@ -38,7 +39,7 @@
                     <label for="skeleton-state-input" style="display: block; margin-bottom: 6px;">Una idea para recordar</label>
                     <input id="skeleton-state-input" @bind="_note" @bind:event="oninput"
                            style="width: 100%; box-sizing: border-box; padding: 10px; color: var(--dnet-sys-on-surface); background: var(--dnet-sys-surface); border: 1px solid var(--dnet-sys-border-strong); border-radius: 4px;" />
-                    <button type="button" class="dnet-button" id="skeleton-content-action" style="margin-top: 12px;" @onclick="() => _saved++">Guardar idea</button>
+                    <DnetButton id="skeleton-content-action" style="margin-top: 12px;" OnClick="() => _saved++">Guardar idea</DnetButton>
                     <p id="skeleton-action-count" style="margin: 8px 0 0;">Ideas guardadas: @_saved</p>
                 </div>
             </DnetSkeleton>

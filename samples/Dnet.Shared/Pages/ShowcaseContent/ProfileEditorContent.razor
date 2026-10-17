@@ -21,7 +21,7 @@
             <div class="profile-editor-field"><DnetFormField Label="Email address" IsRequired="true"><ChildContent><DnetInputText id="showcase-profile-email" @bind-Value="_profile.Email" aria-label="Email address" autocomplete="email" /></ChildContent><ErrorContent><ValidationMessage For="@(() => _profile.Email)" /></ErrorContent></DnetFormField></div>
             <div class="profile-editor-field"><DnetFormField Label="Job title"><ChildContent><DnetInputText id="showcase-profile-role" @bind-Value="_profile.Role" aria-label="Job title" autocomplete="organization-title" /></ChildContent></DnetFormField></div>
         </div>
-        <footer class="profile-editor-actions"><DnetButton OnClick="Cancel">Cancel</DnetButton><DnetButton id="showcase-profile-save" class="profile-editor-save" ButtonType="submit">Save profile</DnetButton></footer>
+        <footer class="profile-editor-actions"><DnetButton id="showcase-profile-cancel" Variant="DnetButtonVariant.Outlined" OnClick="Cancel">Cancel</DnetButton><DnetButton id="showcase-profile-save" class="profile-editor-save" ButtonType="submit">Save profile</DnetButton></footer>
     </EditForm>
 </div>
 

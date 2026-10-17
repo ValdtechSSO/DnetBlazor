@@ -1,7 +1,10 @@
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
 @using Microsoft.AspNetCore.Components.Web
 
 @implements IDisposable
 
+<DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
 <nav class="dnet-paginator" aria-label="@PaginationLabel">
     <div class="dnet-paginator-container" style="grid-template-rows: repeat(@(OneRow ? 1 : 2), 1fr); grid-column-gap: @($"{GridGap}px");">
         <div class="dnet-paginator-page-container @($"zone{PageNumberZone}")">
@@ -60,6 +63,9 @@
 </nav>
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+    private Task HandleLocalizationChanged() => InvokeAsync(StateHasChanged);
+
 
     /// <summary>Raised when go to first page occurs.</summary>
     [Parameter]
@@ -99,35 +105,43 @@
 
     /// <summary>Gets or sets the pagination label used by this component.</summary>
     [Parameter]
-    public string PaginationLabel { get; set; } = "Pagination";
+    public string PaginationLabel { get => _paginationLabel ?? Localizer["Paginator.Label"]; set => _paginationLabel = value; }
+    private string? _paginationLabel;
 
     /// <summary>Gets or sets the page text used by this component.</summary>
     [Parameter]
-    public string PageText { get; set; } = "Page";
+    public string PageText { get => _pageText ?? Localizer["Paginator.Page"]; set => _pageText = value; }
+    private string? _pageText;
 
     /// <summary>Gets or sets the of text used by this component.</summary>
     [Parameter]
-    public string OfText { get; set; } = "of";
+    public string OfText { get => _ofText ?? Localizer["Paginator.Of"]; set => _ofText = value; }
+    private string? _ofText;
 
     /// <summary>Gets or sets the page input label used by this component.</summary>
     [Parameter]
-    public string PageInputLabel { get; set; } = "Current page";
+    public string PageInputLabel { get => _pageInputLabel ?? Localizer["Paginator.CurrentPage"]; set => _pageInputLabel = value; }
+    private string? _pageInputLabel;
 
     /// <summary>Gets or sets the first page label used by this component.</summary>
     [Parameter]
-    public string FirstPageLabel { get; set; } = "First page";
+    public string FirstPageLabel { get => _firstPageLabel ?? Localizer["Paginator.FirstPage"]; set => _firstPageLabel = value; }
+    private string? _firstPageLabel;
 
     /// <summary>Gets or sets the previous page label used by this component.</summary>
     [Parameter]
-    public string PreviousPageLabel { get; set; } = "Previous page";
+    public string PreviousPageLabel { get => _previousPageLabel ?? Localizer["Paginator.PreviousPage"]; set => _previousPageLabel = value; }
+    private string? _previousPageLabel;
 
     /// <summary>Gets or sets the next page label used by this component.</summary>
     [Parameter]
-    public string NextPageLabel { get; set; } = "Next page";
+    public string NextPageLabel { get => _nextPageLabel ?? Localizer["Paginator.NextPage"]; set => _nextPageLabel = value; }
+    private string? _nextPageLabel;
 
     /// <summary>Gets or sets the last page label used by this component.</summary>
     [Parameter]
-    public string LastPageLabel { get; set; } = "Last page";
+    public string LastPageLabel { get => _lastPageLabel ?? Localizer["Paginator.LastPage"]; set => _lastPageLabel = value; }
+    private string? _lastPageLabel;
 
     /// <summary>Gets or sets the page number zone used by this component.</summary>
     [Parameter]

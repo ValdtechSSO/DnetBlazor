@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using Microsoft.AspNetCore.Components;
@@ -132,6 +132,20 @@ namespace Dnet.Blazor.Infrastructure.Forms
                     EditContext?.NotifyValidationStateChanged();
                     _previousParsingAttemptFailed = _parsingFailed;
                 }
+            }
+        }
+
+        /// <summary>Refreshes an existing parse error without changing the value or modified state.</summary>
+        protected void RefreshParsingValidationMessage()
+        {
+            if (!_parsingFailed || _parsingValidationMessages is null || EditContext is null)
+                return;
+
+            if (!TryParseValueFromString(_incomingValueBeforeParsing, out _, out var message))
+            {
+                _parsingValidationMessages.Clear(FieldIdentifier);
+                _parsingValidationMessages.Add(FieldIdentifier, message);
+                EditContext.NotifyValidationStateChanged();
             }
         }
 

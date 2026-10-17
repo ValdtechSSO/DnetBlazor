@@ -79,7 +79,7 @@
                 RowHeight = 56,
                 GridClass = "cvs-bl-grid",
                 SuppressFilterRow = false,
-                EnableFilter = true, // Enable simple filtering
+                EnableFilter = true, // Columns must also set EnableSimpleFilter and CellDataType.
                 EnableAdvancedFilter = true,
             };
     }
@@ -100,11 +100,13 @@
                             ColumnId = 3,
                             HeaderName = "IsActive",
                             DataField = "IsActive",
-                            Width= 100,
+                            Width= 160,
                             Height= height,
                             CanGrow = 0,
                             CellDataFn = (x) => x.RowData.IsActive,
-                            AlingContent = AlingContent.Center
+                            AlingContent = AlingContent.Center,
+                            CellDataType = CellDataType.Boolean,
+                            EnableSimpleFilter = true
                         },
                         new GridColumn<Person> {
                             ColumnId = 5,
@@ -115,7 +117,8 @@
                             CanGrow = canGrow,
                             CellDataFn = (x) => x.RowData.Age,
                             AlingContent = AlingContent.Center,
-                            CellDataType = CellDataType.Number //Set CellDataFnType to allow simple filtering by column
+                            CellDataType = CellDataType.Number,
+                            EnableSimpleFilter = true
                         },
                         new GridColumn<Person> {
                             ColumnId = 0,
@@ -126,6 +129,7 @@
                             CanGrow = canGrow,
                             CellDataFn = (x) => x.RowData.Name,
                             CellDataType = CellDataType.Text,
+                            EnableSimpleFilter = true,
                         },
                         new GridColumn<Person> {
                             ColumnId = 1,
@@ -135,7 +139,8 @@
                             Height= height,
                             CanGrow = canGrow,
                             CellDataFn = (x) => x.RowData.Gender,
-                            CellDataType = CellDataType.Text
+                            CellDataType = CellDataType.Text,
+                            EnableSimpleFilter = true
                         },
                         new GridColumn<Person> {
                             ColumnId = 6,
@@ -145,7 +150,8 @@
                             Height= height,
                             CanGrow = canGrow,
                             CellDataFn = (x) => x.RowData.Company,
-                            CellDataType = CellDataType.Text
+                            CellDataType = CellDataType.Text,
+                            EnableSimpleFilter = true
                         },
                         new GridColumn<Person> {
                             ColumnId = 7,
@@ -155,7 +161,8 @@
                             Height= height,
                             CanGrow = canGrow,
                             CellDataFn = (x) => x.RowData.Email,
-                            CellDataType = CellDataType.Text
+                            CellDataType = CellDataType.Text,
+                            EnableSimpleFilter = true
                         },
                           new GridColumn<Person> {
                             ColumnId = 11,
@@ -164,7 +171,9 @@
                             Width= width,
                             Height= height,
                             CanGrow = canGrow,
-                            CellDataFn = (x) => x.RowData.Phone
+                            CellDataFn = (x) => x.RowData.Phone,
+                            CellDataType = CellDataType.Text,
+                            EnableSimpleFilter = true
                         },
                            new GridColumn<Person> {
                             ColumnId = 12,
@@ -174,7 +183,8 @@
                             Height= height,
                             CanGrow = canGrow,
                             CellDataFn = (x) => x.RowData.Address,
-                            CellDataType = CellDataType.Text
+                            CellDataType = CellDataType.Text,
+                            EnableSimpleFilter = true
                         }
 
         };

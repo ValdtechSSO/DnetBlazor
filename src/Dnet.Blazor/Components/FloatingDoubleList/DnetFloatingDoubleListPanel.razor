@@ -1,4 +1,6 @@
-﻿@using Dnet.Blazor.Components.FloatingDoubleList.Infrastructure.Models;
+﻿@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+@using Dnet.Blazor.Components.FloatingDoubleList.Infrastructure.Models;
 @using Dnet.Blazor.Components.FloatingDoubleList.Infrastructure.Services;
 @using Dnet.Blazor.Components.List
 @using Dnet.Blazor.Components.Checkbox
@@ -10,6 +12,7 @@
 
 @inject HttpClient HttpClient
 
+<DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
 <div class="dnet-connected-panel-container-dl">
     <div class="dnet-split-content-dl" style="height:calc(100% - 0px);">
         <div style="display: flex; justify-content: space-between; padding: 10px 5px 10px 10px;">
@@ -18,7 +21,7 @@
                     @(isActive ? $"{_rightListOptions.HeaderText} >>" : $"{_leftListOptions.HeaderText} >>")
                 </button>
             </div>
-            <span @onclick="Close" class="dnet-dialog-icon-wrapper">
+            <span @onclick="Close" class="dnet-dialog-icon-wrapper" role="button" tabindex="0" aria-label="@(Localizer["Common.Close"])" @onkeydown="HandleCloseKeyDown">
                 <span class="dnet-dialog-icon dnet-dialog-close-icon" unselectable="on"></span>
             </span>
         </div>
@@ -50,6 +53,9 @@
 
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+    private Task HandleLocalizationChanged() => InvokeAsync(() => { ApplyDefaultLabels(); StateHasChanged(); });
+
 
     /// <summary>Gets or sets the left list options used by this component.</summary>
     [Parameter]
@@ -178,6 +184,7 @@
         _rightListOptions = CloneListOptions(RightListOptions);
         _rightListOptions.ContainerName = "RightContainer";
         _rightListOptions.ConnectedTo = "LeftContainer";
+        ApplyDefaultLabels();
 
         if (SearchControlOptions != null)
         {
@@ -366,6 +373,17 @@
         _rightComponent.SetRowData(filtered);
 
         StateHasChanged();
+    }
+
+    private void HandleCloseKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key is "Enter" or " ") Close();
+    }
+
+    private void ApplyDefaultLabels()
+    {
+        _leftListOptions.HeaderText = LeftListOptions?.HeaderText ?? Localizer["FloatingDoubleList.Available"];
+        _rightListOptions.HeaderText = RightListOptions?.HeaderText ?? Localizer["FloatingDoubleList.Assigned"];
     }
 
     private void Close()

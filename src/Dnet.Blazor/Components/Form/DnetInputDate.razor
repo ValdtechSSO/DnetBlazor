@@ -1,4 +1,6 @@
-﻿@using Microsoft.AspNetCore.Components.Forms
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+@using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.JSInterop
 @using System.Diagnostics.CodeAnalysis
@@ -14,6 +16,8 @@
 @implements IDisposable
 
 @inject IJSRuntime JSRuntime
+
+<DnetLocalizationObserver OnChanged="HandleCultureChangedAsync" />
 
 @if (!ImmediateResponse)
 {
@@ -47,6 +51,14 @@ else
 
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+
+    private Task HandleCultureChangedAsync() => InvokeAsync(() =>
+    {
+        RefreshParsingValidationMessage();
+        StateHasChanged();
+    });
+
 
     [CascadingParameter]
     private FormFieldCascadingValues? _formFieldCascadingValues { get; set; }
@@ -113,7 +125,16 @@ else
 
     private string _typeAttributeValue = default!;
     private string _format = default!;
-    private string _parsingErrorMessage = default!;
+    private string EffectiveParsingErrorMessage => !string.IsNullOrEmpty(ParsingErrorMessage)
+        ? ParsingErrorMessage
+        : Localizer[Type switch
+        {
+            InputDateType.Date => "Form.DateParsingError",
+            InputDateType.DateTimeLocal => "Form.DateTimeParsingError",
+            InputDateType.Month => "Form.MonthParsingError",
+            InputDateType.Time => "Form.TimeParsingError",
+            _ => throw new InvalidOperationException($"Unsupported {nameof(InputDateType)} '{Type}'.")
+        }];
 
     public DnetInputDate()
     {
@@ -170,18 +191,14 @@ else
     {
         base.OnParametersSet();
 
-        (_typeAttributeValue, _format, var formatDescription) = Type switch
+        (_typeAttributeValue, _format) = Type switch
         {
-            InputDateType.Date => ("date", DateFormat, "date"),
-            InputDateType.DateTimeLocal => ("datetime-local", DateTimeLocalFormat, "date and time"),
-            InputDateType.Month => ("month", MonthFormat, "year and month"),
-            InputDateType.Time => ("time", TimeFormat, "time"),
+            InputDateType.Date => ("date", DateFormat),
+            InputDateType.DateTimeLocal => ("datetime-local", DateTimeLocalFormat),
+            InputDateType.Month => ("month", MonthFormat),
+            InputDateType.Time => ("time", TimeFormat),
             _ => throw new InvalidOperationException($"Unsupported {nameof(InputDateType)} '{Type}'.")
         };
-
-        _parsingErrorMessage = string.IsNullOrEmpty(ParsingErrorMessage)
-            ? $"The {{0}} field must be a {formatDescription}."
-            : ParsingErrorMessage;
 
         if (_previousDisabled != Disabled)
         {
@@ -278,7 +295,7 @@ else
         }
         else
         {
-            validationErrorMessage = string.Format(CultureInfo.InvariantCulture, _parsingErrorMessage, DisplayName ?? FieldIdentifier.FieldName);
+            validationErrorMessage = string.Format(Localizer.Culture, EffectiveParsingErrorMessage, DisplayName ?? FieldIdentifier.FieldName);
             return false;
         }
     }

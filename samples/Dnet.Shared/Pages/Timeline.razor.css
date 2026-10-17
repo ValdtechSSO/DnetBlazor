@@ -103,7 +103,7 @@
 .timeline-related-link {
     display: inline-block;
     margin-block-start: 8px;
-    color: var(--dnet-sys-primary-strong);
+    color: var(--dnet-sys-primary-content);
     font-size: var(--dnet-sys-text-sm);
     line-height: 1.6;
     text-decoration: underline;

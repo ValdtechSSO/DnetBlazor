@@ -1,4 +1,6 @@
-﻿@using Dnet.Blazor.Components.Dialog.Infrastructure.Interfaces
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+@using Dnet.Blazor.Components.Dialog.Infrastructure.Interfaces
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Interfaces
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Services
 @using Dnet.Blazor.Infrastructure.Services.CssBuilder
@@ -6,9 +8,11 @@
 
 @inject IOverlayService OverlayService
 
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
 <div class="@DialogCssClasses">
     <div class="dnet-dialog-header">
-        <h1 class="dnet-dialog-title">@Title</h1>
+        <h1 class="dnet-dialog-title">@(LocalizedTitleKey is null ? Title : Localizer[LocalizedTitleKey])</h1>
         <span @onclick="CloseDialog" class="dnet-dialog-icon-wrapper">
             <span class="dnet-dialog-icon dnet-dialog-close-icon" unselectable="on"></span>
         </span>
@@ -21,6 +25,11 @@
 </div>
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+
+    [CascadingParameter(Name = "DnetLocalizedDialogTitle")]
+    private string? LocalizedTitleKey { get; set; }
+
 
     [CascadingParameter] private int OverlayReferenceId { get; set; }
 

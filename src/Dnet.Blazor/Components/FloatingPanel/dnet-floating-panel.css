@@ -67,7 +67,7 @@
 }
 
 .dnet-panel-button-list-item {
-  color: var(--dnet-sys-primary-strong);
+  color: var(--dnet-sys-primary-content);
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -111,7 +111,7 @@
 }
 
 .dsec-panel-info-subject {
-  color: var(--dnet-sys-primary-strong);
+  color: var(--dnet-sys-primary-content);
   display: flex;
   align-items: center;
   cursor: pointer;

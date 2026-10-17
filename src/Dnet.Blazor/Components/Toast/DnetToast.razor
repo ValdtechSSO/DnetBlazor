@@ -1,4 +1,6 @@
-﻿@using Dnet.Blazor.Components.Overlay.Infrastructure.Services
+@using Dnet.Blazor.Localization
+@using Dnet.Blazor.Components.Button
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Services
 @using Dnet.Blazor.Components.Toast.Infrastructure.Enums
 @using Dnet.Blazor.Components.Toast.Infrastructure.Interfaces
 @using Dnet.Blazor.Components.Toast.Infrastructure.Models
@@ -9,6 +11,8 @@
 @inject IServiceProvider Services
 
 @implements IAsyncDisposable
+
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
 
 <div class="@_toastCssClasses"
      data-severity="@SeverityName"
@@ -57,12 +61,13 @@
             <div class="dnet-toast__actions">
                 @foreach (var action in VisibleActions)
                 {
-                    <button type="button"
-                            class="dnet-toast__action"
-                            data-quiet="@(action.Quiet ? "true" : null)"
-                            @onclick="() => HandleActionAsync(action)">
+                    <DnetButton ButtonType="button" Size="DnetButtonSize.Small" Variant="DnetButtonVariant.Outlined"
+                                class="dnet-toast__action"
+                                style="--dnet-btn-foreground:currentColor;--dnet-btn-border-color:currentColor"
+                                data-quiet="@(action.Quiet ? "true" : null)"
+                                OnClick="() => HandleActionAsync(action)">
                         @action.Label
-                    </button>
+                    </DnetButton>
                 }
             </div>
         }
@@ -169,8 +174,10 @@
     private CancellationTokenSource? _durationCountdownCancellation;
     private CancellationTokenSource? _closeFallbackCancellation;
 
-    private ToastStrings EffectiveStrings =>
-        Strings ?? Services.GetService(typeof(ToastStrings)) as ToastStrings ?? ToastStrings.Default;
+    private IDnetLocalizer Localizer => DnetLocalization.Get(Services);
+
+    private ToastStrings EffectiveStrings => ToastStrings.Resolve(
+        Strings, Services.GetService(typeof(ToastStrings)) as ToastStrings, Localizer);
 
     private IReadOnlyList<ToastAction> VisibleActions =>
         Actions?.Where(action => !string.IsNullOrWhiteSpace(action.Label)).Take(2).ToArray()

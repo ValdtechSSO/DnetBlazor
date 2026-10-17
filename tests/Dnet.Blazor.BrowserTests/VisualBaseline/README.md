@@ -126,10 +126,11 @@ intercambio de fuentes web.
 
 ## Prueba de la propia suite
 
-El criterio de aceptación de STY-002: un golden de `hover` sobre `Button` debe
-fallar si cambia su color de hover (el defecto que motiva la Fase 2 — el default
-y el hover de `Button` caen hoy ambos en `--dnet-sys-state-hover`, así que los
-goldens `button-hover` y `button-default` son idénticos por construcción).
+El golden de `hover` sobre `Button` debe fallar si cambia su color de hover.
+El escenario usa `/Buttons` y `#button-variant-filled`, sin overrides de color:
+`default`, `hover` y `focus` deben producir capturas distintas. Las variantes
+`outlined` y `disabled` se capturan en la misma página. `/theming` conserva
+sus overrides deliberados y no representa el aspecto por defecto de Button.
 
 Además de comparar contra el golden, `VisualGoldenIntegrityTests` calcula un
 hash por PNG y falla si los estados que declaran un cambio visual (selección,

@@ -29,7 +29,7 @@ public sealed class TimelineTests : BunitContext
         Assert.Single(cut.FindAll("[aria-current]"));
         Assert.Equal(["Received", "Preparing", "Delivered"], cut.FindAll(".dnet-timeline-title").Select(element => element.TextContent));
         Assert.All(cut.FindAll(".dnet-timeline-bullet"), bullet => Assert.Equal("true", bullet.GetAttribute("aria-hidden")));
-        Assert.Equal(["Completed", "Current", "Pending"], cut.FindAll(".dnet-timeline-status").Select(element => element.TextContent));
+        Assert.Equal(["Completado", "Actual", "Pendiente"], cut.FindAll(".dnet-timeline-status").Select(element => element.TextContent));
     }
 
     [Theory]
@@ -132,7 +132,7 @@ public sealed class TimelineTests : BunitContext
 
         Assert.Null(cut.Find("li").GetAttribute("aria-current"));
         Assert.Contains("dnet-timeline-item-completed", cut.Find("li").ClassList);
-        Assert.Equal("Completed", cut.Find(".dnet-timeline-status").TextContent);
+        Assert.Equal("Completado", cut.Find(".dnet-timeline-status").TextContent);
         Assert.Equal("Still mounted", cut.Find(".dnet-timeline-body").TextContent);
     }
 

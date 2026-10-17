@@ -479,128 +479,30 @@
 }
 
 .blg-advanced-filter-container {
+  width: min(320px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
   border-radius: var(--dnet-sys-radius-lg);
-  overflow: hidden;
+  overflow: auto;
   box-shadow: var(--dnet-sys-elevation-3);
   background: var(--dnet-sys-surface-raised);
   color: var(--dnet-sys-on-surface-emphasis);
 }
 
-.blg-adv-filter-select {
-  position: relative;
-  display: block;
-  line-height: 2rem;
-  overflow: hidden;
-  border: 1px solid var(--dnet-grid-border-color, var(--blg-border-color, var(--dnet-sys-border)));
-  flex: 1 1 auto;
-  border-radius: 0px;
-  font-size: 0.875rem;
-  color: var(--dnet-grid-foreground-color, var(--blg-foreground-color, var(--dnet-sys-on-surface)));
-  height: 30px;
-  /*Arrow*/
-}
-.blg-adv-filter-select input::-webkit-input-placeholder {
-  font-size: 0.875rem;
-}
-.blg-adv-filter-select::after {
-  color: var(--dnet-grid-foreground-color, var(--blg-foreground-color, var(--dnet-sys-on-surface)));
-  font-weight: 300;
-  font-size: 0.875rem;
-  position: absolute;
-  top: 8px;
-  right: 2px;
-  bottom: 0;
-  padding: 0 0.7rem;
-  pointer-events: none;
-  -webkit-transition: 0.25s all ease;
-  -o-transition: 0.25s all ease;
-  transition: 0.25s all ease;
-  height: auto;
-  display: inline-block;
-  content: "";
-  background-color: currentColor;
-  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M1.646 4.646a.5.5 0 01.708 0L8 10.293l5.646-5.647a.5.5 0 01.708.708l-6 6a.5.5 0 01-.708 0l-6-6a.5.5 0 010-.708z'/></svg>");
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-size: 0.875rem 0.875rem;
-  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M1.646 4.646a.5.5 0 01.708 0L8 10.293l5.646-5.647a.5.5 0 01.708.708l-6 6a.5.5 0 01-.708 0l-6-6a.5.5 0 010-.708z'/></svg>");
-  mask-repeat: no-repeat;
-  mask-size: 0.875rem 0.875rem;
-  height: 1em;
-  width: 1em;
-}
-.blg-adv-filter-select select {
-  background-color: transparent;
-  outline: 0;
-  box-shadow: none;
-  border: 0 !important;
-  background-image: none;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  color: var(--dnet-grid-foreground-color, var(--blg-foreground-color, var(--dnet-sys-on-surface)));
-  cursor: pointer;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  /*height: 30px;*/
-}
-.blg-adv-filter-select select:hover::after {
-  color: var(--dnet-sys-warning);
-}
-.blg-adv-filter-select select::-ms-expand {
-  display: none;
-}
-.blg-adv-filter-select select option.placeholder {
-  color: var(--dnet-sys-state-disabled-fg);
-}
-.blg-adv-filter-select select:focus {
-  background-color: transparent;
+.blg-adv-filter-form {
+  display: grid;
+  gap: var(--dnet-sys-space-3);
+  padding: var(--dnet-sys-space-4);
 }
 
-.blg-adv-filter-input-search {
-  width: 100%;
-  border-radius: 0;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  background-color: var(--dnet-sys-surface);
-  -webkit-transition: none;
-  transition: none;
-  box-shadow: none;
-  font-size: 0.875rem;
-  color: var(--dnet-grid-foreground-color, var(--blg-foreground-color, var(--dnet-sys-on-surface)));
-  border: 1px solid var(--dnet-grid-border-color, var(--blg-border-color, var(--dnet-sys-border)));
-  height: 30px;
-}
-.blg-adv-filter-input-search:focus {
-  box-shadow: none;
+.blg-adv-filter-form > div {
+  min-width: 0;
 }
 
-.blg-adv-filter-validation-message {
-  padding-top: 3px;
-  color: var(--dnet-sys-danger);
-  font-size: 0.825rem;
-}
-
-.blg-adv-filter-wrapper {
-  width: 100%;
-}
-
-.blg-adv-filter-buttom-ok {
-  border: none;
-  border-radius: 0px;
-  background-color: color-mix(in srgb, var(--dnet-sys-on-surface) 25%, var(--dnet-sys-surface));
-  width: auto;
-  padding: 0.25rem 1rem;
-}
-
-.blg-adv-filter-buttom-reset {
-  width: 100%;
-  border-radius: 0px;
-  width: auto;
-  padding: 0.25rem 1rem;
+.blg-adv-filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--dnet-sys-space-2);
 }
 
 .form-group {

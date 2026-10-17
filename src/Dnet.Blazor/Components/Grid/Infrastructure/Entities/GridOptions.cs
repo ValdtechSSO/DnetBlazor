@@ -1,4 +1,5 @@
 ﻿using Dnet.Blazor.Components.Grid.Infrastructure.Enums;
+using Dnet.Blazor.Localization;
 using Dnet.Blazor.Infrastructure.Models.SearchModels.FilterModels;
 using Microsoft.AspNetCore.Components;
 
@@ -96,7 +97,9 @@ namespace Dnet.Blazor.Components.Grid.Infrastructure.Entities
         /// <summary>
         /// Accessible name exposed by the semantic center grid.
         /// </summary>
-        public string AriaLabel { get; set; } = "Grid de datos";
+        public string AriaLabel { get => _ariaLabel ?? DnetLocalization.Get(null)["Grid.Label"]; set => _ariaLabel = value; }
+        private string? _ariaLabel;
+        internal string? AriaLabelOverride => _ariaLabel;
 
         /// <summary>
         /// Delay used by consumers that schedule local filtering. A zero value

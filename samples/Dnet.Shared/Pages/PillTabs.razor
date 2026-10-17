@@ -1,69 +1,170 @@
 @page "/PillTabs"
 @using Dnet.Blazor.Components.PillTabs
+@using Dnet.Blazor.Components.Button
+@using Microsoft.JSInterop
 
-<div class="container-fluid" style="padding-top: 10px;">
-    <div class="dnet-page-content-left-margin dnet-m-t-20">
-        <h1 class="dnet-app-comp-name">Pill Tabs</h1>
-        <p>Pestañas compactas con contadores opcionales. Usa las flechas, Inicio y Fin para navegar.</p>
+<DemoPage Id="demo-pill-tabs" Title="Pill Tabs" Category="Navegación y selección"
+          Description="Una forma compacta de organizar el contenido y cambiar de perspectiva. Los contadores te orientan y la selección mantiene a la vista lo que necesitas."
+          Badge="Seleccionar · Explorar · Continuar">
+    <DemoCard Id="pill-tabs-inbox-card" Title="Cada solicitud, en su sitio" Eyebrow="Bandeja del equipo"
+              Description="Revisa lo que queda por resolver o vuelve a las solicitudes aprobadas. Los contadores siguen el estado real de esta bandeja de ejemplo.">
+        <ChildContent>
+            <div class="pill-inbox-layout">
+                <div class="pill-inbox">
+                    <DnetPillTabs Items="Statuses" @bind-Value="_status" AriaLabel="Estado de solicitudes" FullWidth="true" id="pill-tabs-reference">
+                        <ChildContent Context="tab">
+                            <div id="pill-tabs-inbox-content" class="pill-inbox-content" @ref="_inboxContent"
+                                 tabindex="-1" role="group" aria-label="@($"Solicitudes: {tab.Label}")">
+                                <div class="pill-panel-heading"><p id="pill-tabs-selected-status">Mostrando: @tab.Label</p><span>@ResultCount(tab.Value)</span></div>
+                                @if (RequestsFor(tab.Value).Any())
+                                {
+                                    <div class="pill-request-list">
+                                        @foreach (var request in RequestsFor(tab.Value))
+                                        {
+                                            <article @key="request.Id" class="pill-request" data-request-id="@request.Id" data-request-status="@request.Status">
+                                                <span class="pill-avatar" aria-hidden="true">@request.Initials</span>
+                                                <div class="pill-request-copy">
+                                                    <span class="pill-request-meta">@request.Id · @request.When</span>
+                                                    <h3>@request.Title</h3>
+                                                    <p>@request.Person</p>
+                                                    <div class="pill-request-state"><span class="pill-tag">@(request.Status == "pending" ? "Pendiente de revisión" : "Aprobada")</span></div>
+                                                </div>
+                                                @if (request.Status == "pending")
+                                                {
+                                                    <div class="pill-request-action"><DnetButton id="@($"pill-tabs-approve-{request.Id}")" OnClick="() => ApproveRequest(request.Id)" aria-label="@($"Aprobar solicitud {request.Id}")">Aprobar</DnetButton></div>
+                                                }
+                                            </article>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div id="pill-tabs-inbox-empty" class="pill-empty">
+                                        <span class="pill-empty-symbol" aria-hidden="true">✓</span>
+                                        <strong>Todo al día</strong>
+                                        <p>No quedan solicitudes pendientes. Puedes añadir otra desde el ejemplo de selección compartida.</p>
+                                    </div>
+                                }
+                            </div>
+                        </ChildContent>
+                    </DnetPillTabs>
+                </div>
+                <aside class="pill-inbox-summary" aria-labelledby="pill-tabs-summary-title">
+                    <span class="pill-tag">Una vista del conjunto</span>
+                    <h3 id="pill-tabs-summary-title">El equipo sigue avanzando</h3>
+                    <p>Una solicitud aprobada pasa a su nueva vista. Si llegan más, los contadores de las dos barras se actualizan juntos.</p>
+                    <dl class="pill-totals">
+                        <div><dt>Por revisar</dt><dd id="pill-tabs-pending-total">@PendingCount</dd></div>
+                        <div><dt>Aprobadas</dt><dd id="pill-tabs-approved-total">@ApprovedCount</dd></div>
+                        <div><dt>En total</dt><dd id="pill-tabs-all-total">@_requests.Count</dd></div>
+                    </dl>
+                    <p class="pill-summary-note">Prueba Aprobar y descubre cómo queda una bandeja sin pendientes.</p>
+                </aside>
+            </div>
+        </ChildContent>
+        <Footer><span class="demo-info">Usa las flechas, Inicio y Fin para recorrer las pestañas. Tab te lleva al contenido seleccionado.</span></Footer>
+    </DemoCard>
 
-        <section class="dnet-m-t-20" aria-labelledby="pill-tabs-reference-title">
-            <h2 id="pill-tabs-reference-title" style="font-size: 1rem;">Como en la referencia</h2>
-            <div data-dnet-theme="base" style="padding: 24px; border-radius: 12px; background: #f1f3f8; max-width: 480px;">
-                <DnetPillTabs Items="_statuses" @bind-Value="_status" AriaLabel="Estado de solicitudes"
-                              id="pill-tabs-reference"
-                              style="--dnet-pill-tabs-background: #fff; --dnet-pill-tabs-selected-background: #3855ff; --dnet-pill-tabs-selected-foreground: #fff; --dnet-pill-tabs-foreground: #586581; --dnet-pill-tabs-badge-background: #eff1f5;">
-                    <ChildContent Context="tab">
-                        <p style="margin: 8px 0 0; color: #586581;" id="pill-tabs-selected-status">Mostrando: @tab.Label</p>
-                    </ChildContent>
-                </DnetPillTabs>
-            </div>
-        </section>
+    <div class="demo-grid">
+        <DemoCard Id="pill-tabs-settings-card" Title="Un espacio para cada ajuste" Eyebrow="Ancho completo"
+                  Description="La barra aprovecha el espacio disponible. Una opción restringida permanece visible y el teclado la salta al navegar.">
+            <ChildContent>
+                <div class="pill-settings-example">
+                    <DnetPillTabs Items="Settings" FullWidth="true" AriaLabel="Configuración" id="pill-tabs-settings">
+                        <ChildContent Context="tab">
+                            <div class="pill-settings-content">
+                                <span class="pill-tag">@SettingTag(tab.Value)</span>
+                                <h3 id="pill-tabs-setting-value">@tab.Label</h3>
+                                <p>@SettingDescription(tab.Value)</p>
+                                <dl class="pill-setting-facts">
+                                    <div><dt>Espacio de trabajo</dt><dd>Estudio de diseño</dd></div>
+                                    <div><dt>@SettingFactLabel(tab.Value)</dt><dd>@SettingFactValue(tab.Value)</dd></div>
+                                </dl>
+                            </div>
+                        </ChildContent>
+                    </DnetPillTabs>
+                </div>
+            </ChildContent>
+            <Footer><span class="demo-info">El contador 0 de Notificaciones sigue visible. Restringido requiere un permiso adicional.</span></Footer>
+        </DemoCard>
 
-        <section class="dnet-m-t-20" aria-labelledby="pill-tabs-theme-title">
-            <h2 id="pill-tabs-theme-title" style="font-size: 1rem;">Tema actual, ancho completo y una opción deshabilitada</h2>
-            <div style="max-width: 560px;">
-                <DnetPillTabs Items="_settings" FullWidth="true" AriaLabel="Configuración" id="pill-tabs-settings">
-                    <ChildContent Context="tab">
-                        <p>@tab.Label: contenido de la pestaña activa.</p>
-                    </ChildContent>
-                </DnetPillTabs>
-            </div>
-        </section>
+        <DemoCard Id="pill-tabs-sync-card" Title="Dos controles, una misma selección" Eyebrow="Estado compartido"
+                  Description="Cambia la vista desde esta barra o desde la bandeja principal. Añade una solicitud para ver sus datos y contadores en ambos lugares.">
+            <ChildContent>
+                <div class="demo-stack">
+                    <div class="pill-shared-preview">
+                        <DnetPillTabs Items="Statuses" @bind-Value="_status" AriaLabel="Estado sincronizado" id="pill-tabs-synchronized" />
+                    </div>
+                    <div class="demo-actions">
+                        <DnetButton Variant="DnetButtonVariant.Outlined" OnClick="SelectAll" id="pill-tabs-select-all">Seleccionar Todos</DnetButton>
+                        <DnetButton Variant="DnetButtonVariant.Outlined" OnClick="AddPending" id="pill-tabs-add-pending">Añadir pendiente</DnetButton>
+                        <DnetButton Variant="DnetButtonVariant.Outlined" OnClick="ResetInbox" id="pill-tabs-reset">Reiniciar bandeja</DnetButton>
+                    </div>
+                    <div class="pill-shared-summary">
+                        <span class="pill-tag">Cambios al instante</span>
+                        <h3>Una sola bandeja, varias entradas</h3>
+                        <p>La selección y las solicitudes se comparten entre estos dos ejemplos. La configuración y las barras con desplazamiento mantienen su propia selección.</p>
+                    </div>
+                </div>
+            </ChildContent>
+            <Footer><span id="pill-tabs-shared-value" class="demo-value" role="status">Selección compartida: @StatusLabel · @PendingCount @(PendingCount == 1 ? "pendiente" : "pendientes") · @ApprovedCount @(ApprovedCount == 1 ? "aprobada" : "aprobadas") · @_requests.Count en total</span></Footer>
+        </DemoCard>
 
-        <section class="dnet-m-t-20" aria-labelledby="pill-tabs-overflow-title">
-            <h2 id="pill-tabs-overflow-title" style="font-size: 1rem;">Desplazamiento sin barra y difuminado en los extremos</h2>
-            <p>Desliza horizontalmente: el difuminado indica dónde quedan más opciones.</p>
-            <div style="max-width: 260px; margin-bottom: 16px;">
-                <DnetPillTabs Items="_statuses" AriaLabel="Estado con desplazamiento" id="pill-tabs-overflow" />
-            </div>
-            <p>La misma lista en dirección RTL:</p>
-            <div style="max-width: 260px;">
-                <DnetPillTabs Items="_statuses" AriaLabel="Estado en RTL" dir="rtl" id="pill-tabs-rtl" />
-            </div>
-        </section>
+        <DemoCard Id="pill-tabs-overflow-card" Title="Más opciones, sin ocupar más espacio" Eyebrow="Desplazamiento horizontal"
+                  Description="La barra mantiene un ancho compacto. Desliza con el trackpad, el gesto táctil o el teclado para llegar a las opciones que quedan fuera.">
+            <ChildContent>
+                <div class="demo-stack">
+                    <div class="pill-scroll-example">
+                        <DnetPillTabs Items="Statuses" AriaLabel="Estado con desplazamiento" id="pill-tabs-overflow" />
+                    </div>
+                    <div class="pill-explanation">
+                        <span class="pill-hint-symbol" aria-hidden="true">↔</span>
+                        <div><h3>El borde te indica el camino</h3><p>El difuminado aparece sólo en el extremo donde quedan más opciones. Al llegar al final, desaparece.</p></div>
+                    </div>
+                    <p class="demo-muted">La barra de scroll permanece oculta; el desplazamiento sigue disponible.</p>
+                </div>
+            </ChildContent>
+            <Footer><span class="demo-info">Esta selección es independiente de la bandeja, aunque sus contadores reflejan las mismas solicitudes.</span></Footer>
+        </DemoCard>
 
-        <section class="dnet-m-t-20" aria-labelledby="pill-tabs-controlled-title">
-            <h2 id="pill-tabs-controlled-title" style="font-size: 1rem;">Selección controlada y cambios de los contadores</h2>
-            <div class="dnet-m-b-10">
-                <button type="button" class="dnet-button" @onclick="SelectAll" id="pill-tabs-select-all">Seleccionar Todos</button>
-                <button type="button" class="dnet-button" @onclick="AddPending" id="pill-tabs-add-pending">Añadir pendiente</button>
-            </div>
-            <DnetPillTabs Items="_statuses" @bind-Value="_status" AriaLabel="Estado sincronizado" id="pill-tabs-synchronized" />
-            <p>Selección compartida: @_status</p>
-        </section>
+        <DemoCard Id="pill-tabs-direction-card" Title="La misma interacción, en otra dirección" Eyebrow="De derecha a izquierda"
+                  Description="La misma lista de estados se dispone en RTL. El orden visual, las flechas del teclado y los difuminados siguen la dirección de la barra.">
+            <ChildContent>
+                <div class="demo-stack">
+                    <div class="pill-scroll-example">
+                        <DnetPillTabs Items="Statuses" AriaLabel="Estado en RTL" dir="rtl" id="pill-tabs-rtl" />
+                    </div>
+                    <div class="pill-explanation">
+                        <span class="pill-hint-symbol" aria-hidden="true">←</span>
+                        <div><h3>Una navegación que acompaña</h3><p>La flecha izquierda avanza a la siguiente opción. Inicio y Fin siguen llevando a la primera y a la última.</p></div>
+                    </div>
+                    <p class="demo-muted">También puedes recorrer la barra deslizando en horizontal, sin mostrar un scroll adicional.</p>
+                </div>
+            </ChildContent>
+            <Footer><span class="demo-info">La dirección se configura en esta instancia y no cambia las demás barras.</span></Footer>
+        </DemoCard>
     </div>
-</div>
+</DemoPage>
 
 @code {
     private string _status = "pending";
-    private IReadOnlyList<DnetPillTabItem<string>> _statuses =
+    private int _nextRequestId = 1045;
+    private List<Request> _requests = InitialRequests();
+    private ElementReference _inboxContent;
+    private bool _focusInboxAfterApproval;
+
+    private int PendingCount => _requests.Count(request => request.Status == "pending");
+    private int ApprovedCount => _requests.Count(request => request.Status == "approved");
+    private string StatusLabel => _status switch { "approved" => "Aprobados", "all" => "Todos", _ => "Pendientes" };
+
+    private IReadOnlyList<DnetPillTabItem<string>> Statuses =>
     [
-        new("pending", "Pendientes", 1),
-        new("approved", "Aprobados", 2),
-        new("all", "Todos", 3)
+        new("pending", "Pendientes", PendingCount),
+        new("approved", "Aprobados", ApprovedCount),
+        new("all", "Todos", _requests.Count)
     ];
 
-    private readonly IReadOnlyList<DnetPillTabItem<string>> _settings =
+    private static readonly IReadOnlyList<DnetPillTabItem<string>> Settings =
     [
         new("general", "General"),
         new("notifications", "Notificaciones", 0),
@@ -71,12 +172,78 @@
         new("history", "Historial", 12)
     ];
 
+    private IEnumerable<Request> RequestsFor(string status) => _requests.Where(request => status == "all" || request.Status == status);
+    private string ResultCount(string status)
+    {
+        var count = RequestsFor(status).Count();
+        return $"{count} {(count == 1 ? "solicitud" : "solicitudes")}";
+    }
+
     private void SelectAll() => _status = "all";
 
     private void AddPending()
     {
-        _statuses = _statuses.Select(tab => tab.Value is "pending" or "all"
-            ? tab with { Count = tab.Count + 1 }
-            : tab).ToArray();
+        var id = _nextRequestId++;
+        _requests.Add(new($"RQ-{id}", $"Revisión de recurso {id}", "Equipo de diseño", "ED", "pending", "Ahora"));
     }
+
+    private void ApproveRequest(string id)
+    {
+        var index = _requests.FindIndex(request => request.Id == id && request.Status == "pending");
+        if (index < 0) return;
+        _requests[index] = _requests[index] with { Status = "approved", When = "Ahora" };
+        _focusInboxAfterApproval = true;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!_focusInboxAfterApproval) return;
+        _focusInboxAfterApproval = false;
+        try
+        {
+            await _inboxContent.FocusAsync(preventScroll: true);
+        }
+        catch (JSException)
+        {
+            // Navigation may remove the inbox before focus is restored.
+        }
+    }
+
+    private void ResetInbox()
+    {
+        _requests = InitialRequests();
+        _nextRequestId = 1045;
+        _status = "pending";
+    }
+
+    private static List<Request> InitialRequests() =>
+    [
+        new("RQ-1042", "Acceso al espacio de diseño", "Lucía Marín", "LM", "pending", "Hace 10 min"),
+        new("RQ-1043", "Recursos para la nueva campaña", "Diego Torres", "DT", "approved", "Hoy · 09:30"),
+        new("RQ-1044", "Revisión del kit de marca", "Nora Vidal", "NV", "approved", "Hoy · 09:15")
+    ];
+
+    private static string SettingTag(string value) => value switch
+    {
+        "notifications" => "Sin avisos pendientes", "history" => "Actividad del espacio", _ => "Tu espacio de trabajo"
+    };
+
+    private static string SettingDescription(string value) => value switch
+    {
+        "notifications" => "Todo al día: no tienes notificaciones pendientes de revisar en este espacio.",
+        "history" => "El espacio conserva 12 movimientos recientes para consultar cómo avanza el trabajo del equipo.",
+        _ => "Un punto de partida para organizar los recursos, la actividad y las preferencias que comparte el equipo."
+    };
+
+    private static string SettingFactLabel(string value) => value switch
+    {
+        "notifications" => "Avisos por revisar", "history" => "Movimientos registrados", _ => "Acceso"
+    };
+
+    private static string SettingFactValue(string value) => value switch
+    {
+        "notifications" => "0 · Todo al día", "history" => "12 · Disponibles", _ => "Miembros del equipo"
+    };
+
+    private sealed record Request(string Id, string Title, string Person, string Initials, string Status, string When);
 }

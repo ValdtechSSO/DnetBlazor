@@ -13,7 +13,7 @@
             <p class="theme-description">Customize colors, spacing and shape. Preview changes as you go.</p>
         </div>
         <div class="theme-header-actions">
-            <DnetButton id="theme-reset" class="theme-secondary-action" OnClick="ResetTheme">Reset changes</DnetButton>
+            <DnetButton id="theme-reset" Variant="DnetButtonVariant.Outlined" class="theme-secondary-action" OnClick="ResetTheme">Reset changes</DnetButton>
             <DnetButton id="theme-copy" class="theme-primary-action" OnClick="CopyTheme" style="@PrimaryButtonStyle">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" /><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3" /></svg>
                 <span>@(_copyStatus.StartsWith("CSS copied", StringComparison.Ordinal) ? "Copied!" : "Copy CSS")</span>
@@ -99,7 +99,7 @@
                     </div>
                     <div class="theme-preview-actions">
                         <DnetButton id="theme-preview-primary" class="theme-example-primary" OnClick="SavePreview" style="@PrimaryButtonStyle">Save changes</DnetButton>
-                        <DnetButton id="theme-preview-secondary" class="theme-example-secondary" OnClick="ResetPreview" style="--dnet-btn-background:var(--dnet-sys-state-hover);">Cancel</DnetButton>
+                        <DnetButton id="theme-preview-secondary" Variant="DnetButtonVariant.Outlined" class="theme-example-secondary" OnClick="ResetPreview">Cancel</DnetButton>
                         <span class="theme-preview-status" role="status">@_previewStatus</span>
                     </div>
                     <div class="theme-palette" aria-label="Theme palette">
@@ -123,7 +123,7 @@
                     <article class="theme-scope-example">
                     <h2 class="theme-scope-heading">An independent theme</h2>
                     <p class="theme-scope-description">A dark section, even inside a light interface.</p>
-                    <div class="theme-scope-actions"><DnetButton style="--dnet-btn-background:var(--dnet-sys-state-selected);--dnet-btn-foreground:var(--dnet-sys-primary-strong);">Nested dark scope</DnetButton></div>
+                    <div class="theme-scope-actions"><DnetButton Variant="DnetButtonVariant.Outlined">Nested dark scope</DnetButton></div>
                     </article>
                 </DnetThemeScope>
             </div>
@@ -144,11 +144,11 @@
     private const string ThemeStorageKey = "dnet.theme";
     private static readonly (string Name, string Color)[] ColorPresets =
     [
-        ("Sky blue", "#4fc3f7"), ("Indigo", "#5b5ce0"), ("Teal", "#0d9488"),
+        ("Indigo", "#5b5ce0"), ("Sky blue", "#4fc3f7"), ("Teal", "#0d9488"),
         ("Rose", "#e11d48"), ("Amber", "#d97706")
     ];
     private string _theme = "dark";
-    private string _primaryColor = "#4fc3f7";
+    private string _primaryColor = "#5b5ce0";
     private int _spaceUnit = 4;
     private int _radius = 9999;
     private string _copyStatus = string.Empty;

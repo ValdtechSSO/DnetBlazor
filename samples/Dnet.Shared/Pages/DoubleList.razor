@@ -43,7 +43,7 @@
 
                     <div class="doublelist-transfer-controls" role="group" aria-label="Move selected people">
                         <DnetButton id="doublelist-assign" disabled="@(_availableSelection.Count == 0)" OnClick="AssignSelection">Assign →</DnetButton>
-                        <DnetButton id="doublelist-return" disabled="@(_assignedSelection.Count == 0)" OnClick="ReturnSelection">← Return</DnetButton>
+                        <DnetButton Variant="DnetButtonVariant.Outlined" id="doublelist-return" disabled="@(_assignedSelection.Count == 0)" OnClick="ReturnSelection">← Return</DnetButton>
                         <span class="demo-muted">Selected people</span>
                     </div>
 
@@ -62,7 +62,7 @@
                                 </ListItemContent>
                             </DnetList>
                         </div>
-                        <div class="doublelist-mobile-action"><DnetButton id="doublelist-return-mobile" disabled="@(_assignedSelection.Count == 0)" OnClick="ReturnSelection">← Return selected (@_assignedSelection.Count)</DnetButton></div>
+                        <div class="doublelist-mobile-action"><DnetButton Variant="DnetButtonVariant.Outlined" id="doublelist-return-mobile" disabled="@(_assignedSelection.Count == 0)" OnClick="ReturnSelection">← Return selected (@_assignedSelection.Count)</DnetButton></div>
                     </section>
                 </div>
                 <p id="doublelist-action" class="demo-status" role="status">@_lastAction</p>
@@ -101,7 +101,7 @@
                         <li @key="contact.Id"><span>@contact.Name</span>@if (contact.IsLocked) { <span class="doublelist-fixed">Project lead · Fixed</span> }</li>
                     }
                 </ul>
-                <div class="demo-actions doublelist-reset-action"><DnetButton id="doublelist-reset" OnClick="ResetAssignment">Reset assignment</DnetButton></div>
+                <div class="demo-actions doublelist-reset-action"><DnetButton Variant="DnetButtonVariant.Outlined" id="doublelist-reset" OnClick="ResetAssignment">Reset assignment</DnetButton></div>
                 <p class="demo-info">Restore the original team. Your display preferences stay in place.</p>
             </ChildContent>
             <Footer><span id="doublelist-team-count" class="demo-value" role="status">@_assignedItems.Count @(_assignedItems.Count == 1 ? "person" : "people") on the project · 1 fixed lead</span></Footer>

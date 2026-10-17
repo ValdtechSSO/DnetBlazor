@@ -3,7 +3,10 @@
 Rounded horizontal tabs with optional counters, keyboard navigation and optional
 content panels. Import `Dnet.Blazor.Components.PillTabs` and load the standard
 library CSS and JavaScript bundles. The runnable example is at `/PillTabs` in
-the sample application.
+the sample application. It includes a request inbox with live counters and
+approval actions, a synchronized selector, a settings example with a disabled
+option, and independent compact LTR/RTL lists with overflow fades. The inbox can
+be reset without resetting the independent examples.
 
 ```razor
 @using Dnet.Blazor.Components.PillTabs
@@ -53,7 +56,8 @@ their container without a visible scrollbar. A fade at the left, right or both
 edges indicates hidden options, including in RTL. The fades update while
 scrolling, resizing and changing items or counts, and disappear when all items
 fit. Touch, trackpad and keyboard scrolling remain available; changing selection
-reveals the selected option. Unmatched attributes such as `class`, `style`, `id`, `dir` and
+reveals the selected option. Resizing the browser window also brings the active
+option back into view. Unmatched attributes such as `class`, `style`, `id`, `dir` and
 `data-*` are applied to the root.
 
 The selected tab is the tab list's single tab stop. Left/Right wrap around enabled

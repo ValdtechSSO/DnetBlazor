@@ -65,12 +65,15 @@
 }
 
 .dnet-split-content-dl {
-  width: 450px;
+  width: 100%;
+  min-width: 0;
 }
 
 .dnet-split-content-container-dl {
+  box-sizing: border-box;
   display: grid;
-  grid-template-columns: 49% 8px 49%;
+  grid-template-columns: minmax(0, 1fr) 8px minmax(0, 1fr);
+  width: 100%;
   height: calc(100% - 50px);
   padding-left: 5px;
   padding-right: 5px;
@@ -97,21 +100,21 @@
   font-size: 1em;
   cursor: pointer;
   outline: none;
-  color: var(--dnet-sys-primary-strong);
+  color: var(--dnet-sys-primary-content);
   font-size: 0.75rem;
 }
 
 .dnet-split-content-left-dl,
 .dnet-split-content-right-dl {
   display: block;
+  min-width: 0;
   height: calc(100% - 0px);
   overflow-y: hidden;
 }
 
 @media only screen and (max-width: 550px) {
   .dnet-split-content-container-dl {
-    width: 100%;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     height: calc(100% - 60px);
   }
   .dnet-split-content-left-dl,
@@ -121,15 +124,12 @@
   .dnet-split-content-left-dl.active,
   .dnet-split-content-right-dl.active {
     display: block;
-    width: calc(100dvw - 30px);
+    width: 100%;
   }
   .dnet-split-content-btn-dl {
     display: block;
   }
   .dnet-double-list-controls-dl {
     display: none;
-  }
-  .dnet-split-content-dl {
-    width: calc(100dvw - 30px);
   }
 }

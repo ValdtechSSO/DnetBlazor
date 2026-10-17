@@ -20,7 +20,7 @@
                         </DnetChipList>
                     </div>
                     <div class="demo-actions">
-                        <DnetButton id="chips-clear-topics" disabled="@(_selectedTopics.Count == 0)" OnClick="ClearTopics">Clear filters</DnetButton>
+                        <DnetButton Variant="DnetButtonVariant.Outlined" id="chips-clear-topics" disabled="@(_selectedTopics.Count == 0)" OnClick="ClearTopics">Clear filters</DnetButton>
                     </div>
                     <p class="demo-muted">Combine several topics without leaving this view.</p>
                 </div>
@@ -75,7 +75,7 @@
                         </DnetChipList>
                     </div>
                     <div class="demo-actions">
-                        <DnetButton id="chips-restore-team" disabled="@(_people.Count == 3)" OnClick="RestorePeople">Restore team</DnetButton>
+                        <DnetButton Variant="DnetButtonVariant.Outlined" id="chips-restore-team" disabled="@(_people.Count == 3)" OnClick="RestorePeople">Restore team</DnetButton>
                     </div>
                     <p id="chips-people-action" class="demo-status" role="status">@_peopleAction</p>
                 </div>

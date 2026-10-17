@@ -33,9 +33,10 @@
   --dnet-sys-on-surface-muted: var(--dnet-ref-neutral-600);
   --dnet-sys-on-surface-subtle: var(--dnet-ref-neutral-500);
   --dnet-sys-on-surface-emphasis: color-mix(in srgb, var(--dnet-ref-neutral-1000) 87%, transparent);
-  --dnet-sys-primary: var(--dnet-ref-accent-300);
-  --dnet-sys-primary-strong: var(--dnet-ref-accent-500);
-  --dnet-sys-primary-emphasis: var(--dnet-ref-indigo-500);
+  --dnet-sys-primary: #5b5ce0;
+  --dnet-sys-primary-strong: var(--dnet-sys-primary);
+  --dnet-sys-primary-content: color-mix(in srgb, var(--dnet-sys-primary-strong) 50%, var(--dnet-sys-on-surface));
+  --dnet-sys-primary-emphasis: color-mix(in srgb, var(--dnet-sys-primary) 80%, var(--dnet-ref-neutral-1000));
   --dnet-sys-success: var(--dnet-ref-green-500);
   --dnet-sys-warning: var(--dnet-ref-yellow-500);
   --dnet-sys-danger: var(--dnet-ref-red-500);
@@ -581,14 +582,14 @@ body {
   --_layout-divider-width: var(--dnet-layout-divider-width, 0);
   --_layout-divider-style: var(--dnet-layout-divider-style, solid);
   display: grid;
-  grid-template-columns: minmax(var(--dnet-dash-left-column-width, 250px), auto) calc(100dvw - var(--dnet-dash-left-column-width, 250px) - var(--dnet-dash-right-column-width, 250px)) minmax(var(--dnet-dash-right-column-width, 250px), auto);
+  grid-template-columns: minmax(var(--dnet-dash-left-column-width, 270px), auto) calc(100dvw - var(--dnet-dash-left-column-width, 270px) - var(--dnet-dash-right-column-width, 250px)) minmax(var(--dnet-dash-right-column-width, 250px), auto);
   /*grid-template-rows: var(--dnet-dash-header-height, 50px) calc(100dvh - var(--dnet-dash-header-height, 50px) - var(--dnet-dash-footer-height, 50px)) var(--dnet-dash-footer-height, 50px);*/
   grid-template-rows: var(--dnet-dash-header-height, 50px) 1fr var(--dnet-dash-footer-height, 50px);
   grid-template-areas: "left header right" "left content right" "left footer right";
   height: calc(100dvh - 0px);
 }
 .dnet-grid-container.hidden-right-column {
-  grid-template-columns: minmax(var(--dnet-dash-left-column-width, 250px), auto) calc(100dvw - var(--dnet-dash-left-column-width, 250px));
+  grid-template-columns: minmax(var(--dnet-dash-left-column-width, 270px), auto) calc(100dvw - var(--dnet-dash-left-column-width, 270px));
 }
 .dnet-grid-container.hidden-left-column {
   grid-template-columns: 0px calc(100dvw - var(--dnet-dash-right-column-width, 250px)) minmax(var(--dnet-dash-right-column-width, 250px), auto);
@@ -621,13 +622,13 @@ body {
 /* Media queries ordenadas de mayor a menor para evitar conflictos */
 @media only screen and (max-width: 1024px) {
   .dnet-grid-container {
-    grid-template-columns: minmax(var(--dnet-dash-left-column-width, 250px), auto) calc(100dvw - var(--dnet-dash-left-column-width, 250px) - var(--dnet-dash-right-column-width, 250px)) minmax(var(--dnet-dash-right-column-width, 250px), auto);
+    grid-template-columns: minmax(var(--dnet-dash-left-column-width, 270px), auto) calc(100dvw - var(--dnet-dash-left-column-width, 270px) - var(--dnet-dash-right-column-width, 250px)) minmax(var(--dnet-dash-right-column-width, 250px), auto);
     grid-template-areas: "left header right" "left content right" "left footer right";
   }
 }
 @media only screen and (max-width: 768px) {
   .dnet-grid-container {
-    grid-template-columns: minmax(var(--dnet-dash-left-column-width, 250px), auto) calc(100dvw - var(--dnet-dash-left-column-width, 250px) - var(--dnet-dash-right-column-width, 250px)) minmax(var(--dnet-dash-right-column-width, 250px), auto);
+    grid-template-columns: minmax(var(--dnet-dash-left-column-width, 270px), auto) calc(100dvw - var(--dnet-dash-left-column-width, 270px) - var(--dnet-dash-right-column-width, 250px)) minmax(var(--dnet-dash-right-column-width, 250px), auto);
     grid-template-areas: "left header right" "left content right" "left footer right";
   }
 }
@@ -691,7 +692,7 @@ body {
 
 .minifyme {
   height: 50px;
-  width: var(--dnet-dash-aside-width, var(--dnet-dash-asideWidth, 250px));
+  width: var(--dnet-dash-aside-width, var(--dnet-dash-asideWidth, 270px));
   background-color: transparent;
   border: none;
   margin: 0;
@@ -781,6 +782,10 @@ body {
   .responsive-menu .dnet-aside-menu-button {
     display: flex;
   }
+  .responsive-menu .dnet-aside .dnet-menu-text {
+    -webkit-padding-start: 10px;
+            padding-inline-start: 10px;
+  }
 }
 /*.dnet-desktop-navigation-menu {
     flex: 1 1 auto;
@@ -845,7 +850,7 @@ li {
 }
 li ul {
   margin: 0;
-  width: calc(var(--dnet-dash-aside-width, var(--dnet-dash-asideWidth, 250px)) - 21px);
+  width: calc(var(--dnet-dash-aside-width, var(--dnet-dash-asideWidth, 270px)) - 21px);
   background: var(--dnet-dash-primary-reset, var(--dnet-sys-primary-strong));
 }
 li .positioning-helper {
@@ -895,7 +900,7 @@ nav ul li a:hover .collapse-sign, nav ul li a:hover .menu-item-parent {
   color: var(--dnet-dash-link-color, var(--dnet-sys-on-surface-emphasis));
 }
 nav ul li a:hover .dnet-menu-text {
-  color: var(--dnet-dash-indicator-bgcolor, var(--dnet-sys-primary-strong));
+  color: var(--dnet-dash-indicator-bgcolor, var(--dnet-sys-primary-content));
 }
 nav ul li a:hover .dnet-tree-cmp-link-indicator {
   height: var(--dnet-dash-navbar-height, 38px);
@@ -913,6 +918,22 @@ nav ul li a .dnet-menu-text {
   color: var(--dnet-dash-navigation-color, var(--dnet-sys-on-surface-emphasis));
   font-size: var(--dnet-dash-menu-text-size, var(--dnet-sys-text-md));
   text-align: left;
+}
+.dnet-grid-container:not(.minified) .dnet-aside .dnet-menu-text {
+  -webkit-padding-start: 10px;
+          padding-inline-start: 10px;
+}
+/* Align the start of icon-and-label groups with text-only links. */
+.dnet-grid-container:is(:not(.minified), .responsive-menu) .dnet-aside nav > ul > li > .dnet-tree-cmp-link > a > .dnet-menu-img:has(+ .dnet-menu-text) {
+  -webkit-padding-start: 10px;
+          padding-inline-start: 10px;
+}
+.dnet-grid-container:is(:not(.minified), .responsive-menu) .dnet-aside nav > ul > li > .dnet-tree-cmp-link > a > .dnet-menu-img:has(+ .dnet-menu-text) > span:only-child {
+  margin: 0;
+}
+.dnet-grid-container:is(:not(.minified), .responsive-menu) .dnet-aside nav > ul > li > .dnet-tree-cmp-link > a > .dnet-menu-img + .dnet-menu-text {
+  -webkit-padding-start: 8px;
+          padding-inline-start: 8px;
 }
 nav ul li a.active {
   font-weight: 700;
@@ -969,7 +990,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   color: var(--dnet-dash-navigation-color, var(--dnet-sys-on-surface-emphasis));
 }
 .minified nav > ul > li a:hover .dnet-menu-text {
-  color: var(--dnet-dash-indicator-bgcolor, var(--dnet-sys-primary-strong));
+  color: var(--dnet-dash-indicator-bgcolor, var(--dnet-sys-primary-content));
 }
 .minified nav > ul > li a.has-image {
   justify-content: flex-start !important;
@@ -1003,7 +1024,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .minified nav > ul .positioning-helper {
-  width: calc(var(--dnet-dash-aside-width, var(--dnet-dash-asideWidth, 250px)) - 21px);
+  width: calc(var(--dnet-dash-aside-width, var(--dnet-dash-asideWidth, 270px)) - 21px);
   left: var(--dnet-dash-floating-menu-left, 60px);
   z-index: 200;
 }
@@ -1901,9 +1922,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 .dnet-calendar-next-button,
 .dnet-calendar-day-content,
 .dnet-calendar-year-content,
-.dnet-calendar-month-content,
-.dnet-datepicker-action,
-.dnet-datepicker-reset-button-wrapper {
+.dnet-calendar-month-content {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
@@ -1936,9 +1955,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 .dnet-calendar-next-button:focus-visible,
 .dnet-calendar-day-content:focus-visible,
 .dnet-calendar-year-content:focus-visible,
-.dnet-calendar-month-content:focus-visible,
-.dnet-datepicker-action:focus-visible,
-.dnet-datepicker-reset-button-wrapper:focus-visible {
+.dnet-calendar-month-content:focus-visible {
   outline: 2px solid var(--dnet-sys-primary);
   outline-offset: 2px;
 }
@@ -2157,34 +2174,6 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   gap: 6px;
 }
 
-.dnet-datepicker-reset-button-wrapper,
-.dnet-datepicker-action {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 36px;
-  padding: 0 12px;
-  border-radius: var(--dnet-sys-radius-md);
-  background: transparent;
-  color: var(--dnet-sys-primary);
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.dnet-datepicker-reset-button-wrapper:hover,
-.dnet-datepicker-action-secondary:hover {
-  background: var(--dnet-sys-state-hover);
-}
-
-.dnet-datepicker-action-primary {
-  background: var(--dnet-sys-primary);
-  color: var(--dnet-sys-on-primary);
-}
-
-.dnet-datepicker-action-primary:hover {
-  background: color-mix(in srgb, var(--dnet-sys-primary) 88%, var(--dnet-sys-on-primary));
-}
-
 .dnet-datepicker-touch {
   border-radius: var(--dnet-sys-radius-lg);
 }
@@ -2237,8 +2226,6 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 .dnet-datepicker-reset-button {
   width: 1em;
   height: 1em;
-  -webkit-margin-end: 6px;
-          margin-inline-end: 6px;
   background: currentColor;
   -webkit-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M4.65 4.65a.5.5 0 0 1 .7 0L8 7.29l2.65-2.64a.5.5 0 1 1 .7.7L8.71 8l2.64 2.65a.5.5 0 0 1-.7.7L8 8.71l-2.65 2.64a.5.5 0 0 1-.7-.7L7.29 8 4.65 5.35a.5.5 0 0 1 0-.7z'/></svg>") center / 1em no-repeat;
   mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M4.65 4.65a.5.5 0 0 1 .7 0L8 7.29l2.65-2.64a.5.5 0 1 1 .7.7L8.71 8l2.64 2.65a.5.5 0 0 1-.7.7L8 8.71l-2.65 2.64a.5.5 0 0 1-.7-.7L7.29 8 4.65 5.35a.5.5 0 0 1 0-.7z'/></svg>") center / 1em no-repeat;
@@ -2589,7 +2576,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-panel-button-list-item {
-  color: var(--dnet-sys-primary-strong);
+  color: var(--dnet-sys-primary-content);
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -2633,7 +2620,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dsec-panel-info-subject {
-  color: var(--dnet-sys-primary-strong);
+  color: var(--dnet-sys-primary-content);
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -3139,124 +3126,30 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .blg-advanced-filter-container {
+  width: min(320px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
   border-radius: var(--dnet-sys-radius-lg);
-  overflow: hidden;
+  overflow: auto;
   box-shadow: var(--dnet-sys-elevation-3);
   background: var(--dnet-sys-surface-raised);
   color: var(--dnet-sys-on-surface-emphasis);
 }
 
-.blg-adv-filter-select {
-  position: relative;
-  display: block;
-  line-height: 2rem;
-  overflow: hidden;
-  border: 1px solid var(--dnet-grid-border-color, var(--blg-border-color, var(--dnet-sys-border)));
-  flex: 1 1 auto;
-  border-radius: 0px;
-  font-size: 0.875rem;
-  color: var(--dnet-grid-foreground-color, var(--blg-foreground-color, var(--dnet-sys-on-surface)));
-  height: 30px;
-  /*Arrow*/
-}
-.blg-adv-filter-select input::-webkit-input-placeholder {
-  font-size: 0.875rem;
-}
-.blg-adv-filter-select::after {
-  color: var(--dnet-grid-foreground-color, var(--blg-foreground-color, var(--dnet-sys-on-surface)));
-  font-weight: 300;
-  font-size: 0.875rem;
-  position: absolute;
-  top: 8px;
-  right: 2px;
-  bottom: 0;
-  padding: 0 0.7rem;
-  pointer-events: none;
-  transition: 0.25s all ease;
-  height: auto;
-  display: inline-block;
-  content: "";
-  background-color: currentColor;
-  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M1.646 4.646a.5.5 0 01.708 0L8 10.293l5.646-5.647a.5.5 0 01.708.708l-6 6a.5.5 0 01-.708 0l-6-6a.5.5 0 010-.708z'/></svg>");
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-size: 0.875rem 0.875rem;
-  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M1.646 4.646a.5.5 0 01.708 0L8 10.293l5.646-5.647a.5.5 0 01.708.708l-6 6a.5.5 0 01-.708 0l-6-6a.5.5 0 010-.708z'/></svg>");
-  mask-repeat: no-repeat;
-  mask-size: 0.875rem 0.875rem;
-  height: 1em;
-  width: 1em;
-}
-.blg-adv-filter-select select {
-  background-color: transparent;
-  outline: 0;
-  box-shadow: none;
-  border: 0 !important;
-  background-image: none;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  color: var(--dnet-grid-foreground-color, var(--blg-foreground-color, var(--dnet-sys-on-surface)));
-  cursor: pointer;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  /*height: 30px;*/
-}
-.blg-adv-filter-select select:hover::after {
-  color: var(--dnet-sys-warning);
-}
-.blg-adv-filter-select select::-ms-expand {
-  display: none;
-}
-.blg-adv-filter-select select option.placeholder {
-  color: var(--dnet-sys-state-disabled-fg);
-}
-.blg-adv-filter-select select:focus {
-  background-color: transparent;
+.blg-adv-filter-form {
+  display: grid;
+  gap: var(--dnet-sys-space-3);
+  padding: var(--dnet-sys-space-4);
 }
 
-.blg-adv-filter-input-search {
-  width: 100%;
-  border-radius: 0;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  background-color: var(--dnet-sys-surface);
-  transition: none;
-  box-shadow: none;
-  font-size: 0.875rem;
-  color: var(--dnet-grid-foreground-color, var(--blg-foreground-color, var(--dnet-sys-on-surface)));
-  border: 1px solid var(--dnet-grid-border-color, var(--blg-border-color, var(--dnet-sys-border)));
-  height: 30px;
-}
-.blg-adv-filter-input-search:focus {
-  box-shadow: none;
+.blg-adv-filter-form > div {
+  min-width: 0;
 }
 
-.blg-adv-filter-validation-message {
-  padding-top: 3px;
-  color: var(--dnet-sys-danger);
-  font-size: 0.825rem;
-}
-
-.blg-adv-filter-wrapper {
-  width: 100%;
-}
-
-.blg-adv-filter-buttom-ok {
-  border: none;
-  border-radius: 0px;
-  background-color: color-mix(in srgb, var(--dnet-sys-on-surface) 25%, var(--dnet-sys-surface));
-  width: auto;
-  padding: 0.25rem 1rem;
-}
-
-.blg-adv-filter-buttom-reset {
-  width: 100%;
-  border-radius: 0px;
-  width: auto;
-  padding: 0.25rem 1rem;
+.blg-adv-filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--dnet-sys-space-2);
 }
 
 .form-group {
@@ -3534,14 +3427,6 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   margin-left: auto;
 }
 
-/* The buttons read their own public tokens; the editor points each instance at
-   the role it needs from the markup, so nothing of Button is declared here. This
-   file only adds the outline and the square shape of the icon-only actions. */
-.dnet-image-editor .dnet-image-editor-tool,
-.dnet-image-editor .dnet-image-editor-secondary {
-  border: 1px solid var(--dnet-sys-border-strong);
-}
-
 /* One height across the toolbar, so the labelled actions line up with the
    icon-only ones instead of drifting a couple of pixels. */
 .dnet-image-editor .dnet-image-editor-tool {
@@ -3562,7 +3447,6 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 
 .dnet-image-editor .dnet-image-editor-icon-button {
   --_icon-button-size: 36px;
-  border: 1px solid var(--dnet-sys-border-strong);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -4689,7 +4573,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   gap: 2px;
 }
 
-.dnet-pick-list button {
+.dnet-pick-list button:not(.dnet-button) {
   background: var(--dnet-sys-transparent);
   border: 0;
   border-radius: var(--dnet-picklist-item-radius, var(--dnet-list-hover-border-radius, var(--dnet-sys-radius-lg)));
@@ -4702,12 +4586,12 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   transition: background-color var(--dnet-sys-motion-fast) var(--dnet-sys-motion-ease), color var(--dnet-sys-motion-fast) var(--dnet-sys-motion-ease);
 }
 
-.dnet-pick-list button:hover:not(:disabled) {
+.dnet-pick-list button:not(.dnet-button):hover:not(:disabled) {
   background: var(--_hover);
   color: var(--_foreground);
 }
 
-.dnet-pick-list button:disabled {
+.dnet-pick-list button:not(.dnet-button):disabled {
   cursor: not-allowed;
   opacity: 0.42;
 }
@@ -4811,7 +4695,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-pick-list-search input:focus-visible,
-.dnet-pick-list button:focus-visible {
+.dnet-pick-list button:not(.dnet-button):focus-visible {
   outline: 2px solid var(--_primary);
   outline-offset: 2px;
 }
@@ -5288,7 +5172,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-spinner {
-  --_color: var(--dnet-spinner-color, var(--dnet-sys-primary-strong));
+  --_color: var(--dnet-spinner-color, var(--dnet-sys-primary-content));
   --_size: 22.4px;
   --_stroke-width: 5.6px;
 
@@ -5329,7 +5213,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-spoiler {
-    --_control-color: var(--dnet-spoiler-control-color, color-mix(in srgb, var(--dnet-sys-primary-emphasis) 60%, var(--dnet-sys-on-surface)));
+    --_control-color: var(--dnet-spoiler-control-color, var(--dnet-sys-primary-content));
     --_control-hover-color: var(--dnet-spoiler-control-hover-color, color-mix(in srgb, var(--_control-color) 75%, var(--dnet-sys-on-surface)));
     --_control-font-size: var(--dnet-spoiler-control-font-size, var(--dnet-sys-text-md));
     --_gap: var(--dnet-spoiler-gap, var(--dnet-sys-space-2));
@@ -5970,28 +5854,13 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-toast__action {
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
-  background: none;
-  border: 0;
-  color: var(--_accent);
-  cursor: pointer;
-  font: inherit;
-  font-size: var(--dnet-sys-text-xs);
   font-weight: 600;
-  padding: 0;
 }
 
 .dnet-toast__action[data-quiet] {
-  color: var(--_fg-muted);
+  font-weight: 400;
 }
 
-.dnet-toast__action:hover {
-  text-decoration: underline;
-}
-
-.dnet-toast__action:focus-visible,
 .dnet-toast__close:focus-visible,
 .dnet-toast:focus-visible {
   outline: 2px solid var(--dnet-sys-focus-ring);
@@ -7220,12 +7089,15 @@ button[disabled].dnet-datepickerweekca-raw-next-button::after {
 }
 
 .dnet-split-content-dl {
-  width: 450px;
+  width: 100%;
+  min-width: 0;
 }
 
 .dnet-split-content-container-dl {
+  box-sizing: border-box;
   display: grid;
-  grid-template-columns: 49% 8px 49%;
+  grid-template-columns: minmax(0, 1fr) 8px minmax(0, 1fr);
+  width: 100%;
   height: calc(100% - 50px);
   padding-left: 5px;
   padding-right: 5px;
@@ -7252,21 +7124,21 @@ button[disabled].dnet-datepickerweekca-raw-next-button::after {
   font-size: 1em;
   cursor: pointer;
   outline: none;
-  color: var(--dnet-sys-primary-strong);
+  color: var(--dnet-sys-primary-content);
   font-size: 0.75rem;
 }
 
 .dnet-split-content-left-dl,
 .dnet-split-content-right-dl {
   display: block;
+  min-width: 0;
   height: calc(100% - 0px);
   overflow-y: hidden;
 }
 
 @media only screen and (max-width: 550px) {
   .dnet-split-content-container-dl {
-    width: 100%;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     height: calc(100% - 60px);
   }
   .dnet-split-content-left-dl,
@@ -7276,16 +7148,13 @@ button[disabled].dnet-datepickerweekca-raw-next-button::after {
   .dnet-split-content-left-dl.active,
   .dnet-split-content-right-dl.active {
     display: block;
-    width: calc(100dvw - 30px);
+    width: 100%;
   }
   .dnet-split-content-btn-dl {
     display: block;
   }
   .dnet-double-list-controls-dl {
     display: none;
-  }
-  .dnet-split-content-dl {
-    width: calc(100dvw - 30px);
   }
 }
 
@@ -7914,12 +7783,12 @@ select.mat-input-element::-ms-value {
 
 .dnet-select-list-item:has(input[type="checkbox"]:checked) {
   background-color: var(--dnet-sys-state-selected);
-  color: var(--dnet-sys-primary-strong);
+  color: var(--dnet-sys-primary-content);
   font-weight: 600;
 }
 
 .dnet-select-list-item:has(input[type="checkbox"]:checked) .dnet-select-list-item-headline {
-  --_headline-color: var(--dnet-list-headline-text-color, var(--dnet-select-list-headline-text-color, var(--dnet-sys-primary-strong)));
+  --_headline-color: var(--dnet-list-headline-text-color, var(--dnet-select-list-headline-text-color, var(--dnet-sys-primary-content)));
 }
 
 .dnet-select-list-item:has(input[type="checkbox"]:checked):hover {
@@ -8601,6 +8470,7 @@ select.mat-input-element::-ms-value {
   --_selected: var(--dnet-timepicker-option-selected-background, var(--dnet-sys-state-selected));
   --_active: var(--dnet-timepicker-option-active-background, var(--dnet-sys-state-hover));
   --_accent: var(--dnet-timepicker-accent-color, var(--dnet-sys-primary-strong));
+  --_accent-content: var(--dnet-timepicker-accent-color, var(--dnet-sys-primary-content));
 
   background: var(--_panel-background);
   box-sizing: border-box;
@@ -8652,24 +8522,6 @@ select.mat-input-element::-ms-value {
   padding: var(--dnet-sys-space-2) var(--dnet-sys-space-3) var(--dnet-sys-space-3);
 }
 
-.dnet-timepicker-action {
-  background: transparent;
-  border: 0;
-  border-radius: var(--dnet-sys-radius-md);
-  color: var(--dnet-sys-primary-strong);
-  cursor: pointer;
-  font: inherit;
-  font-weight: 600;
-  min-height: 36px;
-  padding: 0 var(--dnet-sys-space-3);
-}
-
-.dnet-timepicker-action:hover,
-.dnet-timepicker-action:focus-visible {
-  background: var(--dnet-sys-state-hover);
-  outline: 0;
-}
-
 .dnet-timepicker-option {
   align-items: center;
   background: transparent;
@@ -8694,7 +8546,7 @@ select.mat-input-element::-ms-value {
 
 .dnet-timepicker-option-selected {
   background: var(--_selected);
-  color: var(--_accent);
+  color: var(--_accent-content);
   font-weight: 600;
 }
 
@@ -8721,6 +8573,7 @@ select.mat-input-element::-ms-value {
     --_line-color: var(--dnet-timeline-line-color, var(--dnet-sys-border-strong));
     --_accent-color: var(--dnet-timeline-accent-color, var(--dnet-sys-primary-emphasis));
     --_accent-foreground: var(--dnet-timeline-accent-foreground, var(--dnet-sys-on-primary));
+    --_active-foreground: var(--dnet-timeline-accent-color, var(--dnet-sys-primary-content));
     --_bullet-background: var(--dnet-timeline-bullet-background, var(--dnet-sys-surface));
     --_foreground: var(--dnet-timeline-foreground, var(--dnet-sys-on-surface));
     --_muted-foreground: var(--dnet-timeline-muted-foreground, var(--dnet-sys-on-surface-muted));
@@ -8866,7 +8719,7 @@ select.mat-input-element::-ms-value {
 
 .dnet-timeline-item-current > .dnet-timeline-bullet {
     border-color: var(--_accent-color);
-    color: var(--_accent-color);
+    color: var(--_active-foreground);
 }
 
 .dnet-timeline-item-completed:not(.dnet-timeline-item-custom-bullet) > .dnet-timeline-bullet::after {
@@ -9040,7 +8893,7 @@ select.mat-input-element::-ms-value {
 .dnet-button.dnet-button-initial-focus, .dnet-icon-button.dnet-button-initial-focus {
   background-color: var(--_background);
 }
-.dnet-button:hover, .dnet-icon-button:hover {
+.dnet-button:enabled:hover, .dnet-icon-button:enabled:hover {
   background-color: var(--_hover);
 }
 .dnet-button:focus .dnet-button-focus-overlay, .dnet-icon-button:focus .dnet-button-focus-overlay {
@@ -9084,6 +8937,33 @@ select.mat-input-element::-ms-value {
 .dnet-ripple {
   overflow: hidden;
   position: relative;
+}
+
+/* Action variants are emitted by DnetButton. Native calendar/navigation buttons
+   share the base class without inheriting the filled action treatment. */
+.dnet-button-variant-filled {
+  --_background: var(--dnet-btn-background, var(--dnet-button-background-color, var(--dnet-sys-primary)));
+  --_hover: var(--dnet-btn-background-hover, var(--dnet-button-hover-color, color-mix(in srgb, var(--_background) 64%, var(--dnet-sys-primary-emphasis))));
+  --_foreground: var(--dnet-btn-foreground, var(--dnet-sys-on-primary));
+  --_border: var(--dnet-btn-border-color, var(--dnet-sys-transparent));
+  border: 1px solid var(--_border);
+}
+
+.dnet-button-variant-outlined {
+  --_background: var(--dnet-btn-background, var(--dnet-button-background-color, var(--dnet-sys-transparent)));
+  --_foreground: var(--dnet-btn-foreground, var(--dnet-sys-primary-content));
+  --_hover: var(--dnet-btn-background-hover, var(--dnet-button-hover-color, color-mix(in srgb, var(--_foreground) 10%, var(--_background))));
+  --_border: var(--dnet-btn-border-color, var(--_foreground));
+  border: 1px solid var(--_border);
+}
+
+.dnet-button:is(.dnet-button-variant-filled, .dnet-button-variant-outlined):focus-visible {
+  box-shadow: 0 0 0 2px var(--dnet-sys-surface), 0 0 0 4px var(--dnet-sys-focus-ring);
+}
+
+.dnet-button:is(.dnet-button-variant-filled, .dnet-button-variant-outlined):disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 /* Size variants come last: private defaults change while explicit public and

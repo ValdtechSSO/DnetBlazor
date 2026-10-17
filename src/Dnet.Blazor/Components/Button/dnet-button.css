@@ -74,7 +74,7 @@
 .dnet-button.dnet-button-initial-focus, .dnet-icon-button.dnet-button-initial-focus {
   background-color: var(--_background);
 }
-.dnet-button:hover, .dnet-icon-button:hover {
+.dnet-button:enabled:hover, .dnet-icon-button:enabled:hover {
   background-color: var(--_hover);
 }
 .dnet-button:focus .dnet-button-focus-overlay, .dnet-icon-button:focus .dnet-button-focus-overlay {
@@ -118,6 +118,33 @@
 .dnet-ripple {
   overflow: hidden;
   position: relative;
+}
+
+/* Action variants are emitted by DnetButton. Native calendar/navigation buttons
+   share the base class without inheriting the filled action treatment. */
+.dnet-button-variant-filled {
+  --_background: var(--dnet-btn-background, var(--dnet-button-background-color, var(--dnet-sys-primary)));
+  --_hover: var(--dnet-btn-background-hover, var(--dnet-button-hover-color, color-mix(in srgb, var(--_background) 64%, var(--dnet-sys-primary-emphasis))));
+  --_foreground: var(--dnet-btn-foreground, var(--dnet-sys-on-primary));
+  --_border: var(--dnet-btn-border-color, var(--dnet-sys-transparent));
+  border: 1px solid var(--_border);
+}
+
+.dnet-button-variant-outlined {
+  --_background: var(--dnet-btn-background, var(--dnet-button-background-color, var(--dnet-sys-transparent)));
+  --_foreground: var(--dnet-btn-foreground, var(--dnet-sys-primary-content));
+  --_hover: var(--dnet-btn-background-hover, var(--dnet-button-hover-color, color-mix(in srgb, var(--_foreground) 10%, var(--_background))));
+  --_border: var(--dnet-btn-border-color, var(--_foreground));
+  border: 1px solid var(--_border);
+}
+
+.dnet-button:is(.dnet-button-variant-filled, .dnet-button-variant-outlined):focus-visible {
+  box-shadow: 0 0 0 2px var(--dnet-sys-surface), 0 0 0 4px var(--dnet-sys-focus-ring);
+}
+
+.dnet-button:is(.dnet-button-variant-filled, .dnet-button-variant-outlined):disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 /* Size variants come last: private defaults change while explicit public and

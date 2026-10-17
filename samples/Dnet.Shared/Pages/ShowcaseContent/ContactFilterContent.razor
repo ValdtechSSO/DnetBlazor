@@ -10,7 +10,7 @@
     <header><p>Directory settings</p><h2 id="contact-filter-title">Filter contacts</h2><span>Choose which team appears in the directory.</span></header>
     <EditForm Model="_filter" OnSubmit="ApplyFilter">
         <div class="contact-filter-field"><DnetFormField Label="Team"><ChildContent><DnetSelect TValue="string" TItem="string" @bind-Value="_filter.Department" Items="_teams" DisplayValueConverter="team => team" ValueConverter="team => team" ResponsiveLabel="Team" /></ChildContent></DnetFormField></div>
-        <footer><DnetButton OnClick="Cancel">Cancel</DnetButton><DnetButton id="connected-panel-apply" class="contact-filter-apply" ButtonType="submit">Apply filter</DnetButton></footer>
+        <footer><DnetButton Variant="DnetButtonVariant.Outlined" OnClick="Cancel">Cancel</DnetButton><DnetButton id="connected-panel-apply" class="contact-filter-apply" ButtonType="submit">Apply filter</DnetButton></footer>
     </EditForm>
 </div>
 

@@ -1,3 +1,5 @@
+using Dnet.Blazor.Localization;
+
 namespace Dnet.Blazor.Components.Toast;
 
 /// <summary>
@@ -10,5 +12,13 @@ public sealed record ToastStrings
     public static ToastStrings Default { get; } = new();
 
     /// <summary>Gets the accessible label for the dismiss action.</summary>
-    public string CloseLabel { get; init; } = "Close notification";
+    public string CloseLabel { get => _closeLabel ?? "Close notification"; init => _closeLabel = value; }
+
+    // Null backing fields distinguish an omitted label from an explicit legacy English override.
+    private string? _closeLabel;
+
+    internal static ToastStrings Resolve(ToastStrings? instance, ToastStrings? registered, IDnetLocalizer localizer) => new()
+    {
+        CloseLabel = instance?._closeLabel ?? registered?._closeLabel ?? localizer["Toast.CloseNotification"],
+    };
 }

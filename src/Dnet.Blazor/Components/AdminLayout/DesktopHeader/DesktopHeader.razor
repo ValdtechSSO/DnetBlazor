@@ -1,4 +1,6 @@
-﻿@using Dnet.Blazor.Components.AdminLayout.Infrastructure.Interfaces
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+@using Dnet.Blazor.Components.AdminLayout.Infrastructure.Interfaces
 @using Dnet.Blazor.Components.AdminLayout.Infrastructure.Models
 @using Dnet.Blazor.Components.AdminLayout.Infrastructure.Services
 @using Dnet.Blazor.Components.AdminLayout.Infrastructure.Enums
@@ -6,10 +8,12 @@
 
 @inject IThemeMessageService<ThemeConfigData> ThemeMessageService
 
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
 <header class="dnet-header">
     <div class="dnet-header-content-wrapper">
         <div class="dnet-header-menu-button">
-            <button class="dnet-menu-button" type="button" aria-label="Open navigation menu" @onclick="ShowMenuNav">
+            <button class="dnet-menu-button" type="button" aria-label="@Localizer["AdminLayout.OpenNavigation"]" @onclick="ShowMenuNav">
                 <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
                     <path fill="currentColor" d="M2 4h16v2H2V4Zm0 5h16v2H2V9Zm0 5h16v2H2v-2Z" />
                 </svg>
@@ -22,6 +26,8 @@
 </header>
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+
 
     /// <summary>Gets or sets the child content rendered by the component.</summary>
     [Parameter]

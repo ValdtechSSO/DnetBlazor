@@ -57,9 +57,9 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
-| `--dnet-slider-active-track-color` | `#42b0d5` <br><sub>via `--dnet-sys-primary-strong`</sub> |
+| `--dnet-slider-active-track-color` | `#5b5ce0` <br><sub>via `--dnet-sys-primary-strong`</sub> |
 | `--dnet-slider-disabled-opacity` | `0.38` |
-| `--dnet-slider-focus-ring` | `#42b0d5` <br><sub>via `--dnet-sys-focus-ring`</sub> |
+| `--dnet-slider-focus-ring` | `#5b5ce0` <br><sub>via `--dnet-sys-focus-ring`</sub> |
 | `--dnet-slider-inactive-track-color` | `#e1e3e1` <br><sub>via `--dnet-sys-border-strong`</sub> |
 | `--dnet-slider-label-background` | `var(--_active-track)` |
 | `--dnet-slider-label-foreground` | `#ffffff` <br><sub>via `--dnet-sys-on-primary`</sub> |

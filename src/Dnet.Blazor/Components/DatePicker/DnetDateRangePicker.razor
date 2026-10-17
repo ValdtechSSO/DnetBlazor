@@ -1,3 +1,6 @@
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+
 @using System.Diagnostics.CodeAnalysis
 @using System.Globalization
 @using Dnet.Blazor.Components.DatePicker.Infrastructure.Enums
@@ -21,17 +24,19 @@
 @inject IOverlayService OverlayService
 @inject IJSRuntime JSRuntime
 
+<DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
+
 <div @attributes="AdditionalAttributes"
      class="dnet-date-range-inputs @CssClass"
      role="group"
-     aria-label="@Labels.Calendar">
+     aria-label="@EffectiveLabels.Calendar">
     <input @ref="StartElement"
            class="mat-input-element dnet-date-range-start"
            type="text"
            autocomplete="off"
            value="@_startText"
            placeholder="@StartPlaceholder"
-           aria-label="@Labels.StartDate"
+           aria-label="@EffectiveLabels.StartDate"
            aria-haspopup="dialog"
            aria-expanded="@(IsOpen ? "true" : "false")"
            disabled="@Disabled"
@@ -50,7 +55,7 @@
            autocomplete="off"
            value="@_endText"
            placeholder="@EndPlaceholder"
-           aria-label="@Labels.EndDate"
+           aria-label="@EffectiveLabels.EndDate"
            aria-haspopup="dialog"
            aria-expanded="@(IsOpen ? "true" : "false")"
            disabled="@Disabled"
@@ -65,6 +70,25 @@
 </div>
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+    private DnetDatePickerLabels? _labels;
+    private DnetDatePickerLabels EffectiveLabels => Labels.Resolve(Localizer);
+    private Task HandleLocalizationChanged() => InvokeAsync(() =>
+    {
+        if (_menuReference?.Config is { } config)
+        {
+            config.AriaLabel = EffectiveLabels.Calendar;
+            config.Direction = EffectiveCulture.TextInfo.IsRightToLeft ? "rtl" : "ltr";
+            _menuReference.RequestConfigurationUpdate();
+        }
+        if (!_hasInputFocus && !_hasInvalidInput)
+        {
+            _startText = FormatDate(Value?.Start);
+            _endText = FormatDate(Value?.End);
+        }
+        StateHasChanged();
+    });
+
     private const char Separator = '|';
     private readonly IDnetDateRangeSelectionStrategy _defaultStrategy = new DefaultDateRangeSelectionStrategy();
     private OverlayReference? _menuReference;
@@ -77,6 +101,7 @@
     private bool _previousDisabled;
     private bool _overlayUsesTouch;
     private bool _hasInputFocus;
+    private bool _hasInvalidInput;
     private DateTime _suppressFocusOpenUntilUtc;
 
     [CascadingParameter] private FormFieldCascadingValues? FormFieldValues { get; set; }
@@ -109,7 +134,7 @@
     [Parameter] public RenderFragment? FooterContent { get; set; }
     [Parameter] public string? StartPlaceholder { get; set; }
     [Parameter] public string? EndPlaceholder { get; set; }
-    [Parameter] public DnetDatePickerLabels Labels { get; set; } = new();
+    [Parameter] public DnetDatePickerLabels Labels { get => _labels ??= new(); set => _labels = value; }
     [Parameter] public bool ShowActions { get; set; } = true;
     [Parameter] public bool TouchUi { get; set; }
     [Parameter] public bool Responsive { get; set; } = true;
@@ -128,7 +153,7 @@
     [Parameter] public EventCallback OnClosed { get; set; }
     [Parameter] public EventCallback<string> OnError { get; set; }
 
-    private CultureInfo EffectiveCulture => Culture ?? CultureInfo.CurrentCulture;
+    private CultureInfo EffectiveCulture => Culture ?? Localizer.Culture;
     private string[] AcceptedFormats => new[] { Format }.Concat(Formats ?? []).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct(StringComparer.Ordinal).ToArray();
 
     protected override void OnInitialized()
@@ -153,6 +178,7 @@
         if (!Equals(_lastValue, Value))
         {
             _lastValue = Value;
+            _hasInvalidInput = false;
             _startText = FormatDate(Value?.Start);
             _endText = FormatDate(Value?.End);
         }
@@ -182,7 +208,7 @@
         if (start.HasValue && end.HasValue && start > end)
         {
             result = null;
-            validationErrorMessage = "The end date cannot be earlier than the start date.";
+            validationErrorMessage = Localizer["DatePicker.EndBeforeStart"];
             return false;
         }
         result = new DnetDateRange(start, end);
@@ -216,7 +242,7 @@
             return new OverlayConfig
             {
                 HasBackdrop = true, ScrollStrategy = OverlayScrollStrategy.Block, CloseOnEscape = true,
-                Role = "dialog", AriaModal = true, AriaLabel = Labels.Calendar, TrapFocus = true,
+                Role = "dialog", AriaModal = true, AriaLabel = EffectiveLabels.Calendar, TrapFocus = true,
                 Direction = EffectiveCulture.TextInfo.IsRightToLeft ? "rtl" : "ltr",
                 RestoreFocus = RestoreFocus, InitialFocusSelector = "[role='gridcell'][tabindex='0']",
                 PositionStrategy = PositionStrategy.Global,
@@ -235,7 +261,7 @@
         return new OverlayConfig
         {
             HasBackdrop = true, HasTransparentBackdrop = true, CloseOnEscape = true,
-            ScrollStrategy = OverlayScrollStrategy.Reposition, Role = "dialog", AriaLabel = Labels.Calendar,
+            ScrollStrategy = OverlayScrollStrategy.Reposition, Role = "dialog", AriaLabel = EffectiveLabels.Calendar,
             Direction = EffectiveCulture.TextInfo.IsRightToLeft ? "rtl" : "ltr",
             RestoreFocus = RestoreFocus, PositionStrategy = PositionStrategy.FlexibleConnectedTo,
             FlexibleConnectedPositionStrategyBuilder = new FlexibleConnectedPositionStrategyBuilder().WithLockedPosition().WithViewportMargin(8).SetOrigin(origin).WithFlexibleDimensions(false).WithPositions(positions),
@@ -257,7 +283,7 @@
         builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.StartAt), StartAt);
         builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.StartView), StartView);
         builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.FirstDayOfWeek), FirstDayOfWeek);
-        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.Culture), EffectiveCulture);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.Culture), Culture);
         builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.IsDateEnabled), IsDateEnabled);
         builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.DateClass), DateClass);
         builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.RangeSelectionStrategy), SelectionStrategy ?? _defaultStrategy);
@@ -299,7 +325,7 @@
     {
         if (!_pendingRange.IsComplete)
         {
-            await RaiseErrorAsync("Select both a start and an end date.");
+            await RaiseErrorAsync(Localizer["DatePicker.IncompleteRange"]);
             return;
         }
         await CommitRangeAsync(_pendingRange.Normalize());
@@ -344,7 +370,9 @@
         var combined = $"{_startText}{Separator}{_endText}";
         CurrentValueAsString = combined;
         _formEventService?.RaiseCurrentValue(combined);
-        if (TryParseValueFromString(combined, out var range, out var error))
+        var valid = TryParseValueFromString(combined, out var range, out var error);
+        _hasInvalidInput = !valid;
+        if (valid)
         {
             _lastValue = range;
             await OnRangeInput.InvokeAsync(range);
@@ -394,6 +422,7 @@
     {
         CurrentValue = null;
         _lastValue = null;
+        _hasInvalidInput = false;
         _pendingRange = new DnetDateRange();
         _startText = _endText = string.Empty;
         _formEventService?.RaiseCurrentValue(string.Empty);
@@ -409,11 +438,11 @@
         if (!DateOnly.TryParseExact(text, AcceptedFormats, EffectiveCulture, DateTimeStyles.AllowWhiteSpaces, out var date) &&
             !DateOnly.TryParse(text, EffectiveCulture, DateTimeStyles.AllowWhiteSpaces, out date))
         {
-            result = null; error = $"Enter a valid date using {string.Join(", ", AcceptedFormats)}."; return false;
+            result = null; error = Localizer.Format("DatePicker.InvalidDate", string.Join(", ", AcceptedFormats)); return false;
         }
-        if (Min.HasValue && date < Min) { result = null; error = $"Date must be on or after {FormatDate(Min)}."; return false; }
-        if (Max.HasValue && date > Max) { result = null; error = $"Date must be on or before {FormatDate(Max)}."; return false; }
-        if (IsDateEnabled is not null && !IsDateEnabled(date)) { result = null; error = "This date is not available."; return false; }
+        if (Min.HasValue && date < Min) { result = null; error = Localizer.Format("DatePicker.MinimumDate", FormatDate(Min)); return false; }
+        if (Max.HasValue && date > Max) { result = null; error = Localizer.Format("DatePicker.MaximumDate", FormatDate(Max)); return false; }
+        if (IsDateEnabled is not null && !IsDateEnabled(date)) { result = null; error = Localizer["DatePicker.UnavailableDate"]; return false; }
         result = date; error = null; return true;
     }
 

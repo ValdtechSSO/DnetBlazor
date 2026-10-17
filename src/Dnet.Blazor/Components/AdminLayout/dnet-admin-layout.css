@@ -439,14 +439,14 @@ body {
   --_layout-divider-width: var(--dnet-layout-divider-width, 0);
   --_layout-divider-style: var(--dnet-layout-divider-style, solid);
   display: grid;
-  grid-template-columns: minmax(var(--dnet-dash-left-column-width, 250px), auto) calc(100dvw - var(--dnet-dash-left-column-width, 250px) - var(--dnet-dash-right-column-width, 250px)) minmax(var(--dnet-dash-right-column-width, 250px), auto);
+  grid-template-columns: minmax(var(--dnet-dash-left-column-width, 270px), auto) calc(100dvw - var(--dnet-dash-left-column-width, 270px) - var(--dnet-dash-right-column-width, 250px)) minmax(var(--dnet-dash-right-column-width, 250px), auto);
   /*grid-template-rows: var(--dnet-dash-header-height, 50px) calc(100dvh - var(--dnet-dash-header-height, 50px) - var(--dnet-dash-footer-height, 50px)) var(--dnet-dash-footer-height, 50px);*/
   grid-template-rows: var(--dnet-dash-header-height, 50px) 1fr var(--dnet-dash-footer-height, 50px);
   grid-template-areas: "left header right" "left content right" "left footer right";
   height: calc(100dvh - 0px);
 }
 .dnet-grid-container.hidden-right-column {
-  grid-template-columns: minmax(var(--dnet-dash-left-column-width, 250px), auto) calc(100dvw - var(--dnet-dash-left-column-width, 250px));
+  grid-template-columns: minmax(var(--dnet-dash-left-column-width, 270px), auto) calc(100dvw - var(--dnet-dash-left-column-width, 270px));
 }
 .dnet-grid-container.hidden-left-column {
   grid-template-columns: 0px calc(100dvw - var(--dnet-dash-right-column-width, 250px)) minmax(var(--dnet-dash-right-column-width, 250px), auto);
@@ -479,13 +479,13 @@ body {
 /* Media queries ordenadas de mayor a menor para evitar conflictos */
 @media only screen and (max-width: 1024px) {
   .dnet-grid-container {
-    grid-template-columns: minmax(var(--dnet-dash-left-column-width, 250px), auto) calc(100dvw - var(--dnet-dash-left-column-width, 250px) - var(--dnet-dash-right-column-width, 250px)) minmax(var(--dnet-dash-right-column-width, 250px), auto);
+    grid-template-columns: minmax(var(--dnet-dash-left-column-width, 270px), auto) calc(100dvw - var(--dnet-dash-left-column-width, 270px) - var(--dnet-dash-right-column-width, 250px)) minmax(var(--dnet-dash-right-column-width, 250px), auto);
     grid-template-areas: "left header right" "left content right" "left footer right";
   }
 }
 @media only screen and (max-width: 768px) {
   .dnet-grid-container {
-    grid-template-columns: minmax(var(--dnet-dash-left-column-width, 250px), auto) calc(100dvw - var(--dnet-dash-left-column-width, 250px) - var(--dnet-dash-right-column-width, 250px)) minmax(var(--dnet-dash-right-column-width, 250px), auto);
+    grid-template-columns: minmax(var(--dnet-dash-left-column-width, 270px), auto) calc(100dvw - var(--dnet-dash-left-column-width, 270px) - var(--dnet-dash-right-column-width, 250px)) minmax(var(--dnet-dash-right-column-width, 250px), auto);
     grid-template-areas: "left header right" "left content right" "left footer right";
   }
 }
@@ -549,7 +549,7 @@ body {
 
 .minifyme {
   height: 50px;
-  width: var(--dnet-dash-aside-width, var(--dnet-dash-asideWidth, 250px));
+  width: var(--dnet-dash-aside-width, var(--dnet-dash-asideWidth, 270px));
   background-color: transparent;
   border: none;
   margin: 0;
@@ -647,6 +647,9 @@ body {
   .responsive-menu .dnet-aside-menu-button {
     display: flex;
   }
+  .responsive-menu .dnet-aside .dnet-menu-text {
+    padding-inline-start: 10px;
+  }
 }
 /*.dnet-desktop-navigation-menu {
     flex: 1 1 auto;
@@ -711,7 +714,7 @@ li {
 }
 li ul {
   margin: 0;
-  width: calc(var(--dnet-dash-aside-width, var(--dnet-dash-asideWidth, 250px)) - 21px);
+  width: calc(var(--dnet-dash-aside-width, var(--dnet-dash-asideWidth, 270px)) - 21px);
   background: var(--dnet-dash-primary-reset, var(--dnet-sys-primary-strong));
 }
 li .positioning-helper {
@@ -761,7 +764,7 @@ nav ul li a:hover .collapse-sign, nav ul li a:hover .menu-item-parent {
   color: var(--dnet-dash-link-color, var(--dnet-sys-on-surface-emphasis));
 }
 nav ul li a:hover .dnet-menu-text {
-  color: var(--dnet-dash-indicator-bgcolor, var(--dnet-sys-primary-strong));
+  color: var(--dnet-dash-indicator-bgcolor, var(--dnet-sys-primary-content));
 }
 nav ul li a:hover .dnet-tree-cmp-link-indicator {
   height: var(--dnet-dash-navbar-height, 38px);
@@ -779,6 +782,19 @@ nav ul li a .dnet-menu-text {
   color: var(--dnet-dash-navigation-color, var(--dnet-sys-on-surface-emphasis));
   font-size: var(--dnet-dash-menu-text-size, var(--dnet-sys-text-md));
   text-align: left;
+}
+.dnet-grid-container:not(.minified) .dnet-aside .dnet-menu-text {
+  padding-inline-start: 10px;
+}
+/* Align the start of icon-and-label groups with text-only links. */
+.dnet-grid-container:is(:not(.minified), .responsive-menu) .dnet-aside nav > ul > li > .dnet-tree-cmp-link > a > .dnet-menu-img:has(+ .dnet-menu-text) {
+  padding-inline-start: 10px;
+}
+.dnet-grid-container:is(:not(.minified), .responsive-menu) .dnet-aside nav > ul > li > .dnet-tree-cmp-link > a > .dnet-menu-img:has(+ .dnet-menu-text) > span:only-child {
+  margin: 0;
+}
+.dnet-grid-container:is(:not(.minified), .responsive-menu) .dnet-aside nav > ul > li > .dnet-tree-cmp-link > a > .dnet-menu-img + .dnet-menu-text {
+  padding-inline-start: 8px;
 }
 nav ul li a.active {
   font-weight: 700;
@@ -835,7 +851,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   color: var(--dnet-dash-navigation-color, var(--dnet-sys-on-surface-emphasis));
 }
 .minified nav > ul > li a:hover .dnet-menu-text {
-  color: var(--dnet-dash-indicator-bgcolor, var(--dnet-sys-primary-strong));
+  color: var(--dnet-dash-indicator-bgcolor, var(--dnet-sys-primary-content));
 }
 .minified nav > ul > li a.has-image {
   justify-content: flex-start !important;
@@ -869,7 +885,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .minified nav > ul .positioning-helper {
-  width: calc(var(--dnet-dash-aside-width, var(--dnet-dash-asideWidth, 250px)) - 21px);
+  width: calc(var(--dnet-dash-aside-width, var(--dnet-dash-asideWidth, 270px)) - 21px);
   left: var(--dnet-dash-floating-menu-left, 60px);
   z-index: 200;
 }

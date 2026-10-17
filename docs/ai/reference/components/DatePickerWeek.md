@@ -9,6 +9,7 @@
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
+| `Culture` | `CultureInfo?` | — | Gets or sets the culture used to format and parse values. |
 | `Disabled` | `bool` | `false` | Gets or sets whether user interaction with the component is disabled. |
 | `Format` | `string` | `$"yyyy/MM/dd"` | Gets or sets the display and parsing format for the value. |
 | `PlaceHolder` | `string` | `""` | Gets or sets placeholder text displayed when the input is empty. |
@@ -34,7 +35,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-datepickerweek-input-height` | `28px` |
 | `--dnet-datepickerweekca-day-disabled-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 60.5%, transparent)` |
 | `--dnet-datepickerweekca-day-height` | `40px` |
-| `--dnet-datepickerweekca-selected-bg-color` | `#42b0d5` <br><sub>via `--dnet-sys-primary-strong`</sub> |
+| `--dnet-datepickerweekca-selected-bg-color` | `#5b5ce0` <br><sub>via `--dnet-sys-primary-strong`</sub> |
 | `--dnet-datepickerweekca-today-bg-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 15.9%, transparent)` |
 
 <details><summary>Legacy token names still honoured</summary>

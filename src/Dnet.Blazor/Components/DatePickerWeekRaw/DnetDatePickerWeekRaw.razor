@@ -1,14 +1,19 @@
-﻿@using System.Globalization
+﻿@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+
+@using System.Globalization
 @using Dnet.Blazor.Components.DatePickerWeekRaw.Infrastructure.Enums
 @using Dnet.Blazor.Components.DatePickerWeekRaw.Infrastructure.Models
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Web
 
+<DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
+
 <div class="dnet-datepickerweek-raw-content">
-    <div class="dnet-calendar dnet-datepickerweek-raw-calendar">
+    <div class="dnet-calendar dnet-datepickerweek-raw-calendar" aria-label="@Localizer["DatePicker.Calendar"]">
         <div class="dnet-datepickerweekca-raw-header">
             <div class="dnet-datepickerweekca-raw-controls">
-                <button type="button" class="dnet-datepickerweekca-raw-period-button dnet-button" @onclick="ChangeView">
+                <button type="button" class="dnet-datepickerweekca-raw-period-button dnet-button" aria-label="@Localizer["DatePicker.ChooseMonthAndYear"]" @onclick="ChangeView">
                     <span class="dnet-button-wrapper">
                         @switch (_activeView)
                         {
@@ -26,8 +31,8 @@
                     <div class="dnet-datepickerweekca-raw-arrow @(_activeView == 1 ? "dnet-datepickerweekca-raw-arrow-up" : "dnet-datepickerweekca-raw-arrow-down")"></div>
                 </button>
                 <div class="dnet-datepickerweekca-raw-spacer"></div>
-                <button type="button" class="dnet-datepickerweekca-raw-previous-button dnet-focus-indicator" @onclick="CalendarPrevious" disabled="@(_activeView == 3)"></button>
-                <button type="button" class="dnet-datepickerweekca-raw-next-button dnet-focus-indicator" @onclick="CalendarNext" disabled="@(_activeView == 3)"></button>
+                <button type="button" class="dnet-datepickerweekca-raw-previous-button dnet-focus-indicator" aria-label="@Localizer["DatePicker.PreviousPeriod"]" @onclick="CalendarPrevious" disabled="@(_activeView == 3)"></button>
+                <button type="button" class="dnet-datepickerweekca-raw-next-button dnet-focus-indicator" aria-label="@Localizer["DatePicker.NextPeriod"]" @onclick="CalendarNext" disabled="@(_activeView == 3)"></button>
             </div>
         </div>
         @switch (_activeView)
@@ -43,7 +48,7 @@
                     <div class="dnet-datepickerweekca-raw-content-body">
                         @foreach (var day in _days)
                         {
-                            <div class="dnet-datepickerweekca-raw-day"
+                            <div class="dnet-datepickerweekca-raw-day" aria-label="@day.Date.ToString("D", EffectiveCulture)"
                             @onclick="(() => SelectDay(day))"
                             @onmouseover="(() => hoveredWeek = day.WeekOfYear)"
                             @onmouseout="(() => hoveredWeek = null)">
@@ -93,6 +98,24 @@
 </div>
 
 @code {
+    [Parameter] public CultureInfo? Culture { get; set; }
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+    private CultureInfo EffectiveCulture => Culture ?? Localizer.Culture;
+    private void RefreshLocalizedNames()
+    {
+        if (_workingYear < 1 || _workingMonth < 1) return;
+        _workingMonthName = new DateTime(_workingYear, _workingMonth, 1)
+            .ToString("MMM", EffectiveCulture).ToUpper(EffectiveCulture);
+        SetMonths(_tempWorkingYear > 0 ? _tempWorkingYear : _workingYear);
+    }
+    protected override void OnParametersSet() => RefreshLocalizedNames();
+    private Task HandleLocalizationChanged() => InvokeAsync(() =>
+    {
+        RefreshLocalizedNames();
+        StateHasChanged();
+    });
+
+
 
     /// <summary>Raised when week selected occurs.</summary>
     [Parameter]
@@ -106,7 +129,8 @@
 
     private List<string> _dayNameCaptionsShort = new List<string> { "M", "T", "W", "T", "F", "S", "S" };
 
-    private List<string> _dayNameCaptionsLarge = new List<string> { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+    private List<string> _dayNameCaptionsLarge => Enumerable.Range(0, 7)
+        .Select(offset => EffectiveCulture.DateTimeFormat.GetAbbreviatedDayName((DayOfWeek)((offset + 1) % 7))).ToList();
 
     private int _workingYear { get; set; }
 
@@ -179,7 +203,7 @@
 
     public void GetMonthDaysWithFullWeeks(int workingYear, int workingMonth)
     {
-        _workingMonthName = new DateTime(workingYear, workingMonth, 1).ToString("MMM", CultureInfo.InvariantCulture).ToUpper();
+        _workingMonthName = new DateTime(workingYear, workingMonth, 1).ToString("MMM", EffectiveCulture).ToUpper(EffectiveCulture);
 
         _days = new List<CalendarDay>();
         var firstDayOfMonth = new DateTime(workingYear, workingMonth, 1);
@@ -275,12 +299,12 @@
 
         var endDay = allDays.Find(d => d.Date.Date == selectedDate.Date);
 
-        return $"{startDay.Date.Year} {startDay.Date.ToString("MMMM dd")} - {endDay.Date.ToString("MMMM dd")}";
+        return $"{startDay.Date.Year} {startDay.Date.ToString("MMMM dd", EffectiveCulture)} - {endDay.Date.ToString("MMMM dd", EffectiveCulture)}";
     }
 
     private CalendarDay CreateCalendarDay(DateTime date, int dayIndex)
     {
-        var calendar = CultureInfo.CurrentCulture.Calendar;
+        var calendar = EffectiveCulture.Calendar;
 
         return new CalendarDay
             {
@@ -292,7 +316,7 @@
                 Year = date.Year,
                 Month = date.Month,
                 Date = date,
-                FormattedDate = date.ToString("yyyy-MM-dd"),
+                FormattedDate = date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
                 WeekOfYear = calendar.GetWeekOfYear(date, CalendarWeekRule.FirstDay, DayOfWeek.Monday)
             };
     }
@@ -394,13 +418,13 @@
 
     private void SetMonths(int workingYear)
     {
-        var monthNames = new DateTime(workingYear).ToString("MMM", CultureInfo.InvariantCulture).ToUpper();
+        var monthNames = new DateTime(workingYear).ToString("MMM", EffectiveCulture).ToUpper(EffectiveCulture);
 
         _months = new Dictionary<int, string>();
 
         for (var i = 1; i <= 12; i++)
         {
-            var month = new DateTime(workingYear, i, 1).ToString("MMM", CultureInfo.InvariantCulture).ToUpper();
+            var month = new DateTime(workingYear, i, 1).ToString("MMM", EffectiveCulture).ToUpper(EffectiveCulture);
 
             _months.Add(i, month);
         }
@@ -491,7 +515,7 @@
         {
             currentValue = dayValue;
 
-            var day = Convert.ToDateTime(dayValue);
+            var day = DateTime.Parse(dayValue, EffectiveCulture);
 
             _workingYear = day.Year;
 

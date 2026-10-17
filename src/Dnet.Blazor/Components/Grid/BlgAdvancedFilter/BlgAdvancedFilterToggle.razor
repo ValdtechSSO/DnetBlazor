@@ -1,4 +1,6 @@
-﻿@using Dnet.Blazor.Components.Overlay.Infrastructure.Enums
+﻿@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Enums
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Interfaces
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Models
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Services
@@ -14,12 +16,16 @@
 
 @inject DnetOverlayInterop DnetOverlayInterop
 
-<div @ref="_menuTrigger" @onclick="ToggleMenu">
+<DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
+<div @ref="_menuTrigger" @onclick="ToggleMenu" role="button" tabindex="0" aria-label="@(Localizer["Grid.OpenFilter"])" aria-expanded="@(_isOpen ? "true" : "false")" @onkeydown="HandleKeyDown">
     <span class="@(IsFiltered ? "blg-adv-toggle-button-filtered-image" : "blg-adv-toggle-button-image")">
     </span>
 </div>
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+    private Task HandleLocalizationChanged() => InvokeAsync(StateHasChanged);
+
 
     [CascadingParameter(Name = "DnetThemeScope")]
     private string? _themeScope { get; set; }
@@ -51,6 +57,8 @@
 
     private OverlayReference? _menuReference;
 
+
+    private Task HandleKeyDown(KeyboardEventArgs args) => args.Key is "Enter" or " " ? ToggleMenu() : Task.CompletedTask;
 
     private async Task ToggleMenu()
     {

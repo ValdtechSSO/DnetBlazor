@@ -25,7 +25,7 @@
     display: grid;
     place-items: center;
     flex: 0 0 auto;
-    color: var(--dnet-sys-primary-strong);
+    color: var(--dnet-sys-primary-content);
     background: var(--dnet-sys-state-selected);
     border-radius: var(--dnet-sys-radius-md);
 }
@@ -71,9 +71,9 @@
     max-width: 100%;
     padding: 8px 20px;
     overflow: hidden;
-    border: 1px solid var(--dnet-sys-primary-strong);
+    border: 1px solid var(--dnet-sys-primary);
     border-radius: var(--dnet-sys-radius-pill);
-    background: var(--dnet-sys-primary-strong);
+    background: var(--dnet-sys-primary);
     color: var(--dnet-sys-on-primary);
     font-size: var(--dnet-sys-text-sm);
     font-weight: 600;
@@ -85,14 +85,13 @@
 
 .image-file-action:hover,
 .image-download:hover {
-    background: var(--dnet-sys-primary-emphasis);
-    border-color: var(--dnet-sys-primary-emphasis);
+    background: color-mix(in srgb, var(--dnet-sys-primary) 64%, var(--dnet-sys-primary-emphasis));
+    border-color: color-mix(in srgb, var(--dnet-sys-primary) 64%, var(--dnet-sys-primary-emphasis));
 }
 
 .image-file-action:focus-within,
 .image-download:focus-visible {
-    outline: 2px solid var(--dnet-sys-primary-strong);
-    outline-offset: 3px;
+    box-shadow: 0 0 0 3px var(--dnet-sys-focus-ring);
 }
 
 .image-file-action[aria-disabled="true"] {

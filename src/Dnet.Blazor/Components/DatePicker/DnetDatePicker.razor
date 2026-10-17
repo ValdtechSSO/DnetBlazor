@@ -1,3 +1,6 @@
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+
 @using System.Diagnostics.CodeAnalysis
 @using System.Globalization
 @using Dnet.Blazor.Components.DatePicker.Infrastructure.Enums
@@ -19,6 +22,8 @@
 
 @inject IOverlayService OverlayService
 @inject IJSRuntime JSRuntime
+
+<DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
 
 <input @ref="Element"
        @attributes="AdditionalAttributes"
@@ -44,6 +49,20 @@
        @onkeydown="HandleKeyDownAsync" />
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+    private DnetDatePickerLabels? _labels;
+    private DnetDatePickerLabels EffectiveLabels => Labels.Resolve(Localizer);
+    private Task HandleLocalizationChanged() => InvokeAsync(() =>
+    {
+        if (_menuReference?.Config is { } config)
+        {
+            config.AriaLabel = EffectiveLabels.Calendar;
+            config.Direction = EffectiveCulture.TextInfo.IsRightToLeft ? "rtl" : "ltr";
+            _menuReference.RequestConfigurationUpdate();
+        }
+        StateHasChanged();
+    });
+
     private OverlayReference? _menuReference;
     private IFormEventService? _formEventService;
     private DateOnly? _pendingDate;
@@ -89,7 +108,7 @@
     [Parameter] public RenderFragment? FooterContent { get; set; }
     [Parameter] public bool ShowActions { get; set; }
     [Parameter] public bool ShowReset { get; set; } = true;
-    [Parameter] public DnetDatePickerLabels Labels { get; set; } = new();
+    [Parameter] public DnetDatePickerLabels Labels { get => _labels ??= new(); set => _labels = value; }
     [Parameter] public bool TouchUi { get; set; }
     [Parameter] public bool Responsive { get; set; } = true;
     [Parameter] public int ResponsiveBreakpoint { get; set; } = 600;
@@ -104,14 +123,14 @@
     /// <summary>Gets whether the calendar overlay is currently open.</summary>
     public bool IsOpen { get; private set; }
 
-    private CultureInfo EffectiveCulture => Culture ?? CultureInfo.CurrentCulture;
+    private CultureInfo EffectiveCulture => Culture ?? Localizer.Culture;
     private DateOnly? Min => MinDayValue.HasValue ? DateOnly.FromDateTime(MinDayValue.Value) : null;
     private DateOnly? Max => MaxDayValue.HasValue ? DateOnly.FromDateTime(MaxDayValue.Value) : null;
     private DateOnly? StartAt => FirstDayToShow.HasValue ? DateOnly.FromDateTime(FirstDayToShow.Value) : null;
     private string? PanelId => _menuReference is null ? null : $"cdk-overlay-pane-{_menuReference.GetOverlayReferenceId()}";
     private string ResolvedInputAriaLabel => AdditionalAttributes?.TryGetValue("aria-label", out var label) == true
-        ? Convert.ToString(label, CultureInfo.InvariantCulture) ?? Labels.ChooseDate
-        : Labels.ChooseDate;
+        ? Convert.ToString(label, CultureInfo.InvariantCulture) ?? EffectiveLabels.ChooseDate
+        : EffectiveLabels.ChooseDate;
     private string InputClass => new CssBuilder("mat-input-element dnet-datepicker-input").AddClass(CssClass).Build();
     private string[] AcceptedFormats => new[] { Format }.Concat(Formats ?? []).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct(StringComparer.Ordinal).ToArray();
 
@@ -158,7 +177,7 @@
         if (!TryParseDate(value, out var date))
         {
             result = string.Empty;
-            validationErrorMessage = $"Enter a valid date using {string.Join(", ", AcceptedFormats)}.";
+            validationErrorMessage = Localizer.Format("DatePicker.InvalidDate", string.Join(", ", AcceptedFormats));
             return false;
         }
 
@@ -207,7 +226,7 @@
                 CloseOnEscape = true,
                 Role = "dialog",
                 AriaModal = true,
-                AriaLabel = Labels.Calendar,
+                AriaLabel = EffectiveLabels.Calendar,
                 Direction = EffectiveCulture.TextInfo.IsRightToLeft ? "rtl" : "ltr",
                 TrapFocus = true,
                 RestoreFocus = RestoreFocus,
@@ -237,7 +256,7 @@
             CloseOnEscape = true,
             ScrollStrategy = OverlayScrollStrategy.Reposition,
             Role = "dialog",
-            AriaLabel = Labels.Calendar,
+            AriaLabel = EffectiveLabels.Calendar,
             Direction = EffectiveCulture.TextInfo.IsRightToLeft ? "rtl" : "ltr",
             RestoreFocus = RestoreFocus,
             PositionStrategy = PositionStrategy.FlexibleConnectedTo,
@@ -262,7 +281,7 @@
         builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.StartAt), StartAt);
         builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.StartView), StartView);
         builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.FirstDayOfWeek), FirstDayOfWeek);
-        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.Culture), EffectiveCulture);
+        builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.Culture), Culture);
         builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.IsDateEnabled), EffectiveDateFilter);
         builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.DateClass), DateClass);
         builder.AddAttribute(sequence++, nameof(DnetDatePickerPanel.Labels), Labels);
@@ -385,9 +404,9 @@
 
     private bool ValidateDate(DateOnly date, out string? error)
     {
-        if (Min.HasValue && date < Min) { error = $"Date must be on or after {Min.Value.ToString(Format, EffectiveCulture)}."; return false; }
-        if (Max.HasValue && date > Max) { error = $"Date must be on or before {Max.Value.ToString(Format, EffectiveCulture)}."; return false; }
-        if (!EffectiveDateFilter(date)) { error = "This date is not available."; return false; }
+        if (Min.HasValue && date < Min) { error = Localizer.Format("DatePicker.MinimumDate", Min.Value.ToString(Format, EffectiveCulture)); return false; }
+        if (Max.HasValue && date > Max) { error = Localizer.Format("DatePicker.MaximumDate", Max.Value.ToString(Format, EffectiveCulture)); return false; }
+        if (!EffectiveDateFilter(date)) { error = Localizer["DatePicker.UnavailableDate"]; return false; }
         error = null;
         return true;
     }

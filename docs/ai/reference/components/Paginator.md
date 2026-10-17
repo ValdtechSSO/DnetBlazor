@@ -22,14 +22,14 @@
 | `PageSize` | `int` | — | Gets or sets the number of items displayed on each page. |
 | `TotalItems` | `int` | — | Gets or sets the total items used by this component. |
 | `Disabled` | `bool` | — | Gets or sets whether user interaction with the component is disabled. |
-| `PaginationLabel` | `string` | `"Pagination"` | Gets or sets the pagination label used by this component. |
-| `PageText` | `string` | `"Page"` | Gets or sets the page text used by this component. |
-| `OfText` | `string` | `"of"` | Gets or sets the of text used by this component. |
-| `PageInputLabel` | `string` | `"Current page"` | Gets or sets the page input label used by this component. |
-| `FirstPageLabel` | `string` | `"First page"` | Gets or sets the first page label used by this component. |
-| `PreviousPageLabel` | `string` | `"Previous page"` | Gets or sets the previous page label used by this component. |
-| `NextPageLabel` | `string` | `"Next page"` | Gets or sets the next page label used by this component. |
-| `LastPageLabel` | `string` | `"Last page"` | Gets or sets the last page label used by this component. |
+| `PaginationLabel` | `string` | Computed | Gets or sets the pagination label used by this component. |
+| `PageText` | `string` | Computed | Gets or sets the page text used by this component. |
+| `OfText` | `string` | Computed | Gets or sets the of text used by this component. |
+| `PageInputLabel` | `string` | Computed | Gets or sets the page input label used by this component. |
+| `FirstPageLabel` | `string` | Computed | Gets or sets the first page label used by this component. |
+| `PreviousPageLabel` | `string` | Computed | Gets or sets the previous page label used by this component. |
+| `NextPageLabel` | `string` | Computed | Gets or sets the next page label used by this component. |
+| `LastPageLabel` | `string` | Computed | Gets or sets the last page label used by this component. |
 | `PageNumberZone` | `int` | `2` | Gets or sets the page number zone used by this component. |
 | `ControlsZone` | `int` | `3` | Gets or sets the controls zone used by this component. |
 | `RangeZone` | `int` | `4` | Gets or sets the range zone used by this component. |

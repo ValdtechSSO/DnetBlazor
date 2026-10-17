@@ -1,18 +1,24 @@
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+
 @using System.Globalization
+@using Dnet.Blazor.Components.Button
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.JSInterop
 
 @inject IJSRuntime JSRuntime
 
+<DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
+
 <div class="dnet-timepicker-panel @(TouchUi ? "dnet-timepicker-panel-touch" : null)">
     @if (TouchUi)
     {
-        <div class="dnet-timepicker-panel-header">@OptionsAriaLabel</div>
+        <div class="dnet-timepicker-panel-header">@EffectiveOptionsAriaLabel</div>
     }
 
     <div class="dnet-timepicker-options"
          role="@(TouchUi ? "listbox" : null)"
-         aria-label="@(TouchUi ? OptionsAriaLabel : null)">
+         aria-label="@(TouchUi ? EffectiveOptionsAriaLabel : null)">
         @for (var index = 0; index < Options.Count; index++)
         {
             var optionIndex = index;
@@ -41,14 +47,22 @@
     @if (TouchUi)
     {
         <div class="dnet-timepicker-actions">
-            <button class="dnet-timepicker-action"
-                    type="button"
-                    @onclick="Cancel">@CancelLabel</button>
+            <DnetButton Size="DnetButtonSize.Small" Variant="DnetButtonVariant.Outlined"
+                        class="dnet-timepicker-action"
+                        OnClick="Cancel">@EffectiveCancelLabel</DnetButton>
         </div>
     }
 </div>
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+    private string? _optionsAriaLabel;
+    private string? _cancelLabel;
+    private string EffectiveOptionsAriaLabel => _optionsAriaLabel ?? Localizer["TimePicker.ChooseTime"];
+    private string EffectiveCancelLabel => _cancelLabel ?? Localizer["Common.Cancel"];
+    private CultureInfo? _culture;
+    private Task HandleLocalizationChanged() => InvokeAsync(StateHasChanged);
+
     /// <summary>Gets or sets the selectable time values.</summary>
     [Parameter, EditorRequired]
     public IReadOnlyList<TimeOnly> Options { get; set; } = Array.Empty<TimeOnly>();
@@ -67,7 +81,7 @@
 
     /// <summary>Gets or sets the display culture.</summary>
     [Parameter]
-    public CultureInfo Culture { get; set; } = CultureInfo.CurrentCulture;
+    public CultureInfo Culture { get => _culture ?? Localizer.Culture; set => _culture = value; }
 
     /// <summary>Gets or sets the stable prefix used for accessible option identifiers.</summary>
     [Parameter, EditorRequired]
@@ -75,11 +89,11 @@
 
     /// <summary>Gets or sets the accessible label for the options list.</summary>
     [Parameter]
-    public string OptionsAriaLabel { get; set; } = "Choose a time";
+    public string OptionsAriaLabel { get => _optionsAriaLabel ?? "Choose a time"; set => _optionsAriaLabel = value; }
 
     /// <summary>Gets or sets the label of the cancel action.</summary>
     [Parameter]
-    public string CancelLabel { get; set; } = "Cancel";
+    public string CancelLabel { get => _cancelLabel ?? "Cancel"; set => _cancelLabel = value; }
 
     /// <summary>Gets or sets whether the panel is rendered using its touch-friendly modal presentation.</summary>
     [Parameter]

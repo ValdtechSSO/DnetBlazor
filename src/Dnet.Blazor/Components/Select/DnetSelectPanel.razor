@@ -1,4 +1,6 @@
-﻿@using Dnet.Blazor.Components.Button
+﻿@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+@using Dnet.Blazor.Components.Button
 @using Dnet.Blazor.Components.Checkbox
 @using Dnet.Blazor.Components.Form
 @using Microsoft.AspNetCore.Components.Forms
@@ -18,6 +20,7 @@
 
 @inject IOverlayService OverlayService
 
+<DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
 <div class="dnet-select-list-wrapper">
     <div class="dnet-select-list-header">
         <div class="dnet-select-list-header-content">
@@ -26,7 +29,7 @@
             </span>
         </div>
         <div class="dnet-select-list-header-checkall">
-            <span @onclick="CancelOverlay" class="dnet-dialog-icon-wrapper">
+            <span @onclick="CancelOverlay" class="dnet-dialog-icon-wrapper" role="button" tabindex="0" aria-label="@(Localizer["Common.Close"])" @onkeydown="HandleCloseKeyDown">
                 <span class="dnet-dialog-icon dnet-dialog-close-icon" unselectable="on"></span>
             </span>
         </div>
@@ -120,6 +123,9 @@
 </div>
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+    private Task HandleLocalizationChanged() => InvokeAsync(StateHasChanged);
+
 
     [CascadingParameter]
     private int OverlayReferenceId { get; set; }
@@ -202,7 +208,8 @@
 
     /// <summary>Gets or sets the label displayed for the component.</summary>
     [Parameter]
-    public string Label { get; set; } = string.Empty;
+    public string Label { get => _label ?? Localizer["Select.Options"]; set => _label = value; }
+    private string? _label;
 
 
     private string _styles { get; set; } = string.Empty;
@@ -266,6 +273,11 @@
         {
             SelectedRowNodes.Remove(rowNode);
         }
+    }
+
+    private void HandleCloseKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key is "Enter" or " ") CancelOverlay();
     }
 
     void CancelOverlay()

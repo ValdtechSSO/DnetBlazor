@@ -1,4 +1,4 @@
-﻿using Dnet.Blazor.Components.Dialog.Infrastructure.Interfaces;
+using Dnet.Blazor.Components.Dialog.Infrastructure.Interfaces;
 using Dnet.Blazor.Components.Dialog.Infrastructure.Models;
 using Dnet.Blazor.Components.FloatingPanel.Infrastructure.Models;
 using Dnet.Blazor.Components.Overlay.Infrastructure.Enums;
@@ -53,7 +53,7 @@ namespace Dnet.Blazor.Components.Dialog.Infrastructure.Services
                 ComponentType = ComponentType.Dialog
             };
 
-            var dialog = new RenderFragment(x =>
+            var dialogContent = new RenderFragment(x =>
             {
                 x.OpenComponent(0, typeof(DnetDialog));
                 if (componentType != null) x.AddAttribute(1, "ComponentType", componentType);
@@ -62,6 +62,18 @@ namespace Dnet.Blazor.Components.Dialog.Infrastructure.Services
                 x.AddAttribute(4, "DialogClass", dialogConfig.DialogClass);
                 x.CloseComponent();
             });
+
+            var dialog = dialogConfig.LocalizedTitleKey is null
+                ? dialogContent
+                : new RenderFragment(builder =>
+                {
+                    builder.OpenComponent<CascadingValue<string>>(0);
+                    builder.AddAttribute(1, "Name", "DnetLocalizedDialogTitle");
+                    builder.AddAttribute(2, "Value", dialogConfig.LocalizedTitleKey);
+                    builder.AddAttribute(3, "IsFixed", true);
+                    builder.AddAttribute(4, "ChildContent", dialogContent);
+                    builder.CloseComponent();
+                });
 
             var overlayReference = _overlayService.Attach(dialog, overlayConfig);
 

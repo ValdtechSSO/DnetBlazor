@@ -1,4 +1,6 @@
-﻿@using Dnet.Blazor.Components.Checkbox
+﻿@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+@using Dnet.Blazor.Components.Checkbox
 @using Dnet.Blazor.Components.Form
 @using Dnet.Blazor.Infrastructure.Models.SearchModels.FilterModels
 @using Microsoft.AspNetCore.Components.Forms
@@ -19,6 +21,7 @@
 
 @typeparam TItem
 
+<DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
 <div class="dnet-list-wrapper">
     @if (ListOptions.EnableSearching)
     {
@@ -28,7 +31,7 @@
                     <span class="dnet-list-search-icon dnet-list-search-icon-default" unselectable="on"></span>
                 </PrefixContent>
                 <ChildContent>
-                    <DnetInputText @bind-Value="_filter" PlaceHolder="@PlaceHolder" type="text" OnStopTyping="FilterData"
+                    <DnetInputText @bind-Value="_filter" PlaceHolder="@PlaceHolder" type="text" aria-label="@Label" OnStopTyping="FilterData"
                         OnClearInput="ClearInput">
                     </DnetInputText>
                 </ChildContent>
@@ -39,7 +42,7 @@
     {
         <div class="dnet-list-header">
             <div class="dnet-list-header-content" @onclick="Sort">
-                <span class="dnet-list-header-text">@ListOptions.HeaderText</span>
+                <span class="dnet-list-header-text">@(ListOptions.HeaderText ?? Localizer["List.Items"])</span>
                 @if (ListOptions.EnableSorting)
                 {
                     if (IsSortAscending()) { SortIconClass = "dnet-icon-asc"; }
@@ -54,7 +57,7 @@
                 <div class="dnet-list-header-checkall">
                     <DnetInputCheckbox Value="@_allNodesSelected"
                         ValueChanged="(eventArgs =>ChangeSelectAllNodes((bool)eventArgs))"
-                        ValueExpression="() => _allNodesSelected" class="dnet-m-r-5"></DnetInputCheckbox>
+                        ValueExpression="() => _allNodesSelected" class="dnet-m-r-5" aria-label="@(Localizer["List.SelectAll"])"></DnetInputCheckbox>
                 </div>
             }
         </div>
@@ -110,7 +113,7 @@
                             {
                                 <div class="dnet-list-item-check">
                                     <DnetInputCheckbox Value="item.Selected" ValueChanged="() => CheckboxClicked(item)"
-                                        ValueExpression="() => item.Selected" class="dnet-m-r-5"></DnetInputCheckbox>
+                                        ValueExpression="() => item.Selected" class="dnet-m-r-5" aria-label="@(Localizer.Format("List.SelectItem", ListOptions.DisplayValueConverter?.Invoke(item.RowData)))"></DnetInputCheckbox>
                                 </div>
                             }
                         </div>
@@ -144,7 +147,7 @@
                         @if (ListOptions.CheckboxSelectionColumn && disabled == false)
                         {
                             <DnetInputCheckbox Value="item.Selected" ValueChanged="() => CheckboxClicked(item)"
-                                ValueExpression="() => item.Selected" class="dnet-m-r-5"></DnetInputCheckbox>
+                                ValueExpression="() => item.Selected" class="dnet-m-r-5" aria-label="@(Localizer.Format("List.SelectItem", ListOptions.DisplayValueConverter?.Invoke(item.RowData)))"></DnetInputCheckbox>
                         }
                     </div>
                 }
@@ -165,7 +168,7 @@
             else
             {
                 <div style="display: flex; justify-content: flex-end; width: 100%; padding: 15px 15px 15px 15px">
-                    <span style="font-size:.675rem">Count: @_rowNodes.Count</span>
+                    <span style="font-size:.675rem">@Localizer.Format("List.Count", _rowNodes.Count)</span>
                 </div>
             }
         </div>
@@ -174,6 +177,9 @@
 
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+    private Task HandleLocalizationChanged() => InvokeAsync(StateHasChanged);
+
 
     /// <summary>Raised when the selection changes.</summary>
     [Parameter]
@@ -225,11 +231,13 @@
 
     /// <summary>Gets or sets placeholder text displayed when the input is empty.</summary>
     [Parameter]
-    public string PlaceHolder { get; set; } = "";
+    public string PlaceHolder { get => _placeHolder ?? ListOptions.SearchInputPlaceHolder ?? Localizer["List.SearchPlaceholder"]; set => _placeHolder = value; }
+    private string? _placeHolder;
 
     /// <summary>Gets or sets the label displayed for the component.</summary>
     [Parameter]
-    public string Label { get; set; } = "";
+    public string Label { get => _label ?? ListOptions.SearchInputLabel ?? Localizer["Common.Search"]; set => _label = value; }
+    private string? _label;
 
     /// <summary>Gets or sets whether the component use plain control.</summary>
     [Parameter]

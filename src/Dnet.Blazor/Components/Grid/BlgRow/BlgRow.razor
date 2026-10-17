@@ -1,4 +1,6 @@
-﻿@using Dnet.Blazor.Components.Grid.BlgGrid
+﻿@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+@using Dnet.Blazor.Components.Grid.BlgGrid
 @using Dnet.Blazor.Infrastructure.Models.SearchModels;
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.JSInterop
@@ -14,6 +16,7 @@
 
 @typeparam TItem
 
+<DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
 @if (GridOptions.CheckboxSelectionColumn && CheckboxSelectionPinned)
 {
     var checkboxHeight = GridOptions.RowHeight + "px";
@@ -29,7 +32,7 @@
          style="flex:0 0 auto; width: 40px; height: @checkboxHeight; grid-column: 1/1">
         @if (GetDisableRow() == false)
         {
-            <input type="checkbox" checked="@RowNode.IsSelected()" @onchange="CheckboxClicked" class="blg-checkbox-no-label" aria-label="@($"Seleccionar fila {RowId}")">
+            <input type="checkbox" checked="@RowNode.IsSelected()" @onchange="CheckboxClicked" class="blg-checkbox-no-label" aria-label="@(Localizer.Format("Grid.SelectRow", RowId))">
         }
     </div>
 }
@@ -102,9 +105,9 @@
             else if (cell.CellDataType == CellDataType.Date)
             {
                 DateTime temp;
-                if (result != null && DateTime.TryParse(result.ToString(), out temp))
+                if (result != null && DateTime.TryParse(Convert.ToString(result, CultureInfo.InvariantCulture), CultureInfo.InvariantCulture, DateTimeStyles.None, out temp))
                 {
-                    data = Convert.ToDateTime(result).ToString(cell.DateFormat, CultureInfo.InvariantCulture);
+                    data = temp.ToString(cell.DateFormat, Localizer.Culture);
                 }
                 else
                 {
@@ -195,7 +198,7 @@ else
              data-blg-row-span="1"
              style="height: @height; grid-column: @(1 + checkboxCounter)/@(GridColumns.Count + 2 + checkboxCounter)">
             <span class="blg-tree-group-content" style="padding-left: @paddingLeft; width: 100%; display: flex">
-                <button type="button" @onclick="() => ChangeExpanded(RowNode.RowNodeId)" class="blg-icon-wrapper blg-tree-toggle" aria-label="@($"{(RowNode.Expanded ? "Contraer" : "Expandir")} grupo {RowNode.GroupValue}")" aria-expanded="@RowNode.Expanded">
+                <button type="button" @onclick="() => ChangeExpanded(RowNode.RowNodeId)" class="blg-icon-wrapper blg-tree-toggle" aria-label="@(Localizer.Format(RowNode.Expanded ? "Grid.CollapseGroup" : "Grid.ExpandGroup", RowNode.GroupValue))" aria-expanded="@RowNode.Expanded">
                     <span class="blg-icon @iconClass" unselectable="on"></span>
                 </button>
                 <span>@RowNode.GroupValue</span>
@@ -216,7 +219,7 @@ else
                  data-blg-row-index="@RowId"
                  data-blg-row-span="1">
                 <span style="padding-left: @paddingLeft; width: 100%; display: flex">
-                    <button type="button" @onclick="() => ChangeExpanded(RowNode.RowNodeId)" class="blg-icon-wrapper blg-tree-toggle" aria-label="@($"{(RowNode.Expanded ? "Contraer" : "Expandir")} grupo {RowNode.GroupValue}")" aria-expanded="@RowNode.Expanded"></button>
+                    <button type="button" @onclick="() => ChangeExpanded(RowNode.RowNodeId)" class="blg-icon-wrapper blg-tree-toggle" aria-label="@(Localizer.Format(RowNode.Expanded ? "Grid.CollapseGroup" : "Grid.ExpandGroup", RowNode.GroupValue))" aria-expanded="@RowNode.Expanded"></button>
                 </span>
             </div>
         }
@@ -225,6 +228,9 @@ else
 
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+    private Task HandleLocalizationChanged() => InvokeAsync(StateHasChanged);
+
     //In Events OnCellClicked, OnRowClicked, OnRowDoubleClicked, OnSelectionChanged T should be
     //the generic form of RowNode, GridColumn etc. See implementation in BlGrid
     //It is a Bug in Blazor https://github.com/dotnet/aspnetcore/issues/17480

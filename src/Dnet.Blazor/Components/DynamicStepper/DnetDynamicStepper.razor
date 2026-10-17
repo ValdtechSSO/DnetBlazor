@@ -1,8 +1,12 @@
-﻿@using Dnet.Blazor.Components.Button
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+@using Dnet.Blazor.Components.Button
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Services
 @using Microsoft.AspNetCore.Components.Web
 
 @inject DnetOverlayInterop DnetOverlayInterop
+
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
 
 <div id="@_containerId" class="dnet-dstepper-horizontal" style="width: calc(100% - 0px)">
     <div class="dnet-horizontal-dstepper-header-container"
@@ -46,8 +50,8 @@
     @if(ShowButtons)
     {
         <div class="dnet-horizontal-dstepper-controls">
-            <DnetButton OnClick="PreviousStep" disabled="@(GetSelectedStepIndex() <= 0)">Previous</DnetButton>
-            <DnetButton OnClick="NextStep" disabled="@(GetSelectedStepIndex() >= Steps.Count - 1)">Next</DnetButton>
+            <DnetButton Variant="DnetButtonVariant.Outlined" OnClick="PreviousStep" disabled="@(GetSelectedStepIndex() <= 0)">@Localizer["Common.Previous"]</DnetButton>
+            <DnetButton Variant="DnetButtonVariant.Filled" OnClick="NextStep" disabled="@(GetSelectedStepIndex() >= Steps.Count - 1)">@Localizer["Common.Next"]</DnetButton>
         </div>
     }
 </div>
@@ -56,6 +60,8 @@
 </CascadingValue>
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+
     /// <summary>Raised when the selection changes.</summary>
     [Parameter]
     public EventCallback<Tuple<int, int>> OnSelectionChange { get; set; }

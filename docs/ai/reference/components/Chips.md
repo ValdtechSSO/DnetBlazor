@@ -50,7 +50,7 @@ the element's own `style`. Nothing else is needed.
 |---|---|
 | `--dnet-chips-background` | `#e0e0e0` <br><sub>via `--dnet-sys-surface-variant`</sub> |
 | `--dnet-chips-background-hover` | `#f2f2f2` <br><sub>via `--dnet-sys-surface-hover`</sub> |
-| `--dnet-chips-background-selected` | `#3f51b5` <br><sub>via `--dnet-sys-primary-emphasis`</sub> |
+| `--dnet-chips-background-selected` | `color-mix(in srgb, var(--dnet-sys-primary) 80%, var(--dnet-ref-neutral-1000))` <br><sub>via `--dnet-sys-primary-emphasis`</sub> |
 | `--dnet-chips-font-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
 | `--dnet-chips-foreground` | `color-mix(in srgb, var(--dnet-ref-neutral-1000) 87%, transparent)` <br><sub>via `--dnet-sys-on-surface-emphasis`</sub> |
 | `--dnet-chips-foreground-selected` | `#ffffff` <br><sub>via `--dnet-sys-on-primary`</sub> |

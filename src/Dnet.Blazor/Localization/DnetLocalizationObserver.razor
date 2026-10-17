@@ -1,0 +1,30 @@
+@namespace Dnet.Blazor.Localization
+@implements IDisposable
+@inject IServiceProvider Services
+
+@code {
+    /// <summary>Refreshes the owning component after a culture change.</summary>
+    [Parameter] public EventCallback OnChanged { get; set; }
+    private IDnetLocalizer? _localizer;
+    private bool _disposed;
+
+    protected override void OnInitialized()
+    {
+        _localizer = DnetLocalization.Get(Services);
+        _localizer.Changed += HandleChanged;
+    }
+
+    private void HandleChanged()
+    {
+        if (!_disposed) _ = InvokeAsync(async () =>
+        {
+            if (!_disposed) await OnChanged.InvokeAsync();
+        });
+    }
+
+    public void Dispose()
+    {
+        _disposed = true;
+        if (_localizer is not null) _localizer.Changed -= HandleChanged;
+    }
+}

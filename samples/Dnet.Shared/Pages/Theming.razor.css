@@ -17,7 +17,7 @@
 
 .theme-eyebrow {
     margin: 0 0 8px;
-    color: var(--dnet-sys-primary-strong);
+    color: var(--dnet-sys-primary-content);
     font-size: var(--dnet-sys-text-sm);
     font-weight: 650;
     letter-spacing: 0.1em;
@@ -231,7 +231,7 @@
     min-width: 0;
     width: 100%;
     margin: 5px 0;
-    accent-color: var(--dnet-sys-primary-strong);
+    accent-color: var(--dnet-sys-primary-content);
     cursor: pointer;
 }
 
@@ -273,9 +273,9 @@
 }
 
 .theme-shape-option[aria-pressed="true"] {
-    border-color: var(--dnet-sys-primary-strong);
+    border-color: var(--dnet-sys-primary-content);
     background: var(--dnet-sys-state-selected);
-    color: var(--dnet-sys-primary-strong);
+    color: var(--dnet-sys-primary-content);
     font-weight: 600;
 }
 
@@ -352,7 +352,7 @@
     height: 28px;
     border-radius: var(--dnet-sys-radius-md);
     background: var(--dnet-sys-state-selected);
-    color: var(--dnet-sys-primary-strong);
+    color: var(--dnet-sys-primary-content);
     font-size: var(--dnet-sys-text-md);
     font-weight: 700;
 }

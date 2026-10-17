@@ -6,10 +6,20 @@
         <div>
             <p class="button-eyebrow">Components / Actions</p>
             <h1>Buttons</h1>
-            <p class="button-introduction">Compare spacing, icons and corner shapes across three button sizes.</p>
+            <p class="button-introduction">Primary actions are filled; secondary actions use an outline. Compare both with the three button sizes.</p>
         </div>
-        <span class="button-default-badge">Medium · Pill by default</span>
+        <span class="button-default-badge">Filled · Medium · Pill by default</span>
     </header>
+
+    <section class="button-interaction-card button-variant-card" aria-labelledby="button-variant-title">
+        <p class="button-card-eyebrow">Action hierarchy</p>
+        <h2 id="button-variant-title">Make the next action clear</h2>
+        <p>Use a filled button for the main task and an outlined button for supporting actions.</p>
+        <div class="button-interaction-actions">
+            <DnetButton id="button-variant-filled" OnClick="IncrementCount">Primary action</DnetButton>
+            <DnetButton id="button-variant-outlined" Variant="DnetButtonVariant.Outlined" OnClick="IncrementCount">Secondary action</DnetButton>
+        </div>
+    </section>
 
     <section class="button-gallery" aria-labelledby="button-gallery-title">
         <div class="button-gallery-header">

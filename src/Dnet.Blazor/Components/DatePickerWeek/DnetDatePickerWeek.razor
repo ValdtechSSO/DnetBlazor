@@ -1,4 +1,7 @@
-﻿@using Dnet.Blazor.Components.DatePickerWeek.Infrastructure.Models
+﻿@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+
+@using Dnet.Blazor.Components.DatePickerWeek.Infrastructure.Models
 @using Dnet.Blazor.Components.DatePickerWeek.Infrastructure.Services
 @using Dnet.Blazor.Components.Form
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Enums
@@ -20,7 +23,9 @@
 
 @inject IOverlayService OverlayService
 
-<div class="mat-select dnet-plain-select" @onclick="ToggleMenu">
+<DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
+
+<div class="mat-select dnet-plain-select" aria-label="@Localizer["DatePicker.ChooseWeek"]" @onclick="ToggleMenu">
     <div @ref="_menuTrigger"
          class="mat-select-trigger dnet-plain-select-trigger">
         <div class="mat-select-value dnet-plain-select-value">
@@ -31,7 +36,7 @@
             @if (!string.IsNullOrEmpty(CurrentValue))
             {
                 <span class="mat-select-value-text dnet-plain-select-value-text">
-                    <span class="mat-select-min-line">@BindConverter.FormatValue(CurrentValue)</span>
+                    <span class="mat-select-min-line">@DisplayedValue</span>
                 </span>
             }
         </div>
@@ -42,6 +47,23 @@
 </div>
 
 @code {
+    [Parameter] public CultureInfo? Culture { get; set; }
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+    private CultureInfo EffectiveCulture => Culture ?? Localizer.Culture;
+    private string? _generatedValue;
+    private string? DisplayedValue => _generatedValue == CurrentValue && _selectedDays.Count > 0
+        ? GetWeekInterval(_selectedDays) : CurrentValue;
+    private Task HandleLocalizationChanged() => InvokeAsync(() =>
+    {
+        if (_menuReference?.Config is { } config)
+        {
+            config.AriaLabel = Localizer["DatePicker.ChooseWeek"];
+            _menuReference.RequestConfigurationUpdate();
+        }
+        StateHasChanged();
+    });
+
+
 
     [CascadingParameter]
     private FormFieldCascadingValues? _formFieldCascadingValues { get; set; }
@@ -154,6 +176,7 @@
             if (string.IsNullOrEmpty(CurrentValue))
             {
                 CurrentValue = GetWeekInterval(_selectedDays);
+                _generatedValue = CurrentValue;
             }
         }
 
@@ -235,7 +258,7 @@
         var flexibleConnectedPositionStrategyBuilder = new FlexibleConnectedPositionStrategyBuilder()
             .WithLockedPosition()
             .WithViewportMargin(8)
-            .SetOrigin(_formFieldCascadingValues.FormField)
+            .SetOrigin(_formFieldCascadingValues?.FormField ?? _menuTrigger)
             .WithFlexibleDimensions(false)
             .WithPositions(positions);
 
@@ -246,7 +269,8 @@
                 PositionStrategy = PositionStrategy.FlexibleConnectedTo,
                 FlexibleConnectedPositionStrategyBuilder = flexibleConnectedPositionStrategyBuilder,
                 ComponentType = ComponentType.DatePickerWeek,
-                ThemeScope = _themeScope
+                ThemeScope = _themeScope,
+                AriaLabel = Localizer["DatePicker.ChooseWeek"]
             };
 
         if (!string.IsNullOrEmpty(CurrentValue) && _selectedDays.Any())
@@ -270,6 +294,7 @@
             x.AddAttribute(4, "MinDayValue", MinDayValue);
             x.AddAttribute(5, "DatepickerFilter", DatepickerFilter);
             x.AddAttribute(6, "FirstDayToShow", FirstDayToShow);
+            x.AddAttribute(7, "Culture", Culture);
             x.CloseComponent();
         });
 
@@ -305,6 +330,7 @@
         var value = GetWeekInterval(days);
 
         CurrentValue = value;
+        _generatedValue = CurrentValue;
 
         NotifyCurrentValue();
 
@@ -442,7 +468,7 @@
 
     private CalendarDay CreateCalendarDay(DateTime date, int dayIndex)
     {
-        var calendar = CultureInfo.CurrentCulture.Calendar;
+        var calendar = EffectiveCulture.Calendar;
 
         return new CalendarDay
             {
@@ -454,7 +480,7 @@
                 Year = date.Year,
                 Month = date.Month,
                 Date = date,
-                FormattedDate = date.ToString("yyyy-MM-dd"),
+                FormattedDate = date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
                 WeekOfYear = calendar.GetWeekOfYear(date, CalendarWeekRule.FirstDay, DayOfWeek.Monday)
             };
     }
@@ -498,7 +524,7 @@
 
         var endDay = selectedDays.Find(d => d.Date.Date == selectedDate.Date);
 
-        return $"{startDay.Date.Year} / {startDay.Date.ToString("MMMM dd")} - {endDay.Date.ToString("MMMM dd")}";
+        return $"{startDay.Date.Year} / {startDay.Date.ToString("MMMM dd", EffectiveCulture)} - {endDay.Date.ToString("MMMM dd", EffectiveCulture)}";
     }
 
     public void UpdateValue(string dayValue)
@@ -509,13 +535,14 @@
         {
             currentValue = dayValue;
 
-            var selectedDay = Convert.ToDateTime(dayValue);
+            var selectedDay = DateTime.Parse(dayValue, EffectiveCulture);
 
             var days = GetMonthDaysWithFullWeeks(selectedDay.Year, selectedDay.Month);
 
             _selectedDays = GetWeekDays(days.FirstOrDefault(p => p.Date == selectedDay.Date), days);
 
             CurrentValue = GetWeekInterval(_selectedDays);
+                _generatedValue = CurrentValue;
 
             NotifyCurrentValue();
 

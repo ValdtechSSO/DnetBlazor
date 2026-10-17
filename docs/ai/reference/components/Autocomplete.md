@@ -46,7 +46,7 @@
 | `IsRequired` | `bool` | — | Gets or sets whether a value is required for validation. |
 | `PlaceHolder` | `string` | `string.Empty` | Gets or sets placeholder text displayed when the input is empty. |
 | `OverlayPanelClass` | `string?` | — | Gets or sets the overlay panel class used by this component. |
-| `PanelLabel` | `string` | `string.Empty` | Gets or sets the panel label used by this component. |
+| `PanelLabel` | `string` | Computed | Gets or sets the panel label used by this component. |
 
 ## Styling tokens
 

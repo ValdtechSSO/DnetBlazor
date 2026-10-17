@@ -21,7 +21,7 @@
                             <div class="connected-contact"><span class="connected-avatar" aria-hidden="true">@contact.Initials</span><div><strong>@contact.Name</strong><span>@contact.Team</span></div><small>@contact.Location</small></div>
                         }
                     </div>
-                    <div class="demo-actions"><DnetButton id="connected-panel-reset" OnClick="ResetFilter" disabled="@(_department == "All teams")">Reset filter</DnetButton></div>
+                    <div class="demo-actions"><DnetButton Variant="DnetButtonVariant.Outlined" id="connected-panel-reset" OnClick="ResetFilter" disabled="@(_department == "All teams")">Reset filter</DnetButton></div>
                 </div>
             </ChildContent>
             <Footer><div id="connected-panel-result" class="demo-value" role="status"><span class="demo-muted">Active filter</span><strong>@_status</strong></div></Footer>

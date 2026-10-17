@@ -89,12 +89,12 @@ public sealed class ThemingPlaygroundTests
         await Assertions.Expect(page.Locator("#theme-css-output")).ToContainTextAsync("--dnet-btn-radius: 9999px;");
 
         // Theme changes made through either visible selector update the other one.
-        var headerTheme = page.GetByRole(AriaRole.Combobox, new() { Name = "Application theme", Exact = true });
-        await headerTheme.SelectOptionAsync("compact");
+        var headerTheme = BrowserHeaderPreferences.Control(page, "theme");
+        await BrowserHeaderPreferences.SelectAsync(page, "theme", "compact");
         await Assertions.Expect(page.Locator("#theme-select")).ToHaveValueAsync("compact");
         await Assertions.Expect(page.Locator("#theme-density")).ToHaveValueAsync("3");
         await page.Locator("#theme-select").SelectOptionAsync("");
-        await Assertions.Expect(headerTheme).ToHaveValueAsync("");
+        await Assertions.Expect(headerTheme).ToHaveAttributeAsync("title", "Theme: Light");
         await Assertions.Expect(page.Locator("html")).ToHaveAttributeAsync("data-dnet-theme", "");
         Assert.Equal("", await StoredThemeAsync(page));
 
@@ -169,6 +169,7 @@ public sealed class ThemingPlaygroundTests
     {
         var theme = System.Text.Json.JsonSerializer.Serialize(initialTheme);
         await page.AddInitScriptAsync($"if (localStorage.getItem('dnet.theme') === null) localStorage.setItem('dnet.theme', JSON.stringify({theme}));");
+        await BrowserLanguage.UseEnglishAsync(page);
         await page.GotoAsync($"{BaseUrl}/theming");
         await Assertions.Expect(page.Locator("#theme-studio")).ToBeVisibleAsync();
         await Assertions.Expect(page.Locator("#theme-select")).ToHaveValueAsync(initialTheme);

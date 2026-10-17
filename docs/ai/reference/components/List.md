@@ -21,8 +21,8 @@
 | `ItemPrefixContent` | `RenderFragment<TItem>?` | — | Gets or sets content rendered for item prefix. |
 | `ItemSufixContent` | `RenderFragment<TItem>?` | — | Gets or sets content rendered for item sufix. |
 | `ListOptions` | `ListOptions<TItem>` | `new()` | Gets or sets the list options used by this component. |
-| `PlaceHolder` | `string` | `""` | Gets or sets placeholder text displayed when the input is empty. |
-| `Label` | `string` | `""` | Gets or sets the label displayed for the component. |
+| `PlaceHolder` | `string` | Computed | Gets or sets placeholder text displayed when the input is empty. |
+| `Label` | `string` | Computed | Gets or sets the label displayed for the component. |
 | `UsePlainControl` | `bool` | `true` | Gets or sets whether the component use plain control. |
 | `OnTransfer` | `EventCallback<TItem>` | — | Raised when transfer occurs. |
 

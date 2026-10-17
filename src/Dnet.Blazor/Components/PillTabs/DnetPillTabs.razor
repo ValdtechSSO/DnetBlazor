@@ -1,10 +1,14 @@
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
 @typeparam TValue where TValue : notnull
 @using Dnet.Blazor.Infrastructure.Forms
 @using Microsoft.AspNetCore.Components.Web
 
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
 <div @attributes="AdditionalAttributes" class="@CssClass" aria-disabled="@(Disabled ? "true" : null)">
     <dnet-pill-tabs-viewport class="dnet-pill-tabs-viewport">
-        <div class="dnet-pill-tabs-list" role="@(ChildContent is null ? "group" : "tablist")" aria-label="@AriaLabel"
+        <div class="dnet-pill-tabs-list" role="@(ChildContent is null ? "group" : "tablist")" aria-label="@(_ariaLabel ?? Localizer["Tabs.Label"])"
              aria-orientation="@(ChildContent is null ? null : "horizontal")">
             @for (var index = 0; index < Items.Count; index++)
             {
@@ -62,6 +66,8 @@
 </div>
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+
     /// <summary>Gets or sets the tabs in their display order. Values must be unique and non-null.</summary>
     [Parameter]
     [EditorRequired]
@@ -77,7 +83,9 @@
 
     /// <summary>Gets or sets the accessible name of the tab list.</summary>
     [Parameter]
-    public string AriaLabel { get; set; } = "Tabs";
+    public string AriaLabel { get => _ariaLabel ?? "Tabs"; set => _ariaLabel = value; }
+
+    private string? _ariaLabel;
 
     /// <summary>Gets or sets whether all tabs are disabled.</summary>
     [Parameter]

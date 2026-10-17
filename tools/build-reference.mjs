@@ -16,6 +16,7 @@
 import { readFileSync, readdirSync, writeFileSync, mkdirSync, existsSync, rmSync } from "node:fs";
 import { join, basename } from "node:path";
 import { execFileSync } from "node:child_process";
+import { extractParameters } from "./component-parameters.mjs";
 
 const flags = process.argv.slice(2).filter((a) => a.startsWith("--"));
 const positional = process.argv.slice(2).filter((a) => !a.startsWith("--"));
@@ -240,33 +241,10 @@ for (const name of components) {
             (text.match(/\/\/\/\s*<summary>([\s\S]*?)<\/summary>[\s\S]{0,300}?public\s+(?:partial\s+)?class/) ?? [])[1]
         );
 
-        // Line scan: a /// <summary> only counts when it sits immediately above
-        // the [Parameter] attribute. Regex across the whole file swallows the
-        // class body into the first parameter's description.
-        const params = [];
-        const lines = text.split(/\r?\n/);
-        for (let i = 0; i < lines.length; i++) {
-            if (!/^\s*\[Parameter(?:\s*(?:\(|,|\]))/.test(lines[i])) continue;
-
-            let doc = "";
-            for (let k = i - 1; k >= 0 && k >= i - 6; k--) {
-                const l = lines[k].trim();
-                if (l.startsWith("///")) { doc = l.replace(/^\/\/\/\s?/, "") + " " + doc; continue; }
-                if (l === "" || l.startsWith("[")) continue;
-                break;
-            }
-
-            const decl = lines.slice(i, i + 4).join(" ");
-            const m = decl.match(/public\s+([\w?<>,\s\[\]]+?)\s+(\w+)\s*\{\s*get;\s*set;\s*\}(?:\s*=\s*([^;]+);)?/);
-            if (!m) continue;
-            const parameterType = clean(m[1]);
-            params.push({
-                doc: stripDoc(doc) || describeParameter(m[2], parameterType),
-                type: parameterType,
-                name: m[2],
-                def: m[3]?.trim() ?? null,
-            });
-        }
+        const params = extractParameters(text).map((p) => ({
+            ...p,
+            doc: stripDoc(p.doc) || describeParameter(p.name, p.type),
+        }));
 
         if (params.length) api.push({ tag, generics, params, summary });
     }
@@ -283,7 +261,7 @@ for (const name of components) {
         if (a.summary && a.summary !== topSummary) L.push(a.summary, "");
 
         const req = a.params.filter(
-            (p) => !p.def && !/^(EventCallback|RenderFragment)/.test(p.type) && !p.type.includes("?")
+            (p) => !p.def && !p.computed && !/^(EventCallback|RenderFragment)/.test(p.type) && !p.type.includes("?")
         );
         L.push("```razor", `<${a.tag}${a.generics.map((g) => ` ${g}="..."`).join("")}`);
         for (const p of req.slice(0, 4)) L.push(`    ${p.name}="..."`);
@@ -291,7 +269,7 @@ for (const name of components) {
 
         L.push("| Parameter | Type | Default | Description |", "|---|---|---|---|");
         for (const p of a.params) {
-            L.push(`| \`${p.name}\` | \`${cell(p.type)}\` | ${p.def ? "`" + cell(p.def) + "`" : "—"} | ${cell(p.doc)} |`);
+            L.push(`| \`${p.name}\` | \`${cell(p.type)}\` | ${p.def ? "`" + cell(p.def) + "`" : p.computed ? "Computed" : "—"} | ${cell(p.doc)} |`);
         }
         L.push("");
     }

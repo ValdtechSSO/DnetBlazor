@@ -1,10 +1,14 @@
-﻿@using Microsoft.AspNetCore.Components.Forms
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+@using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.AspNetCore.Components.Web.Virtualization
 @using System.Timers
 @using Dnet.Blazor.Infrastructure.Services.CssBuilder
 
 @implements IDisposable
+
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
 
 <div class="dnet-chip dnet-standard-chip dnet-chip-with-trailing-icon dnet-chip-size-@_chipSizeClass"
      style="@_dnetChipStyle"
@@ -32,7 +36,7 @@
 	}
 	@if (Removable)
 	{
-		<button type="button" disabled="@Disabled" @onclick="RemoveChip" @onclick:stopPropagation="true" class="dnet-chip-remove dnet-chip-trailing-icon" aria-label="Remove chip">
+		<button type="button" disabled="@Disabled" @onclick="RemoveChip" @onclick:stopPropagation="true" class="dnet-chip-remove dnet-chip-trailing-icon" aria-label="@Localizer["Chips.Remove"]">
 			<div class="dnet-chips-icon-wrapper">
 				<span style="--_icon-scale:@_valuesBySize.BackGroundSize;background-size:@_valuesBySize.BackGroundSize" class="dnet-chips-icon @(string.IsNullOrEmpty(RemoveIcon) ? "dnet-chips-icon-remove" : @RemoveIcon)"></span>
 			</div>
@@ -41,6 +45,8 @@
 </div>
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+
 
 	[CascadingParameter]
 	private DnetChipList Parent { get; set; }

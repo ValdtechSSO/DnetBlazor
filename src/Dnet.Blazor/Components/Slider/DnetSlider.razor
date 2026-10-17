@@ -1,5 +1,9 @@
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
 @namespace Dnet.Blazor.Components.Slider
 @using Microsoft.AspNetCore.Components.Web
+
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
 
 <div @attributes="RootAttributes" class="@RootClass" style="@RootStyle">
     @if (ChildContent is not null)

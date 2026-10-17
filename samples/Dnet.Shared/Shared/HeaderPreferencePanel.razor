@@ -1,0 +1,86 @@
+@using Dnet.Blazor.Components.Button
+@using Dnet.Blazor.Components.ConnectedPanel.Infrastructure.Interfaces
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Enums
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Services
+@using Dnet.Blazor.Localization
+@inject IConnectedPanelService ConnectedPanelService
+@inject IDnetLocalizer Localizer
+
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+<section id="@PanelId" class="header-preference-panel" role="dialog" aria-labelledby="@TitleId">
+    <header class="header-preference-heading">
+        <p>@Text("Personaliza tu espacio", "Make it yours")</p>
+        <h2 id="@TitleId">@(IsLanguage ? Text("Idioma de los componentes", "Component language") : Text("Apariencia", "Appearance"))</h2>
+        <span>@(IsLanguage ? Text("Elige el idioma de los controles de la biblioteca.", "Choose the language used by library controls.") : Text("Elige cómo quieres ver la aplicación.", "Choose how the application looks."))</span>
+    </header>
+    <div class="header-preference-options" role="group" aria-labelledby="@TitleId">
+        @foreach (var option in Options)
+        {
+            var selected = option.Value == SelectedValue || (!IsLanguage && option.Value == "light" && string.IsNullOrEmpty(SelectedValue));
+            <DnetButton @key="option.Value" class="header-preference-option" data-preference-value="@option.Value"
+                        aria-pressed="@(selected ? "true" : "false")" InitialFocus="@selected"
+                        Variant="@(selected ? DnetButtonVariant.Filled : DnetButtonVariant.Outlined)"
+                        OnClick="() => Select(option.Value)">
+                <IconContent>
+                    @if (IsLanguage)
+                    {
+                        <span class="header-preference-language-code">@option.Value.ToUpperInvariant()</span>
+                    }
+                    else
+                    {
+                        <HeaderThemeIcon Theme="@option.Value" />
+                    }
+                </IconContent>
+                <ChildContent>
+                    <span class="header-preference-option-label">@Text(option.Spanish, option.English)</span>
+                    @if (selected)
+                    {
+                        <svg class="header-preference-selected" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true" focusable="false">
+                            <path d="m3 8 3 3 7-7" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    }
+                </ChildContent>
+            </DnetButton>
+        }
+    </div>
+    <footer class="header-preference-footer">
+        <DnetButton id="@(PanelId + "-close")" Size="DnetButtonSize.Small" Variant="DnetButtonVariant.Outlined" OnClick="Cancel">@Localizer["Common.Close"]</DnetButton>
+    </footer>
+</section>
+
+@code {
+    [CascadingParameter] private int OverlayReferenceId { get; set; }
+    [Parameter] public bool IsLanguage { get; set; }
+    [Parameter] public string SelectedValue { get; set; } = string.Empty;
+
+    private string PanelId => IsLanguage ? "header-language-panel" : "header-theme-panel";
+    private string TitleId => PanelId + "-title";
+    private IReadOnlyList<PreferenceOption> Options => IsLanguage ? Languages : Themes;
+    private static readonly PreferenceOption[] Languages =
+    [
+        new("es", "Español", "Español"),
+        new("en", "English", "English")
+    ];
+    private static readonly PreferenceOption[] Themes =
+    [
+        new("light", "Claro", "Light"),
+        new("dark", "Oscuro", "Dark"),
+        new("compact", "Compacto", "Compact"),
+        new("high-contrast", "Alto contraste", "High contrast"),
+        new("modern", "Moderno", "Modern")
+    ];
+
+    private string Text(string spanish, string english) => Localizer.Culture.TwoLetterISOLanguageName == "en" ? english : spanish;
+    private void Select(string value) => ConnectedPanelService.Close(new OverlayResult
+    {
+        OverlayReferenceId = OverlayReferenceId,
+        CloseReason = CloseReason.Ok,
+        ComponentData = value
+    });
+    private void Cancel() => ConnectedPanelService.Close(new OverlayResult
+    {
+        OverlayReferenceId = OverlayReferenceId,
+        CloseReason = CloseReason.Cancel
+    });
+    private sealed record PreferenceOption(string Value, string Spanish, string English);
+}

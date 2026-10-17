@@ -165,8 +165,8 @@ public sealed class TimePickerTests : BunitContext
 
         var panel = Render(attachedContent!);
         Assert.Equal("listbox", panel.Find(".dnet-timepicker-options").GetAttribute("role"));
-        Assert.Equal("Choose a time", panel.Find(".dnet-timepicker-panel-header").TextContent.Trim());
-        Assert.Equal("Cancel", panel.Find(".dnet-timepicker-action").TextContent.Trim());
+        Assert.Equal("Elegir hora", panel.Find(".dnet-timepicker-panel-header").TextContent.Trim());
+        Assert.Equal("Cancelar", panel.Find(".dnet-timepicker-action").TextContent.Trim());
 
         await panel.Find(".dnet-timepicker-action").ClickAsync(new());
         await cut.Find("input").FocusInAsync(new FocusEventArgs());

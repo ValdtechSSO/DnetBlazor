@@ -57,6 +57,7 @@
   --_selected: var(--dnet-timepicker-option-selected-background, var(--dnet-sys-state-selected));
   --_active: var(--dnet-timepicker-option-active-background, var(--dnet-sys-state-hover));
   --_accent: var(--dnet-timepicker-accent-color, var(--dnet-sys-primary-strong));
+  --_accent-content: var(--dnet-timepicker-accent-color, var(--dnet-sys-primary-content));
 
   background: var(--_panel-background);
   box-sizing: border-box;
@@ -108,24 +109,6 @@
   padding: var(--dnet-sys-space-2) var(--dnet-sys-space-3) var(--dnet-sys-space-3);
 }
 
-.dnet-timepicker-action {
-  background: transparent;
-  border: 0;
-  border-radius: var(--dnet-sys-radius-md);
-  color: var(--dnet-sys-primary-strong);
-  cursor: pointer;
-  font: inherit;
-  font-weight: 600;
-  min-height: 36px;
-  padding: 0 var(--dnet-sys-space-3);
-}
-
-.dnet-timepicker-action:hover,
-.dnet-timepicker-action:focus-visible {
-  background: var(--dnet-sys-state-hover);
-  outline: 0;
-}
-
 .dnet-timepicker-option {
   align-items: center;
   background: transparent;
@@ -150,7 +133,7 @@
 
 .dnet-timepicker-option-selected {
   background: var(--_selected);
-  color: var(--_accent);
+  color: var(--_accent-content);
   font-weight: 600;
 }
 

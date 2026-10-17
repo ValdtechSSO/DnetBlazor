@@ -49,13 +49,20 @@ public static class ComponentScenarios
 {
     public static readonly IReadOnlyList<ComponentScenario> All =
     [
-        // Migrated components — the reference implementations. Button states are
-        // captured on /theming because its buttons have no InitialFocus.
+        // Capture the default action itself: the theming page deliberately
+        // overrides its buttons and therefore cannot guard the library defaults.
         new(
             "button",
-            "/theming",
-            ".dnet-button",
-            [VisualState.Default, VisualState.Hover, VisualState.Focus]),
+            "/Buttons",
+            "#button-variant-filled",
+            [VisualState.Default, VisualState.Hover, VisualState.Focus],
+            HoverSelector: "#button-variant-filled",
+            FocusSelector: "#button-variant-filled",
+            Variants:
+            [
+                new("outlined", "#button-variant-outlined"),
+                new("disabled", "#button-disabled-demo"),
+            ]),
 
         new(
             "chips",
@@ -109,9 +116,9 @@ public static class ComponentScenarios
         new(
             "select",
             "/Select",
-            ".dnet-plain-select",
+            ".dnet-desktop-content .dnet-plain-select",
             [VisualState.Default, VisualState.Hover, VisualState.Open],
-            OpenSelector: ".dnet-plain-select",
+            OpenSelector: ".dnet-desktop-content .dnet-plain-select",
             PageCaptureStates: [VisualState.Open]),
 
         new(
@@ -197,7 +204,7 @@ public static class ComponentScenarios
         new(
             "floating-double-list",
             "/FloatingDoubleList",
-            ".dnet-plain-select",
+            "#floating-doublelist-field .dnet-plain-select",
             [VisualState.Default]),
 
         new(
@@ -252,8 +259,8 @@ public static class ComponentScenarios
         new(
             "forms",
             "/Forms",
-            ".dnet-form-field-plain-wrapper",
+            ".dnet-desktop-content .dnet-form-field-plain-wrapper",
             [VisualState.Default, VisualState.Focus],
-            FocusSelector: ".dnet-form-field-plain-wrapper input"),
+            FocusSelector: ".dnet-desktop-content .dnet-form-field-plain-wrapper input"),
     ];
 }

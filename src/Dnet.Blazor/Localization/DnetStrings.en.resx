@@ -1,0 +1,411 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <data name="AdminLayout.OpenNavigation" xml:space="preserve">
+    <value>Open navigation menu</value>
+  </data>
+  <data name="Autocomplete.Label" xml:space="preserve">
+    <value>Search options</value>
+  </data>
+  <data name="Autocomplete.Options" xml:space="preserve">
+    <value>Suggestions</value>
+  </data>
+  <data name="Chips.Remove" xml:space="preserve">
+    <value>Remove chip</value>
+  </data>
+  <data name="Common.Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="Common.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Common.Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="Common.Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Common.Loading" xml:space="preserve">
+    <value>Loading…</value>
+  </data>
+  <data name="Common.Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="Common.NoItems" xml:space="preserve">
+    <value>No items</value>
+  </data>
+  <data name="Common.NoResults" xml:space="preserve">
+    <value>No results</value>
+  </data>
+  <data name="Common.Previous" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="Common.Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="Common.Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="DatePicker.Calendar" xml:space="preserve">
+    <value>Calendar</value>
+  </data>
+  <data name="DatePicker.ChooseDate" xml:space="preserve">
+    <value>Choose date</value>
+  </data>
+  <data name="DatePicker.ChooseMonthAndYear" xml:space="preserve">
+    <value>Choose month and year</value>
+  </data>
+  <data name="DatePicker.ChooseWeek" xml:space="preserve">
+    <value>Choose week</value>
+  </data>
+  <data name="DatePicker.EndBeforeStart" xml:space="preserve">
+    <value>The end date cannot be earlier than the start date.</value>
+  </data>
+  <data name="DatePicker.EndDate" xml:space="preserve">
+    <value>End date</value>
+  </data>
+  <data name="DatePicker.IncompleteRange" xml:space="preserve">
+    <value>Select both a start and an end date.</value>
+  </data>
+  <data name="DatePicker.InvalidDate" xml:space="preserve">
+    <value>Enter a valid date using {0}.</value>
+  </data>
+  <data name="DatePicker.MaximumDate" xml:space="preserve">
+    <value>Date must be on or before {0}.</value>
+  </data>
+  <data name="DatePicker.MinimumDate" xml:space="preserve">
+    <value>Date must be on or after {0}.</value>
+  </data>
+  <data name="DatePicker.NextPeriod" xml:space="preserve">
+    <value>Next period</value>
+  </data>
+  <data name="DatePicker.OpenCalendar" xml:space="preserve">
+    <value>Open calendar</value>
+  </data>
+  <data name="DatePicker.PreviousPeriod" xml:space="preserve">
+    <value>Previous period</value>
+  </data>
+  <data name="DatePicker.StartDate" xml:space="preserve">
+    <value>Start date</value>
+  </data>
+  <data name="DatePicker.UnavailableDate" xml:space="preserve">
+    <value>This date is not available.</value>
+  </data>
+  <data name="FloatingDoubleList.Assigned" xml:space="preserve">
+    <value>Assigned</value>
+  </data>
+  <data name="FloatingDoubleList.Available" xml:space="preserve">
+    <value>Available</value>
+  </data>
+  <data name="FloatingDoubleList.Label" xml:space="preserve">
+    <value>Assign items</value>
+  </data>
+  <data name="Form.DateParsingError" xml:space="preserve">
+    <value>The {0} field must be a date.</value>
+  </data>
+  <data name="Form.DateTimeParsingError" xml:space="preserve">
+    <value>The {0} field must be a date and time.</value>
+  </data>
+  <data name="Form.MonthParsingError" xml:space="preserve">
+    <value>The {0} field must be a year and month.</value>
+  </data>
+  <data name="Form.NumberParsingError" xml:space="preserve">
+    <value>The {0} field must be a number.</value>
+  </data>
+  <data name="Form.TimeParsingError" xml:space="preserve">
+    <value>The {0} field must be a time.</value>
+  </data>
+  <data name="Grid.ChangeSort" xml:space="preserve">
+    <value>Change sort for {0}</value>
+  </data>
+  <data name="Grid.CollapseAll" xml:space="preserve">
+    <value>Collapse all groups</value>
+  </data>
+  <data name="Grid.CollapseGroup" xml:space="preserve">
+    <value>Collapse group {0}</value>
+  </data>
+  <data name="Grid.CombineConditions" xml:space="preserve">
+    <value>Combine conditions</value>
+  </data>
+  <data name="Grid.Condition.And" xml:space="preserve">
+    <value>And</value>
+  </data>
+  <data name="Grid.Condition.Or" xml:space="preserve">
+    <value>Or</value>
+  </data>
+  <data name="Grid.Empty" xml:space="preserve">
+    <value>No data.</value>
+  </data>
+  <data name="Grid.ExpandAll" xml:space="preserve">
+    <value>Expand all groups</value>
+  </data>
+  <data name="Grid.ExpandGroup" xml:space="preserve">
+    <value>Expand group {0}</value>
+  </data>
+  <data name="Grid.False" xml:space="preserve">
+    <value>False</value>
+  </data>
+  <data name="Grid.Filter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="Grid.FilterColumn" xml:space="preserve">
+    <value>Filter {0}</value>
+  </data>
+  <data name="Grid.Group" xml:space="preserve">
+    <value>Group</value>
+  </data>
+  <data name="Grid.GroupBy" xml:space="preserve">
+    <value>Group by {0}</value>
+  </data>
+  <data name="Grid.Label" xml:space="preserve">
+    <value>Data grid</value>
+  </data>
+  <data name="Grid.LoadError" xml:space="preserve">
+    <value>The rows could not be loaded.</value>
+  </data>
+  <data name="Grid.NoResults" xml:space="preserve">
+    <value>No results for the current filters.</value>
+  </data>
+  <data name="Grid.OpenFilter" xml:space="preserve">
+    <value>Open advanced filter</value>
+  </data>
+  <data name="Grid.Operator" xml:space="preserve">
+    <value>Operator</value>
+  </data>
+  <data name="Grid.Operator.Contains" xml:space="preserve">
+    <value>Contains</value>
+  </data>
+  <data name="Grid.Operator.EndsWith" xml:space="preserve">
+    <value>Ends with</value>
+  </data>
+  <data name="Grid.Operator.Equals" xml:space="preserve">
+    <value>Equal</value>
+  </data>
+  <data name="Grid.Operator.GreaterThan" xml:space="preserve">
+    <value>Greater than</value>
+  </data>
+  <data name="Grid.Operator.LessThan" xml:space="preserve">
+    <value>Less than</value>
+  </data>
+  <data name="Grid.Operator.None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="Grid.Operator.NotContains" xml:space="preserve">
+    <value>Does not contain</value>
+  </data>
+  <data name="Grid.Operator.NotEquals" xml:space="preserve">
+    <value>Not equal</value>
+  </data>
+  <data name="Grid.Operator.StartsWith" xml:space="preserve">
+    <value>Starts with</value>
+  </data>
+  <data name="Grid.ResizeColumn" xml:space="preserve">
+    <value>Resize {0}</value>
+  </data>
+  <data name="Grid.Retry" xml:space="preserve">
+    <value>Retry</value>
+  </data>
+  <data name="Grid.SecondOperator" xml:space="preserve">
+    <value>Second operator</value>
+  </data>
+  <data name="Grid.SecondValue" xml:space="preserve">
+    <value>Second value</value>
+  </data>
+  <data name="Grid.SelectAll" xml:space="preserve">
+    <value>Select all rows</value>
+  </data>
+  <data name="Grid.SelectRow" xml:space="preserve">
+    <value>Select row {0}</value>
+  </data>
+  <data name="Grid.SortBy" xml:space="preserve">
+    <value>Sort by {0}</value>
+  </data>
+  <data name="Grid.True" xml:space="preserve">
+    <value>True</value>
+  </data>
+  <data name="Grid.Ungroup" xml:space="preserve">
+    <value>Ungroup by {0}</value>
+  </data>
+  <data name="Grid.Value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="ImageEditor.Crop" xml:space="preserve">
+    <value>Crop</value>
+  </data>
+  <data name="ImageEditor.FlipHorizontal" xml:space="preserve">
+    <value>Flip horizontal</value>
+  </data>
+  <data name="ImageEditor.FlipVertical" xml:space="preserve">
+    <value>Flip vertical</value>
+  </data>
+  <data name="ImageEditor.FreeRatio" xml:space="preserve">
+    <value>Free</value>
+  </data>
+  <data name="ImageEditor.HeightAbbreviation" xml:space="preserve">
+    <value>H</value>
+  </data>
+  <data name="ImageEditor.InitializationError" xml:space="preserve">
+    <value>The image could not be opened. Cancel and select another image.</value>
+  </data>
+  <data name="ImageEditor.Preview" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="ImageEditor.Ratio" xml:space="preserve">
+    <value>Ratio</value>
+  </data>
+  <data name="ImageEditor.ResetImage" xml:space="preserve">
+    <value>Reset the image</value>
+  </data>
+  <data name="ImageEditor.RotateLeft" xml:space="preserve">
+    <value>Rotate left</value>
+  </data>
+  <data name="ImageEditor.RotateRight" xml:space="preserve">
+    <value>Rotate right</value>
+  </data>
+  <data name="ImageEditor.Selection" xml:space="preserve">
+    <value>Selection</value>
+  </data>
+  <data name="ImageEditor.Title" xml:space="preserve">
+    <value>Image Editor</value>
+  </data>
+  <data name="ImageEditor.WidthAbbreviation" xml:space="preserve">
+    <value>W</value>
+  </data>
+  <data name="ImageEditor.ZoomIn" xml:space="preserve">
+    <value>Zoom in</value>
+  </data>
+  <data name="ImageEditor.ZoomOut" xml:space="preserve">
+    <value>Zoom out</value>
+  </data>
+  <data name="List.Count" xml:space="preserve">
+    <value>Count: {0}</value>
+  </data>
+  <data name="List.Items" xml:space="preserve">
+    <value>Items</value>
+  </data>
+  <data name="List.SearchPlaceholder" xml:space="preserve">
+    <value>Search…</value>
+  </data>
+  <data name="List.SelectAll" xml:space="preserve">
+    <value>Select all items</value>
+  </data>
+  <data name="List.SelectItem" xml:space="preserve">
+    <value>Select {0}</value>
+  </data>
+  <data name="Paginator.CurrentPage" xml:space="preserve">
+    <value>Current page</value>
+  </data>
+  <data name="Paginator.FirstPage" xml:space="preserve">
+    <value>First page</value>
+  </data>
+  <data name="Paginator.Label" xml:space="preserve">
+    <value>Pagination</value>
+  </data>
+  <data name="Paginator.LastPage" xml:space="preserve">
+    <value>Last page</value>
+  </data>
+  <data name="Paginator.NextPage" xml:space="preserve">
+    <value>Next page</value>
+  </data>
+  <data name="Paginator.Of" xml:space="preserve">
+    <value>of</value>
+  </data>
+  <data name="Paginator.Page" xml:space="preserve">
+    <value>Page</value>
+  </data>
+  <data name="Paginator.PreviousPage" xml:space="preserve">
+    <value>Previous page</value>
+  </data>
+  <data name="PickList.FirstPage" xml:space="preserve">
+    <value>First page</value>
+  </data>
+  <data name="PickList.LastPage" xml:space="preserve">
+    <value>Last page</value>
+  </data>
+  <data name="PickList.NextPage" xml:space="preserve">
+    <value>Next page</value>
+  </data>
+  <data name="PickList.Of" xml:space="preserve">
+    <value>of</value>
+  </data>
+  <data name="PickList.Page" xml:space="preserve">
+    <value>Page</value>
+  </data>
+  <data name="PickList.PageLabel" xml:space="preserve">
+    <value>Page {0}</value>
+  </data>
+  <data name="PickList.Pagination" xml:space="preserve">
+    <value>Pagination</value>
+  </data>
+  <data name="PickList.PreviousPage" xml:space="preserve">
+    <value>Previous page</value>
+  </data>
+  <data name="PickList.SelectPage" xml:space="preserve">
+    <value>Select page</value>
+  </data>
+  <data name="PickList.Selected" xml:space="preserve">
+    <value>Selected</value>
+  </data>
+  <data name="Select.InvalidValue" xml:space="preserve">
+    <value>The {0} value is not valid.</value>
+  </data>
+  <data name="Select.Label" xml:space="preserve">
+    <value>Select option</value>
+  </data>
+  <data name="Select.Options" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="Spoiler.ShowLess" xml:space="preserve">
+    <value>Show less</value>
+  </data>
+  <data name="Spoiler.ShowMore" xml:space="preserve">
+    <value>Show more</value>
+  </data>
+  <data name="Tabs.Label" xml:space="preserve">
+    <value>Tabs</value>
+  </data>
+  <data name="TimePicker.ChooseTime" xml:space="preserve">
+    <value>Choose a time</value>
+  </data>
+  <data name="TimePicker.InvalidTime" xml:space="preserve">
+    <value>Enter a valid time using the format {0}.</value>
+  </data>
+  <data name="TimePicker.MaximumTime" xml:space="preserve">
+    <value>Time must be at or before {0}.</value>
+  </data>
+  <data name="TimePicker.MinimumTime" xml:space="preserve">
+    <value>Time must be at or after {0}.</value>
+  </data>
+  <data name="TimePicker.OpenPicker" xml:space="preserve">
+    <value>Open time picker</value>
+  </data>
+  <data name="Timeline.Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="Timeline.Current" xml:space="preserve">
+    <value>Current</value>
+  </data>
+  <data name="Timeline.Label" xml:space="preserve">
+    <value>Timeline</value>
+  </data>
+  <data name="Timeline.Pending" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="Toast.CloseNotification" xml:space="preserve">
+    <value>Close notification</value>
+  </data>
+  <data name="Tree.CollapseNode" xml:space="preserve">
+    <value>Collapse node</value>
+  </data>
+  <data name="Tree.ExpandNode" xml:space="preserve">
+    <value>Expand node</value>
+  </data>
+  <data name="Tree.SelectNode" xml:space="preserve">
+    <value>Select {0}</value>
+  </data>
+</root>

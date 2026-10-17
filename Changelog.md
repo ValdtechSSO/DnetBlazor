@@ -2,6 +2,54 @@
 
 ## Unreleased
 
+- Added shared control localization with Spanish as the default and English as
+  the second language, including regional formats, live updates in open panels,
+  accessible labels and parsing messages. Explicit text overrides and per-user
+  scope are preserved. Added a language selector and `/Localization` sample.
+
+- The sample header is 65px tall and uses circular library buttons with connected
+  panels for language and theme. The triggers show the active language code and
+  theme icon, and the panels mark the current selection.
+
+- Refreshed the FloatingDoubleList sample with a responsive assignment workspace,
+  local searches, a live roster, a protected lead, read-only preview and reset.
+  Transfers persist when reopening the panel. FloatingDoubleList now forwards its
+  existing row-template/search-label options and supports keyboard opening,
+  Escape dismissal and focus restoration. Both lists share the full popup width;
+  the mobile list fits its panel without relying on viewport-based widths.
+
+- Grid advanced filters now use DnetFormField, DnetSelect and library text,
+  numeric and date inputs. The panel adapts to the viewport and validates active
+  conditions before applying a filter.
+- Select emits explicit true/false ARIA values for its expanded and disabled
+  states, including when used inside the grid's advanced filter panel.
+
+- Fixed the FilteringExample sample's empty filter row by enabling simple filters
+  on every column and declaring the data types for IsActive and Phone.
+
+- Added `DnetButtonVariant`: Filled is now the default primary action and Outlined
+  distinguishes secondary actions. Existing size, pill-radius and token overrides
+  remain supported; `--dnet-btn-border-color` customizes the outline.
+- Changed the default primary color to `#5B5CE0`, with contrasting primary text
+  and a theme-adapted outlined-action color. Added visible keyboard
+  focus and disabled action states, and applied the hierarchy across the samples
+  and internal commands. `--dnet-sys-primary-content` keeps colored text legible
+  on normal surfaces while primary fills retain their contrasting foreground.
+
+- Increased the expanded left navigation column default width from 250 to
+  270 px, including its minifier and submenu widths.
+
+- Added 10 px of extra text spacing inside the expanded desktop and responsive
+  navigation menus. Icon links start at the same inset as text-only links,
+  with 8 px between their icon and label.
+
+- Refreshed the PillTabs sample with a themed request inbox, live approval and
+  count updates, synchronized selections, full-width settings and separate
+  scrolling examples in LTR and RTL. Reset restores the inbox while keeping
+  the other examples independent.
+- PillTabs keeps the selected option visible after browser resizing while
+  preserving manual scrolling within its container.
+
 - Refreshed the ImageEditor sample with a responsive upload workspace, a local
   demo image, editing guidance and a downloadable result with file details.
   Added validation, cancel/reopen/reset flows and disposal of upload streams

@@ -1,6 +1,10 @@
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
 @using System.Globalization
 @using Dnet.Blazor.Infrastructure.Services.CssBuilder
 @namespace Dnet.Blazor.Components.Badge
+
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
 
 <span @attributes="ForwardedAttributes"
       class="@RootClass"
@@ -19,6 +23,8 @@
 </span>
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+
     /// <summary>Gets or sets the content decorated by the badge.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
@@ -62,7 +68,7 @@
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
 
-    private string DisplayContent => Convert.ToString(Content, CultureInfo.CurrentCulture) ?? string.Empty;
+    private string DisplayContent => Convert.ToString(Content, Localizer.Culture) ?? string.Empty;
 
     private bool ShouldShowBadge => !Hidden && !string.IsNullOrWhiteSpace(DisplayContent);
 

@@ -1,4 +1,6 @@
 [data-dnet-theme="dark"] {
+    --dnet-sys-primary-content: color-mix(in srgb, var(--dnet-sys-primary-strong) 50%, var(--dnet-sys-on-surface));
+    --dnet-sys-focus-ring: var(--dnet-sys-primary-content);
     --dnet-sys-surface: #1e1f22;
     --dnet-sys-surface-raised: #2b2d31;
     --dnet-sys-surface-variant: #2b2d31;

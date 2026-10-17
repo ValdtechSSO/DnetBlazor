@@ -48,7 +48,7 @@
                     </div>
                     <div class="demo-actions">
                         <DnetButton id="timeline-advance" disabled="@(_orderStage == 4)" OnClick="AdvanceOrder">@NextAction</DnetButton>
-                        <DnetButton id="timeline-reset" disabled="@(_orderStage == 1)" OnClick="ResetOrder">Reiniciar</DnetButton>
+                        <DnetButton Variant="DnetButtonVariant.Outlined" id="timeline-reset" disabled="@(_orderStage == 1)" OnClick="ResetOrder">Reiniciar</DnetButton>
                     </div>
                     <p class="demo-status">Avanza el ejemplo para ver cómo el pedido cambia de estado. Puedes reiniciarlo en cualquier momento.</p>
                 </aside>

@@ -10,7 +10,7 @@
 | Parameter | Type | Default | Description |
 |---|---|---|---|
 | `Alignment` | `DnetTimelineAlignment` | `DnetTimelineAlignment.Start` | Gets or sets the position of the rail. Start and End follow the text direction. |
-| `AriaLabel` | `string?` | `"Timeline"` | Gets or sets the accessible name of the ordered list. |
+| `AriaLabel` | `string?` | Computed | Gets or sets the accessible name of the ordered list. |
 | `ChildContent` | `RenderFragment?` | — | Gets or sets the DnetTimelineItem components in chronological or process order. |
 | `AdditionalAttributes` | `IReadOnlyDictionary<string, object>?` | — | Gets or sets unmatched attributes, including class, style, id and dir, on the ordered list. |
 
@@ -40,7 +40,7 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
-| `--dnet-timeline-accent-color` | `#3f51b5` <br><sub>via `--dnet-sys-primary-emphasis`</sub> |
+| `--dnet-timeline-accent-color` | `color-mix(in srgb, var(--dnet-sys-primary) 80%, var(--dnet-ref-neutral-1000))` <br><sub>via `--dnet-sys-primary-emphasis`</sub> |
 | `--dnet-timeline-accent-foreground` | `#ffffff` <br><sub>via `--dnet-sys-on-primary`</sub> |
 | `--dnet-timeline-bullet-background` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
 | `--dnet-timeline-bullet-size` | `calc(var(--dnet-sys-space-unit) * 6)` |

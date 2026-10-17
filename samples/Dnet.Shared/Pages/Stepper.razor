@@ -28,8 +28,8 @@
                 </div>
             </div>
             <div class="demo-actions">
-                <DnetButton id="stepper-horizontal-back" disabled="@(_horizontalStep == 1)" OnClick="() => MoveHorizontal(-1)">Previous stage</DnetButton>
-                <DnetButton id="stepper-horizontal-next" disabled="@(_horizontalStep == _stages.Length)" OnClick="() => MoveHorizontal(1)">Next stage</DnetButton>
+                <DnetButton Variant="DnetButtonVariant.Outlined" id="stepper-horizontal-back" disabled="@(_horizontalStep == 1)" OnClick="() => MoveHorizontal(-1)">Previous stage</DnetButton>
+                <DnetButton Variant="DnetButtonVariant.Outlined" id="stepper-horizontal-next" disabled="@(_horizontalStep == _stages.Length)" OnClick="() => MoveHorizontal(1)">Next stage</DnetButton>
             </div>
         </ChildContent>
         <Footer><span id="stepper-horizontal-value" role="status">Stage @_horizontalStep of @_stages.Length · @_stages[_horizontalStep - 1].Title</span></Footer>
@@ -58,7 +58,7 @@
                     }
                 </DnetStepper>
                 <div class="demo-actions">
-                    <DnetButton id="stepper-linear-back" disabled="@(_linearStep == 1)" OnClick="() => MoveLinear(-1)">Back</DnetButton>
+                    <DnetButton Variant="DnetButtonVariant.Outlined" id="stepper-linear-back" disabled="@(_linearStep == 1)" OnClick="() => MoveLinear(-1)">Back</DnetButton>
                     <DnetButton id="stepper-linear-next" disabled="@(_linearStep == _stages.Length || !_stages[_linearStep - 1].Completed)" OnClick="() => MoveLinear(1)">Continue</DnetButton>
                 </div>
             </ChildContent>

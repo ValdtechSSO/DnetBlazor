@@ -1,4 +1,6 @@
-﻿@using Microsoft.AspNetCore.Components.Forms
+﻿@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+@using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.AspNetCore.Components.Web.Virtualization
 @using Dnet.Blazor.Components.Autocomplete.Infrastructure.Services
@@ -17,6 +19,7 @@
 
 @inject IOverlayService OverlayService
 
+<DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
 <div class="dnet-autocomplete-list-wrapper">
     <div class="dnet-autocomplete-list-header">
         <div class="dnet-autocomplete-list-header-content">
@@ -25,18 +28,18 @@
             </span>
         </div>
         <div class="dnet-autocomplete-list-header-checkall">
-            <span @onclick="CancelOverlay" class="dnet-dialog-icon-wrapper">
+            <span @onclick="CancelOverlay" class="dnet-dialog-icon-wrapper" role="button" tabindex="0" aria-label="@(Localizer["Common.Close"])" @onkeydown="HandleCloseKeyDown">
                 <span class="dnet-dialog-icon dnet-dialog-close-icon" unselectable="on"></span>
             </span>
         </div>
     </div>
     <div class="dnet-autocomplete-list-form">
-        <DnetFormField Label="" UseClearButton="true">
+        <DnetFormField Label="@(Localizer["Common.Search"])" UseClearButton="true">
             <PrefixContent>
                 <span class="dnet-list-search-icon dnet-list-search-icon-default" unselectable="on"></span>
             </PrefixContent>
             <ChildContent>
-                <DnetInputText @bind-Value="_tempInputValue" PlaceHolder="" type="text" OnStopTyping="HandleInput" OnClearInput="ClearInput">
+                <DnetInputText @bind-Value="_tempInputValue" PlaceHolder="@PlaceHolder" type="text" aria-label="@(Localizer["Common.Search"])" OnStopTyping="HandleInput" OnClearInput="ClearInput">
                 </DnetInputText>
             </ChildContent>
         </DnetFormField>
@@ -114,6 +117,9 @@
 </div>
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+    private Task HandleLocalizationChanged() => InvokeAsync(StateHasChanged);
+
 
     [CascadingParameter]
     private int OverlayReferenceId { get; set; }
@@ -168,7 +174,8 @@
 
     /// <summary>Gets or sets the panel label used by this component.</summary>
     [Parameter]
-    public string PanelLabel { get; set; } = string.Empty;
+    public string PanelLabel { get => _panelLabel ?? Localizer["Autocomplete.Options"]; set => _panelLabel = value; }
+    private string? _panelLabel;
 
     /// <summary>Gets or sets the current value used by this component.</summary>
     [Parameter]
@@ -220,6 +227,11 @@
     private void SelectItem(TItem item)
     {
         if (AutoCompleteListService is not null) AutoCompleteListService.UpdateSelectedItem(item);
+    }
+
+    private void HandleCloseKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key is "Enter" or " ") CancelOverlay();
     }
 
     void CancelOverlay()

@@ -34,6 +34,7 @@
      #6366f1 lands at 4.47:1 and misses AA by a hair. */
   --dnet-sys-primary: #5b5ce0;
   --dnet-sys-primary-strong: #4f46e5;
+  --dnet-sys-primary-content: color-mix(in srgb, var(--dnet-sys-primary-strong) 50%, var(--dnet-sys-on-surface));
   --dnet-sys-primary-emphasis: #4338ca;
   --dnet-sys-on-primary: #ffffff;
 
@@ -131,6 +132,7 @@
 
   --dnet-sys-primary: #818cf8;
   --dnet-sys-primary-strong: #6366f1;
+  --dnet-sys-primary-content: color-mix(in srgb, var(--dnet-sys-primary-strong) 50%, var(--dnet-sys-on-surface));
   --dnet-sys-primary-emphasis: #a5b4fc;
   --dnet-sys-on-primary: #1e1b4b;
 

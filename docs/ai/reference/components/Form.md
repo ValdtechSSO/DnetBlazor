@@ -58,7 +58,7 @@
 | `OnStopTyping` | `EventCallback<string>` | — | Raised after the user stops typing. |
 | `Disabled` | `bool` | — | Gets or sets whether user interaction with the component is disabled. |
 | `ImmediateResponse` | `bool` | `false` | Gets or sets the immediate response used by this component. |
-| `ParsingErrorMessage` | `string` | `"The {0} field must be a number."` | Gets or sets the parsing error message used by this component. |
+| `ParsingErrorMessage` | `string` | Computed | Gets or sets the parsing error message used by this component. |
 | `DebounceTime` | `int` | `300` | Gets or sets the delay before a debounced input action is raised. |
 | `IsRequired` | `bool` | — | Gets or sets whether a value is required for validation. |
 | `PlaceHolder` | `string?` | — | Gets or sets placeholder text displayed when the input is empty. |

@@ -205,6 +205,7 @@ public sealed class ImageEditorShowcaseTests
         };
         var serializedTheme = System.Text.Json.JsonSerializer.Serialize(theme);
         await page.AddInitScriptAsync($"localStorage.setItem('dnet.theme', JSON.stringify({serializedTheme}));");
+        await BrowserLanguage.UseEnglishAsync(page);
         await page.GotoAsync($"{BaseUrl}/ImageEditor");
         await Assertions.Expect(page.Locator("#demo-image-editor")).ToBeVisibleAsync();
         return (page, errors);

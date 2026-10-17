@@ -37,7 +37,7 @@ public sealed class ToastTests : BunitContext
         Assert.Equal("info", toast.GetAttribute("data-severity"));
         Assert.Equal("open", toast.GetAttribute("data-state"));
         Assert.Empty(cut.FindAll(".dnet-toast__progress"));
-        Assert.Equal("Close notification", cut.Find(".dnet-toast__close").GetAttribute("aria-label"));
+        Assert.Equal("Cerrar notificación", cut.Find(".dnet-toast__close").GetAttribute("aria-label"));
     }
 
     [Fact]

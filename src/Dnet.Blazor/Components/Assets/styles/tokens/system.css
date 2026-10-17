@@ -9,9 +9,10 @@
   --dnet-sys-on-surface-muted: var(--dnet-ref-neutral-600);
   --dnet-sys-on-surface-subtle: var(--dnet-ref-neutral-500);
   --dnet-sys-on-surface-emphasis: color-mix(in srgb, var(--dnet-ref-neutral-1000) 87%, transparent);
-  --dnet-sys-primary: var(--dnet-ref-accent-300);
-  --dnet-sys-primary-strong: var(--dnet-ref-accent-500);
-  --dnet-sys-primary-emphasis: var(--dnet-ref-indigo-500);
+  --dnet-sys-primary: #5b5ce0;
+  --dnet-sys-primary-strong: var(--dnet-sys-primary);
+  --dnet-sys-primary-content: color-mix(in srgb, var(--dnet-sys-primary-strong) 50%, var(--dnet-sys-on-surface));
+  --dnet-sys-primary-emphasis: color-mix(in srgb, var(--dnet-sys-primary) 80%, var(--dnet-ref-neutral-1000));
   --dnet-sys-success: var(--dnet-ref-green-500);
   --dnet-sys-warning: var(--dnet-ref-yellow-500);
   --dnet-sys-danger: var(--dnet-ref-red-500);

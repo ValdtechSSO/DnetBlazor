@@ -8,13 +8,13 @@ Open only the one you need.
 | [AdminLayout](components/AdminLayout.md) | `<DesktopFooter>`, `<DesktopHeader>`, `<DesktopLayout>`, `<DesktopLeftColumn>`, `<DesktopMinifyMenu>`, `<DesktopNavigation>`, `<DesktopNavigationMenu>`, `<DesktopRightColumn>`, `<MenuTree>`, `<MenuTreeLink>`, `<MenuTreeLinkHelper>` | 27 | 42 |
 | [Autocomplete](components/Autocomplete.md) | `<DnetAutocomplete>` | 34 | 17 |
 | [Badge](components/Badge.md) | `<DnetBadge>` | 10 | 4 |
-| [Button](components/Button.md) | `<DnetButton>` | 7 | 10 |
+| [Button](components/Button.md) | `<DnetButton>` | 8 | 11 |
 | [Checkbox](components/Checkbox.md) | `<DnetInputCheckbox>` | 3 | 7 |
 | [Chips](components/Chips.md) | `<DnetChip>`, `<DnetChipList>` | 18 | 11 |
 | [ConnectedPanel](components/ConnectedPanel.md) | `<DnetConnectedFloatingPanel>` | 3 | 3 |
 | [DatePicker](components/DatePicker.md) | `<DnetCalendar>`, `<DnetDatePicker>`, `<DnetDateRangePicker>` | 111 | 8 |
-| [DatePickerWeek](components/DatePickerWeek.md) | `<DnetDatePickerWeek>` | 12 | 7 |
-| [DatePickerWeekRaw](components/DatePickerWeekRaw.md) | `<DnetDatePickerWeekRaw>` | 2 | 5 |
+| [DatePickerWeek](components/DatePickerWeek.md) | `<DnetDatePickerWeek>` | 13 | 7 |
+| [DatePickerWeekRaw](components/DatePickerWeekRaw.md) | `<DnetDatePickerWeekRaw>` | 3 | 5 |
 | [Dialog](components/Dialog.md) | `<DnetDialog>` | 4 | 12 |
 | [DynamicStepper](components/DynamicStepper.md) | `<DnetDynamicStep>`, `<DnetDynamicStepper>` | 13 | 1 |
 | [ExpansionPanel](components/ExpansionPanel.md) | `<DnetExpansionPanelItem>` | 10 | 3 |
@@ -22,7 +22,7 @@ Open only the one you need.
 | [FloatingPanel](components/FloatingPanel.md) | `<DnetFloatingPanel>` | 3 | — |
 | [Form](components/Form.md) | `<DnetFormField>`, `<DnetInputDate>`, `<DnetInputNumber>`, `<DnetInputText>`, `<DnetInputTextArea>` | 47 | 11 |
 | [Grid](components/Grid.md) | `<BlgAdvancedFilterToggle>`, `<BlgBody>`, `<BlgGrid>`, `<BlgHeader>`, `<BlgRow>` | 72 | 30 |
-| [ImageEditor](components/ImageEditor.md) | `<DnetImageEditor>` | 17 | — |
+| [ImageEditor](components/ImageEditor.md) | `<DnetImageEditor>`, `<ImageEditorTooltipText>` | 18 | — |
 | [List](components/List.md) | `<DnetList>` | 16 | 17 |
 | [Overlay](components/Overlay.md) | `<DnetOverlay>` | 1 | — |
 | [Paginator](components/Paginator.md) | `<DnetPaginator>` | 22 | 8 |

@@ -1,3 +1,4 @@
+using Dnet.Blazor.Localization;
 using Bunit;
 using Dnet.Blazor.Components.PickList;
 using Microsoft.AspNetCore.Components;
@@ -8,6 +9,8 @@ namespace Dnet.Blazor.UnitTests;
 
 public sealed class PickListTests : BunitContext
 {
+    public PickListTests() => Services.AddDnetLocalization(options => options.DefaultCulture = "en-US");
+
     [Fact]
     public async Task Local_search_and_toggle_use_real_dom_events_without_mutating_the_input_set()
     {

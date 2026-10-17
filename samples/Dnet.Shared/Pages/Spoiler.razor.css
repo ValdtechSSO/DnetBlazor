@@ -69,7 +69,7 @@
 
 .spoiler-visible-resource a,
 .spoiler-extra-details > a {
-    color: var(--dnet-sys-primary-strong);
+    color: var(--dnet-sys-primary-content);
     line-height: 1.6;
     text-decoration: underline;
     text-underline-offset: 3px;

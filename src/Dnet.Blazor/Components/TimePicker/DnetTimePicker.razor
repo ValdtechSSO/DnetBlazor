@@ -1,3 +1,6 @@
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+
 @using System.Diagnostics.CodeAnalysis
 @using System.Globalization
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Enums
@@ -17,6 +20,8 @@
 @inject IOverlayService OverlayService
 @inject IJSRuntime JSRuntime
 
+<DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
+
 <input @ref="Element"
        @attributes="AdditionalAttributes"
        class="@InputClass"
@@ -34,6 +39,7 @@
        aria-expanded="@(_isOpen ? "true" : "false")"
        aria-controls="@ListboxId"
        aria-activedescendant="@ActiveOptionId"
+       aria-label="@ResolvedInputAriaLabel"
        aria-required="@(Required ? "true" : null)"
        @onfocusin="HandleFocusInAsync"
        @onfocus="HandleFocus"
@@ -42,6 +48,25 @@
        @onkeydown="HandleKeyDown" />
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+    private string? _optionsAriaLabel;
+    private string? _cancelLabel;
+    private string EffectiveOptionsAriaLabel => _optionsAriaLabel ?? Localizer["TimePicker.ChooseTime"];
+    private string EffectiveCancelLabel => _cancelLabel ?? Localizer["Common.Cancel"];
+    private string ResolvedInputAriaLabel => AdditionalAttributes?.TryGetValue("aria-label", out var label) == true
+        ? Convert.ToString(label, CultureInfo.InvariantCulture) ?? EffectiveOptionsAriaLabel
+        : EffectiveOptionsAriaLabel;
+    private Task HandleLocalizationChanged() => InvokeAsync(() =>
+    {
+        if (_menuReference?.Config is { } config)
+        {
+            config.AriaLabel = EffectiveOptionsAriaLabel;
+            config.Direction = EffectiveCulture.TextInfo.IsRightToLeft ? "rtl" : "ltr";
+            _menuReference.RequestConfigurationUpdate();
+        }
+        StateHasChanged();
+    });
+
     private readonly string _optionIdPrefix = $"dnet-timepicker-option-{Guid.NewGuid():N}";
     private IReadOnlyList<TimeOnly> _resolvedOptions = Array.Empty<TimeOnly>();
     private OverlayReference? _menuReference;
@@ -108,11 +133,11 @@
 
     /// <summary>Gets or sets the accessible label announced for the options list.</summary>
     [Parameter]
-    public string OptionsAriaLabel { get; set; } = "Choose a time";
+    public string OptionsAriaLabel { get => _optionsAriaLabel ?? "Choose a time"; set => _optionsAriaLabel = value; }
 
     /// <summary>Gets or sets the label of the responsive dialog cancel action.</summary>
     [Parameter]
-    public string CancelLabel { get; set; } = "Cancel";
+    public string CancelLabel { get => _cancelLabel ?? "Cancel"; set => _cancelLabel = value; }
 
     /// <summary>Gets or sets an additional CSS class applied to the overlay panel.</summary>
     [Parameter]
@@ -141,7 +166,7 @@
     [CascadingParameter(Name = "DnetThemeScope")]
     private string? ThemeScope { get; set; }
 
-    private CultureInfo EffectiveCulture => Culture ?? CultureInfo.CurrentCulture;
+    private CultureInfo EffectiveCulture => Culture ?? Localizer.Culture;
 
     private string? InstanceStyle => AdditionalAttributes?.TryGetValue("style", out var style) == true
         ? Convert.ToString(style, CultureInfo.InvariantCulture)
@@ -265,21 +290,21 @@
             !TimeOnly.TryParse(value, EffectiveCulture, DateTimeStyles.AllowWhiteSpaces, out parsed))
         {
             result = null;
-            validationErrorMessage = $"Enter a valid time using the format {Format}.";
+            validationErrorMessage = Localizer.Format("TimePicker.InvalidTime", Format);
             return false;
         }
 
         if (Min is not null && parsed < Min)
         {
             result = null;
-            validationErrorMessage = $"Time must be at or after {Min.Value.ToString(Format, EffectiveCulture)}.";
+            validationErrorMessage = Localizer.Format("TimePicker.MinimumTime", Min.Value.ToString(Format, EffectiveCulture));
             return false;
         }
 
         if (Max is not null && parsed > Max)
         {
             result = null;
-            validationErrorMessage = $"Time must be at or before {Max.Value.ToString(Format, EffectiveCulture)}.";
+            validationErrorMessage = Localizer.Format("TimePicker.MaximumTime", Max.Value.ToString(Format, EffectiveCulture));
             return false;
         }
 
@@ -385,11 +410,11 @@
             builder.AddAttribute(2, nameof(DnetTimePickerPanel.Selected), CurrentValue);
             builder.AddAttribute(3, nameof(DnetTimePickerPanel.ActiveIndex), _activeIndex);
             builder.AddAttribute(4, nameof(DnetTimePickerPanel.Format), Format);
-            builder.AddAttribute(5, nameof(DnetTimePickerPanel.Culture), EffectiveCulture);
+            builder.AddAttribute(5, nameof(DnetTimePickerPanel.Culture), Culture);
             builder.AddAttribute(6, nameof(DnetTimePickerPanel.OptionIdPrefix), _optionIdPrefix);
-            builder.AddAttribute(7, nameof(DnetTimePickerPanel.OptionsAriaLabel), OptionsAriaLabel);
+            builder.AddAttribute(7, nameof(DnetTimePickerPanel.OptionsAriaLabel), _optionsAriaLabel);
             builder.AddAttribute(8, nameof(DnetTimePickerPanel.TouchUi), touch);
-            builder.AddAttribute(9, nameof(DnetTimePickerPanel.CancelLabel), CancelLabel);
+            builder.AddAttribute(9, nameof(DnetTimePickerPanel.CancelLabel), _cancelLabel);
             builder.AddAttribute(
                 10,
                 nameof(DnetTimePickerPanel.Cancel),
@@ -427,7 +452,7 @@
                 ScrollStrategy = OverlayScrollStrategy.Block,
                 Role = "dialog",
                 AriaModal = true,
-                AriaLabel = OptionsAriaLabel,
+                AriaLabel = EffectiveOptionsAriaLabel,
                 Direction = EffectiveCulture.TextInfo.IsRightToLeft ? "rtl" : "ltr",
                 TrapFocus = true,
                 RestoreFocus = RestoreFocus,
@@ -488,7 +513,7 @@
             CloseOnEscape = true,
             ScrollStrategy = OverlayScrollStrategy.Reposition,
             Role = "listbox",
-            AriaLabel = OptionsAriaLabel,
+            AriaLabel = EffectiveOptionsAriaLabel,
             Direction = EffectiveCulture.TextInfo.IsRightToLeft ? "rtl" : "ltr",
             RestoreFocus = RestoreFocus,
             PositionStrategy = PositionStrategy.FlexibleConnectedTo,

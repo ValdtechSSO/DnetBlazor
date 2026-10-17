@@ -102,6 +102,12 @@ namespace Dnet.Blazor.Components.Overlay.Infrastructure.Models
             }
         }
 
+        /// <summary>Refreshes control-owned metadata without replacing the active content.</summary>
+        internal void RequestConfigurationUpdate()
+        {
+            if (IsAttached) _requestConfigurationUpdate?.Invoke(OverlayReferenceId);
+        }
+
         /// <summary>
         /// Updates the supplied sizing constraints and refreshes the attached pane.
         /// </summary>

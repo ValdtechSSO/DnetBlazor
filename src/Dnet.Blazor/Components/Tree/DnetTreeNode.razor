@@ -1,14 +1,18 @@
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
 @using Dnet.Blazor.Components.Checkbox
 @using Microsoft.JSInterop
 @using Microsoft.AspNetCore.Components.Web
 
 @typeparam TNode
 
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
 <li role="treeitem" aria-expanded="@(Node?.Children?.Count > 0 ? Node.IsExpanded() : null)" aria-selected="@Node?.IsSelected()">
 	<div class="dnet-tree-parent-node">
 		@if (Node.Children != null && Node.Children.Count > 0)
 		{
-			<button type="button" class="dnet-tree-icon-wrapper" @onclick="Toggle" aria-label="@(Node.IsExpanded() ? "Collapse node" : "Expand node")">
+			<button type="button" class="dnet-tree-icon-wrapper" @onclick="Toggle" aria-label="@Localizer[Node.IsExpanded() ? "Tree.CollapseNode" : "Tree.ExpandNode"]">
 				<span class="dnet-tree-icon @(Node.IsExpanded() ? "dnet-icon-node-open" : "dnet-icon-node-close")"></span>
 			</button>
 		}
@@ -23,7 +27,7 @@
 			<DnetInputCheckbox Value ="@isSelected"
 						   ValueChanged ="CheckboxClicked"
 						   ValueExpression="() => isSelected"
-						   aria-label="@($"Select {DisplayValueConverter(Node.TreeNodeData)}")"></DnetInputCheckbox>
+						   aria-label="@Localizer.Format("Tree.SelectNode", DisplayValueConverter(Node.TreeNodeData))"></DnetInputCheckbox>
 		}
 		<div class="dnet-tree-content @(Node.IsActive() ? "active" : null)" tabindex="0" @onclick="TreeNodeClicked" @onkeydown="OnKeyDown">
 			@if (NodeContent != null)
@@ -58,6 +62,8 @@
 </li>
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+
 
 	[CascadingParameter]
 	public DnetTree<TNode> DnetTreeComponent { get; set; } = default!;

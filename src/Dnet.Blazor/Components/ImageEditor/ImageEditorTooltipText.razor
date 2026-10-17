@@ -1,0 +1,12 @@
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+@Localizer[ResourceKey]
+
+@code {
+    [Parameter, EditorRequired]
+    public string ResourceKey { get; set; } = string.Empty;
+
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+}

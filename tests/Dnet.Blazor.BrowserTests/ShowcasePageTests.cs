@@ -9,7 +9,7 @@ public sealed class ShowcasePageTests
     [
         "Dialog", "Select", "ConnectedPanel", "FloatingPanel", "DatePicker", "TimePicker",
         "Tabs", "Stepper", "DynamicStepper", "Toast", "Tooltip", "Spinner", "List", "Tree",
-        "Expansion", "RadioButton", "CheckBox", "SlideToggle", "Chips", "PickList", "DoubleList", "Timeline", "Spoiler", "ImageEditor"
+        "Expansion", "RadioButton", "CheckBox", "SlideToggle", "Chips", "PickList", "DoubleList", "Timeline", "Spoiler", "ImageEditor", "PillTabs", "FloatingDoubleList", "Localization"
     ];
 
     [Theory]

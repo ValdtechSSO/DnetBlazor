@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net11.0</TargetFramework>
 		<PublishTrimmed>true</PublishTrimmed>
+		<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(RunConfiguration)' == 'Dnet.ClientSide' ">

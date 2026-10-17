@@ -61,7 +61,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-list-foreground` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
 | `--dnet-list-header-footer-height` | `50px` |
 | `--dnet-list-headline-font-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
-| `--dnet-list-headline-text-color` | `#42b0d5` <br><sub>via `--dnet-sys-primary-strong`</sub> |
+| `--dnet-list-headline-text-color` | `color-mix(in srgb, var(--dnet-sys-primary-strong) 50%, var(--dnet-sys-on-surface))` <br><sub>via `--dnet-sys-primary-content`</sub> |
 | `--dnet-list-hover-background-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 8%, transparent)` <br><sub>via `--dnet-sys-state-hover`</sub> |
 | `--dnet-list-hover-border-radius` | `5px` <br><sub>via `--dnet-sys-radius-md`</sub> |
 | `--dnet-list-item-height` | `50px` <br><sub>via `--dnet-sys-control-height`</sub> |

@@ -1,12 +1,14 @@
 # DnetButton
 
 `DnetButton` provides three sizes with consistent padding and icon spacing.
-Import `Dnet.Blazor.Components.Button`. The default is `Medium` with pill corners.
+Import `Dnet.Blazor.Components.Button`. The default is a filled primary action,
+`Medium` size and pill corners. The default primary color is `#5B5CE0`.
 
 ```razor
 @using Dnet.Blazor.Components.Button
 
 <DnetButton OnClick="Save">Save changes</DnetButton>
+<DnetButton Variant="DnetButtonVariant.Outlined" OnClick="Cancel">Cancel</DnetButton>
 
 <DnetButton Size="DnetButtonSize.Large" OnClick="Add">
     <IconContent>
@@ -18,6 +20,19 @@ Import `Dnet.Blazor.Components.Button`. The default is `Medium` with pill corner
     <ChildContent>Common button</ChildContent>
 </DnetButton>
 ```
+
+## Action hierarchy
+
+Use `Filled` for the main task, such as Save, Apply or Continue. Use `Outlined`
+for secondary actions, such as Cancel, Back, Reset or Clear. Both have a visible
+button surface or border, with distinct hover, keyboard-focus and disabled states.
+There is no text-only action variant. Structural controls such as calendar
+navigation and tabs keep their own component presentation.
+
+Filled buttons read `--dnet-sys-primary` and `--dnet-sys-on-primary`. Outlined
+buttons use `--dnet-sys-primary-content`, a brand-colored foreground that stays
+legible on ordinary surfaces in both themes. Explicit component token overrides remain effective
+for either variant.
 
 ## Sizes
 
@@ -37,6 +52,7 @@ also adopt the selected icon size and spacing. Give an SVG a `viewBox` and use
 
 | Parameter | Default | Behavior |
 | --- | --- | --- |
+| `Variant` | `DnetButtonVariant.Filled` | Selects `Filled` or `Outlined`. |
 | `Size` | `DnetButtonSize.Medium` | Selects `Small`, `Medium` or `Large` spacing. |
 | `IconContent` | `null` | Optional leading decorative icon. |
 | `ChildContent` | `null` | Visible button label or other content. |
@@ -74,7 +90,8 @@ as `--dnet-button-line-height`, `--dnet-button-padding` and
 `--dnet-button-border-radius` remain supported in the fallback chain.
 
 The color tokens are `--dnet-btn-background`, `--dnet-btn-background-hover` and
-`--dnet-btn-foreground`; `--dnet-btn-font-size` controls the label's text size.
+`--dnet-btn-foreground`; `--dnet-btn-border-color` customizes the border, and
+`--dnet-btn-font-size` controls the label's text size.
 Use semantic theme tokens for colors so the same button works in scoped themes.
 
 See `/Buttons` for all three sizes in pill, soft and square shapes, with and

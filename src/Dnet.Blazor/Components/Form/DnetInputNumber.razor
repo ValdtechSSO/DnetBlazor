@@ -1,4 +1,6 @@
-﻿@using Microsoft.AspNetCore.Components.Forms
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+@using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.JSInterop
 @using System.Diagnostics.CodeAnalysis
@@ -13,6 +15,8 @@
 @implements IDisposable
 
 @inject IJSRuntime JSRuntime
+
+<DnetLocalizationObserver OnChanged="HandleCultureChangedAsync" />
 
 @if (!ImmediateResponse)
 {
@@ -58,6 +62,14 @@ else
 
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+
+    private Task HandleCultureChangedAsync() => InvokeAsync(() =>
+    {
+        RefreshParsingValidationMessage();
+        StateHasChanged();
+    });
+
 
     [CascadingParameter]
     private FormFieldCascadingValues? _formFieldCascadingValues { get; set; }
@@ -80,7 +92,14 @@ else
 
     /// <summary>Gets or sets the parsing error message used by this component.</summary>
     [Parameter] 
-    public string ParsingErrorMessage { get; set; } = "The {0} field must be a number.";
+    public string ParsingErrorMessage
+    {
+        get => _parsingErrorMessageOverride ?? "The {0} field must be a number.";
+        set => _parsingErrorMessageOverride = value;
+    }
+
+    private string? _parsingErrorMessageOverride;
+    private string EffectiveParsingErrorMessage => _parsingErrorMessageOverride ?? Localizer["Form.NumberParsingError"];
 
     [DisallowNull]
     public ElementReference? __inputReference { get; protected set; }
@@ -284,7 +303,7 @@ else
         }
         else
         {
-            validationErrorMessage = string.Format(CultureInfo.InvariantCulture, ParsingErrorMessage, DisplayName ?? FieldIdentifier.FieldName);
+            validationErrorMessage = string.Format(Localizer.Culture, EffectiveParsingErrorMessage, DisplayName ?? FieldIdentifier.FieldName);
             return false;
         }
     }

@@ -1,5 +1,8 @@
-﻿@using System.Diagnostics
+﻿@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+@using System.Diagnostics
 @using System.Threading
+@using Dnet.Blazor.Components.Button
 @using Dnet.Blazor.Components.Grid.Infrastructure.Entities
 @using Dnet.Blazor.Components.Grid.Infrastructure.Enums
 @using Dnet.Blazor.Components.Grid.Infrastructure.Interfaces
@@ -19,6 +22,7 @@
 
 @typeparam TItem
 
+<DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
 <div @ref="_eGridContainer"
      class="@_gridClasses"
      style="height: calc(100% - 0px);"
@@ -75,8 +79,8 @@
                     }
                     else
                     {
-                        <span>No se han podido cargar las filas.</span>
-                        <button type="button" @onclick="RetryAsync">Reintentar</button>
+                        <span>@Localizer["Grid.LoadError"]</span>
+                        <DnetButton Size="DnetButtonSize.Small" ButtonType="button" OnClick="RetryAsync">@Localizer["Grid.Retry"]</DnetButton>
                     }
                 </div>
             }
@@ -85,11 +89,11 @@
                 <div class="blg-grid-status" role="status" aria-live="polite">
                     @if (_sourceItemCount == 0)
                     {
-                        @(GridOptions.EmptyTemplate ?? (builder => builder.AddContent(0, "No hay datos.")))
+                        @(GridOptions.EmptyTemplate ?? (builder => builder.AddContent(0, Localizer["Grid.Empty"])))
                     }
                     else
                     {
-                        @(GridOptions.NoResultsTemplate ?? (builder => builder.AddContent(0, "No hay resultados para los filtros actuales.")))
+                        @(GridOptions.NoResultsTemplate ?? (builder => builder.AddContent(0, Localizer["Grid.NoResults"])))
                     }
                 </div>
             }
@@ -252,7 +256,7 @@
                                         <div @ref="_eCenterContainer"
                                              class="blg-center-cols-container"
                                              role="grid"
-                                             aria-label="@GridOptions.AriaLabel"
+                                             aria-label="@(GridOptions.AriaLabelOverride ?? Localizer["Grid.Label"])"
                                              aria-rowcount="@semanticRowCount"
                                              aria-colcount="@semanticColumnCount"
                                              aria-multiselectable="@(GridOptions.RowSelectionType == RowSelectionType.Multiple)"
@@ -355,5 +359,8 @@
     }
 </div>
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+    private Task HandleLocalizationChanged() => InvokeAsync(StateHasChanged);
+
     // --- IGNORE ---
 }

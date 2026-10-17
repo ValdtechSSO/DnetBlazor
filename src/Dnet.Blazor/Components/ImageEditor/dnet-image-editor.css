@@ -40,14 +40,6 @@
   margin-left: auto;
 }
 
-/* The buttons read their own public tokens; the editor points each instance at
-   the role it needs from the markup, so nothing of Button is declared here. This
-   file only adds the outline and the square shape of the icon-only actions. */
-.dnet-image-editor .dnet-image-editor-tool,
-.dnet-image-editor .dnet-image-editor-secondary {
-  border: 1px solid var(--dnet-sys-border-strong);
-}
-
 /* One height across the toolbar, so the labelled actions line up with the
    icon-only ones instead of drifting a couple of pixels. */
 .dnet-image-editor .dnet-image-editor-tool {
@@ -68,7 +60,6 @@
 
 .dnet-image-editor .dnet-image-editor-icon-button {
   --_icon-button-size: 36px;
-  border: 1px solid var(--dnet-sys-border-strong);
   display: inline-flex;
   align-items: center;
   justify-content: center;

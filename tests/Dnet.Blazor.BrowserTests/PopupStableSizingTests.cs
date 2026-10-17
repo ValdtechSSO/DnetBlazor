@@ -84,11 +84,11 @@ public sealed class PopupStableSizingTests
         await page.GotoAsync($"{BaseUrl}/Select");
         for (var index = 0; index < 3; index++)
         {
-            var trigger = page.Locator(".dnet-plain-select").Nth(index);
+            var trigger = page.Locator(".dnet-desktop-content .dnet-plain-select").Nth(index);
             await CheckSelectAsync(page, trigger, width, $"Select example {index}");
         }
         await page.GotoAsync($"{BaseUrl}/Forms");
-        await CheckSelectAsync(page, page.Locator(".dnet-plain-select").First, width, "Forms gender");
+        await CheckSelectAsync(page, page.Locator(".dnet-desktop-content .dnet-plain-select").First, width, "Forms gender");
         Assert.Empty(errors);
     }
 

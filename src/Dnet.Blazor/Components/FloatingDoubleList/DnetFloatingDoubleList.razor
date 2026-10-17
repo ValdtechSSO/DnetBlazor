@@ -1,4 +1,6 @@
-﻿@using Dnet.Blazor.Components.Chips
+﻿@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+@using Dnet.Blazor.Components.Chips
 @using Dnet.Blazor.Components.FloatingDoubleList.Infrastructure.Models;
 @using Dnet.Blazor.Components.FloatingDoubleList.Infrastructure.Services;
 @using Dnet.Blazor.Components.Form
@@ -19,6 +21,7 @@
 @using System.Reflection;
 @using System.Linq.Expressions;
 @using Dnet.Blazor.Infrastructure.Models.SearchModels;
+@using Microsoft.JSInterop
 
 @implements IDisposable
 
@@ -29,7 +32,18 @@
 @inject IOverlayService OverlayService
 
 
-<div class="dnet-plain-select" @onclick=@(() => OpenMenu())>
+<DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
+<div @ref="_focusTrigger"
+     class="dnet-plain-select"
+     role="combobox"
+     tabindex="@(Disabled ? -1 : 0)"
+     aria-haspopup="dialog"
+     aria-label="@(DisplayName ?? Localizer["FloatingDoubleList.Label"])"
+     aria-expanded="@(_isOpen ? "true" : "false")"
+     aria-controls="@(_isOpen && _menuReference is not null ? $"cdk-overlay-pane-{_menuReference.GetOverlayReferenceId()}" : null)"
+     aria-disabled="@(Disabled ? "true" : "false")"
+     @onclick="OpenMenu"
+     @onkeydown="HandleKeyDown">
     <div @ref="_menuTrigger"
          class="dnet-plain-select-trigger" style="width: 100%">
         <div class="dnet-plain-select-value">
@@ -50,6 +64,18 @@
 
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+    private Task HandleLocalizationChanged() => InvokeAsync(() => { RefreshOverlayLabel(); StateHasChanged(); });
+
+    private void RefreshOverlayLabel()
+    {
+        if (_menuReference?.Config is not { } config) return;
+        var label = DisplayName ?? Localizer["FloatingDoubleList.Label"];
+        if (config.AriaLabel == label) return;
+        config.AriaLabel = label;
+        _menuReference.RequestConfigurationUpdate();
+    }
+
 
     [CascadingParameter]
     private FormFieldCascadingValues? _formFieldCascadingValues { get; set; }
@@ -188,7 +214,11 @@
 
     private ElementReference _menuTrigger;
 
+    private ElementReference _focusTrigger;
+
     private bool _isOpen;
+
+    private bool _disposed;
 
     private OverlayReference? _menuReference;
 
@@ -244,6 +274,7 @@
 
     protected override void OnParametersSet()
     {
+        RefreshOverlayLabel();
         if (RightItems != null && SideForSelections == ListToShow.Right)
         {
             if (_isInitialized && RightItems.Any())
@@ -278,6 +309,8 @@
         {
             x.OpenElement(4, "div");
             x.AddAttribute(5, "class", "dnet-app-icon-wrapper");
+            x.AddAttribute(8, "role", "button");
+            x.AddAttribute(9, "aria-label", Localizer["Common.Clear"]);
             x.AddAttribute(3, "onclick", EventCallback.Factory.Create<MouseEventArgs>(this, _ => ClearInput()));
             x.OpenElement(6, "span");
             x.AddAttribute(7, "class", "dnet-app-icon dnet-autoc-reset-button");
@@ -297,13 +330,21 @@
 
     private void OpenMenu()
     {
-        if (Disabled) return;
+        if (Disabled || _disposed) return;
 
         if (_isOpen) return;
 
         AttachMenu();
 
         _isOpen = true;
+    }
+
+    private void HandleKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key is "Enter" or " " or "Spacebar" or "ArrowDown")
+        {
+            OpenMenu();
+        }
     }
 
     private void CloseMenu()
@@ -404,6 +445,9 @@
             {
                 HasBackdrop = true,
                 HasTransparentBackdrop = true,
+                CloseOnEscape = true,
+                Role = "dialog",
+                AriaLabel = DisplayName ?? Localizer["FloatingDoubleList.Label"],
                 PositionStrategy = PositionStrategy.FlexibleConnectedTo,
                 FlexibleConnectedPositionStrategyBuilder = flexibleConnectedPositionStrategyBuilder,
                 MinWidth = MinWidth,
@@ -431,6 +475,8 @@
             x.AddAttribute(15, "LeftListOptions", LeftListOptions);
             x.AddAttribute(16, "RightListOptions", RightListOptions);
             x.AddAttribute(19, "EqualityComparer", EqualityComparer);
+            x.AddAttribute(20, "ListItemContent", ListItemContent);
+            x.AddAttribute(21, "SearchControlOptions", SearchControlOptions);
             x.CloseComponent();
         });
 
@@ -458,6 +504,38 @@
     void CloseFilter(OverlayResult overlayDataResult)
     {
         _isOpen = false;
+
+        if (_menuReference is not null)
+        {
+            _menuReference.Close -= CloseFilter;
+            _menuReference = null;
+        }
+
+        if (_disposed) return;
+
+        _ = InvokeAsync(async () =>
+        {
+            StateHasChanged();
+
+            if (Disabled || _disposed) return;
+
+            try
+            {
+                await _focusTrigger.FocusAsync(preventScroll: true);
+            }
+            catch (JSException)
+            {
+                // The browser connection or the trigger can disappear during navigation.
+            }
+            catch (InvalidOperationException)
+            {
+                // A static render has no interactive element to focus.
+            }
+            catch (OperationCanceledException)
+            {
+                // Navigation can cancel the focus request after the overlay has closed.
+            }
+        });
     }
 
     private void SearchLeft(SearchModel searchModel) => _ = InvokeAsync(() => SearchLeftAsync(searchModel));
@@ -552,7 +630,16 @@
 
     public void Dispose()
     {
-        if (_menuReference != null) _menuReference.Close -= CloseFilter;
+        _disposed = true;
+
+        if (_menuReference != null)
+        {
+            _menuReference.Close -= CloseFilter;
+            DetachMenu();
+            _menuReference = null;
+        }
+
+        if (EditContext is not null) EditContext.OnFieldChanged -= HandleOnValidationStateChanged;
 
         if (_floatingDoubleListService is not null)
         {

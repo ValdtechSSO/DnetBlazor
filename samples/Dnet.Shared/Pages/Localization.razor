@@ -1,0 +1,107 @@
+@page "/Localization"
+@using Dnet.Blazor.Localization
+@using Dnet.Blazor.Components.Button
+@using Dnet.Blazor.Components.DatePicker
+@using Dnet.Blazor.Components.Form
+@using Dnet.Blazor.Components.Paginator
+@using Dnet.Blazor.Components.PickList
+@using Dnet.Blazor.Components.Spoiler
+@using Dnet.Blazor.Components.TimePicker
+@using Dnet.Blazor.Components.Toast.Infrastructure.Interfaces
+@using Dnet.Blazor.Components.Toast.Infrastructure.Models
+@inject IDnetLocalizer Localizer
+@inject IToastService ToastService
+
+<DnetLocalizationObserver OnChanged="RefreshLanguage" />
+<DemoPage Id="demo-localization" Title="@Text("Un idioma para todos los controles", "One language for every control")"
+          Category="@Text("Idiomas y formatos", "Languages and formats")"
+          Description="@Text("Usa el selector de idioma de la cabecera. Los controles cambian sus textos sin perder fechas, búsquedas ni selecciones.", "Use the language selector in the header. Controls update their text without losing dates, searches or selections.")"
+          Badge="Español · English">
+    <div class="demo-grid">
+        <DemoCard Id="localization-selection" Title="@Text("Elige tu equipo", "Choose your team")"
+                  Eyebrow="@Text("01 / Textos automáticos", "01 / Automatic text")"
+                  Description="@Text("Selecciona personas, busca o cambia de página antes de alternar el idioma.", "Select people, search or change pages before switching languages.")">
+            <ChildContent>
+                <div id="localization-picklist">
+                    <PickList TItem="string" TKey="string" Items="_people" ItemKey="person => person"
+                              SearchTextSelector="person => person" @bind-SelectedKeys="_selected" PageSize="3">
+                        <ItemTemplate Context="person">@person</ItemTemplate>
+                    </PickList>
+                </div>
+            </ChildContent>
+            <Footer><span id="localization-selection-value" class="demo-value" role="status">@string.Join(", ", _selected.Order())</span></Footer>
+        </DemoCard>
+
+        <DemoCard Id="localization-dates" Title="@Text("Fechas y horas a tu manera", "Dates and times your way")"
+                  Eyebrow="@Text("02 / Cultura regional", "02 / Regional culture")"
+                  Description="@Text("Abre el calendario y cambia el idioma: el panel abierto también se actualiza.", "Open the calendar and switch languages: the open panel updates too.")">
+            <ChildContent>
+                <EditForm Model="_form">
+                    <div class="demo-stack">
+                        <div id="localization-date">
+                            <DnetFormField Label="@Text("Día de salida", "Departure day")">
+                                <DnetDatePicker @bind-Value="_form.Date" Format="yyyy-MM-dd" />
+                            </DnetFormField>
+                        </div>
+                        <div id="localization-time">
+                            <DnetFormField Label="@Text("Hora de salida", "Departure time")">
+                                <DnetTimePicker @bind-Value="_form.Time" TouchUi="true" />
+                            </DnetFormField>
+                        </div>
+                    </div>
+                </EditForm>
+            </ChildContent>
+            <Footer><span id="localization-format-value" class="demo-value">@(new DateOnly(2026, 10, 16).ToString("D", Localizer.Culture)) · @(1234.56m.ToString("N2", Localizer.Culture))</span></Footer>
+        </DemoCard>
+
+        <DemoCard Id="localization-content" Title="@Text("Mensajes que acompañan", "Helpful messages")"
+                  Eyebrow="@Text("03 / Contenido y avisos", "03 / Content and notifications")"
+                  Description="@Text("Los textos propios de los controles y sus etiquetas accesibles siguen el idioma elegido.", "Control text and accessible labels follow the selected language.")">
+            <div class="demo-stack">
+                <DnetSpoiler id="localization-spoiler" MaxHeight="48">
+                    <p>@Text("Un equipo comparte fechas, ideas y decisiones. Cada persona puede utilizar los controles en su idioma.", "A team shares dates, ideas and decisions. Each person can use the controls in their language.")</p>
+                    <p>@Text("Cambiar de idioma conserva el estado de los controles. Puedes seguir trabajando en el mismo punto.", "Changing language preserves control state. You can continue working where you left off.")</p>
+                </DnetSpoiler>
+                <div class="demo-actions"><DnetButton id="localization-show-toast" OnClick="ShowNotification">@Text("Mostrar notificación", "Show notification")</DnetButton></div>
+            </div>
+        </DemoCard>
+
+        <DemoCard Id="localization-overrides" Title="@Text("Tu vocabulario tiene prioridad", "Your wording takes priority")"
+                  Eyebrow="@Text("04 / Personalización", "04 / Custom wording")"
+                  Description="@Text("Este ejemplo mantiene su texto personalizado. El resto de etiquetas sigue usando el idioma general.", "This example keeps its custom text. Other labels continue using the general language.")">
+            <ChildContent>
+                <div id="localization-custom-picklist">
+                    <PickList TItem="string" TKey="string" Items="_people" ItemKey="person => person"
+                              SearchTextSelector="person => person" @bind-SelectedKeys="_customSelected" PageSize="3"
+                              Strings="_customStrings">
+                        <ItemTemplate Context="person">@person</ItemTemplate>
+                    </PickList>
+                </div>
+            </ChildContent>
+            <Footer><span class="demo-info">@Text("«Vaciar mi selección» es un texto definido por esta aplicación.", "“Vaciar mi selección” is wording supplied by this application.")</span></Footer>
+        </DemoCard>
+    </div>
+</DemoPage>
+
+@code {
+    private readonly string[] _people = ["Alex Rivera", "Taylor Morgan", "Sam Chen", "Riley Parker", "Jordan Lee", "Avery Scott"];
+    private IReadOnlySet<string> _selected = new HashSet<string> { "Taylor Morgan" };
+    private IReadOnlySet<string> _customSelected = new HashSet<string> { "Alex Rivera" };
+    private readonly PickListStrings _customStrings = new() { ClearLabel = "Vaciar mi selección" };
+    private readonly FormModel _form = new();
+    private Task RefreshLanguage() => InvokeAsync(StateHasChanged);
+    private string Text(string spanish, string english) => Localizer.Culture.TwoLetterISOLanguageName == "en" ? english : spanish;
+
+    private void ShowNotification() => ToastService.Show(new ToastConfig
+    {
+        Title = Text("Equipo actualizado", "Team updated"),
+        Text = Text("Cambia el idioma con este aviso abierto para comprobar su botón de cierre.", "Switch language while this notification is open to check its close button."),
+        Duration = null
+    });
+
+    private sealed class FormModel
+    {
+        public string Date { get; set; } = "2026-10-16";
+        public TimeOnly? Time { get; set; } = new(14, 30);
+    }
+}

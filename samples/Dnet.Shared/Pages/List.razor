@@ -71,7 +71,7 @@
                             <p class="demo-info">And @(_selectedItems.Count - 6) more contacts.</p>
                         }
                     }
-                    <div class="demo-actions list-selection-actions"><DnetButton id="list-reset" disabled="@(_loading || _loadFailed)" OnClick="ResetDirectory">Reset directory</DnetButton></div>
+                    <div class="demo-actions list-selection-actions"><DnetButton Variant="DnetButtonVariant.Outlined" id="list-reset" disabled="@(_loading || _loadFailed)" OnClick="ResetDirectory">Reset directory</DnetButton></div>
                 </ChildContent>
                 <Footer><span id="list-selected-count" role="status">@_selectedItems.Count selected</span></Footer>
             </DemoCard>

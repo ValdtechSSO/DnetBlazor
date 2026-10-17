@@ -2,6 +2,7 @@ using Bunit;
 using Dnet.Blazor.Components.Form;
 using Dnet.Blazor.Components.List;
 using Dnet.Blazor.Components.Paginator;
+using Dnet.Blazor.Localization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -12,6 +13,7 @@ public sealed class ListSearchResultsTests : BunitContext
 {
     public ListSearchResultsTests()
     {
+        Services.AddDnetLocalization(options => options.DefaultCulture = "en-US");
         Services.AddTransient<IFormEventService, FormEventService>();
         Services.AddScoped(typeof(DnetListDragAndDropService<>), typeof(DnetListDragAndDropService<>));
         Services.AddScoped<IPaginator, Paginator>();

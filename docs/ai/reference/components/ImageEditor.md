@@ -29,3 +29,14 @@
 | `AllowedFormats` | `List<string>` | `new()` | Gets or sets the image file formats that may be selected. |
 | `ImageEditingControls` | `List<ImageEditorControlType>` | `new()` | Gets or sets the image editing controls used by this component. |
 | `ImageFile` | `IBrowserFile?` | — | Gets or sets the image file used by this component. |
+
+## `<ImageEditorTooltipText>`
+
+```razor
+<ImageEditorTooltipText
+/>
+```
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `ResourceKey` | `string` | `string.Empty` | Gets or sets the resource key used by this component. |

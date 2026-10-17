@@ -249,6 +249,7 @@ when you upgrade the package.
 
 ## Documentation
 
+- [Localization: Spanish default and English](docs/localization.md)
 - [PickList guide](docs/pick-list.md)
 - [Overlay guide](docs/overlay.md)
 - [Styling guide](docs/styling/README.md)

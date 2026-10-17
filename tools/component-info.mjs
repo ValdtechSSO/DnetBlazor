@@ -12,6 +12,7 @@
 
 import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
 import { join, basename, relative } from "node:path";
+import { extractParameters } from "./component-parameters.mjs";
 
 const repo = process.env.DNET_REPO ?? process.cwd();
 const componentsRoot = join(repo, "src/Dnet.Blazor/Components");
@@ -87,11 +88,7 @@ for (const f of cssFiles) {
 const params = [];
 for (const f of razorFiles.concat(csFiles)) {
     const t = readFileSync(f, "utf8");
-    for (const m of t.matchAll(
-        /\[Parameter\][\s\S]{0,120}?public\s+([\w?<>,\s]+?)\s+(\w+)\s*\{\s*get;\s*set;\s*\}(?:\s*=\s*([^;]+);)?/g
-    )) {
-        params.push({ type: m[1].trim(), name: m[2], def: m[3]?.trim() ?? null, file: basename(f) });
-    }
+    params.push(...extractParameters(t).map((p) => ({ ...p, file: basename(f) })));
 }
 
 // ------------------------------------------------------------------ warnings
@@ -180,7 +177,7 @@ console.log(H(`CSS classes — ${classes.length}`));
 console.log("  " + classes.join(", "));
 
 console.log(H(`Public parameters — ${params.length}`));
-params.forEach((p) => console.log(`  ${p.type} ${p.name}${p.def ? ` = ${p.def}` : ""}   [${p.file}]`));
+params.forEach((p) => console.log(`  ${p.type} ${p.name}${p.def ? ` = ${p.def}` : p.computed ? " (computed)" : ""}   [${p.file}]`));
 
 console.log(H(`WARNINGS — ${warnings.length}`));
 if (!warnings.length) console.log("  None detected.");

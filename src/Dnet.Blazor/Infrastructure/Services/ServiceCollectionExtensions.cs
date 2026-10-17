@@ -21,6 +21,7 @@ using Dnet.Blazor.Components.Toast.Infrastructure.Services;
 using Dnet.Blazor.Components.Tooltip.Infrastructure.Interfaces;
 using Dnet.Blazor.Components.Tooltip.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Dnet.Blazor.Localization;
 
 namespace Dnet.Blazor.Infrastructure.Services
 {
@@ -28,6 +29,8 @@ namespace Dnet.Blazor.Infrastructure.Services
     {
         public static IServiceCollection AddDnetBlazor(this IServiceCollection services)
         {
+            services.AddDnetLocalization();
+
             services.AddScoped(typeof(IOverlayService), typeof(OverlayService));
 
             services.AddScoped(typeof(IBlGridMessageService<>), typeof(BlGridMessageService<>));

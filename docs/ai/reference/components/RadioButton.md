@@ -13,7 +13,7 @@ An input component for editing bool values.
 | Parameter | Type | Default | Description |
 |---|---|---|---|
 | `AdditionalAttributes` | `IReadOnlyDictionary<string, object>?` | — | Gets or sets a collection of additional attributes that will be applied to the input element. |
-| `Value` | `TValue?` | — | Gets or sets the value of this input. |
+| `Value` | `TValue?` | — | Gets or sets a collection of additional attributes that will be applied to the input element. Gets or sets the value of this input. |
 | `Name` | `string?` | — | Gets or sets the name of the parent input radio group. |
 | `TextPlacedBefore` | `bool` | `false` | Gets or sets the name of the parent input radio group. |
 | `ChildContent` | `RenderFragment` | — | Gets or sets the child content rendered by the component. |
@@ -29,7 +29,7 @@ An input component for editing bool values.
 | Parameter | Type | Default | Description |
 |---|---|---|---|
 | `ChildContent` | `RenderFragment?` | — | Gets or sets the child content to be rendering inside the InputRadioGroup{TValue}. |
-| `Name` | `string?` | — | Gets or sets the name of the group. |
+| `Name` | `string?` | — | Gets or sets the child content to be rendering inside the InputRadioGroup{TValue}. Gets or sets the name of the group. |
 
 ## Styling tokens
 
@@ -38,7 +38,7 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
-| `--dnet-radio-button-background` | `#42b0d5` <br><sub>via `--dnet-sys-primary-strong`</sub> |
+| `--dnet-radio-button-background` | `#5b5ce0` <br><sub>via `--dnet-sys-primary-strong`</sub> |
 | `--dnet-radio-button-border-width` | `1px` |
 | `--dnet-radio-button-font-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
 | `--dnet-radio-button-size` | `20px` |

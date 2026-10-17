@@ -13,15 +13,25 @@
 @using Dnet.Blazor.Components.AdminLayout.DesktopFooter
 @using Dnet.Blazor.Components.AdminLayout.DesktopNavigation
 @using Dnet.Blazor.Components.Spinner
+@using Dnet.Blazor.Components.Button
+@using Dnet.Blazor.Components.ConnectedPanel.Infrastructure.Interfaces
+@using Dnet.Blazor.Components.ConnectedPanel.Infrastructure.Models
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Enums
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Models
+@using Dnet.Blazor.Components.Overlay.Infrastructure.Services
 @using Dnet.Blazor.Components.AdminLayout.Menu
+@using Dnet.Blazor.Localization
 @implements IAsyncDisposable
 
 @inject IThemeMessageService<ThemeConfigData> ThemeMessageService
 @inject IJSRuntime JSRuntime
+@inject IDnetLocalizer Localizer
+@inject IConnectedPanelService ConnectedPanelService
 
+<DnetLocalizationObserver OnChanged="RefreshLanguage" />
 <DnetOverlay BaseZindex="1100"></DnetOverlay>
 
-<DesktopLayout IsLeftColumnHidden="false" IsRightColumnHidden="true" IsFooterHidden="false" IsHeaderHidden="false" ShowMinifier="true" IsDesktopMode="true">
+<DesktopLayout IsLeftColumnHidden="false" IsRightColumnHidden="true" IsFooterHidden="false" IsHeaderHidden="false" ShowMinifier="true" IsDesktopMode="true" style="--dnet-dash-header-height:65px;">
     <DesktopLeftColumn>
         <DesktopNavigation>
             <CompanyChildContent>
@@ -50,16 +60,24 @@
             </div>
             <div class="dnet-desktop-header-right">
                 <div class="dnet-dashboard-right-container">
-                    <label class="dnet-dashboard-theme-selector">
-                        <span>Theme</span>
-                        <select value="@_theme" @onchange="ChangeTheme" aria-label="Application theme">
-                            <option value="">Light</option>
-                            <option value="dark">Dark</option>
-                            <option value="compact">Compact</option>
-                            <option value="high-contrast">High contrast</option>
-                            <option value="modern">Modern</option>
-                        </select>
-                    </label>
+                    <div class="dnet-dashboard-preferences">
+                        <div id="dnet-language-selector" class="dnet-dashboard-preference" @ref="_languageTrigger">
+                            <DnetButton Variant="DnetButtonVariant.Outlined" OnClick="@(() => TogglePreference(true))"
+                                        style="@PreferenceButtonStyle" aria-label="@Text("Idioma de los componentes", "Component language")"
+                                        title="@LanguageTitle" aria-haspopup="dialog" aria-expanded="@(LanguagePanelOpen ? "true" : "false")"
+                                        aria-controls="@(LanguagePanelOpen ? "header-language-panel" : null)">
+                                <span class="dnet-dashboard-language-code">@Localizer.Culture.TwoLetterISOLanguageName.ToUpperInvariant()</span>
+                            </DnetButton>
+                        </div>
+                        <div id="dnet-theme-selector" class="dnet-dashboard-preference" @ref="_themeTrigger">
+                            <DnetButton Variant="DnetButtonVariant.Outlined" OnClick="@(() => TogglePreference(false))"
+                                        style="@PreferenceButtonStyle" aria-label="@Text("Tema de la aplicación", "Application theme")"
+                                        title="@ThemeTitle" aria-haspopup="dialog" aria-expanded="@(ThemePanelOpen ? "true" : "false")"
+                                        aria-controls="@(ThemePanelOpen ? "header-theme-panel" : null)">
+                                <HeaderThemeIcon Theme="@ThemeSelection" />
+                            </DnetButton>
+                        </div>
+                    </div>
                     <div class="dnet-dashboard-user-data">
                         <div style="display: flex;justify-content: flex-end;">
                             <span class="dnet-dashboard-person-name">PersonName</span>
@@ -106,9 +124,21 @@
 </DesktopLayout>
 
 @code {
+    #nullable enable annotations
 
     private const string ThemeStorageKey = "dnet.theme";
+    private const string LanguageStorageKey = "dnet.language";
     private string _theme = "dark";
+    private const string PreferenceButtonStyle = "--dnet-btn-height:44px;--dnet-btn-min-width:44px;--dnet-btn-padding:0;--dnet-btn-radius:50%;";
+    private string ThemeSelection => string.IsNullOrEmpty(_theme) ? "light" : _theme;
+    private ElementReference _languageTrigger;
+    private ElementReference _themeTrigger;
+    private OverlayReference? _preferencePanel;
+    private bool _preferenceIsLanguage;
+    private bool LanguagePanelOpen => _preferencePanel?.IsAttached == true && _preferenceIsLanguage;
+    private bool ThemePanelOpen => _preferencePanel?.IsAttached == true && !_preferenceIsLanguage;
+    private string LanguageTitle => $"{Text("Idioma", "Language")}: {LanguageName(Localizer.Culture.TwoLetterISOLanguageName)}";
+    private string ThemeTitle => $"{Text("Tema", "Theme")}: {ThemeName(ThemeSelection)}";
     private IJSObjectReference? _themeModule;
     private DotNetObjectReference<MainLayout>? _themeReference;
     private int _themeWatcherId;
@@ -155,14 +185,21 @@
 
         await JSRuntime.InvokeVoidAsync("dnetinterop.setTheme", _theme);
         _themeModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Dnet.App.Shared/js/theming-playground.js");
+        try
+        {
+            var persistedLanguage = await JSRuntime.InvokeAsync<string?>("dnetinterop.get", LanguageStorageKey);
+            if (persistedLanguage is "es-ES" or "en-US") Localizer.SetCulture(persistedLanguage);
+            await _themeModule.InvokeVoidAsync("setLanguage", Localizer.Culture.Name);
+        }
+        catch (JSDisconnectedException) { }
         _themeReference = DotNetObjectReference.Create(this);
         _themeWatcherId = await _themeModule.InvokeAsync<int>("watchTheme", _themeReference);
         StateHasChanged();
     }
 
-    private async Task ChangeTheme(ChangeEventArgs args)
+    private async Task ChangeTheme(string selection)
     {
-        var theme = args.Value?.ToString() ?? string.Empty;
+        var theme = selection == "light" ? string.Empty : selection;
         if (!IsSupportedTheme(theme))
         {
             return;
@@ -172,6 +209,79 @@
         await JSRuntime.InvokeVoidAsync("dnetinterop.setTheme", _theme);
         await JSRuntime.InvokeVoidAsync("dnetinterop.set", ThemeStorageKey, _theme);
     }
+
+    private string Text(string spanish, string english) =>
+        Localizer.Culture.TwoLetterISOLanguageName == "en" ? english : spanish;
+
+    private static string LanguageName(string language) => language == "en" ? "English" : "Español";
+
+    private string ThemeName(string theme) => theme switch
+    {
+        "light" => Text("Claro", "Light"),
+        "dark" => Text("Oscuro", "Dark"),
+        "compact" => Text("Compacto", "Compact"),
+        "high-contrast" => Text("Alto contraste", "High contrast"),
+        "modern" => Text("Moderno", "Modern"),
+        _ => theme
+    };
+
+    private async Task ChangeLanguage(string language)
+    {
+        if (language is not ("es" or "en")) return;
+        Localizer.SetCulture(language == "en" ? "en-US" : "es-ES");
+        try { await JSRuntime.InvokeVoidAsync("dnetinterop.set", LanguageStorageKey, Localizer.Culture.Name); }
+        catch (JSDisconnectedException) { }
+    }
+
+    private void TogglePreference(bool isLanguage)
+    {
+        var wasOpen = _preferencePanel?.IsAttached == true && _preferenceIsLanguage == isLanguage;
+        _preferencePanel?.Detach();
+        if (wasOpen) return;
+
+        _preferenceIsLanguage = isLanguage;
+        _preferencePanel = ConnectedPanelService.Open(typeof(HeaderPreferencePanel),
+            new Dictionary<string, object>
+            {
+                [nameof(HeaderPreferencePanel.IsLanguage)] = isLanguage,
+                [nameof(HeaderPreferencePanel.SelectedValue)] = isLanguage ? Localizer.Culture.TwoLetterISOLanguageName : ThemeSelection
+            }, isLanguage ? _languageTrigger : _themeTrigger,
+            new ConnectedPanelConfig { Width = "280px", Height = "auto" });
+        if (_preferencePanel.Config is { } config)
+        {
+            config.TrapFocus = true;
+            config.InitialFocusSelector = ".header-preference-option[aria-pressed=true]";
+        }
+        _preferencePanel.Close += PreferenceClosed;
+    }
+
+    private void PreferenceClosed(OverlayResult result)
+    {
+        var isLanguage = _preferenceIsLanguage;
+        if (_preferencePanel is not null) _preferencePanel.Close -= PreferenceClosed;
+        _preferencePanel = null;
+        if (_disposed) return;
+        _ = InvokeAsync(async () =>
+        {
+            if (result.CloseReason == CloseReason.Ok && result.ComponentData is string selected)
+            {
+                if (isLanguage) await ChangeLanguage(selected);
+                else await ChangeTheme(selected);
+            }
+            StateHasChanged();
+        });
+    }
+
+    private Task RefreshLanguage() => InvokeAsync(async () =>
+    {
+        if (_disposed) return;
+        if (_themeModule is not null)
+        {
+            try { await _themeModule.InvokeVoidAsync("setLanguage", Localizer.Culture.Name); }
+            catch (JSDisconnectedException) { }
+        }
+        StateHasChanged();
+    });
 
     private static bool IsSupportedTheme(string? theme) => theme is "" or "dark" or "compact" or "high-contrast" or "modern";
 
@@ -190,6 +300,11 @@
     public async ValueTask DisposeAsync()
     {
         _disposed = true;
+        if (_preferencePanel is not null)
+        {
+            _preferencePanel.Close -= PreferenceClosed;
+            _preferencePanel.Dispose();
+        }
         if (_themeModule is not null)
         {
             try
@@ -256,6 +371,12 @@
                 Rights = new List<string> {
                     "CanReadDashboard"
                 }
+            },
+            new NavigationMenu {
+                MenuId = 45, Link = "/Localization", ParentId = 0,
+                Text = "Idiomas / Languages", MinifiedText = "Idi", IconClass = "",
+                Children = new List<NavigationMenu>(), IsNode = true,
+                Rights = new List<string> { "CanReadDashboard" }
             },
              new NavigationMenu {
                 MenuId = 10,

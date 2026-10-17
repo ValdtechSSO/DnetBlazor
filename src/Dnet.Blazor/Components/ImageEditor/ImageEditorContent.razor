@@ -1,3 +1,5 @@
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
 @using System.Globalization
 @using System.IO
 @using Dnet.Blazor.Components.Chips
@@ -25,11 +27,13 @@
 @implements IDragAndDropJsCallbacks
 @implements IAsyncDisposable
 
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
 <div class="dnet-image-editor">
     <div class="dnet-image-editor-header">
-        @if (!string.IsNullOrEmpty(_initializationError))
+        @if (_initializationFailed)
         {
-            <p class="dnet-image-editor-error" role="alert">@_initializationError</p>
+            <p class="dnet-image-editor-error" role="alert">@Localizer["ImageEditor.InitializationError"]</p>
         }
         else
         {
@@ -40,50 +44,50 @@
     <div class="dnet-image-editor-toolbar">
         @if (ShowControl(ImageEditorControlType.Crop))
         {
-            <DnetButton OnClick="OnCropImage" class="dnet-image-editor-tool" style="@ToolButtonStyle" disabled="@(!_isImageEditorReady)">
+            <DnetButton Variant="DnetButtonVariant.Outlined" OnClick="OnCropImage" class="dnet-image-editor-tool" style="@ToolButtonStyle" disabled="@(!_isImageEditorReady)">
                 <span class="dnet-image-editor-button-content">
                     <span class="dnet-icon dnet-icon-crop" unselectable="on"></span>
-                    <span class="dnet-icon-text" unselectable="on">Crop</span>
+                    <span class="dnet-icon-text" unselectable="on">@Localizer["ImageEditor.Crop"]</span>
                 </span>
             </DnetButton>
         }
         @if (ShowControl(ImageEditorControlType.RotateCounterClockWise))
         {
-            <span @ref="_rotateLeftTrigger" @onmouseenter='() => ShowTooltip("Rotate left", _rotateLeftTrigger)' @onmouseleave="HideTooltip">
-                <DnetButton OnClick="OnRotateLeft" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)" aria-label="Rotate left">
+            <span @ref="_rotateLeftTrigger" @onmouseenter='() => ShowTooltip("ImageEditor.RotateLeft", _rotateLeftTrigger)' @onmouseleave="HideTooltip">
+                <DnetButton Variant="DnetButtonVariant.Outlined" OnClick="OnRotateLeft" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)" aria-label="@Localizer["ImageEditor.RotateLeft"]">
                     <span class="dnet-icon dnet-icon-rotate-left" unselectable="on"></span>
                 </DnetButton>
             </span>
         }
         @if (ShowControl(ImageEditorControlType.RotateClockWise))
         {
-            <span @ref="_rotateRightTrigger" @onmouseenter='() => ShowTooltip("Rotate right", _rotateRightTrigger)' @onmouseleave="HideTooltip">
-                <DnetButton OnClick="OnRotateRight" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)" aria-label="Rotate right">
+            <span @ref="_rotateRightTrigger" @onmouseenter='() => ShowTooltip("ImageEditor.RotateRight", _rotateRightTrigger)' @onmouseleave="HideTooltip">
+                <DnetButton Variant="DnetButtonVariant.Outlined" OnClick="OnRotateRight" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)" aria-label="@Localizer["ImageEditor.RotateRight"]">
                     <span class="dnet-icon dnet-icon-rotate-right" unselectable="on"></span>
                 </DnetButton>
             </span>
         }
         @if (ShowControl(ImageEditorControlType.FlipHorizontal))
         {
-            <span @ref="_flipHorizontalTrigger" @onmouseenter='() => ShowTooltip("Flip horizontal", _flipHorizontalTrigger)' @onmouseleave="HideTooltip">
-                <DnetButton OnClick="OnFlipHorizontal" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)" aria-label="Flip horizontal">
+            <span @ref="_flipHorizontalTrigger" @onmouseenter='() => ShowTooltip("ImageEditor.FlipHorizontal", _flipHorizontalTrigger)' @onmouseleave="HideTooltip">
+                <DnetButton Variant="DnetButtonVariant.Outlined" OnClick="OnFlipHorizontal" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)" aria-label="@Localizer["ImageEditor.FlipHorizontal"]">
                     <span class="dnet-icon dnet-icon-flip-h" unselectable="on"></span>
                 </DnetButton>
             </span>
         }
         @if (ShowControl(ImageEditorControlType.FlipVertical))
         {
-            <span @ref="_flipVerticalTrigger" @onmouseenter='() => ShowTooltip("Flip vertical", _flipVerticalTrigger)' @onmouseleave="HideTooltip">
-                <DnetButton OnClick="OnFlipVertical" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)" aria-label="Flip vertical">
+            <span @ref="_flipVerticalTrigger" @onmouseenter='() => ShowTooltip("ImageEditor.FlipVertical", _flipVerticalTrigger)' @onmouseleave="HideTooltip">
+                <DnetButton Variant="DnetButtonVariant.Outlined" OnClick="OnFlipVertical" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)" aria-label="@Localizer["ImageEditor.FlipVertical"]">
                     <span class="dnet-icon dnet-icon-flip-v" unselectable="on"></span>
                 </DnetButton>
             </span>
         }
         <span class="dnet-image-editor-toolbar-end">
-            <span @ref="_resetTrigger" @onmouseenter='() => ShowTooltip("Reset the image", _resetTrigger)' @onmouseleave="HideTooltip">
-                <DnetButton OnClick="OnReset" class="dnet-image-editor-tool" style="@ToolButtonStyle" disabled="@(!_isImageEditorReady)">
+            <span @ref="_resetTrigger" @onmouseenter='() => ShowTooltip("ImageEditor.ResetImage", _resetTrigger)' @onmouseleave="HideTooltip">
+                <DnetButton Variant="DnetButtonVariant.Outlined" OnClick="OnReset" class="dnet-image-editor-tool" style="@ToolButtonStyle" disabled="@(!_isImageEditorReady)">
                     <span class="dnet-image-editor-button-content">
-                        <span class="dnet-icon-text" unselectable="on">Reset</span>
+                        <span class="dnet-icon-text" unselectable="on">@Localizer["Common.Reset"]</span>
                     </span>
                 </DnetButton>
             </span>
@@ -117,14 +121,14 @@
             </div>
 
             <div class="dnet-image-editor-zoom">
-                <span @ref="_zoomOutTrigger" @onmouseenter='() => ShowTooltip("Zoom out", _zoomOutTrigger)' @onmouseleave="HideTooltip">
-                    <DnetButton OnClick="OnZoomOut" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)" aria-label="Zoom out">
+                <span @ref="_zoomOutTrigger" @onmouseenter='() => ShowTooltip("ImageEditor.ZoomOut", _zoomOutTrigger)' @onmouseleave="HideTooltip">
+                    <DnetButton Variant="DnetButtonVariant.Outlined" OnClick="OnZoomOut" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)" aria-label="@Localizer["ImageEditor.ZoomOut"]">
                         <span class="dnet-icon dnet-icon-zoom-out" unselectable="on"></span>
                     </DnetButton>
                 </span>
                 <span class="dnet-image-editor-zoom-value">@_zoomLabel</span>
-                <span @ref="_zoomInTrigger" @onmouseenter='() => ShowTooltip("Zoom in", _zoomInTrigger)' @onmouseleave="HideTooltip">
-                    <DnetButton OnClick="OnZoomIn" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)" aria-label="Zoom in">
+                <span @ref="_zoomInTrigger" @onmouseenter='() => ShowTooltip("ImageEditor.ZoomIn", _zoomInTrigger)' @onmouseleave="HideTooltip">
+                    <DnetButton Variant="DnetButtonVariant.Outlined" OnClick="OnZoomIn" class="dnet-icon-button dnet-image-editor-icon-button" style="@IconButtonStyle" disabled="@(!_isImageEditorReady)" aria-label="@Localizer["ImageEditor.ZoomIn"]">
                         <span class="dnet-icon dnet-icon-zoom-in" unselectable="on"></span>
                     </DnetButton>
                 </span>
@@ -133,7 +137,7 @@
 
         <div class="dnet-image-editor-panel">
             <section class="dnet-image-editor-section">
-                <h2 class="dnet-image-editor-section-title">Preview</h2>
+                <h2 class="dnet-image-editor-section-title">@Localizer["ImageEditor.Preview"]</h2>
                 <div class="dnet-image-editor-preview">
                     <canvas @ref="_previewCanvas" class="dnet-image-preview-canvas" width="1" height="1" style="@StyleService.GetImagePreviewStyles(_imgPreviewHeight, _imgPreviewWidth)"></canvas>
                 </div>
@@ -141,7 +145,7 @@
             </section>
 
             <section class="dnet-image-editor-section">
-                <h2 class="dnet-image-editor-section-title">Ratio</h2>
+                <h2 class="dnet-image-editor-section-title">@Localizer["ImageEditor.Ratio"]</h2>
                 <div class="dnet-image-editor-ratios">
                     <DnetChipList @key="_ratioRevision" OnSelectionChange="OnRatioChanged">
                         @foreach (var option in RatioOptions)
@@ -153,7 +157,7 @@
             </section>
 
             <section class="dnet-image-editor-section">
-                <h2 class="dnet-image-editor-section-title">Selection</h2>
+                <h2 class="dnet-image-editor-section-title">@Localizer["ImageEditor.Selection"]</h2>
                 <div class="dnet-image-editor-fields">
                     <DnetFormField>
                         <ChildContent>
@@ -179,7 +183,7 @@
                     </DnetFormField>
                     <DnetFormField>
                         <ChildContent>
-                            <span class="dnet-image-editor-field-label">W</span>
+                            <span class="dnet-image-editor-field-label">@Localizer["ImageEditor.WidthAbbreviation"]</span>
                             <DnetInputNumber TValue="int"
                                              Value="_cropWidth"
                                              ValueChanged="OnCropWidthChanged"
@@ -190,7 +194,7 @@
                     </DnetFormField>
                     <DnetFormField>
                         <ChildContent>
-                            <span class="dnet-image-editor-field-label">H</span>
+                            <span class="dnet-image-editor-field-label">@Localizer["ImageEditor.HeightAbbreviation"]</span>
                             <DnetInputNumber TValue="int"
                                              Value="_cropHeight"
                                              ValueChanged="OnCropHeightChanged"
@@ -205,17 +209,19 @@
     </div>
 
     <div class="dnet-image-editor-footer">
-        <DnetButton OnClick="CancelOverlay" class="dnet-image-editor-secondary" style="@ToolButtonStyle">Cancel</DnetButton>
-        <DnetButton OnClick="CloseOverlay" class="dnet-image-editor-primary" style="@PrimaryButtonStyle" disabled="@(!_isImageEditorReady)" InitialFocus="true">
+        <DnetButton Variant="DnetButtonVariant.Outlined" OnClick="CancelOverlay" class="dnet-image-editor-secondary" style="@ToolButtonStyle">@Localizer["Common.Cancel"]</DnetButton>
+        <DnetButton Variant="DnetButtonVariant.Filled" OnClick="CloseOverlay" class="dnet-image-editor-primary" style="@PrimaryButtonStyle" disabled="@(!_isImageEditorReady)" InitialFocus="true">
             <span class="dnet-image-editor-button-content">
                 <span class="dnet-icon dnet-icon-check" unselectable="on"></span>
-                <span class="dnet-icon-text" unselectable="on">Apply</span>
+                <span class="dnet-icon-text" unselectable="on">@Localizer["Common.Apply"]</span>
             </span>
         </DnetButton>
     </div>
 </div>
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+
 
     [CascadingParameter]
     private int OverlayReferenceId { get; set; }
@@ -232,14 +238,13 @@
     // computed factor that need not be one of these.
     private static readonly double[] ZoomSteps = { 0.25, 0.5, 0.75, 1, 1.5, 2, 4 };
 
-    // Button exposes its look through its own public tokens, so pointing one
-    // instance at a different role means writing them on that instance: the
-    // component stylesheet must not declare another component's tokens.
+    // Button variants own their appearance; the editor only customizes spacing
+    // through Button's public tokens on each instance.
     private const string ToolButtonStyle = "--dnet-btn-padding: 0 var(--dnet-sys-space-3); --dnet-btn-min-width: 0;";
 
     private const string IconButtonStyle = "--dnet-btn-padding: 0; --dnet-btn-min-width: 0;";
 
-    private const string PrimaryButtonStyle = "--dnet-btn-background: var(--dnet-sys-primary); --dnet-btn-background-hover: var(--dnet-sys-primary-strong); --dnet-btn-foreground: var(--dnet-sys-on-primary); --dnet-btn-padding: 0 var(--dnet-sys-space-4);";
+    private const string PrimaryButtonStyle = "--dnet-btn-padding: 0 var(--dnet-sys-space-4);";
 
     // The ratio presets, as width / height. Zero means free.
     private static readonly double[] RatioOptions = { 0, 1, 4d / 3d, 16d / 9d };
@@ -292,7 +297,7 @@
 
     private string _subtitle { get; set; } = string.Empty;
 
-    private string? _initializationError { get; set; }
+    private bool _initializationFailed { get; set; }
 
     private string _selectionLabel { get; set; } = string.Empty;
 
@@ -391,7 +396,7 @@
         catch (Exception exception)
         {
             Console.WriteLine($"Dnet.Blazor: the image editor could not load the image. {exception.Message}");
-            _initializationError = "The image could not be opened. Cancel and select another image.";
+            _initializationFailed = true;
             _isImageEditorReady = false;
             StateHasChanged();
             return;
@@ -798,9 +803,9 @@
     private static string RatioValue(double ratio)
         => ratio.ToString(CultureInfo.InvariantCulture);
 
-    private static string RatioLabel(double ratio)
+    private string RatioLabel(double ratio)
     {
-        if (ratio <= 0) return "Free";
+        if (ratio <= 0) return Localizer["ImageEditor.FreeRatio"];
         if (Math.Abs(ratio - 1) < 0.0001) return "1:1";
         if (Math.Abs(ratio - (4d / 3d)) < 0.0001) return "4:3";
         if (Math.Abs(ratio - (16d / 9d)) < 0.0001) return "16:9";
@@ -808,15 +813,17 @@
         return ratio.ToString("0.##", CultureInfo.InvariantCulture);
     }
 
-    private void ShowTooltip(string text, ElementReference target)
+    private void ShowTooltip(string resourceKey, ElementReference target)
     {
         HideTooltip();
 
-        _tooltipReference = TooltipService.Show(new TooltipConfig
+        _tooltipReference = TooltipService.Show<ImageEditorTooltipText>(new TooltipConfig
             {
-                Text = text,
                 MaxWidth = "180px",
                 ShowDelay = 400
+            }, new Dictionary<string, object>
+            {
+                [nameof(ImageEditorTooltipText.ResourceKey)] = resourceKey
             }, target);
     }
 

@@ -1,6 +1,10 @@
 const themeWatchers = new Map();
 let nextThemeWatcherId = 1;
 
+export function setLanguage(culture) {
+    document.documentElement.lang = culture;
+}
+
 function toHexColor(value) {
     const color = value.trim();
     const shortHex = /^#([\da-f]{3})(?:[\da-f])?$/i.exec(color);

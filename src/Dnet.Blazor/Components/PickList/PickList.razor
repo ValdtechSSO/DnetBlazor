@@ -1,9 +1,13 @@
+@using Dnet.Blazor.Localization
 @namespace Dnet.Blazor.Components.PickList
 @using Microsoft.AspNetCore.Components.Web
 @using Dnet.Blazor.Components.Paginator
+@using Dnet.Blazor.Components.Button
 @using Dnet.Blazor.Components.SlideToggle
 @typeparam TItem
 @typeparam TKey where TKey : notnull
+
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
 
 <section class="dnet-pick-list" aria-busy="@_isLoading">
     <label class="dnet-pick-list-search">
@@ -22,16 +26,16 @@
             @EffectiveStrings.SelectedLabel: @SelectedKeys.Count / @(_totalCount?.ToString() ?? "—")
         </output>
         <div class="dnet-pick-list-actions">
-            <button type="button"
-                    disabled="@(!CanSelectVisible)"
-                    @onclick="SelectVisibleAsync">
+            <DnetButton Size="DnetButtonSize.Small" Variant="DnetButtonVariant.Outlined"
+                        disabled="@(!CanSelectVisible)"
+                        OnClick="SelectVisibleAsync">
                 @EffectiveStrings.SelectVisibleLabel
-            </button>
-            <button type="button"
-                    disabled="@(SelectedKeys.Count == 0)"
-                    @onclick="ClearSelectionAsync">
+            </DnetButton>
+            <DnetButton Size="DnetButtonSize.Small" Variant="DnetButtonVariant.Outlined"
+                        disabled="@(SelectedKeys.Count == 0)"
+                        OnClick="ClearSelectionAsync">
                 @EffectiveStrings.ClearLabel
-            </button>
+            </DnetButton>
         </div>
     </div>
 

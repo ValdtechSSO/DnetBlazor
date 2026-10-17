@@ -1,5 +1,5 @@
 .dnet-spoiler {
-    --_control-color: var(--dnet-spoiler-control-color, color-mix(in srgb, var(--dnet-sys-primary-emphasis) 60%, var(--dnet-sys-on-surface)));
+    --_control-color: var(--dnet-spoiler-control-color, var(--dnet-sys-primary-content));
     --_control-hover-color: var(--dnet-spoiler-control-hover-color, color-mix(in srgb, var(--_control-color) 75%, var(--dnet-sys-on-surface)));
     --_control-font-size: var(--dnet-spoiler-control-font-size, var(--dnet-sys-text-md));
     --_gap: var(--dnet-spoiler-gap, var(--dnet-sys-space-2));

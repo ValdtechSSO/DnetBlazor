@@ -1,191 +1,295 @@
-﻿@using Dnet.Blazor.Components.Grid.Infrastructure.Enums
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+@using System.Globalization
+@using Dnet.Blazor.Components.Button
+@using Dnet.Blazor.Components.DatePicker
+@using Dnet.Blazor.Components.Form
+@using Dnet.Blazor.Components.Select
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Enums
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Interfaces
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Services
 @using Dnet.Blazor.Infrastructure.Models.SearchModels
 @using Dnet.Blazor.Infrastructure.Models.SearchModels.FilterModels
 @using Microsoft.AspNetCore.Components.Forms
-@using Microsoft.AspNetCore.Components.Web
+@implements IDisposable
 
 @inject IOverlayService OverlayService
 
-<div class="blg-advanced-filter-container" style="height: auto; width: 250px;">
-    <div class="row dnet-p-10">
-        <div class="col-12">
-            <div class="d-flex">
-                <div class="blg-adv-filter-wrapper dnet-p-t-15">
-                    <EditForm EditContext="@_userEditContext" OnValidSubmit="HandleValidSubmit" class="coms-p-l-10 coms-p-r-10">
-                        <DataAnnotationsValidator />
-                        @if (FilterData.Type != CellDataType.Boolean)
+<DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
+<div class="blg-advanced-filter-container">
+    <EditForm @key="_userEditContext" EditContext="_userEditContext" OnValidSubmit="HandleValidSubmit" class="blg-adv-filter-form">
+        <DataAnnotationsValidator />
+        @if (FilterData.Type != CellDataType.Boolean)
+        {
+            <div class="blg-adv-filter-operator">
+                <DnetFormField Label="@(Localizer["Grid.Operator"])" IsRequired="true">
+                    <DnetSelect TItem="FilterChoice" TValue="int" @bind-Value="OperatorValue"
+                                Items="_operators" ValueConverter="item => item.Value" DisplayValueConverter="item => Localizer[item.Label]"
+                                DisabledClearButton="true" Width="@((string?)null)" Height="280px" ResponsiveLabel="@(Localizer["Grid.Operator"])" />
+                </DnetFormField>
+            </div>
+        }
+
+        <div class="blg-adv-filter-value">
+            <DnetFormField Label="@(Localizer["Grid.Value"])" IsRequired="true" UseClearButton="@(FilterData.Type != CellDataType.Boolean)">
+                <ChildContent>
+                    @switch (FilterData.Type)
+                    {
+                        case CellDataType.Boolean:
+                            <DnetSelect TItem="string" TValue="string" @bind-Value="FilterData.Value"
+                                        Items="BooleanValues" ValueConverter="item => item" DisplayValueConverter="BooleanLabel"
+                                        DisabledClearButton="true" Width="@((string?)null)" Height="80px" ResponsiveLabel="@(Localizer["Grid.Value"])" />
+                            break;
+                        case CellDataType.Number:
+                            <DnetInputNumber TValue="int?" @bind-Value="NumberValue" ImmediateResponse="true" Step="1" aria-label="@(Localizer["Grid.Value"])" />
+                            break;
+                        case CellDataType.Date:
+                            <DnetDatePicker @bind-Value="DateValue" Format="@ResolvedDateFormat" OpenOnFocus="false" ShowInternalErrors="false" />
+                            break;
+                        default:
+                            <DnetInputText @bind-Value="FilterData.Value" aria-label="@(Localizer["Grid.Value"])" />
+                            break;
+                    }
+                </ChildContent>
+                <ErrorContent>
+                    @if (FilterData.Type == CellDataType.Number)
+                    {
+                        <ValidationMessage For="@(() => NumberValue)" />
+                    }
+                    else if (FilterData.Type == CellDataType.Date)
+                    {
+                        <ValidationMessage For="@(() => DateValue)" />
+                    }
+                    else
+                    {
+                        <ValidationMessage For="@(() => FilterData.Value)" />
+                    }
+                </ErrorContent>
+            </DnetFormField>
+        </div>
+
+        @if (FilterData.Type != CellDataType.Boolean)
+        {
+            <div class="blg-adv-filter-condition">
+                <DnetFormField Label="@(Localizer["Grid.CombineConditions"])">
+                    <DnetSelect TItem="FilterChoice" TValue="int" @bind-Value="ConditionValue"
+                                Items="Conditions" ValueConverter="item => item.Value" DisplayValueConverter="item => Localizer[item.Label]"
+                                DisabledClearButton="true" Width="@((string?)null)" Height="120px" ResponsiveLabel="@(Localizer["Grid.CombineConditions"])" />
+                </DnetFormField>
+            </div>
+            <div class="blg-adv-filter-additional-operator">
+                <DnetFormField Label="@(Localizer["Grid.SecondOperator"])" IsRequired="HasAdditionalCondition">
+                    <DnetSelect TItem="FilterChoice" TValue="int" @bind-Value="AdditionalOperatorValue"
+                                Items="_operators" ValueConverter="item => item.Value" DisplayValueConverter="item => Localizer[item.Label]"
+                                Disabled="@(!HasAdditionalCondition)" DisabledClearButton="true"
+                                Width="@((string?)null)" Height="280px" ResponsiveLabel="@(Localizer["Grid.SecondOperator"])" />
+                </DnetFormField>
+            </div>
+            <div class="blg-adv-filter-additional-value" @key="HasAdditionalCondition">
+                <DnetFormField Label="@(Localizer["Grid.SecondValue"])" IsRequired="HasAdditionalCondition" UseClearButton="true">
+                    <ChildContent>
+                        @switch (FilterData.Type)
                         {
-                            <div class="form-group">
-                                <div class="blg-adv-filter-select">
-                                    <InputSelect @bind-Value="FilterData.Operator" class="form-control-sm">
-                                        @if (FilterData.Type == CellDataType.Text)
-                                            {
-                                            <option value="None"></option>
-                                            <option value="Equals">Equal</option>
-                                            <option value="NotEquals">Not equal</option>
-                                            <option value="StartsWith">Starts with</option>
-                                            <option value="EndsWith">Ends with</option>
-                                            <option value="Contains">Contains</option>
-                                            <option value="NotContains">Not Contains</option>
-                                            }
-                                        @if (FilterData.Type == CellDataType.Number || FilterData.Type == CellDataType.Date)
-                                            {
-                                            <option value="None"></option>
-                                            <option value="Equals">Equal</option>
-                                            <option value="NotEquals">Not equal</option>
-                                            <option value="GreaterThan">Greater than</option>
-                                            <option value="LessThan">Less than</option>
-                                            }
-                                    </InputSelect>
-                                </div>
-                            </div>
+                            case CellDataType.Number:
+                                <DnetInputNumber TValue="int?" @bind-Value="AdditionalNumberValue" ImmediateResponse="true"
+                                                 Step="1" Disabled="@(!HasAdditionalCondition)" aria-label="@(Localizer["Grid.SecondValue"])" />
+                                break;
+                            case CellDataType.Date:
+                                <DnetDatePicker @bind-Value="AdditionalDateValue" Format="@ResolvedDateFormat"
+                                                Disabled="@(!HasAdditionalCondition)" OpenOnFocus="false" ShowInternalErrors="false" />
+                                break;
+                            default:
+                                <DnetInputText @bind-Value="FilterData.AdditionalValue" Disabled="@(!HasAdditionalCondition)" aria-label="@(Localizer["Grid.SecondValue"])" />
+                                break;
                         }
-                        @if (FilterData.Type == CellDataType.Boolean)
+                    </ChildContent>
+                    <ErrorContent>
+                        @if (FilterData.Type == CellDataType.Number)
                         {
-                            <div class="form-group">
-                                <div class="blg-adv-filter-select">
-                                    <InputSelect @bind-Value="FilterData.Value" class="form-control-sm">
-                                        <option value="true">true</option>
-                                        <option value="false">false</option>
-                                    </InputSelect>
-                                </div>
-                            </div>
+                            <ValidationMessage For="@(() => AdditionalNumberValue)" />
                         }
                         else if (FilterData.Type == CellDataType.Date)
                         {
-                            <div class="form-group">
-                              @*  <DnetDatePicker @bind-Value="@FilterData.Value"
-                                                Disabled="false"
-                                                Format="@DateFormat">
-                                </DnetDatePicker>*@
-                            </div>
+                            <ValidationMessage For="@(() => AdditionalDateValue)" />
                         }
                         else
                         {
-                            <div class="form-group">
-                                <CustomInputText @bind-Value="FilterData.Value" class="form-control-sm blg-adv-filter-input-search" />
-                            </div>
+                            <ValidationMessage For="@(() => FilterData.AdditionalValue)" />
                         }
-                        @if (FilterData.Type != CellDataType.Boolean)
-                        {
-                            <div class="form-group">
-                                <div class="blg-adv-filter-select">
-                                    <InputSelect @bind-Value="FilterData.Condition" class="form-control-sm">
-                                        <option value="None"></option>
-                                        <option value="And">And</option>
-                                        <option value="Or">Or</option>
-                                    </InputSelect>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="blg-adv-filter-select">
-                                    <InputSelect @bind-Value="FilterData.AdditionalOperator" class="form-control-sm">
-                                        @if (FilterData.Type == CellDataType.Text)
-                                            {
-                                            <option value="None"></option>
-                                            <option value="Equals">Equal</option>
-                                            <option value="NotEquals">Not equal</option>
-                                            <option value="StartsWith">Starts with</option>
-                                            <option value="EndsWith">Ends with</option>
-                                            <option value="Contains">Contains</option>
-                                            <option value="NotContains">Not Contains</option>
-                                            }
-                                        @if (FilterData.Type == CellDataType.Number || FilterData.Type == CellDataType.Date)
-                                            {
-                                            <option value="None"></option>
-                                            <option value="Equals">Equal</option>
-                                            <option value="NotEquals">Not equal</option>
-                                            <option value="GreaterThan">Greater than</option>
-                                            <option value="LessThan">Less than</option>
-                                            }
-                                    </InputSelect>
-                                </div>
-                            </div>
-                            @if (FilterData.Type == CellDataType.Date)
-                            {
-                                <div class="form-group">
-                                 @*   <DnetDatePicker @bind-Value="@FilterData.AdditionalValue"
-                                                    Disabled="false"
-                                                    Format="@DateFormat">
-                                    </DnetDatePicker>*@
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="form-group">
-                                    <CustomInputText @bind-Value="FilterData.AdditionalValue" class="form-control-sm blg-adv-filter-input-search" />
-                                </div>
-                            }
-                        }
-                        <div class="row align-items-center justify-content-end dnet-p-r-15">
-                            <button class="btn btn-sm blg-adv-filter-buttom-reset dnet-m-r-10" type="button" @onclick="OnReset">Reset</button>
-                            <button class="btn btn-sm blg-adv-filter-buttom-ok" type="submit" disabled="@_formInvalid">Filter</button>
-                        </div>
-                    </EditForm>
-                </div>
+                    </ErrorContent>
+                </DnetFormField>
             </div>
+        }
+
+        <div class="blg-adv-filter-actions">
+            <DnetButton class="blg-adv-filter-buttom-reset" Size="DnetButtonSize.Small"
+                        Variant="DnetButtonVariant.Outlined" ButtonType="button" OnClick="OnReset">@Localizer["Common.Reset"]</DnetButton>
+            <DnetButton class="blg-adv-filter-buttom-ok" Size="DnetButtonSize.Small"
+                        ButtonType="submit" disabled="@_formInvalid">@Localizer["Grid.Filter"]</DnetButton>
         </div>
-    </div>
+    </EditForm>
 </div>
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+    private Task HandleLocalizationChanged() => InvokeAsync(StateHasChanged);
 
-    [CascadingParameter]
-    private int OverlayReferenceId { get; set; }
-
+    [CascadingParameter] private int OverlayReferenceId { get; set; }
 
     /// <summary>Gets or sets the filter data used by this component.</summary>
-    [Parameter]
-    public AdvancedFilterModel FilterData { get; set; }
+    [Parameter] public AdvancedFilterModel FilterData { get; set; } = default!;
 
     /// <summary>Gets or sets the format used to display date values.</summary>
-    [Parameter]
-    public string DateFormat { get; set; }
+    [Parameter] public string? DateFormat { get; set; }
 
+    private sealed record FilterChoice(int Value, string Label);
 
+    private static readonly List<FilterChoice> TextOperators =
+    [
+        new((int)FilterOperator.None, "Grid.Operator.None"),
+        new((int)FilterOperator.Equals, "Grid.Operator.Equals"),
+        new((int)FilterOperator.NotEquals, "Grid.Operator.NotEquals"),
+        new((int)FilterOperator.StartsWith, "Grid.Operator.StartsWith"),
+        new((int)FilterOperator.EndsWith, "Grid.Operator.EndsWith"),
+        new((int)FilterOperator.Contains, "Grid.Operator.Contains"),
+        new((int)FilterOperator.NotContains, "Grid.Operator.NotContains")
+    ];
+
+    private static readonly List<FilterChoice> ComparisonOperators =
+    [
+        new((int)FilterOperator.None, "Grid.Operator.None"),
+        new((int)FilterOperator.Equals, "Grid.Operator.Equals"),
+        new((int)FilterOperator.NotEquals, "Grid.Operator.NotEquals"),
+        new((int)FilterOperator.GreaterThan, "Grid.Operator.GreaterThan"),
+        new((int)FilterOperator.LessThan, "Grid.Operator.LessThan")
+    ];
+
+    private static readonly List<FilterChoice> Conditions =
+    [
+        new((int)FilterCondition.None, "Grid.Operator.None"),
+        new((int)FilterCondition.And, "Grid.Condition.And"),
+        new((int)FilterCondition.Or, "Grid.Condition.Or")
+    ];
+
+    private static readonly List<string> BooleanValues = ["true", "false"];
+    private string BooleanLabel(string value) => Localizer[value == "true" ? "Grid.True" : "Grid.False"];
+    private List<FilterChoice> _operators = TextOperators;
+    private EditContext _userEditContext = default!;
     private bool _formInvalid = true;
+    private bool HasAdditionalCondition => FilterData.Condition != FilterCondition.None;
+    private string ResolvedDateFormat => !string.IsNullOrWhiteSpace(DateFormat) ? DateFormat
+        : !string.IsNullOrWhiteSpace(FilterData.DateFormat) ? FilterData.DateFormat : "yyyy-MM-dd";
 
-    private EditContext _userEditContext;
-
-
-    protected override void OnInitialized()
+    private int OperatorValue { get => (int)FilterData.Operator; set => FilterData.Operator = (FilterOperator)value; }
+    private int AdditionalOperatorValue { get => (int)FilterData.AdditionalOperator; set => FilterData.AdditionalOperator = (FilterOperator)value; }
+    private int ConditionValue { get => (int)FilterData.Condition; set => FilterData.Condition = (FilterCondition)value; }
+    private int? NumberValue
     {
-        _userEditContext = new EditContext(FilterData);
+        get => ParseNumber(FilterData.Value);
+        set => FilterData.Value = value?.ToString(CultureInfo.InvariantCulture);
+    }
+    private int? AdditionalNumberValue
+    {
+        get => ParseNumber(FilterData.AdditionalValue);
+        set => FilterData.AdditionalValue = value?.ToString(CultureInfo.InvariantCulture);
+    }
+    private string? DateValue
+    {
+        get => FormatDate(FilterData.Value);
+        set => FilterData.Value = NormalizeDate(value);
+    }
+    private string? AdditionalDateValue
+    {
+        get => FormatDate(FilterData.AdditionalValue);
+        set => FilterData.AdditionalValue = NormalizeDate(value);
+    }
 
-        _userEditContext.OnFieldChanged += (data, eventArgs) =>
+    private bool TryParseFilterDate(string? value, out DateTime date) =>
+        DateTime.TryParseExact(value, ResolvedDateFormat, Localizer.Culture, DateTimeStyles.None, out date)
+        || DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
+
+    private string? FormatDate(string? value) => TryParseFilterDate(value, out var date)
+        ? date.ToString(ResolvedDateFormat, Localizer.Culture) : value;
+
+    // The picker displays the column's format; the filtering engine reads invariant dates.
+    private string? NormalizeDate(string? value) => TryParseFilterDate(value, out var date)
+        ? date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) : value;
+
+    private static int? ParseNumber(string? value) => int.TryParse(value, NumberStyles.Integer,
+        CultureInfo.InvariantCulture, out var result) ? result : null;
+
+    protected override void OnParametersSet()
+    {
+        if (_userEditContext is null || !ReferenceEquals(_userEditContext.Model, FilterData))
         {
-            _formInvalid = !_userEditContext.Validate();
-            StateHasChanged();
-        };
+            Unsubscribe();
+            _userEditContext = new EditContext(FilterData);
+            _userEditContext.OnFieldChanged += HandleFieldChanged;
+            _userEditContext.OnValidationStateChanged += HandleValidationChanged;
+        }
+        _operators = FilterData.Type == CellDataType.Text ? TextOperators : ComparisonOperators;
+        if (FilterData.Type == CellDataType.Boolean) FilterData.Operator = FilterOperator.Equals;
+        UpdateValidity();
+    }
+
+    private bool HasValue(string? value) => FilterData.Type switch
+    {
+        CellDataType.Number => ParseNumber(value).HasValue,
+        CellDataType.Boolean => bool.TryParse(value, out _),
+        CellDataType.Date => TryParseFilterDate(value, out _),
+        _ => !string.IsNullOrWhiteSpace(value)
+    };
+
+    private void UpdateValidity()
+    {
+        var hasPrimary = FilterData.Operator != FilterOperator.None && HasValue(FilterData.Value);
+        var hasAdditional = FilterData.Type == CellDataType.Boolean || !HasAdditionalCondition
+            || (FilterData.AdditionalOperator != FilterOperator.None && HasValue(FilterData.AdditionalValue));
+        _formInvalid = !hasPrimary || !hasAdditional || _userEditContext.GetValidationMessages().Any();
+    }
+
+    private void HandleFieldChanged(object? sender, FieldChangedEventArgs args)
+    {
+        UpdateValidity();
+        StateHasChanged();
+    }
+
+    private void HandleValidationChanged(object? sender, ValidationStateChangedEventArgs args)
+    {
+        UpdateValidity();
+        StateHasChanged();
     }
 
     private void HandleValidSubmit()
     {
-        var dataResult = new OverlayResult()
+        UpdateValidity();
+        if (_formInvalid) return;
+        if (FilterData.Type == CellDataType.Date)
+        {
+            FilterData.Value = NormalizeDate(FilterData.Value);
+            if (HasAdditionalCondition) FilterData.AdditionalValue = NormalizeDate(FilterData.AdditionalValue);
+        }
+        OverlayService.Detach(new OverlayResult
         {
             CloseReason = CloseReason.Ok,
             ComponentData = FilterData,
             OverlayReferenceId = OverlayReferenceId
-
-        };
-
-        OverlayService.Detach(dataResult);
+        });
     }
 
-    private void OnReset()
+    private void OnReset() => OverlayService.Detach(new OverlayResult
     {
-        var dataResult = new OverlayResult()
-        {
-            CloseReason = CloseReason.Cancel,
-            ComponentData = true,
-            OverlayReferenceId = OverlayReferenceId
+        CloseReason = CloseReason.Cancel,
+        ComponentData = true,
+        OverlayReferenceId = OverlayReferenceId
+    });
 
-        };
-
-        OverlayService.Detach(dataResult);
+    private void Unsubscribe()
+    {
+        if (_userEditContext is null) return;
+        _userEditContext.OnFieldChanged -= HandleFieldChanged;
+        _userEditContext.OnValidationStateChanged -= HandleValidationChanged;
     }
 
+    public void Dispose() => Unsubscribe();
 }

@@ -9,8 +9,8 @@
                   Description="Open a category to explore its contents. Selecting a parent also selects the items inside it.">
             <ChildContent>
                 <div class="demo-actions tree-actions">
-                    <DnetButton id="tree-expand-all" OnClick="() => Expand(true)">Expand all</DnetButton>
-                    <DnetButton id="tree-collapse-all" OnClick="() => Expand(false)">Collapse all</DnetButton>
+                    <DnetButton Variant="DnetButtonVariant.Outlined" id="tree-expand-all" OnClick="() => Expand(true)">Expand all</DnetButton>
+                    <DnetButton Variant="DnetButtonVariant.Outlined" id="tree-collapse-all" OnClick="() => Expand(false)">Collapse all</DnetButton>
                 </div>
                 <div id="tree-catalog" class="tree-stage">
                     <DnetTree @ref="_tree" TNode="Food" Nodes="_treeData" DisplayValueConverter="food => food.Name"

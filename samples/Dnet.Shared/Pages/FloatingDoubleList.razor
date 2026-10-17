@@ -1,215 +1,205 @@
-﻿@page "/FloatingDoubleList"
-
-@using System.Drawing
-@using Dnet.App.Shared.Infrastructure.Entities
-@using Dnet.App.Shared.Infrastructure.Models
-@using Dnet.App.Shared.Infrastructure.Services
+@page "/FloatingDoubleList"
+@using Dnet.Blazor.Components.Button
 @using Dnet.Blazor.Components.FloatingDoubleList
-@using Dnet.Blazor.Components.FloatingDoubleList.Infrastructure.Models;
+@using Dnet.Blazor.Components.FloatingDoubleList.Infrastructure.Models
 @using Dnet.Blazor.Components.Form
 @using Dnet.Blazor.Components.List
-@using Dnet.Blazor.Components.Checkbox
-@using System.Net.Http
-@using System.Net.Http.Json
-@using Dnet.Blazor.Components.Select
-@using Dnet.Blazor.Infrastructure.Models.SearchModels;
 
-@inject HttpClient HttpClient
-@inject IHttpClientFactory ClientFactory
-@inject IApplicationServiceService ApplicationServiceService
+<DemoPage Id="demo-floating-doublelist" Title="Floating Double List" Category="Selección y asignación"
+          Description="Organiza un equipo desde un selector compacto. Abre el panel, busca a una persona y muévela entre las dos listas sin perder el contexto."
+          Badge="Buscar · Asignar · Revisar">
+    <DemoCard Id="floating-doublelist-assignment" Title="Un equipo, sin cambiar de pantalla" Eyebrow="01 / Asignación de proyecto"
+              Description="Elige quién participa en el proyecto Atlas. Los cambios se reflejan al momento en el selector y en el resumen del equipo.">
+        <ChildContent>
+            <div class="floating-doublelist-workspace">
+                <div class="demo-stack">
+                    <div class="floating-doublelist-context"><span class="floating-doublelist-tag">Proyecto Atlas</span><span class="demo-info">10 personas · 1 responsable fijo</span></div>
+                    <EditForm Model="_form">
+                        <div id="floating-doublelist-field">
+                            <DnetFormField Label="Personas asignadas" IsRequired="true">
+                                <ChildContent>
+                                    <DnetFloatingDoubleList @key="_fieldRevision" TItem="Contact" @bind-Value="_form.Selection"
+                                                            LeftItems="_availablePeople" RightItems="_assignedPeople"
+                                                            LeftListOptions="_availableOptions" RightListOptions="_assignedOptions"
+                                                            SearchControlOptions="SearchLabels" EqualityComparer="Comparer"
+                                                            DisplayValueConverter="person => person.Name" DisplayName="Personas asignadas"
+                                                            SideForSelections="ListToShow.Right" DisabledClearButton="true"
+                                                            Width="450px" Height="430px" MaxWidth="calc(100vw - 24px)" MaxHeight="calc(100dvh - 64px)"
+                                                            InputItemHeight="24" OnSelectionChanged="SelectionChanged">
+                                        <ItemPrefixContent Context="person"><span class="floating-doublelist-avatar" aria-hidden="true">@Initials(person.Name)</span></ItemPrefixContent>
+                                        <ListItemContent Context="person">
+                                            <span class="floating-doublelist-person-copy">
+                                                <span class="dnet-list-item-headline floating-doublelist-person-name">@person.Name</span>
+                                                <span class="dnet-list-item-supporting-text floating-doublelist-person-role">@(person.IsLocked ? "Fijo · " : null)@person.Role</span>
+                                            </span>
+                                        </ListItemContent>
+                                    </DnetFloatingDoubleList>
+                                </ChildContent>
+                            </DnetFormField>
+                        </div>
+                    </EditForm>
+                    <p id="floating-doublelist-status" class="demo-status" role="status">@_lastAction</p>
+                    <p class="demo-info">La selección se conserva al cerrar y volver a abrir el panel. Taylor Morgan permanece en el equipo como responsable del proyecto.</p>
+                </div>
+                <aside class="floating-doublelist-guide" aria-labelledby="floating-doublelist-guide-title">
+                    <span class="floating-doublelist-guide-eyebrow">Cómo funciona</span>
+                    <h3 id="floating-doublelist-guide-title">Del directorio al equipo</h3>
+                    <ol class="floating-doublelist-steps">
+                        <li><span aria-hidden="true">1</span><div><strong>Encuentra a la persona</strong><p>Busca por nombre en disponibles o asignados.</p></div></li>
+                        <li><span aria-hidden="true">2</span><div><strong>Cambia su asignación</strong><p>Pulsa su nombre para moverla. En escritorio también puedes arrastrarla a la otra lista.</p></div></li>
+                        <li><span aria-hidden="true">3</span><div><strong>Revisa el resultado</strong><p>En móvil, usa el conmutador del panel para cambiar de lista.</p></div></li>
+                    </ol>
+                </aside>
+            </div>
+        </ChildContent>
+        <Footer>
+            <div class="floating-doublelist-metrics" role="status">
+                <span id="floating-doublelist-available-count"><strong>@_availablePeople.Count</strong> disponibles</span>
+                <span id="floating-doublelist-assigned-count"><strong>@_assignedPeople.Count</strong> asignadas</span>
+                <span><strong>1</strong> responsable fijo</span>
+            </div>
+        </Footer>
+    </DemoCard>
 
-<div class="container-fluid" style="padding-top: 10px;">
-    <div class="d-flex dnet-page-content-left-margin dnet-m-t-20">
-        <span class="dnet-m-r-10 dnet-app-comp-name">Double list</span>
-    </div>
-    <div class="d-flex dnet-page-content-left-margin dnet-m-t-20 dnet-page-doc-text">
-        <span class="dnet-m-r-10">Select and use de buttons or Drag&Drop between lists</span>
-    </div>
-    <div class="dnet-page-content-left-margin dnet-m-t-30" style="width: 300px">
-        <EditForm Model="@_formData1">
-            <DataAnnotationsValidator />
-            <DnetFormField Label="Name" IsRequired="true" UseClearButton="true">
-                <ChildContent>
-                    <DnetFloatingDoubleList @bind-Value="_personNameList"
-                                            TItem="Person"
-                                            LeftItems="_leftItems"
-                                            RightItems="_rightItems"
-                                            LeftListOptions="_leftListOptions"
-                                            RightListOptions="_rightListOptions"
-                                            OnSelectionChanged="SelectionChanged"
-                                            EqualityComparer="new PersonEqualityComparer()"
-                                            DisplayValueConverter="(value) => value.Name"
-                                            SideForSelections="ListToShow.Right"
-                                            Height="350px"
-                                            OnSearchLeft="SearchLeft"
-                                            OnSearchRight="SearchRight"
-                                            @ref="_floatingDoubleListPerson">
-                    </DnetFloatingDoubleList>
-                </ChildContent>
-            </DnetFormField>
-        </EditForm>
-    </div>
-</div>
+    <div class="demo-grid">
+        <DemoCard Id="floating-doublelist-team" Title="El equipo de Atlas" Eyebrow="02 / Resumen en directo"
+                  Description="Estas personas tienen acceso al proyecto. El resumen se actualiza al añadir o devolver a alguien.">
+            <ChildContent>
+                <ul id="floating-doublelist-roster" class="floating-doublelist-roster">
+                    @foreach (var person in _assignedPeople.OrderBy(person => person.Name))
+                    {
+                        <li @key="person.Id">
+                            <span class="floating-doublelist-avatar" aria-hidden="true">@Initials(person.Name)</span>
+                            <span class="floating-doublelist-person-copy"><strong>@person.Name</strong><span>@person.Role</span></span>
+                            @if (person.IsLocked) { <span class="floating-doublelist-fixed">Fijo</span> }
+                        </li>
+                    }
+                </ul>
+                <div class="demo-actions floating-doublelist-reset"><DnetButton id="floating-doublelist-reset" Variant="DnetButtonVariant.Outlined" OnClick="ResetAssignment">Restaurar equipo inicial</DnetButton></div>
+            </ChildContent>
+            <Footer><span class="demo-info">Restaura las cinco personas iniciales y limpia las búsquedas del selector.</span></Footer>
+        </DemoCard>
 
+        <DemoCard Id="floating-doublelist-readonly-card" Title="Una selección de solo lectura" Eyebrow="03 / Estado deshabilitado"
+                  Description="El mismo equipo puede mostrarse en un campo deshabilitado cuando la asignación no se puede editar.">
+            <div class="demo-stack">
+                <EditForm Model="_form">
+                    <div id="floating-doublelist-readonly">
+                        <DnetFormField Label="Equipo actual">
+                            <DnetFloatingDoubleList @key="_selectionRevision" TItem="Contact" @bind-Value="_form.Selection"
+                                                    LeftItems="_availablePeople" RightItems="_assignedPeople"
+                                                    LeftListOptions="_availableOptions" RightListOptions="_assignedOptions"
+                                                    DisplayValueConverter="person => person.Name" DisplayName="Equipo actual"
+                                                    SideForSelections="ListToShow.Right" Disabled="true" DisabledClearButton="true" InputItemHeight="24" />
+                        </DnetFormField>
+                    </div>
+                </EditForm>
+                <div class="floating-doublelist-readonly-note"><strong>Visible, sin editar</strong><p>El campo acompaña los cambios del ejemplo principal y mantiene su estado deshabilitado.</p></div>
+                <p class="demo-info">Los nombres se mantienen en una sola línea. El resumen del equipo permite revisar la selección completa.</p>
+            </div>
+        </DemoCard>
+    </div>
+</DemoPage>
 
 @code {
-    private List<Person> _leftItems = new();
+    #nullable enable
 
-    private List<Person> _leftSelectedItems = new();
-
-    private List<Person> _leftAddedItems = new();
-
-    private List<Person> _leftRemovedItems = new();
-
-    private List<Person> _rightItems = new();
-
-    private List<Person> _rightSelectedItems = new();
-
-    private List<Person> _rightAddedItems = new();
-
-    private List<Person> _rightRemovedItems = new();
-
-    private DnetList<Person> _leftComponent { get; set; }
-
-    private DnetList<Person> _rightComponent { get; set; }
-
-    private List<KeyValueModel<int>> _features = new();
-
-    private List<KeyValueModel<int>> _selectedFeatures = new();
-
-    private KeyValueModel<int> _formData1 = new();
-
-    private ListOptions<Person> _leftListOptions { get; set; } = new();
-
-    private ListOptions<Person> _rightListOptions { get; set; } = new();
-
-    private string _personNameList { get; set; }
-
-    private DnetFloatingDoubleList<Person> _floatingDoubleListPerson { get; set; }
-
+    private readonly Contact[] _people =
+    [
+        new(1, "Alex Rivera", "Diseño de producto"),
+        new(2, "Sam Chen", "Desarrollo frontend"),
+        new(3, "Casey Brooks", "Investigación UX"),
+        new(4, "Morgan Patel", "Calidad y pruebas"),
+        new(5, "Jamie Torres", "Gestión de producto"),
+        new(6, "Taylor Morgan", "Responsable del proyecto", true),
+        new(7, "Riley Parker", "Desarrollo backend"),
+        new(8, "Jordan Lee", "Análisis de datos"),
+        new(9, "Avery Scott", "Diseño de contenido"),
+        new(10, "Cameron Reed", "Plataforma e infraestructura")
+    ];
+    private static readonly IEqualityComparer<Contact> Comparer = new ContactComparer();
+    private static readonly SearchControlOptions SearchLabels = new()
+    {
+        LeftLabel = "Buscar", LeftPlaceHolder = "Por nombre",
+        RightLabel = "Buscar", RightPlaceHolder = "Por nombre"
+    };
+    private readonly SelectionForm _form = new();
+    private List<Contact> _availablePeople = [];
+    private List<Contact> _assignedPeople = [];
+    private ListOptions<Contact> _availableOptions = new();
+    private ListOptions<Contact> _assignedOptions = new();
+    private int _fieldRevision;
+    private int _selectionRevision;
+    private string _lastAction = "Abre el selector para organizar el equipo de Atlas.";
 
     protected override void OnInitialized()
     {
-        _leftListOptions = GetListOptions();
-        _leftListOptions.HeaderText = "Contactos";
-        _leftListOptions.ContainerName = "LeftContainer";
-        _leftListOptions.ConnectedTo = "RghtContainer";
-
-        _rightListOptions = GetListOptions();
-        _rightListOptions.HeaderText = "Participantes";
-        _rightListOptions.ContainerName = "RghtContainer";
-        _rightListOptions.ConnectedTo = "LeftContainer";
+        _availableOptions = CreateOptions("Disponibles");
+        _assignedOptions = CreateOptions("Asignados");
+        RestorePeople();
     }
 
-
-    protected override async Task OnInitializedAsync()
+    private static ListOptions<Contact> CreateOptions(string title) => new()
     {
-        var itemsToTake = 5;
+        DisplayValueConverter = person => person.Name,
+        SupportTextValueConverter = person => person.Role,
+        SearchValueConverter = person => person.Name,
+        SortedData = person => person.Name,
+        DisableItem = person => person.IsLocked,
+        HeaderText = title,
+        ItemSize = 56,
+        PageSize = 10,
+        EnableServerSide = false,
+        EnableSearching = true,
+        EnableSorting = true,
+        EnablePagingination = false,
+        ShowHeader = true,
+        ShowFooter = false,
+        CheckboxSelectionColumn = false,
+        MultiSelect = true
+    };
 
-        var items = await GetPersons();
-
-        _leftItems = items.Take(itemsToTake).ToList();
-
-        _rightItems = items.Skip(itemsToTake).Take(itemsToTake).ToList();
-
-        StateHasChanged();
+    private void SelectionChanged(TransferredItems<Contact> transfer)
+    {
+        var previous = _assignedPeople.Count;
+        // The panel owns mutable lists. Keep snapshots so reopening preserves the assignment.
+        _availablePeople = transfer.LeftItems.ToList();
+        _assignedPeople = transfer.RightItems.ToList();
+        var difference = _assignedPeople.Count - previous;
+        _lastAction = difference > 0
+            ? $"Equipo actualizado: {difference} {(difference == 1 ? "persona añadida" : "personas añadidas")} al proyecto."
+            : $"Equipo actualizado: {-difference} {(difference == -1 ? "persona devuelta" : "personas devueltas")} a disponibles.";
+        UpdateSelectionSummary();
     }
 
-    private async Task<List<Person>> GetPersons()
+    private void UpdateSelectionSummary()
     {
-        var dataPersons = await ApplicationServiceService.GetPersons();
-
-        return dataPersons;
+        _form.Selection = string.Join(", ", _assignedPeople.Select(person => person.Name));
+        _selectionRevision++;
     }
 
-    private void LeftSelectionChanged(List<Person> selectedItems)
+    private void RestorePeople()
     {
-        _leftSelectedItems = selectedItems;
+        _availablePeople = _people.Take(5).ToList();
+        _assignedPeople = _people.Skip(5).ToList();
+        UpdateSelectionSummary();
     }
 
-    private void RightSelectionChanged(List<Person> selectedItems)
+    private void ResetAssignment()
     {
-        _rightSelectedItems = selectedItems;
+        RestorePeople();
+        _fieldRevision++;
+        _lastAction = "Se ha restaurado el equipo inicial. Las búsquedas y la selección del panel se han limpiado.";
     }
 
-    private void MyValueChangeHandler(string item)
+    private static string Initials(string name) =>
+        string.Concat(name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(2).Select(part => part[0]));
+
+    private sealed record Contact(int Id, string Name, string Role, bool IsLocked = false);
+    private sealed class SelectionForm { public string Selection { get; set; } = string.Empty; }
+    private sealed class ContactComparer : IEqualityComparer<Contact>
     {
-        _formData1.Value = item;
-    }
-
-    private ListOptions<Person> GetListOptions()
-    {
-        return new ListOptions<Person>()
-            {
-                DisplayValueConverter = (value) => value.Name,
-                SortedData = (value) => value.Name,
-                SearchValueConverter = (value) => value.Name,
-                DisableItem = (value) => value.IsActive,
-                HeaderText = "",
-                ItemSize = 40f,
-                MultiSelect = true,
-                DebounceTime = 350,
-                EnableServerSide = true,
-                EnableSearching = true,
-                EnableSorting = false,
-                PageSize = 50,
-                EnablePagingination = true,
-                CheckboxSelectionColumn = false,
-                ShowHeader = true,
-                ShowFooter = false,
-                ServerSideSearchColumns = new List<string>() { "Name" },
-                ServerSideSortColumn = "Name",
-            };
-    }
-
-    private void SelectionChanged(TransferredItems<Person> transferredItems)
-    {
-        var tt = transferredItems;
-    }
-
-    private async Task SearchLeft(SearchModel searchModel)
-    {
-        var items = await GetPersons();
-
-        var paginatedItems = items.Where(p => p.Name.ToUpper().Contains(searchModel.AdvancedFilterModels.FirstOrDefault().Value.ToUpper()))
-                                  .Skip((searchModel.PaginationModel.CurrentPage - 1) * searchModel.PaginationModel.PageSize)
-                                  .Take(searchModel.PaginationModel.PageSize).ToList();
-
-        _floatingDoubleListPerson.RefreshDataLeft(paginatedItems);
-    }
-
-    private async Task SearchRight(SearchModel searchModel)
-    {
-        var items = await GetPersons();
-
-        var paginatedItems = items.Skip((searchModel.PaginationModel.CurrentPage - 1) * searchModel.PaginationModel.PageSize)
-            .Take(searchModel.PaginationModel.PageSize).ToList();
-    }
-
-    public class PersonEqualityComparer : IEqualityComparer<Person>
-    {
-        public bool Equals(Person x, Person y)
-        {
-            if (x == null || y == null)
-                return false;
-
-            if (ReferenceEquals(x, y)) return true;
-
-            x.PersonId = x.PersonId ?? string.Empty;
-
-            y.PersonId = y.PersonId ?? string.Empty;
-
-            return x.PersonId.Equals(y.PersonId);
-        }
-
-        public int GetHashCode(Person obj)
-        {
-            int hashPersonId = obj.PersonId == null ? 0 : obj.PersonId.GetHashCode();
-
-            return hashPersonId;
-        }
+        public bool Equals(Contact? first, Contact? second) => first?.Id == second?.Id;
+        public int GetHashCode(Contact person) => person.Id;
     }
 }
-
-
-

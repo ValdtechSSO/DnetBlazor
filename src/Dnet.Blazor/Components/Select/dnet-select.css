@@ -133,12 +133,12 @@
 
 .dnet-select-list-item:has(input[type="checkbox"]:checked) {
   background-color: var(--dnet-sys-state-selected);
-  color: var(--dnet-sys-primary-strong);
+  color: var(--dnet-sys-primary-content);
   font-weight: 600;
 }
 
 .dnet-select-list-item:has(input[type="checkbox"]:checked) .dnet-select-list-item-headline {
-  --_headline-color: var(--dnet-list-headline-text-color, var(--dnet-select-list-headline-text-color, var(--dnet-sys-primary-strong)));
+  --_headline-color: var(--dnet-list-headline-text-color, var(--dnet-select-list-headline-text-color, var(--dnet-sys-primary-content)));
 }
 
 .dnet-select-list-item:has(input[type="checkbox"]:checked):hover {

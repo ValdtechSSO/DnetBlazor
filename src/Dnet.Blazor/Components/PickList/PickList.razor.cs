@@ -1,3 +1,4 @@
+using Dnet.Blazor.Localization;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Components;
 
@@ -86,8 +87,10 @@ public partial class PickList<TItem, TKey> : ComponentBase, IDisposable
 
     private string? EffectiveSearchText => IsSearchControlled ? SearchText : _searchText;
 
-    private PickListStrings EffectiveStrings =>
-        Strings ?? Services.GetService(typeof(PickListStrings)) as PickListStrings ?? PickListStrings.Default;
+    private IDnetLocalizer Localizer => DnetLocalization.Get(Services);
+
+    private PickListStrings EffectiveStrings => PickListStrings.Resolve(
+        Strings, Services.GetService(typeof(PickListStrings)) as PickListStrings, Localizer);
 
     private int PageCount => _filteredCount is null
         ? 0
@@ -520,7 +523,7 @@ public partial class PickList<TItem, TKey> : ComponentBase, IDisposable
     private Task GoToPaginatorPageAsync(int oneBasedPage) => GoToPageAsync(oneBasedPage - 1);
 
     private string GetCurrentPageLabel() =>
-        string.Format(EffectiveStrings.PageLabelFormat, _pageIndex + 1);
+        string.Format(Localizer.Culture, EffectiveStrings.PageLabelFormat, _pageIndex + 1);
 
     private void ClampPageIndex()
     {

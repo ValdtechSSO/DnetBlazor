@@ -30,8 +30,13 @@ class DnetPillTabsViewport extends HTMLElement {
                 this.schedule();
             }
         };
+        this.onWindowResize = () => {
+            this.revealSelection = true;
+            this.schedule();
+        };
         this.addEventListener("scroll", this.schedule, { capture: true, passive: true });
         this.addEventListener("focusin", this.onFocus);
+        window.addEventListener("resize", this.onWindowResize, { passive: true });
         this.schedule();
     }
 
@@ -40,6 +45,7 @@ class DnetPillTabsViewport extends HTMLElement {
         this.mutationObserver.disconnect();
         this.removeEventListener("scroll", this.schedule, true);
         this.removeEventListener("focusin", this.onFocus);
+        window.removeEventListener("resize", this.onWindowResize);
         cancelAnimationFrame(this.frame);
         this.frame = 0;
         this.observedTabs.clear();

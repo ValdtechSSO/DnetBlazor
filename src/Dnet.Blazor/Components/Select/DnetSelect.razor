@@ -1,4 +1,6 @@
-﻿@using Dnet.Blazor.Components.Chips
+﻿@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+@using Dnet.Blazor.Components.Chips
 @using Dnet.Blazor.Components.Form
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Web
@@ -25,12 +27,14 @@
 
 @inject IOverlayService OverlayService
 
+<DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
 <div class="dnet-plain-select"
      role="combobox"
+     aria-label="@AccessibleLabel"
      tabindex="@(Disabled ? -1 : 0)"
      aria-haspopup="listbox"
-     aria-expanded="@_isOpen"
-     aria-disabled="@Disabled"
+     aria-expanded="@(_isOpen ? "true" : "false")"
+     aria-disabled="@(Disabled ? "true" : "false")"
      @onclick="OpenMenu"
      @onkeydown="HandleKeyDown">
     <div @ref="_menuTrigger"
@@ -114,6 +118,10 @@
 
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+    private Task HandleLocalizationChanged() => InvokeAsync(() => { SetDisplayValue(); _menuReference?.RequestConfigurationUpdate(); StateHasChanged(); });
+    private string? _lastResponsiveLabel;
+
 
     [CascadingParameter(Name = "DnetThemeScope")]
     private string? _themeScope { get; set; }
@@ -367,6 +375,11 @@
             OnDisabledChanged();
         }
 
+        if (_lastResponsiveLabel != ResponsiveLabel)
+        {
+            _lastResponsiveLabel = ResponsiveLabel;
+            _menuReference?.RequestConfigurationUpdate();
+        }
         base.OnParametersSet();
     }
 
@@ -501,12 +514,17 @@
         }
     }
 
+    private string AccessibleLabel => AdditionalAttributes?.TryGetValue("aria-label", out var label) == true
+        ? label?.ToString() ?? string.Empty : DisplayName ?? ResponsiveLabel ?? Localizer["Select.Label"];
+
     private RenderFragment CreateClearButtonContent()
     {
         var inputContent = new RenderFragment(x =>
         {
             x.OpenElement(4, "div");
             x.AddAttribute(5, "class", "dnet-app-icon-wrapper");
+            x.AddAttribute(8, "role", "button");
+            x.AddAttribute(9, "aria-label", Localizer["Common.Clear"]);
             x.AddAttribute(3, "onclick", EventCallback.Factory.Create<MouseEventArgs>(this, _ => ClearInput()));
             x.OpenElement(6, "span");
             x.AddAttribute(7, "class", "dnet-app-icon dnet-autoc-reset-button");
@@ -526,7 +544,7 @@
         }
         else
         {
-            validationErrorMessage = string.Format(CultureInfo.InvariantCulture, "", DisplayName ?? FieldIdentifier.FieldName);
+            validationErrorMessage = Localizer.Format("Select.InvalidValue", DisplayName ?? FieldIdentifier.FieldName);
             return false;
         }
     }

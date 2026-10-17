@@ -1,3 +1,5 @@
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
 @using Dnet.Blazor.Components.Form
 @using Dnet.Blazor.Components.Grid.Infrastructure.Services
 @using Dnet.Blazor.Infrastructure.Enums
@@ -24,6 +26,7 @@
 @typeparam TItem
 
 
+<DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
 @if (GridOptions.CheckboxSelectionColumn && CheckboxSelectionPinned)
 {
     var height = GridOptions.HeaderHeight + "px";
@@ -31,7 +34,7 @@
     <div class="blg-header-cell @(Pinned == Pinned.None ? "blg-header-cell-notpinned" : null)" role="columnheader" style="flex: 1 0 40px; height: @height; border: none">
         <div class="blg-header-cell-container">
             <div class="blg-header-cell-label blg-selection-checkbox-wrapper">
-                <input type="checkbox" @onclick="() => ChangeSelectAllNodes()" class="blg-checkbox-no-label" aria-label="Seleccionar todas las filas">
+                <input type="checkbox" @onclick="() => ChangeSelectAllNodes()" class="blg-checkbox-no-label" aria-label="@(Localizer["Grid.SelectAll"])">
             </div>
         </div>
     </div>
@@ -45,10 +48,10 @@
     <div class="blg-header-cell @(Pinned == Pinned.None ? "blg-header-cell-notpinned" : null)" role="columnheader" style="flex: @GroupGridColumn.CanGrow @GroupGridColumn.CanShrink auto; height: @height;">
         <div class="blg-header-cell-container">
             <div class="blg-header-cell-label">
-                <span class="blg-header-cell-text">Group</span>
+                <span class="blg-header-cell-text">@Localizer["Grid.Group"]</span>
                 @if (GridOptions.ShowExpandCollapseButtons)
                 {
-                    <button type="button" class="blg-header-icon-button" @onclick="Expand" aria-label="@(_isExpanded ? "Contraer todos los grupos" : "Expandir todos los grupos")">
+                    <button type="button" class="blg-header-icon-button" @onclick="Expand" aria-label="@(Localizer[_isExpanded ? "Grid.CollapseAll" : "Grid.ExpandAll"])">
                         <span class="blg-icon @(_isExpanded == true ? "blg-icon-collapse" : "blg-icon-expand")" unselectable="on"></span>
                     </button>
                 }
@@ -91,7 +94,7 @@
         <div class="blg-header-cell-container">
             @if (header.Sortable)
             {
-                <button type="button" class="blg-header-cell-label blg-header-sort-button" @onclick="() => Sort(header)" aria-label="@($"Ordenar por {header.HeaderName}")">
+                <button type="button" class="blg-header-cell-label blg-header-sort-button" @onclick="() => Sort(header)" aria-label="@(Localizer.Format("Grid.SortBy", header.HeaderName))">
                     <span class="blg-header-cell-text" style="@cellTextStyle">@header.HeaderName</span>
                 </button>
             }
@@ -104,7 +107,7 @@
             <div style="display: flex; align-items: center;">
                 @if (header.Sortable)
                 {
-                    <button type="button" class="blg-header-icon-button" @onclick="() => Sort(header)" aria-label="@($"Cambiar orden de {header.HeaderName}")">
+                    <button type="button" class="blg-header-icon-button" @onclick="() => Sort(header)" aria-label="@(Localizer.Format("Grid.ChangeSort", header.HeaderName))">
                         <span class="blg-icon @SortIconClass" unselectable="on"></span>
                     </button>
                 }
@@ -121,13 +124,13 @@
                 {
                     @if (GroupByColumns.Contains(header.DataField))
                     {
-                        <button type="button" class="blg-header-icon-button" @onclick="(() => DeleteGroup(header.DataField))" aria-label="@($"Quitar agrupación por {header.HeaderName}")">
+                        <button type="button" class="blg-header-icon-button" @onclick="(() => DeleteGroup(header.DataField))" aria-label="@(Localizer.Format("Grid.Ungroup", header.HeaderName))">
                             <span class="blg-icon blg-icon-radio-button-on" unselectable="on"></span>
                         </button>
                     }
                     else
                     {
-                        <button type="button" class="blg-header-icon-button" @onclick="(() => AddGroup(header.DataField))" aria-label="@($"Agrupar por {header.HeaderName}")">
+                        <button type="button" class="blg-header-icon-button" @onclick="(() => AddGroup(header.DataField))" aria-label="@(Localizer.Format("Grid.GroupBy", header.HeaderName))">
                             <span class="blg-icon blg-icon-radio-button-off" unselectable="on"></span>
                         </button>
                     }
@@ -136,7 +139,7 @@
         </div>
         @if (header.Pinned == Pinned.None && header.CanGrow == 1)
         {
-            <div role="separator" aria-orientation="vertical" aria-label="@($"Cambiar anchura de {header.HeaderName}")" aria-valuenow="@header.Width" tabindex="0" style="cursor:col-resize; position:absolute; height:@height; user-select:none; width:7px; background-color:transparent; color: transparent; right: 0px; margin-right: -4px"
+            <div role="separator" aria-orientation="vertical" aria-label="@(Localizer.Format("Grid.ResizeColumn", header.HeaderName))" aria-valuenow="@header.Width" tabindex="0" style="cursor:col-resize; position:absolute; height:@height; user-select:none; width:7px; background-color:transparent; color: transparent; right: 0px; margin-right: -4px"
                  @onmousedown="(e) => MouseDown(header, e.ClientX)">
                 |
             </div>
@@ -196,7 +199,7 @@
                             <EditForm Model="@header" style="width:100%">
                                 <DnetFormField class="blg-filter-field" UseClearButton="true" EmptyIconClass="dnet-component-search-icon">
                                     <ChildContent>
-                                        <DnetInputText @bind-Value="@header.Filter" type="text" OnStopTyping="StopTyping" OnClearInput="StopTyping">
+                                        <DnetInputText @bind-Value="@header.Filter" type="text" aria-label="@(Localizer.Format("Grid.FilterColumn", header.HeaderName))" OnStopTyping="StopTyping" OnClearInput="StopTyping">
                                         </DnetInputText>
                                     </ChildContent>
                                 </DnetFormField>
@@ -204,7 +207,7 @@
                             break;
                         case CellDataType.Date:
                             <EditForm Model="@header" style="width:100%">
-                                <DnetFormField class="blg-filter-field" Label="Name" IsRequired="true" UseClearButton="true">
+                                <DnetFormField class="blg-filter-field" Label="@(Localizer.Format("Grid.FilterColumn", header.HeaderName))" IsRequired="true" UseClearButton="true">
                                     <ChildContent>
                                         <DnetDatePicker @bind-Value="@header.Filter"
                                                            Disabled="false"
@@ -225,6 +228,9 @@
 
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+    private Task HandleLocalizationChanged() => InvokeAsync(() => { _shouldRender = true; StateHasChanged(); });
+
 
     [CascadingParameter]
     BlgGrid<TItem> BlgGrid { get; set; }

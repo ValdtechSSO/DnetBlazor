@@ -33,9 +33,18 @@
 		<SupportedPlatform Include="browser" />
 	</ItemGroup>
 
+	<!-- Both catalogs live in the main assembly so WASM can switch languages
+	     without downloading a new satellite assembly or reloading the page. -->
+	<ItemGroup>
+		<EmbeddedResource Update="Localization/DnetStrings.resx" LogicalName="Dnet.Blazor.Localization.DnetStrings.resources" />
+		<EmbeddedResource Update="Localization/DnetStrings.en.resx" WithCulture="false" LogicalName="Dnet.Blazor.Localization.DnetEnglishStrings.resources" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Components" Version="11.0.0-rc.2.26504.105" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="11.0.0-rc.2.26504.105" />
+		<PackageReference Include="Microsoft.Extensions.Localization" Version="11.0.0-rc.2.26504.105" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="11.0.0-rc.2.26504.105" />
 	</ItemGroup>
 
 	<ItemGroup>

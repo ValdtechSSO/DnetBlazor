@@ -1,8 +1,10 @@
-﻿namespace Dnet.Blazor.Components.Dialog.Infrastructure.Models
+namespace Dnet.Blazor.Components.Dialog.Infrastructure.Models
 {
     public class DialogConfig
     {
         public string? Title { get; set; }
+
+        internal string? LocalizedTitleKey { get; set; }
 
         public string? DialogClass { get; set; }
 

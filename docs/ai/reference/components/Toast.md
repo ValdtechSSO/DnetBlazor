@@ -50,7 +50,7 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
-| `--dnet-toast-accent` | `#4fc3f7` <br><sub>via `--dnet-sys-primary`</sub> |
+| `--dnet-toast-accent` | `#5b5ce0` <br><sub>via `--dnet-sys-primary`</sub> |
 | `--dnet-toast-border` | `#ebebeb` <br><sub>via `--dnet-sys-border`</sub> |
 | `--dnet-toast-fg` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
 | `--dnet-toast-fg-muted` | `#666666` <br><sub>via `--dnet-sys-on-surface-muted`</sub> |

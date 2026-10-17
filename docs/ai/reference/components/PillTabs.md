@@ -14,7 +14,7 @@
 | `Items` | `IReadOnlyList<DnetPillTabItem<TValue>>` | `[]` | Gets or sets the tabs in their display order. Values must be unique and non-null. |
 | `Value` | `TValue?` | — | Gets or sets the selected value. Omit this parameter to select the first enabled tab automatically. |
 | `ValueChanged` | `EventCallback<TValue>` | — | Raised when the user requests a different selected value. Supports @bind-Value. |
-| `AriaLabel` | `string` | `"Tabs"` | Gets or sets the accessible name of the tab list. |
+| `AriaLabel` | `string` | Computed | Gets or sets the accessible name of the tab list. |
 | `Disabled` | `bool` | — | Gets or sets whether all tabs are disabled. |
 | `FullWidth` | `bool` | — | Gets or sets whether the tab list fills its container with equally sized tabs. |
 | `ItemTemplate` | `RenderFragment<DnetPillTabItem<TValue>>?` | — | Gets or sets custom label content. Counts are rendered separately. |
@@ -36,7 +36,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-pill-tabs-hover-background` | `color-mix(in srgb, var(--dnet-sys-on-surface) 8%, transparent)` <br><sub>via `--dnet-sys-state-hover`</sub> |
 | `--dnet-pill-tabs-padding` | `calc(var(--dnet-sys-space-unit) * 1)` <br><sub>via `--dnet-sys-space-1`</sub> |
 | `--dnet-pill-tabs-radius` | `9999px` <br><sub>via `--dnet-sys-radius-pill`</sub> |
-| `--dnet-pill-tabs-selected-background` | `#3f51b5` <br><sub>via `--dnet-sys-primary-emphasis`</sub> |
+| `--dnet-pill-tabs-selected-background` | `color-mix(in srgb, var(--dnet-sys-primary) 80%, var(--dnet-ref-neutral-1000))` <br><sub>via `--dnet-sys-primary-emphasis`</sub> |
 | `--dnet-pill-tabs-selected-foreground` | `#ffffff` <br><sub>via `--dnet-sys-on-primary`</sub> |
 | `--dnet-pill-tabs-shadow` | `0 2px 1px -1px var(--dnet-sys-shadow-color), 0 1px 2px 0 var(--dnet-sys-shadow-color), 0 1px 10px 0 var(--dnet-sys-shadow-color)` <br><sub>via `--dnet-sys-elevation-1`</sub> |
 | `--dnet-pill-tabs-tab-height` | `38px` <br><sub>via `--dnet-sys-control-height-sm`</sub> |

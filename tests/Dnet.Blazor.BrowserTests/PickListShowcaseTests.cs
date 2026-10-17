@@ -204,6 +204,7 @@ public sealed class PickListShowcaseTests
         var serializedTheme = System.Text.Json.JsonSerializer.Serialize(theme);
         await page.AddInitScriptAsync($"localStorage.setItem('dnet.theme', JSON.stringify({serializedTheme}));");
         var baseUrl = (Environment.GetEnvironmentVariable("DNET_BLAZOR_BASE_URL") ?? "http://127.0.0.1:5101").TrimEnd('/');
+        await BrowserLanguage.UseEnglishAsync(page);
         await page.GotoAsync($"{baseUrl}/PickList");
         await Assertions.Expect(page.Locator("#demo-picklist")).ToBeVisibleAsync();
         return (page, errors);

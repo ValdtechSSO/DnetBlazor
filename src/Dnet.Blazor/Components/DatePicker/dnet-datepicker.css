@@ -70,9 +70,7 @@
 .dnet-calendar-next-button,
 .dnet-calendar-day-content,
 .dnet-calendar-year-content,
-.dnet-calendar-month-content,
-.dnet-datepicker-action,
-.dnet-datepicker-reset-button-wrapper {
+.dnet-calendar-month-content {
   appearance: none;
   border: 0;
   font: inherit;
@@ -103,9 +101,7 @@
 .dnet-calendar-next-button:focus-visible,
 .dnet-calendar-day-content:focus-visible,
 .dnet-calendar-year-content:focus-visible,
-.dnet-calendar-month-content:focus-visible,
-.dnet-datepicker-action:focus-visible,
-.dnet-datepicker-reset-button-wrapper:focus-visible {
+.dnet-calendar-month-content:focus-visible {
   outline: 2px solid var(--dnet-sys-primary);
   outline-offset: 2px;
 }
@@ -322,34 +318,6 @@
   gap: 6px;
 }
 
-.dnet-datepicker-reset-button-wrapper,
-.dnet-datepicker-action {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 36px;
-  padding: 0 12px;
-  border-radius: var(--dnet-sys-radius-md);
-  background: transparent;
-  color: var(--dnet-sys-primary);
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.dnet-datepicker-reset-button-wrapper:hover,
-.dnet-datepicker-action-secondary:hover {
-  background: var(--dnet-sys-state-hover);
-}
-
-.dnet-datepicker-action-primary {
-  background: var(--dnet-sys-primary);
-  color: var(--dnet-sys-on-primary);
-}
-
-.dnet-datepicker-action-primary:hover {
-  background: color-mix(in srgb, var(--dnet-sys-primary) 88%, var(--dnet-sys-on-primary));
-}
-
 .dnet-datepicker-touch {
   border-radius: var(--dnet-sys-radius-lg);
 }
@@ -402,7 +370,6 @@
 .dnet-datepicker-reset-button {
   width: 1em;
   height: 1em;
-  margin-inline-end: 6px;
   background: currentColor;
   -webkit-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M4.65 4.65a.5.5 0 0 1 .7 0L8 7.29l2.65-2.64a.5.5 0 1 1 .7.7L8.71 8l2.64 2.65a.5.5 0 0 1-.7.7L8 8.71l-2.65 2.64a.5.5 0 0 1-.7-.7L7.29 8 4.65 5.35a.5.5 0 0 1 0-.7z'/></svg>") center / 1em no-repeat;
   mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M4.65 4.65a.5.5 0 0 1 .7 0L8 7.29l2.65-2.64a.5.5 0 1 1 .7.7L8.71 8l2.64 2.65a.5.5 0 0 1-.7.7L8 8.71l-2.65 2.64a.5.5 0 0 1-.7-.7L7.29 8 4.65 5.35a.5.5 0 0 1 0-.7z'/></svg>") center / 1em no-repeat;

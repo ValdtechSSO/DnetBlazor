@@ -1,8 +1,12 @@
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
 @using Dnet.Blazor.Components.Spinner.Infrastructure.Interfaces
 
 @inject ISpinnerService SpinnerService
 
 @implements IDisposable
+
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
 
 @if (_isVisible && CanRun)
 {
@@ -11,10 +15,12 @@
         <div class="dnet-spinner-mask" style="width: @_width; height: @_height; position: @_position"></div>
     }
 
-    <div class="dnet-spinner" role="status" aria-label="Loading" aria-live="polite" style="top:@_top; left: @_left; position: @_position"></div>
+    <div class="dnet-spinner" role="status" aria-label="@Localizer["Common.Loading"]" aria-live="polite" style="top:@_top; left: @_left; position: @_position"></div>
 }
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+
     /// <summary>Gets or sets the can run used by this component.</summary>
     [Parameter] public bool CanRun { get; set; }
     /// <summary>Gets or sets the bind to view used by this component.</summary>

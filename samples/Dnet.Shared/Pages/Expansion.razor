@@ -9,8 +9,8 @@
               Description="Open several answers at once, or use the controls to show and hide every answer.">
         <ChildContent>
             <div class="demo-actions expansion-actions">
-                <DnetButton id="expansion-expand-all" OnClick="() => ExpandAll(true)">Expand all</DnetButton>
-                <DnetButton id="expansion-collapse-all" OnClick="() => ExpandAll(false)">Collapse all</DnetButton>
+                <DnetButton Variant="DnetButtonVariant.Outlined" id="expansion-expand-all" OnClick="() => ExpandAll(true)">Expand all</DnetButton>
+                <DnetButton Variant="DnetButtonVariant.Outlined" id="expansion-collapse-all" OnClick="() => ExpandAll(false)">Collapse all</DnetButton>
             </div>
             <DnetExpansionPanel @ref="_faqPanel" id="expansion-faq" OnExpandedChanged="ExpandedChanged"
                                 ExpansionPanelDisplayMode="ExpansionPanelDisplayMode.Spacing">

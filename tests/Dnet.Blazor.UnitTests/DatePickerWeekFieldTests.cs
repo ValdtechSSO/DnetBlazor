@@ -115,6 +115,7 @@ public sealed class DatePickerWeekFieldTests : BunitContext
                 child.AddAttribute(3, nameof(DnetDatePickerWeek.ValueChanged),
                     EventCallback.Factory.Create<string>(this, value => model.Value = value));
                 child.AddAttribute(4, nameof(DnetDatePickerWeek.PlaceHolder), "Choose a week");
+                child.AddAttribute(5, nameof(DnetDatePickerWeek.Culture), CultureInfo.CurrentCulture);
                 child.CloseComponent();
             }));
             builder.CloseComponent();

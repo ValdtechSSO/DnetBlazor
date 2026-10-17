@@ -8,7 +8,7 @@
 }
 
 .dnet-spinner {
-  --_color: var(--dnet-spinner-color, var(--dnet-sys-primary-strong));
+  --_color: var(--dnet-spinner-color, var(--dnet-sys-primary-content));
   --_size: 22.4px;
   --_stroke-width: 5.6px;
 

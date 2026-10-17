@@ -28,7 +28,7 @@
                     </label>
                     <span id="image-editor-file-help" class="image-upload-hint">PNG o JPEG · Hasta 15 MB por imagen</span>
                     <div class="image-demo-action">
-                        <DnetButton id="image-editor-demo" OnClick="LoadDemoImage" disabled="@_isLoading">Probar con el logo</DnetButton>
+                        <DnetButton Variant="DnetButtonVariant.Outlined" id="image-editor-demo" OnClick="LoadDemoImage" disabled="@_isLoading">Probar con el logo</DnetButton>
                     </div>
                 </div>
                 <aside class="image-workflow" aria-labelledby="image-editor-guide-title">
@@ -77,8 +77,8 @@
                         </dl>
                         <div class="demo-actions">
                             <a id="image-editor-download" class="image-download" href="@_imageUrl" download="@_resultName">Descargar imagen <span aria-hidden="true">↓</span></a>
-                            <DnetButton id="image-editor-reopen" OnClick="ReopenResult" disabled="@_isLoading">Volver a editar</DnetButton>
-                            <DnetButton id="image-editor-clear" OnClick="ClearResult" disabled="@_isLoading">Quitar imagen</DnetButton>
+                            <DnetButton Variant="DnetButtonVariant.Outlined" id="image-editor-reopen" OnClick="ReopenResult" disabled="@_isLoading">Volver a editar</DnetButton>
+                            <DnetButton Variant="DnetButtonVariant.Outlined" id="image-editor-clear" OnClick="ClearResult" disabled="@_isLoading">Quitar imagen</DnetButton>
                         </div>
                     }
                 </div>

@@ -29,7 +29,7 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
-| `--dnet-badge-background` | `#42b0d5` <br><sub>via `--dnet-sys-primary-strong`</sub> |
+| `--dnet-badge-background` | `#5b5ce0` <br><sub>via `--dnet-sys-primary-strong`</sub> |
 | `--dnet-badge-disabled-opacity` | `0.38` |
 | `--dnet-badge-foreground` | `#ffffff` <br><sub>via `--dnet-sys-on-primary`</sub> |
 | `--dnet-badge-outline-color` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |

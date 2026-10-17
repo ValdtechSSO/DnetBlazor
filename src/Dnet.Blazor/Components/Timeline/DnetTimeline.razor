@@ -1,17 +1,30 @@
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
 @using Dnet.Blazor.Infrastructure.Forms
 
-<ol @attributes="AdditionalAttributes" class="@CssClass" role="list" aria-label="@AriaLabel">
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
+<ol @attributes="AdditionalAttributes" class="@CssClass" role="list" aria-label="@(_ariaLabelProvided ? _ariaLabel : Localizer["Timeline.Label"])">
     @ChildContent
 </ol>
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+
     /// <summary>Gets or sets the position of the rail. Start and End follow the text direction.</summary>
     [Parameter]
     public DnetTimelineAlignment Alignment { get; set; } = DnetTimelineAlignment.Start;
 
     /// <summary>Gets or sets the accessible name of the ordered list.</summary>
     [Parameter]
-    public string? AriaLabel { get; set; } = "Timeline";
+    public string? AriaLabel
+    {
+        get => _ariaLabelProvided ? _ariaLabel : "Timeline";
+        set { _ariaLabel = value; _ariaLabelProvided = true; }
+    }
+
+    private string? _ariaLabel;
+    private bool _ariaLabelProvided;
 
     /// <summary>Gets or sets the DnetTimelineItem components in chronological or process order.</summary>
     [Parameter]

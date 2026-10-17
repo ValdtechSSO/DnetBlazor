@@ -12,7 +12,11 @@ or scope it to a subtree with `data-dnet-theme="dark"`.
 
 Global override:
 
-Buttons have a pill shape by default. Set their radius token to choose another
+Buttons use a filled primary action (`#5B5CE0` by default); choose
+`Variant="DnetButtonVariant.Outlined"` for secondary actions. Both use pill corners
+by default. Primary fills pair `--dnet-sys-primary` with `--dnet-sys-on-primary`;
+brand-colored text on normal surfaces uses `--dnet-sys-primary-content` for
+contrast without lightening the filled background. Set their radius token to choose another
 shape, for example square corners:
 
 ```css

@@ -9,4 +9,3 @@
 .profile-editor-field ::deep .dnet-form-field-plain-wrapper { margin-block-end: 0; }
 .profile-editor ::deep .validation-message { color: var(--dnet-sys-danger); font-size: var(--dnet-sys-text-sm); line-height: 1.5; }
 .profile-editor-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; margin-block-start: 24px; padding-block-start: 20px; border-block-start: 1px solid var(--dnet-sys-border); }
-.profile-editor-actions ::deep .profile-editor-save { --dnet-btn-background: var(--dnet-sys-on-surface-emphasis); --dnet-btn-foreground: var(--dnet-sys-surface-raised); --dnet-btn-background-hover: color-mix(in srgb, var(--dnet-sys-on-surface-emphasis) 85%, var(--dnet-sys-surface-raised)); }

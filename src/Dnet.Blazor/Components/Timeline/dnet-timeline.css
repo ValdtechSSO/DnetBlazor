@@ -6,6 +6,7 @@
     --_line-color: var(--dnet-timeline-line-color, var(--dnet-sys-border-strong));
     --_accent-color: var(--dnet-timeline-accent-color, var(--dnet-sys-primary-emphasis));
     --_accent-foreground: var(--dnet-timeline-accent-foreground, var(--dnet-sys-on-primary));
+    --_active-foreground: var(--dnet-timeline-accent-color, var(--dnet-sys-primary-content));
     --_bullet-background: var(--dnet-timeline-bullet-background, var(--dnet-sys-surface));
     --_foreground: var(--dnet-timeline-foreground, var(--dnet-sys-on-surface));
     --_muted-foreground: var(--dnet-timeline-muted-foreground, var(--dnet-sys-on-surface-muted));
@@ -145,7 +146,7 @@
 
 .dnet-timeline-item-current > .dnet-timeline-bullet {
     border-color: var(--_accent-color);
-    color: var(--_accent-color);
+    color: var(--_active-foreground);
 }
 
 .dnet-timeline-item-completed:not(.dnet-timeline-item-custom-bullet) > .dnet-timeline-bullet::after {

@@ -1,7 +1,12 @@
-﻿namespace Dnet.Blazor.Components.Paginator;
+﻿using Dnet.Blazor.Localization;
+
+namespace Dnet.Blazor.Components.Paginator;
 
 public class Paginator : IPaginator
 {
+    private readonly IServiceProvider? _services;
+    public Paginator(IServiceProvider? services = null) => _services = services;
+    private IDnetLocalizer Localizer => DnetLocalization.Get(_services);
     public Tuple<int, int> GetRangePage(int currentPage, int pageSize, int totalItems)
     {
         return new Tuple<int, int>((currentPage - 1) * pageSize, Math.Min(pageSize, totalItems - (currentPage - 1) * pageSize));
@@ -9,7 +14,7 @@ public class Paginator : IPaginator
 
     public string GetRangeLabel(int page, int pageSize, int length)
     {
-        if (length == 0 || pageSize == 0) { return $"0 of {length}"; }
+        if (length == 0 || pageSize == 0) { return $"0 {Localizer["Paginator.Of"]} {length}"; }
 
         length = Math.Max(length, 0);
 
@@ -18,6 +23,6 @@ public class Paginator : IPaginator
         // If the start index exceeds the list length, do not try and fix the end index to the end.
         var endIndex = startIndex < length ? Math.Min(startIndex + pageSize, length) : startIndex + pageSize;
 
-        return $"{startIndex + 1} - {endIndex} of { length}";
+        return $"{startIndex + 1} - {endIndex} {Localizer["Paginator.Of"]} { length}";
     }
 }

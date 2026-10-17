@@ -1,4 +1,6 @@
-﻿@using Dnet.Blazor.Components.Form
+﻿@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+@using Dnet.Blazor.Components.Form
 @using Dnet.Blazor.Infrastructure.Services
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Web
@@ -25,14 +27,19 @@
 
 @inject IOverlayService OverlayService
 
+<DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
 <input @ref="__inputReference" @attributes="AdditionalAttributes" class="@_inputTextClass"
     value="@BindConverter.FormatValue(CurrentValue)" @onfocus=@(() => Focus()) @onblur=@(() => Blur())
     @oninput="@((ChangeEventArgs __e) => UpdateCurrentValue(__e.Value ?? string.Empty))" @onfocusin=@(() => OpenMenu())
     @onkeyup=@((KeyboardEventArgs __e) => HandleKeyUp(__e)) @onkeydown=@((KeyboardEventArgs __e) => HandleKeydown(__e))
     @onclick:stopPropagation="true" @onclick:preventDefault="true" placeholder="@PlaceHolder" disabled="@Disabled"
-    autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="@_isOpen" aria-disabled="@Disabled" />
+    autocomplete="off" role="combobox" aria-label="@AccessibleLabel" aria-autocomplete="list" aria-expanded="@_isOpen" aria-disabled="@Disabled" />
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+    private Task HandleLocalizationChanged() => InvokeAsync(() => { _menuReference?.RequestConfigurationUpdate(); StateHasChanged(); });
+    private string? _lastPanelLabel;
+
 
     [CascadingParameter]
     private FormFieldCascadingValues? _formFieldCascadingValues { get; set; }
@@ -179,7 +186,8 @@
 
     /// <summary>Gets or sets the panel label used by this component.</summary>
     [Parameter]
-    public string PanelLabel { get; set; } = string.Empty;
+    public string PanelLabel { get => _panelLabel ?? Localizer["Autocomplete.Options"]; set => _panelLabel = value; }
+    private string? _panelLabel;
 
 
     private bool _isOpen;
@@ -274,6 +282,11 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
+        if (_lastPanelLabel != _panelLabel)
+        {
+            _lastPanelLabel = _panelLabel;
+            _menuReference?.RequestConfigurationUpdate();
+        }
 
         // Another bound input can change Value without producing a native input
         // event here. Keep the form label and clear action in sync as well.
@@ -554,6 +567,9 @@
         }
     }
 
+    private string AccessibleLabel => AdditionalAttributes?.TryGetValue("aria-label", out var label) == true
+        ? label?.ToString() ?? string.Empty : DisplayName ?? Localizer["Autocomplete.Label"];
+
     private async Task ClearInputAsync()
     {
         try
@@ -679,7 +695,7 @@
             x.AddAttribute(7, "ChildContent", ItemChildContent);
             x.AddAttribute(10, "CurrentValue", CurrentValue);
             x.AddAttribute(11, "FooterContent", FooterContent);
-            x.AddAttribute(12, "PanelLabel", PanelLabel);
+            x.AddAttribute(12, "PanelLabel", _panelLabel);
             x.AddAttribute(13, "OverscanCount", OverscanCount);
             x.CloseComponent();
         });

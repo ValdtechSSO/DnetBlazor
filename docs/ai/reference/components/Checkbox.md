@@ -23,7 +23,7 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
-| `--dnet-checkbox-background` | `#4fc3f7` <br><sub>via `--dnet-sys-primary`</sub> |
+| `--dnet-checkbox-background` | `#5b5ce0` <br><sub>via `--dnet-sys-primary`</sub> |
 | `--dnet-checkbox-border-color` | `color-mix(in srgb, var(--dnet-sys-on-surface-subtle) 57.2%, var(--dnet-sys-surface))` |
 | `--dnet-checkbox-border-radius` | `0px` |
 | `--dnet-checkbox-border-width` | `1px` |

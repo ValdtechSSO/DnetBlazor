@@ -1,9 +1,15 @@
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+
 @using System.Globalization
+@using Dnet.Blazor.Components.Button
 @using Microsoft.AspNetCore.Components.Web
 @using Dnet.Blazor.Components.DatePicker.Infrastructure.Enums
 @using Dnet.Blazor.Components.DatePicker.Infrastructure.Interfaces
 @using Dnet.Blazor.Components.DatePicker.Infrastructure.Models
 @using Dnet.Blazor.Components.DatePicker.Infrastructure.Services
+
+<DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
 
 <div class="dnet-datepicker-content @(TouchUi ? "dnet-datepicker-touch" : null)">
     <DnetCalendar Value="_localValue"
@@ -43,22 +49,27 @@
     @if (ShowActions)
     {
         <div class="dnet-datepicker-actions">
-            <button type="button" class="dnet-datepicker-action dnet-datepicker-action-secondary" @onclick="HandleCancelAsync">@Labels.Cancel</button>
-            <button type="button" class="dnet-datepicker-action dnet-datepicker-action-primary" @onclick="HandleApplyClickAsync">@Labels.Apply</button>
+            <DnetButton Size="DnetButtonSize.Small" Variant="DnetButtonVariant.Outlined" class="dnet-datepicker-action dnet-datepicker-action-secondary" OnClick="Cancel">@EffectiveLabels.Cancel</DnetButton>
+            <DnetButton Size="DnetButtonSize.Small" Variant="DnetButtonVariant.Filled" class="dnet-datepicker-action dnet-datepicker-action-primary" OnClick="ApplySelectionAsync">@EffectiveLabels.Apply</DnetButton>
         </div>
     }
     else if (ShowReset)
     {
         <div class="dnet-calendar-header-footer">
-            <button type="button" class="dnet-datepicker-reset-button-wrapper" @onclick="ResetAsync">
+            <DnetButton Size="DnetButtonSize.Small" Variant="DnetButtonVariant.Outlined" class="dnet-datepicker-reset-button-wrapper" OnClick="ResetAsync">
                 <span class="dnet-datepicker-icon dnet-datepicker-reset-button" aria-hidden="true"></span>
-                <span>@Labels.Reset</span>
-            </button>
+                <span>@EffectiveLabels.Reset</span>
+            </DnetButton>
         </div>
     }
 </div>
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+    private DnetDatePickerLabels? _labels;
+    private DnetDatePickerLabels EffectiveLabels => Labels.Resolve(Localizer);
+    private Task HandleLocalizationChanged() => InvokeAsync(StateHasChanged);
+
     private DateOnly? _localValue;
     private DnetDateRange _localRange = new();
     private DnetDateRange _localPreviewRange = new();
@@ -78,7 +89,7 @@
     [Parameter] public Func<DateOnly, bool>? IsDateEnabled { get; set; }
     [Parameter] public Func<DateOnly, string?>? DateClass { get; set; }
     [Parameter] public IDnetDateRangeSelectionStrategy? RangeSelectionStrategy { get; set; }
-    [Parameter] public DnetDatePickerLabels Labels { get; set; } = new();
+    [Parameter] public DnetDatePickerLabels Labels { get => _labels ??= new(); set => _labels = value; }
     [Parameter] public bool Disabled { get; set; }
     [Parameter] public bool AutoFocus { get; set; } = true;
     [Parameter] public bool TouchUi { get; set; }

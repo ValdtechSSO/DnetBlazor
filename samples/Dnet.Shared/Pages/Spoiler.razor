@@ -39,7 +39,7 @@
                   Description="Abre o cierra desde cualquiera de los dos controles. Al volver, tus enlaces y la nota siguen disponibles.">
             <ChildContent>
                 <div class="demo-stack">
-                    <div class="demo-actions"><DnetButton id="spoiler-external-toggle" OnClick="ToggleDetails">@(_expanded ? "Cerrar detalles" : "Abrir detalles")</DnetButton></div>
+                    <div class="demo-actions"><DnetButton Variant="DnetButtonVariant.Outlined" id="spoiler-external-toggle" OnClick="ToggleDetails">@(_expanded ? "Cerrar detalles" : "Abrir detalles")</DnetButton></div>
                     <div class="demo-preview">
                         <DnetSpoiler MaxHeight="90" @bind-Expanded="_expanded" ShowLabel="Ver todos los detalles" HideLabel="Ocultar detalles"
                                      AriaLabel="Detalles y enlaces" id="spoiler-controlled">
@@ -69,7 +69,7 @@
                   Description="Empieza con una nota breve y añade el artículo completo. El control aparece cuando hace falta más espacio.">
             <ChildContent>
                 <div class="demo-stack">
-                    <div class="demo-actions"><DnetButton id="spoiler-change-content" OnClick="ChangeContent">@(_longContent ? "Mostrar texto corto" : "Añadir texto largo")</DnetButton></div>
+                    <div class="demo-actions"><DnetButton Variant="DnetButtonVariant.Outlined" id="spoiler-change-content" OnClick="ChangeContent">@(_longContent ? "Mostrar texto corto" : "Añadir texto largo")</DnetButton></div>
                     <div class="demo-preview">
                         <DnetSpoiler MaxHeight="100" ShowLabel="Ver la descripción completa" HideLabel="Resumir descripción" id="spoiler-dynamic">
                             @if (_longContent)

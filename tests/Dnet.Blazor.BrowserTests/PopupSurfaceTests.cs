@@ -45,14 +45,14 @@ public sealed class PopupSurfaceTests
 
         Popup[] popups =
         [
-            new("Select", "/Select", ".dnet-plain-select", ".dnet-select-list-wrapper", "--dnet-list-background-color"),
+            new("Select", "/Select", ".dnet-desktop-content .dnet-plain-select", ".dnet-select-list-wrapper", "--dnet-list-background-color"),
             new("Autocomplete", "/Autocomplete", "input[role=combobox]", ".dnet-autocomplete-list-wrapper", Focus: true),
             new("DatePicker", "/DatePicker", ".dnet-form-field-plain-suffix .dnet-datepicker-icon-wrapper", ".dnet-datepicker-content", "--dnet-calendar-background"),
             new("Dialog", "/Dialog", "button:has-text('Show Dialog')", ".dnet-dialog-container", "--dnet-dialog-background"),
             new("ConnectedPanel", "/ConnectedPanel", "svg.bi-filter", ".dnet-connected-panel-container"),
             new("FloatingPanel", "/FloatingPanel", "button:has-text('Show Panel')", ".dnet-floating-panel-container"),
             // These legacy panels leave OverlayConfig.CloseOnEscape disabled and expose their own close actions.
-            new("FloatingDoubleList", "/FloatingDoubleList", ".dnet-plain-select", ".dnet-connected-panel-container-dl", CloseTrigger: ".dnet-dialog-icon-wrapper"),
+            new("FloatingDoubleList", "/FloatingDoubleList", "#floating-doublelist-field .dnet-plain-select", ".dnet-connected-panel-container-dl", CloseTrigger: ".dnet-dialog-icon-wrapper"),
             new("Grid advanced filter", "/BlGrid", ".blg-adv-toggle-button-image", ".blg-advanced-filter-container", Grid: true, CloseTrigger: ".blg-adv-filter-buttom-reset")
         ];
 
@@ -96,6 +96,7 @@ public sealed class PopupSurfaceTests
 
     private static async Task NavigateAsync(IPage page, string baseUrl, string route, string trigger, string theme)
     {
+        await BrowserLanguage.UseEnglishAsync(page);
         await page.GotoAsync(baseUrl + route);
         await Assertions.Expect(page.Locator(trigger).First).ToBeVisibleAsync();
         await page.EvaluateAsync("theme => document.documentElement.dataset.dnetTheme = theme", theme);

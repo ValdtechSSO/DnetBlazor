@@ -1,0 +1,73 @@
+.header-preference-panel {
+    box-sizing: border-box;
+    min-inline-size: 0;
+    padding: 20px;
+    color: var(--dnet-sys-on-surface);
+}
+
+.header-preference-heading {
+    margin-block-end: 20px;
+}
+
+.header-preference-heading p {
+    margin: 0 0 6px;
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-xs);
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.header-preference-heading h2 {
+    margin: 0 0 8px;
+    color: var(--dnet-sys-on-surface-emphasis);
+    font-size: var(--dnet-sys-text-lg);
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.header-preference-heading > span {
+    display: block;
+    color: var(--dnet-sys-on-surface-muted);
+    font-size: var(--dnet-sys-text-sm);
+    line-height: 1.6;
+}
+
+.header-preference-options {
+    display: grid;
+    gap: 8px;
+    min-inline-size: 0;
+}
+
+.header-preference-options ::deep .header-preference-option {
+    inline-size: 100%;
+}
+
+.header-preference-options ::deep .dnet-button-wrapper {
+    inline-size: 100%;
+    justify-content: flex-start;
+}
+
+.header-preference-language-code {
+    font-size: var(--dnet-sys-text-xs);
+    font-weight: 700;
+    letter-spacing: .025em;
+}
+
+.header-preference-option-label {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    text-align: start;
+}
+
+.header-preference-selected {
+    flex: 0 0 16px;
+}
+
+.header-preference-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-block-start: 20px;
+    padding-block-start: 16px;
+    border-block-start: 1px solid var(--dnet-sys-border);
+}

@@ -19,7 +19,7 @@ public sealed class SpoilerTests : BunitContext
         var control = first.Find("button");
         Assert.Equal("button", control.GetAttribute("type"));
         Assert.Equal("false", control.GetAttribute("aria-expanded"));
-        Assert.Equal("Show more", control.TextContent.Trim());
+        Assert.Equal("Mostrar más", control.TextContent.Trim());
         Assert.Equal(first.Find(".dnet-spoiler-viewport").Id, control.GetAttribute("aria-controls"));
         Assert.NotEqual(control.GetAttribute("aria-controls"), second.Find("button").GetAttribute("aria-controls"));
         Assert.Empty(first.FindAll("[role=region]"));
@@ -42,7 +42,7 @@ public sealed class SpoilerTests : BunitContext
 
         cut.Find("button").Click();
         Assert.Equal("true", cut.Find("button").GetAttribute("aria-expanded"));
-        Assert.Equal("Show less", cut.Find("button").TextContent.Trim());
+        Assert.Equal("Mostrar menos", cut.Find("button").TextContent.Trim());
         cut.Find("button").Click();
         Assert.Equal("false", cut.Find("button").GetAttribute("aria-expanded"));
         Assert.Equal([true, false], changes);

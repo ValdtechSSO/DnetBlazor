@@ -12,6 +12,7 @@
 |---|---|---|---|
 | `InitialFocus` | `bool` | — | Gets or sets whether the component receives focus after it is rendered. |
 | `Size` | `DnetButtonSize` | `DnetButtonSize.Medium` | Gets or sets the button size. Medium is 40px high; Small is 32px and Large is 56px. |
+| `Variant` | `DnetButtonVariant` | `DnetButtonVariant.Filled` | Gets or sets the action style. Filled is the primary default; Outlined is a secondary action. |
 | `IconContent` | `RenderFragment?` | — | Gets or sets a decorative leading icon, sized and spaced according to Size. |
 | `AdditionalAttributes` | `IReadOnlyDictionary<string, object>?` | — | Gets or sets unmatched HTML attributes applied to the rendered element. |
 | `OnClick` | `EventCallback` | — | Raised when the user clicks the component. |
@@ -27,6 +28,7 @@ the element's own `style`. Nothing else is needed.
 |---|---|
 | `--dnet-btn-background` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
 | `--dnet-btn-background-hover` | `color-mix(in srgb, var(--dnet-sys-on-surface) 8%, transparent)` <br><sub>via `--dnet-sys-state-hover`</sub> |
+| `--dnet-btn-border-color` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
 | `--dnet-btn-focus-overlay` | `color-mix(in srgb, var(--dnet-sys-on-surface) 14%, transparent)` <br><sub>via `--dnet-sys-state-pressed`</sub> |
 | `--dnet-btn-font-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
 | `--dnet-btn-foreground` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |

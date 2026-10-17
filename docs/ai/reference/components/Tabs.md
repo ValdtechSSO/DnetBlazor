@@ -57,7 +57,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-tabs-background` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
 | `--dnet-tabs-disabled-foreground` | `#666666` <br><sub>via `--dnet-sys-on-surface-muted`</sub> |
 | `--dnet-tabs-foreground` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
-| `--dnet-tabs-indicator-color` | `#3f51b5` <br><sub>via `--dnet-sys-primary-emphasis`</sub> |
+| `--dnet-tabs-indicator-color` | `color-mix(in srgb, var(--dnet-sys-primary) 80%, var(--dnet-ref-neutral-1000))` <br><sub>via `--dnet-sys-primary-emphasis`</sub> |
 
 ```css
 :root { --dnet-tabs-background: /* your value */; }

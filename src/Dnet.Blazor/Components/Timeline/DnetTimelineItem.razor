@@ -1,9 +1,13 @@
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
 @using Dnet.Blazor.Infrastructure.Forms
+
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
 
 <li @attributes="AdditionalAttributes" class="@CssClass" aria-current="@(Status == DnetTimelineItemStatus.Current ? "step" : null)">
     <span class="dnet-timeline-bullet" aria-hidden="true">@BulletContent</span>
     <div class="dnet-timeline-content">
-        <span class="dnet-timeline-status">@(StatusLabel ?? Status.ToString())</span>
+        <span class="dnet-timeline-status">@(StatusLabel ?? Localizer[$"Timeline.{Status}"])</span>
         @if (!string.IsNullOrWhiteSpace(Title))
         {
             <div class="dnet-timeline-title">@Title</div>
@@ -31,6 +35,8 @@
 </li>
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+
     /// <summary>Gets or sets the event title.</summary>
     [Parameter]
     public string? Title { get; set; }

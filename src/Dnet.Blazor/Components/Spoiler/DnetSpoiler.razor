@@ -1,5 +1,9 @@
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
 @using Dnet.Blazor.Infrastructure.Forms
 @using Microsoft.AspNetCore.Components.Web
+
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
 
 <dnet-spoiler @attributes="AdditionalAttributes" class="@CssClass"
               data-expanded="@(IsExpanded ? "true" : "false")" data-max-height="@MaxHeight">
@@ -10,11 +14,13 @@
     <button class="dnet-spoiler-toggle" type="button" aria-controls="@_contentId"
             aria-expanded="@(IsExpanded ? "true" : "false")"
             aria-label="@(IsExpanded ? HideAriaLabel : ShowAriaLabel)" @onclick="ToggleAsync">
-        @(IsExpanded ? HideLabel : ShowLabel)
+        @(IsExpanded ? EffectiveHideLabel : EffectiveShowLabel)
     </button>
 </dnet-spoiler>
 
 @code {
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+
     /// <summary>Gets or sets the visible height, in pixels, when collapsed. Zero hides the entire preview.</summary>
     [Parameter]
     public int MaxHeight { get; set; } = 100;
@@ -33,11 +39,11 @@
 
     /// <summary>Gets or sets the label of the button that reveals the full content.</summary>
     [Parameter]
-    public string ShowLabel { get; set; } = "Show more";
+    public string ShowLabel { get => _showLabel ?? "Show more"; set => _showLabel = value; }
 
     /// <summary>Gets or sets the label of the button that collapses the content.</summary>
     [Parameter]
-    public string HideLabel { get; set; } = "Show less";
+    public string HideLabel { get => _hideLabel ?? "Show less"; set => _hideLabel = value; }
 
     /// <summary>Gets or sets the accessible name of the content region. Omit it to avoid adding a region landmark.</summary>
     [Parameter]
@@ -58,6 +64,11 @@
     /// <summary>Gets or sets unmatched HTML attributes, including class, style, id and dir, on the component root.</summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string? _showLabel;
+    private string? _hideLabel;
+    private string EffectiveShowLabel => _showLabel ?? Localizer["Spoiler.ShowMore"];
+    private string EffectiveHideLabel => _hideLabel ?? Localizer["Spoiler.ShowLess"];
 
     private readonly string _contentId = $"dnet-spoiler-{Guid.NewGuid():N}";
     private bool _expandedProvided;

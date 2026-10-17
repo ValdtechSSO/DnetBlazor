@@ -24,8 +24,8 @@
 | `Max` | `TimeOnly?` | — | Gets or sets the latest selectable time. |
 | `Interval` | `TimeSpan` | `TimeSpan.FromMinutes(30)` | Gets or sets the interval used to generate options when TimeOptions is not supplied. |
 | `TimeOptions` | `IReadOnlyList<TimeOnly>?` | — | Gets or sets an explicit set of selectable times. When supplied, these options take precedence over Interval and are filtered by Min and Max. |
-| `OptionsAriaLabel` | `string` | `"Choose a time"` | Gets or sets the accessible label announced for the options list. |
-| `CancelLabel` | `string` | `"Cancel"` | Gets or sets the label of the responsive dialog cancel action. |
+| `OptionsAriaLabel` | `string` | Computed | Gets or sets the accessible label announced for the options list. |
+| `CancelLabel` | `string` | Computed | Gets or sets the label of the responsive dialog cancel action. |
 | `PanelClass` | `string?` | — | Gets or sets an additional CSS class applied to the overlay panel. |
 | `PanelStyle` | `string?` | — | Gets or sets instance-level styles applied to the overlay panel. |
 | `TouchUi` | `bool` | — | Gets or sets whether the picker always uses its touch-friendly modal presentation. |
@@ -40,7 +40,7 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
-| `--dnet-timepicker-accent-color` | `#42b0d5` <br><sub>via `--dnet-sys-primary-strong`</sub> |
+| `--dnet-timepicker-accent-color` | `#5b5ce0` <br><sub>via `--dnet-sys-primary-strong`</sub> |
 | `--dnet-timepicker-foreground` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
 | `--dnet-timepicker-option-active-background` | `color-mix(in srgb, var(--dnet-sys-on-surface) 8%, transparent)` <br><sub>via `--dnet-sys-state-hover`</sub> |
 | `--dnet-timepicker-option-selected-background` | `color-mix(in srgb, var(--dnet-sys-primary) 12%, transparent)` <br><sub>via `--dnet-sys-state-selected`</sub> |

@@ -44,7 +44,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-picklist-item-selected` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
 | `--dnet-picklist-items-max-height` | `250px` |
 | `--dnet-picklist-muted` | `#666666` <br><sub>via `--dnet-sys-on-surface-muted`</sub> |
-| `--dnet-picklist-primary` | `#4fc3f7` <br><sub>via `--dnet-sys-primary`</sub> |
+| `--dnet-picklist-primary` | `#5b5ce0` <br><sub>via `--dnet-sys-primary`</sub> |
 | `--dnet-picklist-radius` | `10px` <br><sub>via `--dnet-sys-radius-lg`</sub> |
 | `--dnet-picklist-scrollbar` | `#e1e3e1` <br><sub>via `--dnet-sys-border-strong`</sub> |
 | `--dnet-picklist-scrollbar-track` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
