@@ -110,8 +110,16 @@ public sealed class VisualBaselineTests
     }
 
     public static IEnumerable<object[]> Cases() =>
-        ComponentScenarios.All
+        SelectedScenarios()
             .SelectMany(scenario => Viewports.Select(viewport => new object[] { scenario, viewport.Name, viewport.Width, viewport.Height }));
+
+    private static IEnumerable<ComponentScenario> SelectedScenarios()
+    {
+        var name = Environment.GetEnvironmentVariable("DNET_VISUAL_SCENARIO");
+        return string.IsNullOrEmpty(name)
+            ? ComponentScenarios.All
+            : [ComponentScenarios.All.Single(scenario => scenario.Name == name)];
+    }
 
     [Theory]
     [MemberData(nameof(Cases))]

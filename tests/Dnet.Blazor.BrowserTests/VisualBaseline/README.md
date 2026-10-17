@@ -167,3 +167,10 @@ defecto (0 píxeles, umbral 8 por canal) son deliberadamente estrictos: si un
 golden tiembla entre ejecuciones en la misma plataforma, es inestabilidad que
 hay que conocer antes de que una migración dependa de él, no un umbral que
 subir en silencio.
+
+For a focused CI diagnosis, manually run **Build and test** with
+`test_filter=FullyQualifiedName~VisualBaselineTests` and `visual_scenario=tooltip`
+(or another registered scenario). Empty inputs run the full suite; normal pushes
+and pull requests always use the full registry. Unknown scenario names fail
+rather than silently selecting no cases. Failed runs retain actual PNGs and TRX
+results as diagnostic artifacts. Integrity checks continue to inspect all goldens.

@@ -7,6 +7,10 @@ on:
         description: "Optional test filter for diagnosing a failure; leave empty for the full suite"
         required: false
         type: string
+      visual_scenario:
+        description: "Optional visual scenario for diagnostics (for example, tooltip); leave empty for all"
+        required: false
+        type: string
   pull_request:
   push:
     branches:
@@ -61,6 +65,7 @@ jobs:
           exit 1
         env:
           DNET_TEST_FILTER: ${{ inputs.test_filter || '' }}
+          DNET_VISUAL_SCENARIO: ${{ inputs.visual_scenario || '' }}
           DNET_BLAZOR_BROWSER_TESTS: "true"
           DNET_BLAZOR_VISUAL_TESTS: "true"
           DNET_BLAZOR_BASE_URL: http://127.0.0.1:5101
