@@ -3,13 +3,45 @@ run-name: Build and Deploy Version ${{ github.run_number }} by @${{ github.actor
 
 on:
   workflow_dispatch:
+    inputs:
+      diagnostics_only:
+        description: Inspect the application network and port without changing services
+        type: boolean
+        default: false
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: valdtechsso/dnetblazor
 
 jobs:
+  diagnostics:
+    if: ${{ inputs.diagnostics_only }}
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Inspect application network and port
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.SSH_REMOTE_HOST }}
+          username: ${{ secrets.SSH_REMOTE_USER }}
+          password: ${{ secrets.SSH_REMOTE_PASSWORD }}
+          port: ${{ secrets.SSH_REMOTE_PORT }}
+          script: |
+            set -eu
+            cd /home/docker
+            container_id="$(docker compose -f dnetblazor-docker-compose.yaml ps -aq blazorclient)"
+            if [ -n "$container_id" ]; then
+              docker inspect --format 'App: {{.Name}} state={{.State.Status}} error={{.State.Error}} image={{.Config.Image}}' "$container_id"
+              docker logs --tail 20 "$container_id"
+            fi
+            docker ps -a --filter publish=5001 --format 'Port owner: {{.ID}} {{.Names}} {{.Ports}} {{.Status}}'
+            for network_id in $(docker network ls --filter label=com.docker.compose.project=docker --filter label=com.docker.compose.network=datalnet --format '{{.ID}}'); do
+              docker network inspect --format '{{range .Containers}}{{if eq .IPv4Address "192.168.0.3/24"}}IP owner: {{.Name}} {{.IPv4Address}}{{end}}{{end}}' "$network_id"
+            done
+            ss -ltn '( sport = :5001 )' || true
+
   build-and-push:
+    if: ${{ !inputs.diagnostics_only }}
     name: Build and Push Docker Image
     runs-on: ubuntu-latest
     outputs:
