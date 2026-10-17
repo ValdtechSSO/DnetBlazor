@@ -1,0 +1,517 @@
+{
+  "schema_version": 1,
+  "captured_at_utc": "2026-10-11T07:40:17.347009+00:00",
+  "source": "https://github.com/ValdtechSSO/DnetWebProxy/actions/runs/38122139419",
+  "subnet": "192.168.0.0/24",
+  "network": "docker_datalnet",
+  "blocked_ips": {
+    "172.17.0.1": [
+      "Gateway: bridge"
+    ],
+    "172.18.0.1": [
+      "Gateway: docker_default"
+    ],
+    "172.18.0.2": [
+      "Docker: qdrant"
+    ],
+    "192.168.0.0": [
+      "Dirección de red"
+    ],
+    "192.168.0.1": [
+      "Gateway: docker_datalnet",
+      "Interfaz host: br-6f39c40b29f2"
+    ],
+    "192.168.0.2": [
+      "Docker: docker-webproxy-1",
+      "dnetwebproxy-docker-compose.yaml: webproxy"
+    ],
+    "192.168.0.3": [
+      "Docker: docker-blazorclient-1",
+      "YARP: blazorclient",
+      "dnetblazor-docker-compose.yaml: blazorclient"
+    ],
+    "192.168.0.4": [
+      "Docker: soccer-integration-worker-test"
+    ],
+    "192.168.0.5": [
+      "Docker: valdtech-client-prod",
+      "YARP: valdtechsecurityclient",
+      "valdtech-prod-docker-compose.yaml: valdtechsecurityclientprod"
+    ],
+    "192.168.0.6": [
+      "Docker: valdtech-api-prod",
+      "YARP: valdtechsecurityapi",
+      "valdtech-prod-docker-compose.yaml: valdtechsecurityapiprod"
+    ],
+    "192.168.0.7": [
+      "Docker: valdtech-server-prod",
+      "YARP: valdtechsecurityserver",
+      "valdtech-prod-docker-compose.yaml: valdtechsecurityserverprod"
+    ],
+    "192.168.0.8": [
+      "Docker: valdtech-marketing-prod",
+      "YARP: valdtechmarketing",
+      "valdtech-prod-docker-compose.yaml: valdtechsecuritymarketingprod"
+    ],
+    "192.168.0.9": [
+      "Docker: soccer-integration-worker-prod"
+    ],
+    "192.168.0.10": [
+      "Referencia conservada en Dockerfile.yaml",
+      "mssql-docker-compose.yaml: mssql"
+    ],
+    "192.168.0.11": [
+      "Docker: seq-1",
+      "YARP: valdtechlogs",
+      "observability-docker-compose.yaml: seq"
+    ],
+    "192.168.0.12": [
+      "YARP: valdtechlogsdev"
+    ],
+    "192.168.0.13": [
+      "YARP: valdtechvault"
+    ],
+    "192.168.0.14": [
+      "YARP: qwikcmp",
+      "dnetqwikcmp-docker-compose.yaml: qwikclient"
+    ],
+    "192.168.0.15": [
+      "YARP: lawyershelvemanage",
+      "lawyershelve-docker-compose.yml: lawyershelveclient",
+      "lawyershelve-prod-docker-compose.yaml: lawyershelveclientprod"
+    ],
+    "192.168.0.16": [
+      "YARP: lawyershelveresource",
+      "lawyershelve-docker-compose.yml: lawyershelveapi",
+      "lawyershelve-prod-docker-compose.yaml: lawyershelveapiprod"
+    ],
+    "192.168.0.18": [
+      "Docker: postgres17",
+      "Referencia conservada en Dockerfile.yaml",
+      "postgres-docker-compose.yml: postgres",
+      "postgres17-docker-compose.yml: postgres17"
+    ],
+    "192.168.0.19": [
+      "Docker: postgres18",
+      "YARP: lawyershelve",
+      "lawyershelve-docker-compose.yml: lawyershelvelanding",
+      "lawyershelve-prod-docker-compose.yaml: lawyershelvelandingprod",
+      "postgres18-docker-compose.yml: postgres18"
+    ],
+    "192.168.0.20": [
+      "YARP: platedeluxe",
+      "youplay-prod-docker-compose.yaml: youplaylandingprod"
+    ],
+    "192.168.0.21": [
+      "YARP: platedeluxeadmin",
+      "youplay-prod-docker-compose.yaml: youplayadminprod"
+    ],
+    "192.168.0.22": [
+      "YARP: platedeluxeresource",
+      "youplay-prod-docker-compose.yaml: youplayapiprod"
+    ],
+    "192.168.0.23": [
+      "Docker: resource-general-prod",
+      "YARP: resourcemngapi",
+      "ll-resource-prod-docker-compose.yaml: resourcemngapiprod"
+    ],
+    "192.168.0.24": [
+      "YARP: resourcemngteamapi"
+    ],
+    "192.168.0.25": [
+      "Docker: security-server-prod",
+      "YARP: securityserverapi",
+      "ll-security-prod-docker-compose.yaml: securityserverapiprod"
+    ],
+    "192.168.0.26": [
+      "Docker: security-api-prod",
+      "YARP: securityserviceapi",
+      "ll-security-prod-docker-compose.yaml: securityserviceapiprod"
+    ],
+    "192.168.0.27": [
+      "Docker: soccer-mng-prod",
+      "YARP: soccermngapi",
+      "ll-soccer-prod-docker-compose.yaml: soccermngapiprod"
+    ],
+    "192.168.0.28": [
+      "Docker: soccer-public-prod",
+      "YARP: soccerstatapi",
+      "ll-soccer-prod-docker-compose.yaml: soccerstatapiprod"
+    ],
+    "192.168.0.29": [
+      "YARP: tournamentmngapi"
+    ],
+    "192.168.0.31": [
+      "Docker: tournament-api-prod",
+      "YARP: tournamentapi",
+      "tournament-prod-docker-compose.yaml: tournamentapiprod"
+    ],
+    "192.168.0.32": [
+      "Docker: laliguilla-client-production",
+      "YARP: laliguilla",
+      "ll-laliguilla-production-docker-compose.yaml: laliguillaclientproduction"
+    ],
+    "192.168.0.33": [
+      "Docker: image-converter-server-prod",
+      "image-converter-server-prod-docker-compose.yaml: laliguillaimagesapiprod"
+    ],
+    "192.168.0.34": [
+      "Docker: soccer-mcp-prod",
+      "ll-soccer-prod-docker-compose.yaml: soccermcpprod"
+    ],
+    "192.168.0.35": [
+      "Docker: vitara-web-production",
+      "YARP: vitarafitness",
+      "ubuntu-docker-compose.yml: pgloader",
+      "vitara-web-production-docker-compose.yaml: vitarawebclient"
+    ],
+    "192.168.0.36": [
+      "Docker: vitara-fitness-api-prod",
+      "YARP: vitarafitnessapi",
+      "vitarafitness-api-prod-docker-compose.yaml: vitarafitnessapi"
+    ],
+    "192.168.0.37": [
+      "YARP: labelforge",
+      "label-forge-web-production-docker-compose.yaml: labelforgewebclient"
+    ],
+    "192.168.0.38": [
+      "YARP: labelforgeapi",
+      "label-forge-api-prod-docker-compose.yaml: labelforgeapi"
+    ],
+    "192.168.0.39": [
+      "Docker: vyntrio-web-production",
+      "YARP: vyntrio",
+      "vyntrio-web-production-docker-compose.yaml: vyntriowebclient"
+    ],
+    "192.168.0.40": [
+      "Docker: vyntrio-api-prod",
+      "YARP: vyntrioapi",
+      "vyntrio-api-prod-docker-compose.yaml: vyntrioapi"
+    ],
+    "192.168.0.41": [
+      "Docker: padel-mng-prod",
+      "YARP: padelmngapi",
+      "ll-padel-prod-docker-compose.yaml: padelmngapiprod"
+    ],
+    "192.168.0.42": [
+      "Docker: tennis-mng-prod",
+      "YARP: platformadmin",
+      "YARP: tennismngapi",
+      "ll-tennis-prod-docker-compose.yaml: tennismngapiprod"
+    ],
+    "192.168.0.43": [
+      "Docker: platformadminapi",
+      "YARP: platformadminapi",
+      "ll-platform-admin-api-prod-docker-compose.yaml: platformadminapi"
+    ],
+    "192.168.0.45": [
+      "Docker: volley-mng-prod",
+      "YARP: valdtechmetrics",
+      "YARP: volleymngapi",
+      "ll-volley-prod-docker-compose.yaml: volleymngapiprod",
+      "observability-docker-compose.yaml: jaeger"
+    ],
+    "192.168.0.46": [
+      "Docker: baseball-mng-prod",
+      "YARP: baseballmngapi",
+      "ll-baseball-prod-docker-compose.yaml: baseballmngapiprod",
+      "observability-docker-compose.yaml: otel-collector"
+    ],
+    "192.168.0.47": [
+      "Docker: baseball-public-prod",
+      "YARP: baseballstatapi",
+      "ll-baseball-prod-docker-compose.yaml: baseballpublicapiprod",
+      "observability-docker-compose.yaml: prometheus"
+    ],
+    "192.168.0.48": [
+      "Docker: padel-public-prod",
+      "YARP: padelstatapi",
+      "ll-padel-prod-docker-compose.yaml: padelstatapiprod",
+      "observability-docker-compose.yaml: alertmanager"
+    ],
+    "192.168.0.49": [
+      "Docker: padel-mcp-prod",
+      "ll-padel-prod-docker-compose.yaml: padelmcpprod",
+      "observability-docker-compose.yaml: grafana"
+    ],
+    "192.168.0.50": [
+      "Docker: tennis-public-prod",
+      "YARP: tennisstatapi",
+      "ll-tennis-prod-docker-compose.yaml: tennisstatapiprod"
+    ],
+    "192.168.0.51": [
+      "Docker: tennis-mcp-prod",
+      "ll-tennis-prod-docker-compose.yaml: tennismcpprod"
+    ],
+    "192.168.0.52": [
+      "Docker: volley-public-prod",
+      "YARP: volleystatapi",
+      "ll-volley-prod-docker-compose.yaml: volleystatapiprod"
+    ],
+    "192.168.0.53": [
+      "Docker: volley-mcp-prod",
+      "ll-volley-prod-docker-compose.yaml: volleymcpprod"
+    ],
+    "192.168.0.54": [
+      "Docker: baseball-mcp-prod",
+      "ll-baseball-prod-docker-compose.yaml: baseballmcpprod"
+    ],
+    "192.168.0.100": [
+      "Frontera prod/test; no asignar"
+    ],
+    "192.168.0.105": [
+      "YARP: valdtechsecurityclientdev",
+      "valdtech-dev-docker-compose.yaml: valdtechsecurityclientdev"
+    ],
+    "192.168.0.106": [
+      "YARP: valdtechsecurityapidev",
+      "valdtech-dev-docker-compose.yaml: valdtechsecurityapidev"
+    ],
+    "192.168.0.107": [
+      "YARP: valdtechsecurityserverdev",
+      "valdtech-dev-docker-compose.yaml: valdtechsecurityserverdev"
+    ],
+    "192.168.0.115": [
+      "YARP: lawyershelvemanagedev",
+      "lawyershelve-dev-docker-compose.yaml: lawyershelveclientdev"
+    ],
+    "192.168.0.116": [
+      "YARP: lawyershelveresourcedev",
+      "lawyershelve-dev-docker-compose.yaml: lawyershelveapidev"
+    ],
+    "192.168.0.119": [
+      "YARP: lawyershelvedev",
+      "lawyershelve-dev-docker-compose.yaml: lawyershelvelandingdev"
+    ],
+    "192.168.0.123": [
+      "Docker: resource-general-test",
+      "YARP: resourcemngapitest",
+      "ll-resource-test-docker-compose.yaml: resourcemngapitest"
+    ],
+    "192.168.0.124": [
+      "YARP: resourcemngteamapitest"
+    ],
+    "192.168.0.125": [
+      "Docker: security-server-test",
+      "YARP: securityserverapitest",
+      "ll-security-test-docker-compose.yaml: securityserverapitest"
+    ],
+    "192.168.0.126": [
+      "Docker: security-api-test",
+      "YARP: securityserviceapitest",
+      "ll-security-test-docker-compose.yaml: securityserviceapitest"
+    ],
+    "192.168.0.127": [
+      "Docker: soccer-mng-test",
+      "YARP: soccermngapitest",
+      "ll-soccer-test-docker-compose.yaml: soccermngapitest"
+    ],
+    "192.168.0.128": [
+      "Docker: soccer-public-test",
+      "YARP: soccerstatapitest",
+      "ll-soccer-test-docker-compose.yaml: soccerstatapitest"
+    ],
+    "192.168.0.129": [
+      "YARP: tournamentmngapitest"
+    ],
+    "192.168.0.130": [
+      "YARP: tournamentclienttest"
+    ],
+    "192.168.0.131": [
+      "Docker: tournament-api-test",
+      "YARP: tournamentapitest",
+      "tournament-test-docker-compose.yaml: tournamentapitest"
+    ],
+    "192.168.0.132": [
+      "Docker: laliguilla-client-test",
+      "YARP: laliguillatest",
+      "ll-laliguilla-test-docker-compose.yaml: laliguillaclienttest"
+    ],
+    "192.168.0.133": [
+      "image-converter-server-test-docker-compose.yaml: laliguillaimagesapitest"
+    ],
+    "192.168.0.134": [
+      "Docker: soccer-mcp-test",
+      "ll-soccer-test-docker-compose.yaml: soccermcptest"
+    ],
+    "192.168.0.141": [
+      "Docker: padel-mng-test",
+      "YARP: padelmngapitest",
+      "ll-padel-test-docker-compose.yaml: padelmngapitest"
+    ],
+    "192.168.0.142": [
+      "Docker: tennis-mng-test",
+      "YARP: platformadmintest",
+      "YARP: tennismngapitest",
+      "ll-platform-admin-test-docker-compose.yaml: platformadmin",
+      "ll-tennis-test-docker-compose.yaml: tennismngapitest"
+    ],
+    "192.168.0.143": [
+      "Docker: platformadminapitest",
+      "YARP: platformadminapitest",
+      "ll-platform-admin-api-test-docker-compose.yaml: platformadminapitest"
+    ],
+    "192.168.0.145": [
+      "Docker: volley-mng-test",
+      "YARP: volleymngapitest",
+      "ll-volley-test-docker-compose.yaml: volleymngapitest"
+    ],
+    "192.168.0.146": [
+      "Docker: baseball-mng-test",
+      "YARP: baseballmngapitest",
+      "ll-baseball-test-docker-compose.yaml: baseballmngapitest"
+    ],
+    "192.168.0.147": [
+      "Docker: baseball-public-test",
+      "YARP: baseballstatapitest",
+      "ll-baseball-test-docker-compose.yaml: baseballpublicapitest"
+    ],
+    "192.168.0.148": [
+      "Docker: padel-public-test",
+      "YARP: padelstatapitest",
+      "ll-padel-test-docker-compose.yaml: padelstatapitest"
+    ],
+    "192.168.0.149": [
+      "Docker: padel-mcp-test",
+      "ll-padel-test-docker-compose.yaml: padelmcptest"
+    ],
+    "192.168.0.150": [
+      "Docker: tennis-public-test",
+      "YARP: tennisstatapitest",
+      "ll-tennis-test-docker-compose.yaml: tennisstatapitest"
+    ],
+    "192.168.0.151": [
+      "Docker: tennis-mcp-test",
+      "ll-tennis-test-docker-compose.yaml: tennismcptest"
+    ],
+    "192.168.0.152": [
+      "Docker: volley-public-test",
+      "YARP: volleystatapitest",
+      "ll-volley-test-docker-compose.yaml: volleystatapitest"
+    ],
+    "192.168.0.153": [
+      "Docker: volley-mcp-test",
+      "ll-volley-test-docker-compose.yaml: volleymcptest"
+    ],
+    "192.168.0.154": [
+      "Docker: baseball-mcp-test",
+      "ll-baseball-test-docker-compose.yaml: baseballmcptest"
+    ],
+    "192.168.0.200": [
+      "Docker: jaeger"
+    ],
+    "192.168.0.201": [
+      "Docker: otel-collector"
+    ],
+    "192.168.0.202": [
+      "Docker: prometheus"
+    ],
+    "192.168.0.203": [
+      "Docker: alertmanager"
+    ],
+    "192.168.0.204": [
+      "Docker: grafana"
+    ],
+    "192.168.0.205": [
+      "Docker: vyntrio-atomization-worker-prod",
+      "vyntrio-api-prod-docker-compose.yaml: vyntrioatomizationworker"
+    ],
+    "192.168.0.206": [
+      "Docker: vitalveinhealth-web-prod",
+      "YARP: vitalveinhealth",
+      "vitalveinhealth-web-prod-docker-compose.yaml: vitalveinhealthweb"
+    ],
+    "192.168.0.207": [
+      "Docker: vitalveinhealth-api-prod",
+      "vitalveinhealth-api-prod-docker-compose.yaml: vitalveinhealthapi"
+    ],
+    "192.168.0.255": [
+      "Broadcast"
+    ]
+  },
+  "blocked_host_ports": [
+    22,
+    53,
+    80,
+    443,
+    1433,
+    2181,
+    3000,
+    3306,
+    4317,
+    4318,
+    5001,
+    5002,
+    5005,
+    5010,
+    5021,
+    5029,
+    5030,
+    5102,
+    5105,
+    5110,
+    5121,
+    5129,
+    5130,
+    5203,
+    5205,
+    5206,
+    5207,
+    5208,
+    5209,
+    5210,
+    5211,
+    5212,
+    5213,
+    5214,
+    5215,
+    5216,
+    5217,
+    5218,
+    5303,
+    5305,
+    5306,
+    5307,
+    5308,
+    5309,
+    5310,
+    5311,
+    5312,
+    5313,
+    5314,
+    5315,
+    5316,
+    5317,
+    5318,
+    5320,
+    5321,
+    5322,
+    5341,
+    5432,
+    5433,
+    5501,
+    5502,
+    5621,
+    5641,
+    5672,
+    5721,
+    5741,
+    5821,
+    5841,
+    6333,
+    6334,
+    7171,
+    7201,
+    7206,
+    7207,
+    7229,
+    8080,
+    8081,
+    9090,
+    9092,
+    9093,
+    15672,
+    16686
+  ],
+  "note": "Conservative baseline: keep legacy addresses reserved until retirement is verified. Always combine with live VPS state and central allocations."
+}
