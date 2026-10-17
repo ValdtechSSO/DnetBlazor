@@ -6,11 +6,13 @@
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Services
 @inject IConnectedPanelService ConnectedPanelService
 
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
 <div class="contact-filter" role="dialog" aria-labelledby="contact-filter-title">
-    <header><p>Directory settings</p><h2 id="contact-filter-title">Filter contacts</h2><span>Choose which team appears in the directory.</span></header>
+    <header><p>@S["ContactFilterContent.DirectorySettings"]</p><h2 id="contact-filter-title">@S["ConnectedPanel.FilterContacts"]</h2><span>@S["ContactFilterContent.ChooseWhichTeamAppearsInTheDirectory"]</span></header>
     <EditForm Model="_filter" OnSubmit="ApplyFilter">
-        <div class="contact-filter-field"><DnetFormField Label="Team"><ChildContent><DnetSelect TValue="string" TItem="string" @bind-Value="_filter.Department" Items="_teams" DisplayValueConverter="team => team" ValueConverter="team => team" ResponsiveLabel="Team" /></ChildContent></DnetFormField></div>
-        <footer><DnetButton Variant="DnetButtonVariant.Outlined" OnClick="Cancel">Cancel</DnetButton><DnetButton id="connected-panel-apply" class="contact-filter-apply" ButtonType="submit">Apply filter</DnetButton></footer>
+        <div class="contact-filter-field"><DnetFormField Label="@S["ContactFilterContent.Team"]"><ChildContent><DnetSelect TValue="string" TItem="string" @bind-Value="_filter.Department" Items="_teams" DisplayValueConverter="team => S.Text(team)" ValueConverter="team => team" ResponsiveLabel="@S["ContactFilterContent.Team"]" /></ChildContent></DnetFormField></div>
+        <footer><DnetButton Variant="DnetButtonVariant.Outlined" OnClick="Cancel">@S["Theming.Cancel"]</DnetButton><DnetButton id="connected-panel-apply" class="contact-filter-apply" ButtonType="submit">@S["ContactFilterContent.ApplyFilter"]</DnetButton></footer>
     </EditForm>
 </div>
 

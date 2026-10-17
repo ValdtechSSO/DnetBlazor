@@ -17,7 +17,7 @@ public sealed class PillTabsTests
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
         var page = await browser.NewPageAsync();
-        await page.GotoAsync($"{BaseUrl.TrimEnd('/')}/PillTabs");
+        await BrowserReady.OpenAsync(page, $"{BaseUrl.TrimEnd('/')}/PillTabs");
 
         var reference = page.Locator("#pill-tabs-reference");
         var tabs = reference.GetByRole(AriaRole.Tab);
@@ -69,7 +69,7 @@ public sealed class PillTabsTests
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
         var page = await browser.NewPageAsync();
-        await page.GotoAsync($"{BaseUrl.TrimEnd('/')}/PillTabs");
+        await BrowserReady.OpenAsync(page, $"{BaseUrl.TrimEnd('/')}/PillTabs");
         await page.Locator("#pill-tabs-overflow").WaitForAsync();
         await page.EvaluateAsync("() => document.fonts.ready");
 
@@ -125,7 +125,7 @@ public sealed class PillTabsTests
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
         var page = await browser.NewPageAsync(new() { ViewportSize = new() { Width = 390, Height = 844 } });
-        await page.GotoAsync($"{BaseUrl.TrimEnd('/')}/PillTabs");
+        await BrowserReady.OpenAsync(page, $"{BaseUrl.TrimEnd('/')}/PillTabs");
         var root = page.Locator("#pill-tabs-settings");
         await root.WaitForAsync();
         var selected = root.Locator("[aria-selected=true]");

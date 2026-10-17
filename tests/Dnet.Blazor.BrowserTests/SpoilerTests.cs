@@ -17,7 +17,7 @@ public sealed class SpoilerTests
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
         var page = await browser.NewPageAsync(new() { ReducedMotion = ReducedMotion.Reduce });
-        await page.GotoAsync($"{BaseUrl.TrimEnd('/')}/Spoiler");
+        await BrowserReady.OpenAsync(page, $"{BaseUrl.TrimEnd('/')}/Spoiler");
 
         var root = page.Locator("#spoiler-basic");
         await Assertions.Expect(root).ToHaveAttributeAsync("data-overflow", "true");
@@ -61,7 +61,7 @@ public sealed class SpoilerTests
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
         var page = await browser.NewPageAsync(new() { ReducedMotion = ReducedMotion.Reduce });
-        await page.GotoAsync($"{BaseUrl.TrimEnd('/')}/Spoiler");
+        await BrowserReady.OpenAsync(page, $"{BaseUrl.TrimEnd('/')}/Spoiler");
         var root = page.Locator("#spoiler-controlled");
         await Assertions.Expect(root).ToHaveAttributeAsync("data-overflow", "true");
         var visible = page.Locator("#spoiler-visible-link");
@@ -95,7 +95,7 @@ public sealed class SpoilerTests
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
         var page = await browser.NewPageAsync(new() { ViewportSize = new() { Width = 1440, Height = 1000 } });
-        await page.GotoAsync($"{BaseUrl.TrimEnd('/')}/Spoiler");
+        await BrowserReady.OpenAsync(page, $"{BaseUrl.TrimEnd('/')}/Spoiler");
         var root = page.Locator("#spoiler-basic");
         await Assertions.Expect(root).ToHaveAttributeAsync("data-overflow", "true");
         await page.EvaluateAsync("() => document.fonts.ready");

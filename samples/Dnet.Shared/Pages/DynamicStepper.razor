@@ -2,22 +2,24 @@
 @using Dnet.Blazor.Components.DynamicStepper
 @using Dnet.Blazor.Components.Checkbox
 
-<DemoPage Id="demo-dynamic-stepper" Title="Dynamic stepper" Category="Navigation"
-          Description="Keep a longer workflow compact. The visible steps move with you as you work toward the final stage." Badge="10 stages">
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
+<DemoPage Id="demo-dynamic-stepper" Title="@S["DynamicStepper.DynamicStepper"]" Category="@S["Stepper.Navigation"]"
+          Description="@S["DynamicStepper.KeepALongerWorkflowCompactTheVisibleSteps"]" Badge="@S["DynamicStepper.10Stages"]">
     <div class="demo-stack">
-        <DemoCard Id="dynamic-stepper-workflow" Title="From brief to release" Eyebrow="Adaptive step window"
-                  Description="Use Next and Previous, or choose a visible stage. More steps appear as you move through the workflow.">
+        <DemoCard Id="dynamic-stepper-workflow" Title="@S["DynamicStepper.FromBriefToRelease"]" Eyebrow="@S["DynamicStepper.AdaptiveStepWindow"]"
+                  Description="@S["DynamicStepper.UseNextAndPreviousOrChooseAVisible"]">
             <ChildContent>
                 <div class="dnet-app-dstepper-container dynamic-stepper-stage">
                     <DnetDynamicStepper ShowButtons="_showButtons" Editable="@(!_locked)" OnSelectionChange="StepChanged">
                         @foreach (var stage in _stages)
                         {
-                            <DnetDynamicStep Label="@stage.Title">
+                            <DnetDynamicStep Label="@S.Text(stage.Title)">
                                 <div class="dynamic-stepper-content">
-                                    <span class="dynamic-stepper-kicker">Release workflow · Stage @(stage.Index + 1)</span>
-                                    <h3>@stage.Heading</h3>
-                                    <p class="demo-muted">@stage.Description</p>
-                                    <div class="dynamic-stepper-owner"><span class="demo-info">Responsible team</span><strong>@stage.Owner</strong></div>
+                                    <span class="dynamic-stepper-kicker">@S.Format("Common.ReleaseWorkflowStage0", stage.Index + 1)</span>
+                                    <h3>@S.Display(stage.Heading)</h3>
+                                    <p class="demo-muted">@S.Display(stage.Description)</p>
+                                    <div class="dynamic-stepper-owner"><span class="demo-info">@S["DynamicStepper.ResponsibleTeam"]</span><strong>@S.Display(stage.Owner)</strong></div>
                                 </div>
                             </DnetDynamicStep>
                         }
@@ -26,22 +28,22 @@
             </ChildContent>
             <Footer>
                 <div class="dynamic-stepper-progress">
-                    <span id="dynamic-stepper-value" role="status">Stage @_selectedStep of @_stages.Length · @_stages[_selectedStep - 1].Title</span>
-                    <progress value="@_selectedStep" max="@_stages.Length" aria-label="Current workflow position"></progress>
+                    <span id="dynamic-stepper-value" role="status">@S.Format("Common.Stage0Of12", _selectedStep, _stages.Length, S.Text(_stages[_selectedStep - 1].Title))</span>
+                    <progress value="@_selectedStep" max="@_stages.Length" aria-label="@S["DynamicStepper.CurrentWorkflowPosition"]"></progress>
                 </div>
             </Footer>
         </DemoCard>
         <div class="demo-grid">
-            <DemoCard Id="dynamic-stepper-options" Title="Navigation options" Description="Explore how the same workflow responds to different controls.">
-                <div class="demo-option-row"><DnetInputCheckbox id="dynamic-stepper-show-buttons" @bind-Value="_showButtons">Show Previous and Next</DnetInputCheckbox></div>
-                <div class="demo-option-row"><DnetInputCheckbox id="dynamic-stepper-lock" @bind-Value="_locked">Lock the current stage</DnetInputCheckbox></div>
-                <p id="dynamic-stepper-options-value" class="demo-info" role="status">@(_locked ? "Navigation is locked at the current stage." : "Navigation is available between stages.")</p>
+            <DemoCard Id="dynamic-stepper-options" Title="@S["DynamicStepper.NavigationOptions"]" Description="@S["DynamicStepper.ExploreHowTheSameWorkflowRespondsToDifferent"]">
+                <div class="demo-option-row"><DnetInputCheckbox id="dynamic-stepper-show-buttons" @bind-Value="_showButtons">@S["DynamicStepper.ShowPreviousAndNext"]</DnetInputCheckbox></div>
+                <div class="demo-option-row"><DnetInputCheckbox id="dynamic-stepper-lock" @bind-Value="_locked">@S["DynamicStepper.LockTheCurrentStage"]</DnetInputCheckbox></div>
+                <p id="dynamic-stepper-options-value" class="demo-info" role="status">@S.Display(_locked ? "Navigation is locked at the current stage." : "Navigation is available between stages.")</p>
             </DemoCard>
-            <DemoCard Id="dynamic-stepper-guide" Title="A compact view of a longer journey" Description="A sliding step window keeps the current stage within reach.">
+            <DemoCard Id="dynamic-stepper-guide" Title="@S["DynamicStepper.ACompactViewOfALongerJourney"]" Description="@S["DynamicStepper.ASlidingStepWindowKeepsTheCurrentStage"]">
                 <ul class="demo-bullets">
-                    <li>The header shows as many stages as the available space allows.</li>
-                    <li>Moving near an edge reveals the next part of the workflow.</li>
-                    <li>Previous and Next become unavailable at the first and last stages.</li>
+                    <li>@S["DynamicStepper.TheHeaderShowsAsManyStagesAsThe"]</li>
+                    <li>@S["DynamicStepper.MovingNearAnEdgeRevealsTheNextPart"]</li>
+                    <li>@S["DynamicStepper.PreviousAndNextBecomeUnavailableAtTheFirst"]</li>
                 </ul>
             </DemoCard>
         </div>

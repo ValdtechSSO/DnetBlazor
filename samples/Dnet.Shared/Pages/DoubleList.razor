@@ -3,113 +3,122 @@
 @using Dnet.Blazor.Components.Checkbox
 @using Dnet.Blazor.Components.Button
 
+<DnetLocalizationObserver OnChanged="RefreshSampleLanguage" />
+
 @{ var listRevision = _listRevision; }
 
-<DemoPage Id="demo-doublelist" Title="Double List" Category="Selection controls"
-          Description="Bring the right people into a project. Move one person at a time, transfer a selection or drag people between the two lists."
-          Badge="Choose · Move · Review">
-    <DemoCard Id="doublelist-workspace-card" Title="Build your project team" Eyebrow="Website launch"
-              Description="Move people from the available list into your project team. Select people with the checkboxes, then assign or return them.">
+<DemoPage Id="demo-doublelist" Title="@S["DoubleList.DoubleList"]" Category="@S["SlideToggle.SelectionControls"]"
+          Description="@S["DoubleList.BringTheRightPeopleIntoAProjectMove"]"
+          Badge="@S["DoubleList.ChooseMoveReview"]">
+    <DemoCard Id="doublelist-workspace-card" Title="@S["DoubleList.BuildYourProjectTeam"]" Eyebrow="@S["Chips.WebsiteLaunch"]"
+              Description="@S["DoubleList.MovePeopleFromTheAvailableListIntoYour"]">
         <ChildContent>
             <div class="demo-stack">
-                <div class="doublelist-view-switch" role="group" aria-label="Choose a list">
+                <div class="doublelist-view-switch" role="group" aria-label="@S["DoubleList.ChooseAList"]">
                     <button id="doublelist-show-available" type="button" aria-pressed="@(!_showAssigned ? "true" : "false")"
-                            @onclick="() => _showAssigned = false">Available (@_availableItems.Count)</button>
+                            @onclick="() => _showAssigned = false">@S.Format("Common.Available0", _availableItems.Count)</button>
                     <button id="doublelist-show-assigned" type="button" aria-pressed="@(_showAssigned ? "true" : "false")"
-                            @onclick="() => _showAssigned = true">Assigned (@_assignedItems.Count)</button>
+                            @onclick="() => _showAssigned = true">@S.Format("Common.Assigned0", _assignedItems.Count)</button>
                 </div>
                 <div class="doublelist-workspace">
                     <section class="doublelist-column @(!_showAssigned ? "doublelist-active" : null)" aria-labelledby="doublelist-available-title">
-                        <div class="doublelist-column-heading"><h3 id="doublelist-available-title">Available people</h3><span class="doublelist-count">@_availableItems.Count</span></div>
-                        <p class="demo-muted doublelist-column-description">Choose who joins the project.</p>
+                        <div class="doublelist-column-heading"><h3 id="doublelist-available-title">@S["DoubleList.AvailablePeople"]</h3><span class="doublelist-count">@S.Display(_availableItems.Count)</span></div>
+                        <p class="demo-muted doublelist-column-description">@S["DoubleList.ChooseWhoJoinsTheProject"]</p>
                         <div id="doublelist-available" class="doublelist-stage">
                             <DnetList @key="listRevision" TItem="Contact" Items="_availableItems" ListOptions="_availableOptions"
-                                      Label="Search available" PlaceHolder="Type a name"
+                                      Label="@S["DoubleList.SearchAvailable"]" PlaceHolder="@S["List.TypeAName"]"
                                       OnSelectionChange="AvailableSelectionChanged" OnDrop="ReturnPeople"
                                       OnTransfer="@(contact => QuickMove(contact, true, listRevision))">
                                 <ItemPrefixContent Context="contact"><span class="doublelist-avatar" aria-hidden="true">@Initials(contact.Name)</span></ItemPrefixContent>
                                 <ListItemContent Context="contact">
                                     <span class="dnet-list-item-headline">@contact.Name</span>
-                                    <span class="dnet-list-item-supporting-text">@contact.Role</span>
+                                    <span class="dnet-list-item-supporting-text">@S.Display(contact.Role)</span>
                                 </ListItemContent>
                             </DnetList>
                             @if (_availableItems.Count == 0)
                             {
-                                <div id="doublelist-available-empty" class="doublelist-empty" role="status"><strong>Everyone is on the team</strong><span>Return someone to make them available again.</span></div>
+                                <div id="doublelist-available-empty" class="doublelist-empty" role="status"><strong>@S["DoubleList.EveryoneIsOnTheTeam"]</strong><span>@S["DoubleList.ReturnSomeoneToMakeThemAvailableAgain"]</span></div>
                             }
                         </div>
-                        <div class="doublelist-mobile-action"><DnetButton id="doublelist-assign-mobile" disabled="@(_availableSelection.Count == 0)" OnClick="AssignSelection">Assign selected (@_availableSelection.Count) →</DnetButton></div>
+                        <div class="doublelist-mobile-action"><DnetButton id="doublelist-assign-mobile" disabled="@(_availableSelection.Count == 0)" OnClick="AssignSelection">@S.Format("Common.AssignSelected0", _availableSelection.Count)</DnetButton></div>
                     </section>
 
-                    <div class="doublelist-transfer-controls" role="group" aria-label="Move selected people">
-                        <DnetButton id="doublelist-assign" disabled="@(_availableSelection.Count == 0)" OnClick="AssignSelection">Assign →</DnetButton>
-                        <DnetButton Variant="DnetButtonVariant.Outlined" id="doublelist-return" disabled="@(_assignedSelection.Count == 0)" OnClick="ReturnSelection">← Return</DnetButton>
-                        <span class="demo-muted">Selected people</span>
+                    <div class="doublelist-transfer-controls" role="group" aria-label="@S["DoubleList.MoveSelectedPeople"]">
+                        <DnetButton id="doublelist-assign" disabled="@(_availableSelection.Count == 0)" OnClick="AssignSelection">@S["DoubleList.Assign"]</DnetButton>
+                        <DnetButton Variant="DnetButtonVariant.Outlined" id="doublelist-return" disabled="@(_assignedSelection.Count == 0)" OnClick="ReturnSelection">@S["DoubleList.Return"]</DnetButton>
+                        <span class="demo-muted">@S["DoubleList.SelectedPeople"]</span>
                     </div>
 
                     <section class="doublelist-column @(_showAssigned ? "doublelist-active" : null)" aria-labelledby="doublelist-assigned-title">
-                        <div class="doublelist-column-heading"><h3 id="doublelist-assigned-title">Assigned to project</h3><span class="doublelist-count">@_assignedItems.Count</span></div>
-                        <p class="demo-muted doublelist-column-description">The project lead stays on the team.</p>
+                        <div class="doublelist-column-heading"><h3 id="doublelist-assigned-title">@S["DoubleList.AssignedToProject"]</h3><span class="doublelist-count">@S.Display(_assignedItems.Count)</span></div>
+                        <p class="demo-muted doublelist-column-description">@S["DoubleList.TheProjectLeadStaysOnTheTeam"]</p>
                         <div id="doublelist-assigned" class="doublelist-stage">
                             <DnetList @key="listRevision" TItem="Contact" Items="_assignedItems" ListOptions="_assignedOptions"
-                                      Label="Search assigned" PlaceHolder="Type a name"
+                                      Label="@S["DoubleList.SearchAssigned"]" PlaceHolder="@S["List.TypeAName"]"
                                       OnSelectionChange="AssignedSelectionChanged" OnDrop="AssignPeople"
                                       OnTransfer="@(contact => QuickMove(contact, false, listRevision))">
                                 <ItemPrefixContent Context="contact"><span class="doublelist-avatar @(contact.IsLocked ? "doublelist-avatar-muted" : null)" aria-hidden="true">@Initials(contact.Name)</span></ItemPrefixContent>
                                 <ListItemContent Context="contact">
                                     <span class="dnet-list-item-headline @(contact.IsLocked ? "disabled" : null)">@contact.Name</span>
-                                    <span class="dnet-list-item-supporting-text @(contact.IsLocked ? "disabled" : null)">@contact.Role @(contact.IsLocked ? "· Fixed" : null)</span>
+                                    <span class="dnet-list-item-supporting-text @(contact.IsLocked ? "disabled" : null)">@S.Display(contact.Role) @(contact.IsLocked ? S.Text("· Fixed") : null)</span>
                                 </ListItemContent>
                             </DnetList>
                         </div>
-                        <div class="doublelist-mobile-action"><DnetButton Variant="DnetButtonVariant.Outlined" id="doublelist-return-mobile" disabled="@(_assignedSelection.Count == 0)" OnClick="ReturnSelection">← Return selected (@_assignedSelection.Count)</DnetButton></div>
+                        <div class="doublelist-mobile-action"><DnetButton Variant="DnetButtonVariant.Outlined" id="doublelist-return-mobile" disabled="@(_assignedSelection.Count == 0)" OnClick="ReturnSelection">@S.Format("Common.ReturnSelected0", _assignedSelection.Count)</DnetButton></div>
                     </section>
                 </div>
-                <p id="doublelist-action" class="demo-status" role="status">@_lastAction</p>
-                <p class="demo-info">Click a person's name for a quick move. On desktop, you can also drag a person or a selection to the other list. Moving people clears searches and pending selections.</p>
+                <p id="doublelist-action" class="demo-status" role="status">@S.Display(_lastAction)</p>
+                <p class="demo-info">@S["DoubleList.ClickAPersonSNameForAQuick"]</p>
             </div>
         </ChildContent>
         <Footer>
             <div class="doublelist-metrics" role="status">
-                <span id="doublelist-available-count"><strong>@_availableItems.Count</strong> available</span>
-                <span id="doublelist-assigned-count"><strong>@_assignedItems.Count</strong> assigned</span>
-                <span id="doublelist-selected-count"><strong>@(_availableSelection.Count + _assignedSelection.Count)</strong> selected</span>
+                <span id="doublelist-available-count"><strong>@S.Display(_availableItems.Count)</strong> @S["DoubleList.Available"]</span>
+                <span id="doublelist-assigned-count"><strong>@S.Display(_assignedItems.Count)</strong> @S["DoubleList.Assigned"]</span>
+                <span id="doublelist-selected-count"><strong>@S.Display(_availableSelection.Count + _assignedSelection.Count)</strong> @S["DoubleList.Selected"]</span>
             </div>
         </Footer>
     </DemoCard>
 
     <div class="demo-grid">
-        <DemoCard Id="doublelist-options" Title="Choose your list controls" Eyebrow="Display preferences"
-                  Description="Adjust both lists together. Assignments stay in place; changing a control clears searches and pending selections.">
+        <DemoCard Id="doublelist-options" Title="@S["DoubleList.ChooseYourListControls"]" Eyebrow="@S["DoubleList.DisplayPreferences"]"
+                  Description="@S["DoubleList.AdjustBothListsTogetherAssignmentsStayInPlace"]">
             <div class="doublelist-options-grid">
-                <div class="demo-option-row"><DnetInputCheckbox id="doublelist-option-search" @bind-Value="_searching" @bind-Value:after="ApplyOptions">Search</DnetInputCheckbox></div>
-                <div class="demo-option-row"><DnetInputCheckbox id="doublelist-option-checkboxes" @bind-Value="_checkboxes" @bind-Value:after="ApplyOptions">Selection checkboxes</DnetInputCheckbox></div>
-                <div class="demo-option-row"><DnetInputCheckbox id="doublelist-option-sorting" @bind-Value="_sorting" @bind-Value:after="SortingChanged">Sorting</DnetInputCheckbox></div>
-                <div class="demo-option-row"><DnetInputCheckbox id="doublelist-option-header" @bind-Value="_header" @bind-Value:after="HeaderChanged">Header</DnetInputCheckbox></div>
-                <div class="demo-option-row"><DnetInputCheckbox id="doublelist-option-pagination" @bind-Value="_pagination" @bind-Value:after="PaginationChanged">Pagination</DnetInputCheckbox></div>
-                <div class="demo-option-row"><DnetInputCheckbox id="doublelist-option-footer" @bind-Value="_footer" @bind-Value:after="FooterChanged">Footer</DnetInputCheckbox></div>
+                <div class="demo-option-row"><DnetInputCheckbox id="doublelist-option-search" @bind-Value="_searching" @bind-Value:after="ApplyOptions">@S["List.Search"]</DnetInputCheckbox></div>
+                <div class="demo-option-row"><DnetInputCheckbox id="doublelist-option-checkboxes" @bind-Value="_checkboxes" @bind-Value:after="ApplyOptions">@S["List.SelectionCheckboxes"]</DnetInputCheckbox></div>
+                <div class="demo-option-row"><DnetInputCheckbox id="doublelist-option-sorting" @bind-Value="_sorting" @bind-Value:after="SortingChanged">@S["List.Sorting"]</DnetInputCheckbox></div>
+                <div class="demo-option-row"><DnetInputCheckbox id="doublelist-option-header" @bind-Value="_header" @bind-Value:after="HeaderChanged">@S["List.Header"]</DnetInputCheckbox></div>
+                <div class="demo-option-row"><DnetInputCheckbox id="doublelist-option-pagination" @bind-Value="_pagination" @bind-Value:after="PaginationChanged">@S["List.Pagination"]</DnetInputCheckbox></div>
+                <div class="demo-option-row"><DnetInputCheckbox id="doublelist-option-footer" @bind-Value="_footer" @bind-Value:after="FooterChanged">@S["List.Footer"]</DnetInputCheckbox></div>
             </div>
-            <p class="demo-info">The header checkbox selects the current page. Click Name to change sorting. Pagination keeps the footer visible; sorting keeps the header visible.</p>
+            <p class="demo-info">@S["Common.TheHeaderCheckboxSelectsTheCurrentPageClickName"]</p>
         </DemoCard>
 
-        <DemoCard Id="doublelist-summary" Title="Your project team" Eyebrow="Live assignment"
-                  Description="Review everyone currently assigned to the project. The fixed project lead is always included.">
+        <DemoCard Id="doublelist-summary" Title="@S["DoubleList.YourProjectTeam"]" Eyebrow="@S["DoubleList.LiveAssignment"]"
+                  Description="@S["DoubleList.ReviewEveryoneCurrentlyAssignedToTheProjectThe"]">
             <ChildContent>
                 <ul id="doublelist-roster" class="doublelist-roster">
                     @foreach (var contact in _assignedItems.OrderBy(contact => contact.Name))
                     {
-                        <li @key="contact.Id"><span>@contact.Name</span>@if (contact.IsLocked) { <span class="doublelist-fixed">Project lead · Fixed</span> }</li>
+                        <li @key="contact.Id"><span>@contact.Name</span>@if (contact.IsLocked) { <span class="doublelist-fixed">@S["DoubleList.ProjectLeadFixed"]</span> }</li>
                     }
                 </ul>
-                <div class="demo-actions doublelist-reset-action"><DnetButton Variant="DnetButtonVariant.Outlined" id="doublelist-reset" OnClick="ResetAssignment">Reset assignment</DnetButton></div>
-                <p class="demo-info">Restore the original team. Your display preferences stay in place.</p>
+                <div class="demo-actions doublelist-reset-action"><DnetButton Variant="DnetButtonVariant.Outlined" id="doublelist-reset" OnClick="ResetAssignment">@S["DoubleList.ResetAssignment"]</DnetButton></div>
+                <p class="demo-info">@S["DoubleList.RestoreTheOriginalTeamYourDisplayPreferencesStay"]</p>
             </ChildContent>
-            <Footer><span id="doublelist-team-count" class="demo-value" role="status">@_assignedItems.Count @(_assignedItems.Count == 1 ? "person" : "people") on the project · 1 fixed lead</span></Footer>
+            <Footer><span id="doublelist-team-count" class="demo-value" role="status">@S.Format("Common.0PeopleOnTheProject1FixedLead", _assignedItems.Count)</span></Footer>
         </DemoCard>
     </div>
 </DemoPage>
 
 @code {
+    private Task RefreshSampleLanguage() => InvokeAsync(() =>
+    {
+        _availableOptions.HeaderText = S.Text(_availableOptions.HeaderText);
+        _assignedOptions.HeaderText = S.Text(_assignedOptions.HeaderText);
+        StateHasChanged();
+    });
+
     private readonly Contact[] _contacts =
     [
         new(1, "Alex Rivera", "Product designer"),
@@ -149,11 +158,11 @@
     private ListOptions<Contact> CreateOptions(bool assigned) => new()
     {
         DisplayValueConverter = contact => contact.Name,
-        SupportTextValueConverter = contact => contact.Role,
+        SupportTextValueConverter = contact => S.Text(contact.Role),
         SortedData = contact => contact.Name,
         SearchValueConverter = contact => contact.Name,
         DisableItem = contact => contact.IsLocked,
-        HeaderText = "Name",
+        HeaderText = S.Text("Name"),
         MultiSelect = true,
         EnableServerSide = false,
         EnableSearching = _searching,

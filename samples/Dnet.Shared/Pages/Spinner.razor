@@ -5,30 +5,32 @@
 @inject ISpinnerService SpinnerService
 @implements IDisposable
 
-<DemoPage Id="demo-spinner" Title="Spinner" Category="Components / Feedback" Description="Make short waits understandable, from a single action to several requests that finish at different times." Badge="Loading feedback">
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
+<DemoPage Id="demo-spinner" Title="@S["Spinner.Spinner"]" Category="@S["Toast.ComponentsFeedback"]" Description="@S["Spinner.MakeShortWaitsUnderstandableFromASingleAction"]" Badge="@S["Spinner.LoadingFeedback"]">
     <div class="demo-grid">
-        <DemoCard Id="spinner-basic" Title="A short, clear wait" Eyebrow="01 / One operation" Description="Simulate saving a workspace. The loading indicator clears automatically when the operation finishes.">
+        <DemoCard Id="spinner-basic" Title="@S["Spinner.AShortClearWait"]" Eyebrow="@S["Spinner.01OneOperation"]" Description="@S["Spinner.SimulateSavingAWorkspaceTheLoadingIndicatorClears"]">
             <ChildContent>
                 <div class="demo-stack">
-                    <div class="spinner-workspace demo-preview"><span class="spinner-workspace-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="3" /><path d="M3 9h18M8 9v11M12 13h5m-5 3h3" /></svg></span><div><strong>Design workspace</strong><p>Your layout, filters and preferences.</p></div><span class="spinner-duration">2 seconds</span></div>
-                    <div class="demo-actions"><DnetButton id="spinner-run" OnClick="RunSpinner" disabled="@_running">Save workspace</DnetButton></div>
-                    <p class="demo-muted">A subtle mask keeps the focus on the operation. The page becomes available again as soon as saving is complete.</p>
+                    <div class="spinner-workspace demo-preview"><span class="spinner-workspace-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="3" /><path d="M3 9h18M8 9v11M12 13h5m-5 3h3" /></svg></span><div><strong>@S["Spinner.DesignWorkspace"]</strong><p>@S["Spinner.YourLayoutFiltersAndPreferences"]</p></div><span class="spinner-duration">@S["Spinner.2Seconds"]</span></div>
+                    <div class="demo-actions"><DnetButton id="spinner-run" OnClick="RunSpinner" disabled="@_running">@S["Spinner.SaveWorkspace"]</DnetButton></div>
+                    <p class="demo-muted">@S["Spinner.ASubtleMaskKeepsTheFocusOnThe"]</p>
                 </div>
             </ChildContent>
-            <Footer><p id="spinner-status" class="spinner-status" role="status">@_status</p></Footer>
+            <Footer><p id="spinner-status" class="spinner-status" role="status">@S.Display(_status)</p></Footer>
         </DemoCard>
-        <DemoCard Id="spinner-batch" Title="Ready when everything is ready" Eyebrow="02 / Coordinated requests" Description="Load three parts of a dashboard together. The indicator remains until the last request completes.">
+        <DemoCard Id="spinner-batch" Title="@S["Spinner.ReadyWhenEverythingIsReady"]" Eyebrow="@S["Spinner.02CoordinatedRequests"]" Description="@S["Spinner.LoadThreePartsOfADashboardTogetherThe"]">
             <ChildContent>
                 <div class="demo-stack">
                     <div class="spinner-requests">
-                        <div><span class="spinner-request-number">01</span><div><strong>Profile details</strong><span>Ready after 0.8 seconds</span></div></div>
-                        <div><span class="spinner-request-number">02</span><div><strong>Recent activity</strong><span>Ready after 1.6 seconds</span></div></div>
-                        <div><span class="spinner-request-number">03</span><div><strong>Workspace settings</strong><span>Ready after 2.4 seconds</span></div></div>
+                        <div><span class="spinner-request-number">01</span><div><strong>@S["Spinner.ProfileDetails"]</strong><span>@S["Spinner.ReadyAfter08Seconds"]</span></div></div>
+                        <div><span class="spinner-request-number">02</span><div><strong>@S["Spinner.RecentActivity"]</strong><span>@S["Spinner.ReadyAfter16Seconds"]</span></div></div>
+                        <div><span class="spinner-request-number">03</span><div><strong>@S["Theming.WorkspaceSettings"]</strong><span>@S["Spinner.ReadyAfter24Seconds"]</span></div></div>
                     </div>
-                    <div class="demo-actions"><DnetButton id="spinner-run-batch" OnClick="RunBatch" disabled="@_running">Load dashboard</DnetButton></div>
+                    <div class="demo-actions"><DnetButton id="spinner-run-batch" OnClick="RunBatch" disabled="@_running">@S["Spinner.LoadDashboard"]</DnetButton></div>
                 </div>
             </ChildContent>
-            <Footer><p id="spinner-batch-status" class="spinner-status" role="status">@_batchStatus</p></Footer>
+            <Footer><p id="spinner-batch-status" class="spinner-status" role="status">@S.Display(_batchStatus)</p></Footer>
         </DemoCard>
     </div>
 </DemoPage>

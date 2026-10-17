@@ -3,6 +3,8 @@
 @using Dnet.App.Shared.Infrastructure.Entities
 @using Dnet.Blazor.Components.Grid.Infrastructure.Entities
 
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
 <div style="display: flex; flex-direction: column; width: 100%">
     <div style="display: flex;flex-direction: row;justify-content: space-between;height: 15px;align-items: center;font-size: 0.675rem;">
         <span>
@@ -21,7 +23,7 @@
                      justify-content: flex-end; 
                      align-items: center; 
                      padding-right: 5px;">
-            @CellParams.RowData.Balance
+            @S.Display(CellParams.RowData.Balance)
         </span>
     </div>
 </div>

@@ -7,25 +7,27 @@
 
 @inject IApplicationServiceService ApplicationServiceService
 
-<DemoPage Id="demo-list" Title="List" Category="Data display"
-          Description="Browse a contact directory, narrow the results and build a selection across pages." Badge="Search · Select · Page">
+<DnetLocalizationObserver OnChanged="RefreshSampleLanguage" />
+
+<DemoPage Id="demo-list" Title="@S["List.List"]" Category="@S["Tree.DataDisplay"]"
+          Description="@S["List.BrowseAContactDirectoryNarrowTheResultsAnd"]" Badge="@S["List.SearchSelectPage"]">
     <div class="demo-grid">
-        <DemoCard Id="list-directory-card" Title="Contact directory" Eyebrow="Interactive list"
-                  Description="Search by name, select available contacts and use the footer to explore the directory.">
+        <DemoCard Id="list-directory-card" Title="@S["List.ContactDirectory"]" Eyebrow="@S["List.InteractiveList"]"
+                  Description="@S["List.SearchByNameSelectAvailableContactsAndUse"]">
             <ChildContent>
                 @if (_loading)
                 {
-                    <div class="list-loading" role="status">Loading contacts…</div>
+                    <div class="list-loading" role="status">@S["List.LoadingContacts"]</div>
                 }
                 else if (_loadFailed)
                 {
-                    <div class="list-loading" role="status">The contact directory could not be loaded.</div>
+                    <div class="list-loading" role="status">@S["List.TheContactDirectoryCouldNotBeLoaded"]</div>
                 }
                 else
                 {
                     <div id="list-directory" class="list-stage">
                         <DnetList @key="_listRevision" TItem="Person" Items="_items" ListOptions="_listOptions"
-                                  Label="Search contacts" PlaceHolder="Type a name" OnSelectionChange="SelectionChanged">
+                                  Label="@S["List.SearchContacts"]" PlaceHolder="@S["List.TypeAName"]" OnSelectionChange="SelectionChanged">
                             <ItemPrefixContent Context="person"><span class="list-avatar" aria-hidden="true">@Initials(person.Name)</span></ItemPrefixContent>
                             <ListItemContent Context="person">
                                 <div class="list-contact" @onclick:stopPropagation="true">
@@ -37,26 +39,26 @@
                     </div>
                 }
             </ChildContent>
-            <Footer><span id="list-directory-value" role="status">@_items.Count contacts available · @_selectedItems.Count selected</span></Footer>
+            <Footer><span id="list-directory-value" role="status">@S.Format("Common.0ContactsAvailable1Selected", _items.Count, _selectedItems.Count)</span></Footer>
         </DemoCard>
 
         <div class="demo-stack">
-            <DemoCard Id="list-options" Title="Make it your own" Description="Change the directory controls. Changing an option starts a fresh selection.">
+            <DemoCard Id="list-options" Title="@S["List.MakeItYourOwn"]" Description="@S["List.ChangeTheDirectoryControlsChangingAnOptionStarts"]">
                 <div class="list-option-grid">
-                    <div class="demo-option-row"><DnetInputCheckbox id="list-option-search" @bind-Value="_searching" @bind-Value:after="ApplyOptions">Search</DnetInputCheckbox></div>
-                    <div class="demo-option-row"><DnetInputCheckbox id="list-option-checkboxes" @bind-Value="_checkboxes" @bind-Value:after="ApplyOptions">Selection checkboxes</DnetInputCheckbox></div>
-                    <div class="demo-option-row"><DnetInputCheckbox id="list-option-sorting" @bind-Value="_sorting" @bind-Value:after="ApplyOptions">Sorting</DnetInputCheckbox></div>
-                    <div class="demo-option-row"><DnetInputCheckbox id="list-option-header" @bind-Value="_header" @bind-Value:after="ApplyOptions">Header</DnetInputCheckbox></div>
-                    <div class="demo-option-row"><DnetInputCheckbox id="list-option-pagination" @bind-Value="_pagination" @bind-Value:after="PaginationOptionChanged">Pagination</DnetInputCheckbox></div>
-                    <div class="demo-option-row"><DnetInputCheckbox id="list-option-footer" @bind-Value="_footer" @bind-Value:after="FooterOptionChanged">Footer</DnetInputCheckbox></div>
+                    <div class="demo-option-row"><DnetInputCheckbox id="list-option-search" @bind-Value="_searching" @bind-Value:after="ApplyOptions">@S["List.Search"]</DnetInputCheckbox></div>
+                    <div class="demo-option-row"><DnetInputCheckbox id="list-option-checkboxes" @bind-Value="_checkboxes" @bind-Value:after="ApplyOptions">@S["List.SelectionCheckboxes"]</DnetInputCheckbox></div>
+                    <div class="demo-option-row"><DnetInputCheckbox id="list-option-sorting" @bind-Value="_sorting" @bind-Value:after="ApplyOptions">@S["List.Sorting"]</DnetInputCheckbox></div>
+                    <div class="demo-option-row"><DnetInputCheckbox id="list-option-header" @bind-Value="_header" @bind-Value:after="ApplyOptions">@S["List.Header"]</DnetInputCheckbox></div>
+                    <div class="demo-option-row"><DnetInputCheckbox id="list-option-pagination" @bind-Value="_pagination" @bind-Value:after="PaginationOptionChanged">@S["List.Pagination"]</DnetInputCheckbox></div>
+                    <div class="demo-option-row"><DnetInputCheckbox id="list-option-footer" @bind-Value="_footer" @bind-Value:after="FooterOptionChanged">@S["List.Footer"]</DnetInputCheckbox></div>
                 </div>
-                <p class="demo-info">Select the Contacts header to change the sort order. Unavailable contacts appear dimmed.</p>
+                <p class="demo-info">@S["List.SelectTheContactsHeaderToChangeTheSort"]</p>
             </DemoCard>
-            <DemoCard Id="list-selection" Title="Your selection" Description="Selected contacts appear here as you work through the directory.">
+            <DemoCard Id="list-selection" Title="@S["List.YourSelection"]" Description="@S["List.SelectedContactsAppearHereAsYouWorkThrough"]">
                 <ChildContent>
                     @if (_selectedItems.Count == 0)
                     {
-                        <div class="list-empty"><strong>No contacts selected</strong><p class="demo-muted">Choose a contact in the directory to build your selection.</p></div>
+                        <div class="list-empty"><strong>@S["List.NoContactsSelected"]</strong><p class="demo-muted">@S["List.ChooseAContactInTheDirectoryToBuild"]</p></div>
                     }
                     else
                     {
@@ -68,18 +70,24 @@
                         </ul>
                         @if (_selectedItems.Count > 6)
                         {
-                            <p class="demo-info">And @(_selectedItems.Count - 6) more contacts.</p>
+                            <p class="demo-info">@S.Format("Common.And0MoreContacts", _selectedItems.Count - 6)</p>
                         }
                     }
-                    <div class="demo-actions list-selection-actions"><DnetButton Variant="DnetButtonVariant.Outlined" id="list-reset" disabled="@(_loading || _loadFailed)" OnClick="ResetDirectory">Reset directory</DnetButton></div>
+                    <div class="demo-actions list-selection-actions"><DnetButton Variant="DnetButtonVariant.Outlined" id="list-reset" disabled="@(_loading || _loadFailed)" OnClick="ResetDirectory">@S["List.ResetDirectory"]</DnetButton></div>
                 </ChildContent>
-                <Footer><span id="list-selected-count" role="status">@_selectedItems.Count selected</span></Footer>
+                <Footer><span id="list-selected-count" role="status">@S.Format("Common.0Selected", _selectedItems.Count)</span></Footer>
             </DemoCard>
         </div>
     </div>
 </DemoPage>
 
 @code {
+    private Task RefreshSampleLanguage() => InvokeAsync(() =>
+    {
+        _listOptions.HeaderText = S.Text(_listOptions.HeaderText);
+        StateHasChanged();
+    });
+
     private List<Person> _items = new();
     private List<Person> _selectedItems = new();
     private ListOptions<Person> _listOptions = new();
@@ -113,11 +121,11 @@
     private ListOptions<Person> CreateOptions() => new()
     {
         DisplayValueConverter = person => person.Name,
-        SupportTextValueConverter = person => person.Address,
+        SupportTextValueConverter = person => S.Text(person.Address),
         SortedData = person => person.Name,
         SearchValueConverter = person => person.Name,
         DisableItem = person => person.IsActive,
-        HeaderText = "Contacts",
+        HeaderText = S.Text("Contacts"),
         ItemSize = 56,
         MultiSelect = true,
         DebounceTime = 250,

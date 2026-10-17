@@ -9,6 +9,7 @@ namespace Dnet.App.Shared.Shared.CustomComponents;
 
 public class MyValidationSummary : ComponentBase, IDisposable
 {
+    [Inject] private Dnet.App.Shared.Localization.SampleLocalizer Texts { get; set; } = default!;
     private EditContext? _previousEditContext;
     private readonly EventHandler<ValidationStateChangedEventArgs> _validationStateChangedHandler;
 
@@ -74,7 +75,7 @@ public class MyValidationSummary : ComponentBase, IDisposable
 
             builder.OpenElement(3, "li");
             builder.AddAttribute(4, "class", "validation-message");
-            builder.AddContent(5, error);
+            builder.AddContent(5, Texts.Message(error));
             builder.CloseElement();
         }
 

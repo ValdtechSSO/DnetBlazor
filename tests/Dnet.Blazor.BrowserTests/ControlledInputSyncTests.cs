@@ -28,7 +28,8 @@ public sealed class ControlledInputSyncTests
         });
         var page = await browser.NewPageAsync();
 
-        await page.GotoAsync($"{baseUrl.TrimEnd('/')}/PickList/controlled-rejection");
+        await BrowserLanguage.UseEnglishAsync(page);
+        await BrowserReady.OpenAsync(page, $"{baseUrl.TrimEnd('/')}/PickList/controlled-rejection");
 
         var rejected = page.Locator("#rejected-controlled-inputs");
         var checkbox = rejected.Locator("input[type=checkbox]");

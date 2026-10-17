@@ -3,56 +3,58 @@
 @using Dnet.Blazor.Components.Badge
 @using Dnet.Blazor.Components.SlideToggle
 
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
 <div class="container-fluid badge-page">
     <div class="d-flex dnet-m-l-30 dnet-m-t-20">
-        <span class="dnet-m-r-10 dnet-app-comp-name">Badge</span>
+        <span class="dnet-m-r-10 dnet-app-comp-name">@S["Badge.Badge"]</span>
     </div>
 
     <div class="badge-demo-grid dnet-m-l-30 dnet-m-t-30">
         <section class="badge-demo-section">
-            <h2>Content and state</h2>
-            <p>Use a short number or label. Give meaningful states an accessible description.</p>
+            <h2>@S["Badge.ContentAndState"]</h2>
+            <p>@S["Badge.UseAShortNumberOrLabelGiveMeaningful"]</p>
             <div class="badge-demo-row">
                 <DnetBadge Content="@_notifications"
-                           Description="@($"{_notifications} unread messages")">
-                    <button class="badge-icon-button" type="button" aria-label="Open messages">
+                           Description="@S.Format("Common.0UnreadMessages", _notifications)">
+                    <button class="badge-icon-button" type="button" aria-label="@S["Badge.OpenMessages"]">
                         <svg viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z" />
                         </svg>
                     </button>
                 </DnetBadge>
 
-                <DnetBadge Content="@("NEW")" Color="DnetBadgeColor.Success" Description="New feature">
-                    <span class="badge-demo-label">Reports</span>
+                <DnetBadge Content="@("NEW")" Color="DnetBadgeColor.Success" Description="@S["Badge.NewFeature"]">
+                    <span class="badge-demo-label">@S["Badge.Reports"]</span>
                 </DnetBadge>
 
-                <DnetBadge Content="@("!")" Color="DnetBadgeColor.Danger" Description="Action required">
-                    <span class="badge-demo-label">Billing</span>
+                <DnetBadge Content="@("!")" Color="DnetBadgeColor.Danger" Description="@S["Badge.ActionRequired"]">
+                    <span class="badge-demo-label">@S["Expansion.Billing"]</span>
                 </DnetBadge>
             </div>
             <div class="badge-demo-controls">
                 <button type="button" @onclick="Decrement">−</button>
-                <span>Notifications: @_notifications</span>
+                <span>@S.Format("Common.Notifications0", _notifications)</span>
                 <button type="button" @onclick="Increment">+</button>
-                <DnetSlideToggle @bind-Value="_hidden">Hidden</DnetSlideToggle>
+                <DnetSlideToggle @bind-Value="_hidden">@S["Badge.Hidden"]</DnetSlideToggle>
             </div>
-            <DnetBadge Content="@_notifications" Hidden="_hidden" Description="Optional counter">
-                <span class="badge-demo-label">Controlled badge</span>
+            <DnetBadge Content="@_notifications" Hidden="_hidden" Description="@S["Badge.OptionalCounter"]">
+                <span class="badge-demo-label">@S["Badge.ControlledBadge"]</span>
             </DnetBadge>
         </section>
 
         <section class="badge-demo-section">
-            <h2>Sizes and colors</h2>
+            <h2>@S["Badge.SizesAndColors"]</h2>
             <div class="badge-demo-row badge-demo-row-spacious">
-                <DnetBadge Content="@("3")" Size="DnetBadgeSize.Small"><span class="badge-swatch">Small</span></DnetBadge>
-                <DnetBadge Content="@("12")" Color="DnetBadgeColor.Neutral"><span class="badge-swatch">Medium</span></DnetBadge>
-                <DnetBadge Content="@("99+")" Size="DnetBadgeSize.Large" Color="DnetBadgeColor.Warning"><span class="badge-swatch">Large</span></DnetBadge>
-                <DnetBadge Content="@("8")" Color="DnetBadgeColor.Danger" Disabled="true"><span class="badge-swatch">Disabled</span></DnetBadge>
+                <DnetBadge Content="@("3")" Size="DnetBadgeSize.Small"><span class="badge-swatch">@S["Badge.Small"]</span></DnetBadge>
+                <DnetBadge Content="@("12")" Color="DnetBadgeColor.Neutral"><span class="badge-swatch">@S["Badge.Medium"]</span></DnetBadge>
+                <DnetBadge Content="@("99+")" Size="DnetBadgeSize.Large" Color="DnetBadgeColor.Warning"><span class="badge-swatch">@S["Badge.Large"]</span></DnetBadge>
+                <DnetBadge Content="@("8")" Color="DnetBadgeColor.Danger" Disabled="true"><span class="badge-swatch">@S["Slider.Disabled"]</span></DnetBadge>
             </div>
         </section>
 
         <section class="badge-demo-section">
-            <h2>Positions</h2>
+            <h2>@S["Badge.Positions"]</h2>
             <div class="badge-position-grid">
                 @foreach (var item in _positions)
                 {
@@ -60,25 +62,25 @@
                     <DnetBadge Content="@("1")" Position="item.Position" Overlap="_overlap">
                             <span class="badge-position-anchor"></span>
                         </DnetBadge>
-                        <span>@item.Label</span>
+                        <span>@S.Display(item.Label)</span>
                     </div>
                 }
             </div>
-            <DnetSlideToggle @bind-Value="_overlap">Overlap</DnetSlideToggle>
+            <DnetSlideToggle @bind-Value="_overlap">@S["Badge.Overlap"]</DnetSlideToggle>
         </section>
 
         <section class="badge-demo-section">
-            <h2>Logical direction</h2>
-            <p>The same <code>After</code> position follows the document direction.</p>
+            <h2>@S["Badge.LogicalDirection"]</h2>
+            <p>@S["Badge.TheSame"] <code>@S["Badge.After"]</code> @S["Badge.PositionFollowsTheDocumentDirection"]</p>
             <div class="badge-demo-row badge-demo-row-spacious">
                 <div class="badge-direction-example" dir="ltr">
-                    <span>LTR</span>
+                    <span>@S["Badge.LTR"]</span>
                     <DnetBadge Content="@("2")" Position="DnetBadgePosition.After">
                         <span class="badge-position-anchor"></span>
                     </DnetBadge>
                 </div>
                 <div class="badge-direction-example" dir="rtl">
-                    <span>RTL</span>
+                    <span>@S["Slider.RTL"]</span>
                     <DnetBadge Content="@("2")" Position="DnetBadgePosition.After">
                         <span class="badge-position-anchor"></span>
                     </DnetBadge>

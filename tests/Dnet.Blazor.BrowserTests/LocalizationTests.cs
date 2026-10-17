@@ -145,7 +145,7 @@ public sealed class LocalizationTests
         await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
         var (page, errors) = await OpenAsync(browser, "dark", 1440, "/AdvancedFilteringExample", persons);
         await Assertions.Expect(page.Locator(".blg-center-cols-container [data-blg-row-id]").First).ToBeVisibleAsync();
-        var header = page.Locator(".blg-header-container > [role=columnheader][title='Name']");
+        var header = page.Locator(".blg-header-container > [role=columnheader]:is([title='Name'], [title='Nombre'])");
         await header.EvaluateAsync(
             """
             async header => {
@@ -304,7 +304,7 @@ public sealed class LocalizationTests
         var serializedTheme = System.Text.Json.JsonSerializer.Serialize(theme);
         await page.AddInitScriptAsync($"localStorage.setItem('dnet.theme', JSON.stringify({serializedTheme}));");
         var baseUrl = (Environment.GetEnvironmentVariable("DNET_BLAZOR_BASE_URL") ?? "http://127.0.0.1:5101").TrimEnd('/');
-        await page.GotoAsync(baseUrl + route);
+        await BrowserReady.OpenAsync(page, baseUrl + route);
         if (route == "/Localization") await Assertions.Expect(page.Locator("#demo-localization")).ToBeVisibleAsync();
         else await Assertions.Expect(page.Locator("#dnet-language-selector")).ToBeVisibleAsync();
         return (page, errors);

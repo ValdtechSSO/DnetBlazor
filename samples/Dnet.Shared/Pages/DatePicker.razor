@@ -10,56 +10,58 @@
 @using Dnet.Blazor.Components.DatePickerWeekRaw
 @using Dnet.Blazor.Infrastructure.Enums
 
-<DemoPage Id="demo-date-picker" Title="Date picker" Category="Date and time"
-          Description="Choose a day, plan a date range or work with a whole week, using a popup or an integrated calendar."
-          Badge="Days, ranges & weeks">
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
+<DemoPage Id="demo-date-picker" Title="@S["DatePicker.DatePicker"]" Category="@S["DatePicker.DateAndTime"]"
+          Description="@S["DatePicker.ChooseADayPlanADateRangeOr"]"
+          Badge="@S["DatePicker.DaysRangesWeeks"]">
     <div class="demo-grid">
-        <DemoCard Id="date-picker-single" Title="Record a departure day"
-                  Description="Type a date or open the calendar. This example accepts dates up to and including today.">
+        <DemoCard Id="date-picker-single" Title="@S["DatePicker.RecordADepartureDay"]"
+                  Description="@S["DatePicker.TypeADateOrOpenTheCalendarThis"]">
             <ChildContent>
                 <EditForm Model="_formData">
                     <DataAnnotationsValidator />
                     <div class="demo-stack">
-                        <DnetFormField Label="Departure day" UseClearButton="true" IsRequired="true">
+                        <DnetFormField Label="@S["DatePicker.DepartureDay"]" UseClearButton="true" IsRequired="true">
                             <ChildContent>
                                 <DnetDatePicker @bind-Value="_formData.DepartureDay"
-                                                OnDaySelected="DaySelected" PlaceHolder="Departure day"
-                                                aria-label="Departure day"
+                                                OnDaySelected="DaySelected" PlaceHolder="@S["DatePicker.DepartureDay"]"
+                                                aria-label="@S["DatePicker.DepartureDay"]"
                                                 Format="@_datepickerFormat" MaxDayValue="DateTime.Today"
                                                 Formats="@_acceptedFormats" />
                             </ChildContent>
                             <SufixContent>
-                                <button class="dnet-datepicker-icon-wrapper date-picker-trigger" type="button" aria-label="Open departure calendar">
+                                <button class="dnet-datepicker-icon-wrapper date-picker-trigger" type="button" aria-label="@S["DatePicker.OpenDepartureCalendar"]">
                                     <span class="dnet-datepicker-icon" aria-hidden="true"></span>
                                 </button>
                             </SufixContent>
                             <ErrorContent>
-                                <ValidationMessage For="@(() => _formData.DepartureDay)" />
+                                <SampleValidationMessage For="@(() => _formData.DepartureDay)" />
                             </ErrorContent>
                         </DnetFormField>
-                        <p class="demo-status" role="status">@_calendarSelectionStatus</p>
+                        <p class="demo-status" role="status">@S.Display(_calendarSelectionStatus)</p>
                     </div>
                 </EditForm>
             </ChildContent>
             <Footer>
-                <span class="demo-value" role="status">Departure: @SelectedDateLabel</span>
+                <span class="demo-value" role="status">@S.Format("Common.Departure0", S.Text(SelectedDateLabel))</span>
             </Footer>
         </DemoCard>
 
-        <DemoCard Id="date-picker-range" Title="Plan a trip"
-                  Description="Choose the start and end of an upcoming trip, then apply your selection in the calendar panel.">
+        <DemoCard Id="date-picker-range" Title="@S["DatePicker.PlanATrip"]"
+                  Description="@S["DatePicker.ChooseTheStartAndEndOfAnUpcoming"]">
             <ChildContent>
                 <EditForm Model="_formData">
-                    <DnetFormField Label="Travel dates" UseClearButton="true">
+                    <DnetFormField Label="@S["DatePicker.TravelDates"]" UseClearButton="true">
                         <ChildContent>
                             <DnetDateRangePicker @bind-Value="_formData.TravelRange"
-                                                 StartPlaceholder="Start" EndPlaceholder="End"
+                                                 StartPlaceholder="@S["DatePicker.Start"]" EndPlaceholder="@S["DatePicker.End"]"
                                                  Format="dd/MM/yyyy"
                                                  Min="@DateOnly.FromDateTime(DateTime.Today)"
                                                  ShowActions="true" />
                         </ChildContent>
                         <SufixContent>
-                            <button class="dnet-datepicker-icon-wrapper date-picker-trigger" type="button" aria-label="Open travel dates calendar">
+                            <button class="dnet-datepicker-icon-wrapper date-picker-trigger" type="button" aria-label="@S["DatePicker.OpenTravelDatesCalendar"]">
                                 <span class="dnet-datepicker-icon" aria-hidden="true"></span>
                             </button>
                         </SufixContent>
@@ -67,12 +69,12 @@
                 </EditForm>
             </ChildContent>
             <Footer>
-                <span class="demo-value" role="status">@TravelRangeLabel</span>
+                <span class="demo-value" role="status">@S.Display(TravelRangeLabel)</span>
             </Footer>
         </DemoCard>
 
-        <DemoCard Title="Calendar in the page"
-                  Description="Keep the month visible when choosing a day is the main task. Open the month heading to explore other months and years.">
+        <DemoCard Title="@S["DatePicker.CalendarInThePage"]"
+                  Description="@S["DatePicker.KeepTheMonthVisibleWhenChoosingADay"]">
             <ChildContent>
                 <div class="date-calendar-preview">
                     <DnetCalendar @bind-Value="_inlineDate"
@@ -82,65 +84,65 @@
                 </div>
             </ChildContent>
             <Footer>
-                <span class="demo-value" role="status">Selected day: @(_inlineDate?.ToString("dd MMMM yyyy", CultureInfo.InvariantCulture) ?? "No date selected")</span>
+                <span class="demo-value" role="status">@S.Format("Common.SelectedDay0", _inlineDate?.ToString("dd MMMM yyyy", S.Culture) ?? S.Text("No date selected"))</span>
             </Footer>
         </DemoCard>
 
-        <DemoCard Title="Choose the display format"
-                  Description="Change how the departure day is written. The travel range keeps its day/month/year format.">
+        <DemoCard Title="@S["DatePicker.ChooseTheDisplayFormat"]"
+                  Description="@S["DatePicker.ChangeHowTheDepartureDayIsWrittenThe"]">
             <ChildContent>
                 <div class="demo-stack">
-                    <div class="demo-actions" role="group" aria-label="Departure date format">
+                    <div class="demo-actions" role="group" aria-label="@S["DatePicker.DepartureDateFormat"]">
                         @foreach (var format in _displayFormats)
                         {
                             <button type="button" class="date-format-option"
                                     aria-pressed="@(_datepickerFormat == format ? "true" : "false")"
-                                    @onclick="@(() => ChangeDateFormat(format))">@format</button>
+                                    @onclick="@(() => ChangeDateFormat(format))">@S.Display(format)</button>
                         }
                     </div>
                     <div class="demo-preview">
-                        <span class="demo-info">Active format</span>
-                        <p class="demo-value">@_datepickerFormat</p>
-                        <span class="demo-muted">The selected day is preserved when you change the format.</span>
+                        <span class="demo-info">@S["DatePicker.ActiveFormat"]</span>
+                        <p class="demo-value">@S.Display(_datepickerFormat)</p>
+                        <span class="demo-muted">@S["DatePicker.TheSelectedDayIsPreservedWhenYouChange"]</span>
                     </div>
                 </div>
             </ChildContent>
         </DemoCard>
 
-        <DemoCard Id="date-picker-week" Title="Select a whole week"
-                  Description="Open the week picker and choose a day to select its complete week.">
+        <DemoCard Id="date-picker-week" Title="@S["DatePicker.SelectAWholeWeek"]"
+                  Description="@S["DatePicker.OpenTheWeekPickerAndChooseADay"]">
             <ChildContent>
                 <EditForm Model="_weekFormData">
                     <DataAnnotationsValidator />
-                    <DnetFormField Label="Current week">
+                    <DnetFormField Label="@S["DatePicker.CurrentWeek"]">
                         <ChildContent>
                             <DnetDatePickerWeek @bind-Value="_weekFormData.DepartureDay"
                                                 OnWeekSelected="DaySelectedWeek"
-                                                PlaceHolder="Current week" Format="@_datepickerFormat"
+                                                PlaceHolder="@S["DatePicker.CurrentWeek"]" Format="@_datepickerFormat"
                                                 FirstDayToShow="DateTime.Today"
                                                 DatepickerFilter="@(day => day.DayIndex == 0)"
                                                 ComponentTheme="ComponentTheme.Raw" />
                         </ChildContent>
                         <ErrorContent>
-                            <ValidationMessage For="@(() => _weekFormData.DepartureDay)" />
+                            <SampleValidationMessage For="@(() => _weekFormData.DepartureDay)" />
                         </ErrorContent>
                     </DnetFormField>
                 </EditForm>
             </ChildContent>
             <Footer>
-                <span class="demo-value" role="status">@_weekSelectionLabel</span>
+                <span class="demo-value" role="status">@S.Display(_weekSelectionLabel)</span>
             </Footer>
         </DemoCard>
 
-        <DemoCard Id="date-picker-week-inline" Title="Week calendar in the page"
-                  Description="Browse the calendar and select a week without opening a separate panel.">
+        <DemoCard Id="date-picker-week-inline" Title="@S["DatePicker.WeekCalendarInThePage"]"
+                  Description="@S["DatePicker.BrowseTheCalendarAndSelectAWeekWithout"]">
             <ChildContent>
                 <div class="date-calendar-preview">
                     <DnetDatePickerWeekRaw OnWeekSelected="DaySelectedWeekRaw" Format="@_datepickerFormat" />
                 </div>
             </ChildContent>
             <Footer>
-                <span class="demo-value" role="status">@_inlineWeekSelectionLabel</span>
+                <span class="demo-value" role="status">@S.Display(_inlineWeekSelectionLabel)</span>
             </Footer>
         </DemoCard>
     </div>
@@ -152,8 +154,10 @@
     private string _datepickerFormat = "dd/MM/yyyy";
     private DateOnly? _inlineDate = new DateOnly(2026, 8, 15);
     private string _calendarSelectionStatus = "Dates after today are unavailable.";
-    private string _weekSelectionLabel = "No week selected";
-    private string _inlineWeekSelectionLabel = string.Empty;
+    private (DateTime Start, DateTime End)? _weekDates;
+    private string _weekSelectionLabel => _weekDates is { } w ? FormatWeek(w.Start, w.End) : S.Text("No week selected");
+    private (DateTime Start, DateTime End)? _inlineWeekDates;
+    private string _inlineWeekSelectionLabel => _inlineWeekDates is { } w ? FormatWeek(w.Start, w.End) : string.Empty;
 
     private readonly string[] _displayFormats = ["dd/MM/yyyy", "MM/dd/yyyy", "yyyy-MM-dd"];
     private readonly string[] _acceptedFormats = ["dd/MM/yyyy", "d/M/yyyy", "MM/dd/yyyy", "yyyy-MM-dd", "yyyy/MM/dd", "yyyy/M/d"];
@@ -167,9 +171,9 @@
         {
             var range = _formData.TravelRange;
             if (range is null || range.IsEmpty) return "No travel dates selected";
-            if (range.Start is null) return $"End: {range.End:dd MMM yyyy} · Choose a start date";
-            if (range.End is null) return $"Start: {range.Start:dd MMM yyyy} · Choose an end date";
-            return $"{range.Start:dd MMM yyyy} – {range.End:dd MMM yyyy}";
+            if (range.Start is null) return $"End: {range.End?.ToString("dd MMM yyyy", S.Culture)} · Choose a start date";
+            if (range.End is null) return $"Start: {range.Start?.ToString("dd MMM yyyy", S.Culture)} · Choose an end date";
+            return $"{range.Start?.ToString("dd MMM yyyy", S.Culture)} – {range.End?.ToString("dd MMM yyyy", S.Culture)}";
         }
     }
 
@@ -178,8 +182,8 @@
         _formData.DepartureDay = DateTime.Today.ToString(_datepickerFormat, CultureInfo.InvariantCulture);
         var today = DateTime.Today;
         var monday = today.AddDays(-((int)today.DayOfWeek + 6) % 7);
-        _inlineWeekSelectionLabel = FormatWeek(monday, monday.AddDays(6));
-        _weekSelectionLabel = _inlineWeekSelectionLabel;
+        _inlineWeekDates = (monday, monday.AddDays(6));
+        _weekDates = _inlineWeekDates;
     }
 
     private void ChangeDateFormat(string format)
@@ -197,16 +201,16 @@
 
     private void DaySelectedWeek(List<Dnet.Blazor.Components.DatePickerWeek.Infrastructure.Models.CalendarDay> days)
     {
-        if (days.Count > 0) _weekSelectionLabel = FormatWeek(days.Min(day => day.Date), days.Max(day => day.Date));
+        if (days.Count > 0) _weekDates = (days.Min(day => day.Date), days.Max(day => day.Date));
     }
 
     private void DaySelectedWeekRaw(List<Dnet.Blazor.Components.DatePickerWeekRaw.Infrastructure.Models.CalendarDay> days)
     {
-        if (days.Count > 0) _inlineWeekSelectionLabel = FormatWeek(days.Min(day => day.Date), days.Max(day => day.Date));
+        if (days.Count > 0) _inlineWeekDates = (days.Min(day => day.Date), days.Max(day => day.Date));
     }
 
-    private static string FormatWeek(DateTime start, DateTime end) =>
-        $"{start.ToString("dd MMM yyyy", CultureInfo.InvariantCulture)} – {end.ToString("dd MMM yyyy", CultureInfo.InvariantCulture)}";
+    private string FormatWeek(DateTime start, DateTime end) =>
+        $"{start.ToString("dd MMM yyyy", S.Culture)} – {end.ToString("dd MMM yyyy", S.Culture)}";
 
     private sealed class FormData
     {

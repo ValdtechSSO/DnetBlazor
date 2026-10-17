@@ -8,14 +8,16 @@
 
 @inject IApplicationServiceService ApplicationServiceService
 
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
 <div id="autocomplete-page" class="autocomplete-page" aria-labelledby="autocomplete-title">
     <header class="autocomplete-header">
         <div>
-            <p class="autocomplete-eyebrow">Components / Selection</p>
-            <h1 id="autocomplete-title" class="autocomplete-title">Autocomplete</h1>
-            <p class="autocomplete-description">Help people find the right contact. Compare three ways to search and present suggestions.</p>
+            <p class="autocomplete-eyebrow">@S["Autocomplete.ComponentsSelection"]</p>
+            <h1 id="autocomplete-title" class="autocomplete-title">@S["Autocomplete.Autocomplete"]</h1>
+            <p class="autocomplete-description">@S["Autocomplete.HelpPeopleFindTheRightContactCompareThree"]</p>
         </div>
-        <span class="autocomplete-count">@_items.Count sample contacts</span>
+        <span class="autocomplete-count">@S.Format("Common.0SampleContacts", _items.Count)</span>
     </header>
 
     <EditForm Model="_selection" class="autocomplete-examples">
@@ -25,28 +27,28 @@
                 <span class="autocomplete-card-icon" aria-hidden="true">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 5 5" /></svg>
                 </span>
-                <div><p class="autocomplete-kicker">01 / The essentials</p><h2 id="autocomplete-basic-title">Quick search</h2><p>A simple list that keeps the focus on names.</p></div>
+                <div><p class="autocomplete-kicker">@S["Autocomplete.01TheEssentials"]</p><h2 id="autocomplete-basic-title">@S["Autocomplete.QuickSearch"]</h2><p>@S["Autocomplete.ASimpleListThatKeepsTheFocusOn"]</p></div>
             </div>
             <div class="autocomplete-card-body">
                 <div class="autocomplete-field">
-                    <DnetFormField Label="Contact name" IsRequired="true" UseClearButton="true">
+                    <DnetFormField Label="@S["Autocomplete.ContactName"]" IsRequired="true" UseClearButton="true">
                         <ChildContent>
                             <DnetAutocomplete id="autocomplete-basic-input" TValue="string" TItem="Person" @bind-Value="_selection.Name"
                                               Items="_items" DisplayValueConverter="contact => contact.Name" ValueConverter="contact => contact.Name"
                                               Height="320px" MinWidth="0" MaxWidth="calc(100vw - 32px)" ItemHeight="50"
-                                              SortBy="_sortBy" FilterBy="_filterBy" PanelLabel="Find a contact"
-                                              aria-label="Contact name, quick search" aria-required="true" aria-describedby="autocomplete-basic-note" />
+                                              SortBy="_sortBy" FilterBy="_filterBy" PanelLabel="@S["Autocomplete.FindAContact"]"
+                                              aria-label="@S["Autocomplete.ContactNameQuickSearch"]" aria-required="true" aria-describedby="autocomplete-basic-note" />
                         </ChildContent>
-                        <HintContent><span id="autocomplete-basic-note">Search by name or company.</span></HintContent>
-                        <ErrorContent><ValidationMessage For="@(() => _selection.Name)" /></ErrorContent>
+                        <HintContent><span id="autocomplete-basic-note">@S["Autocomplete.SearchByNameOrCompany"]</span></HintContent>
+                        <ErrorContent><SampleValidationMessage For="@(() => _selection.Name)" /></ErrorContent>
                     </DnetFormField>
                 </div>
-                <p class="autocomplete-example-note">Start typing to narrow the suggestions, then choose a contact.</p>
+                <p class="autocomplete-example-note">@S["Autocomplete.StartTypingToNarrowTheSuggestionsThenChoose"]</p>
             </div>
             <div class="autocomplete-value-preview">
-                <span class="autocomplete-value-label">Current value</span>
+                <span class="autocomplete-value-label">@S["Autocomplete.CurrentValue"]</span>
                 <strong id="autocomplete-basic-value" class="autocomplete-current-value">@DisplayValue(_selection.Name)</strong>
-                <small class="autocomplete-value-note">Shared with Detailed results.</small>
+                <small class="autocomplete-value-note">@S["Autocomplete.SharedWithDetailedResults"]</small>
             </div>
         </article>
 
@@ -55,17 +57,17 @@
                 <span class="autocomplete-card-icon" aria-hidden="true">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="3" /><circle cx="8" cy="10" r="2" /><path d="M5 16a3 3 0 0 1 6 0m3-7h4m-4 4h4" /></svg>
                 </span>
-                <div><p class="autocomplete-kicker">02 / Custom content</p><h2 id="autocomplete-rich-title">Detailed results</h2><p>An address helps distinguish contacts with similar names.</p></div>
+                <div><p class="autocomplete-kicker">@S["Autocomplete.02CustomContent"]</p><h2 id="autocomplete-rich-title">@S["Autocomplete.DetailedResults"]</h2><p>@S["Autocomplete.AnAddressHelpsDistinguishContactsWithSimilarNames"]</p></div>
             </div>
             <div class="autocomplete-card-body">
                 <div class="autocomplete-field">
-                    <DnetFormField Label="Contact name" IsRequired="true" UseClearButton="true">
+                    <DnetFormField Label="@S["Autocomplete.ContactName"]" IsRequired="true" UseClearButton="true">
                         <ChildContent>
                             <DnetAutocomplete id="autocomplete-rich-input" TValue="string" TItem="Person" @bind-Value="_selection.Name"
                                               Items="_items" DisplayValueConverter="contact => contact.Name" ValueConverter="contact => contact.Name"
                                               Height="320px" MinWidth="0" MaxWidth="calc(100vw - 32px)" ItemHeight="56"
-                                              SortBy="_sortBy" FilterBy="_filterBy" PanelLabel="Contact details"
-                                              aria-label="Contact name, detailed results" aria-required="true" aria-describedby="autocomplete-rich-note">
+                                              SortBy="_sortBy" FilterBy="_filterBy" PanelLabel="@S["Autocomplete.ContactDetails"]"
+                                              aria-label="@S["Autocomplete.ContactNameDetailedResults"]" aria-required="true" aria-describedby="autocomplete-rich-note">
                                 <ItemChildContent Context="contact">
                                     <span class="autocomplete-person">
                                         <span class="autocomplete-person-name" title="@contact.Name">@contact.Name</span>
@@ -74,16 +76,16 @@
                                 </ItemChildContent>
                             </DnetAutocomplete>
                         </ChildContent>
-                        <HintContent><span id="autocomplete-rich-note">Names and addresses in every suggestion.</span></HintContent>
-                        <ErrorContent><ValidationMessage For="@(() => _selection.Name)" /></ErrorContent>
+                        <HintContent><span id="autocomplete-rich-note">@S["Autocomplete.NamesAndAddressesInEverySuggestion"]</span></HintContent>
+                        <ErrorContent><SampleValidationMessage For="@(() => _selection.Name)" /></ErrorContent>
                     </DnetFormField>
                 </div>
-                <p class="autocomplete-example-note">The extra context appears in the list. The field keeps the contact's name.</p>
+                <p class="autocomplete-example-note">@S["Autocomplete.TheExtraContextAppearsInTheListThe"]</p>
             </div>
             <div class="autocomplete-value-preview">
-                <span class="autocomplete-value-label">Current value</span>
+                <span class="autocomplete-value-label">@S["Autocomplete.CurrentValue"]</span>
                 <strong id="autocomplete-rich-value" class="autocomplete-current-value">@DisplayValue(_selection.Name)</strong>
-                <small class="autocomplete-value-note">Shared with Quick search.</small>
+                <small class="autocomplete-value-note">@S["Autocomplete.SharedWithQuickSearch"]</small>
             </div>
         </article>
 
@@ -92,49 +94,49 @@
                 <span class="autocomplete-card-icon" aria-hidden="true">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="3" /><path d="M2 21v-2a6 6 0 0 1 12 0v2M16 5h5m-5 4h5m-3 5h3m-3 4h3" /></svg>
                 </span>
-                <div><p class="autocomplete-kicker">03 / Prefix &amp; suffix</p><h2 id="autocomplete-decorated-title">Decorated results</h2><p>Initials and eye color give each option more context.</p></div>
+                <div><p class="autocomplete-kicker">@S["Common.03PrefixSuffix"]</p><h2 id="autocomplete-decorated-title">@S["Autocomplete.DecoratedResults"]</h2><p>@S["Autocomplete.InitialsAndEyeColorGiveEachOptionMore"]</p></div>
             </div>
             <div class="autocomplete-card-body">
                 <div class="autocomplete-field">
-                    <DnetFormField Label="Contact name" UseClearButton="true">
+                    <DnetFormField Label="@S["Autocomplete.ContactName"]" UseClearButton="true">
                         <ChildContent>
                             <DnetAutocomplete id="autocomplete-decorated-input" TValue="string" TItem="Person" @bind-Value="_selection.DecoratedName"
                                               Items="_items" DisplayValueConverter="contact => contact.Name" ValueConverter="contact => contact.Name"
                                               Height="320px" MinWidth="0" MaxWidth="calc(100vw - 32px)" ItemHeight="56"
-                                              SortBy="_sortBy" FilterBy="_filterBy" PanelLabel="Contacts with details"
-                                              aria-label="Contact name, decorated results" aria-describedby="autocomplete-decorated-note">
+                                              SortBy="_sortBy" FilterBy="_filterBy" PanelLabel="@S["Autocomplete.ContactsWithDetails"]"
+                                              aria-label="@S["Autocomplete.ContactNameDecoratedResults"]" aria-describedby="autocomplete-decorated-note">
                                 <ItemPrefixContent Context="contact">
                                     <span class="autocomplete-avatar" aria-hidden="true">@Initials(contact.Name)</span>
                                 </ItemPrefixContent>
                                 <ItemSufixContent Context="contact">
                                     <span class="autocomplete-eye-label">
                                         <span class="autocomplete-eye-color" style="background-color:@contact.EyeColor" aria-hidden="true"></span>
-                                        <span>@contact.EyeColor</span>
+                                        <span>@S.Display(contact.EyeColor)</span>
                                     </span>
                                 </ItemSufixContent>
                             </DnetAutocomplete>
                         </ChildContent>
-                        <HintContent><span id="autocomplete-decorated-note">A separate selection with custom result details.</span></HintContent>
+                        <HintContent><span id="autocomplete-decorated-note">@S["Autocomplete.ASeparateSelectionWithCustomResultDetails"]</span></HintContent>
                     </DnetFormField>
                 </div>
-                <p class="autocomplete-example-note">This example has its own value. Try it without changing the other two.</p>
+                <p class="autocomplete-example-note">@S["Autocomplete.ThisExampleHasItsOwnValueTryIt"]</p>
             </div>
             <div class="autocomplete-value-preview">
-                <span class="autocomplete-value-label">Current value</span>
+                <span class="autocomplete-value-label">@S["Autocomplete.CurrentValue"]</span>
                 <strong id="autocomplete-decorated-value" class="autocomplete-current-value">@DisplayValue(_selection.DecoratedName)</strong>
-                <small class="autocomplete-value-note">Independent selection.</small>
+                <small class="autocomplete-value-note">@S["Autocomplete.IndependentSelection"]</small>
             </div>
         </article>
 
         <section id="autocomplete-guide" class="autocomplete-card autocomplete-guide" aria-labelledby="autocomplete-guide-title">
-            <h2 id="autocomplete-guide-title">Try the examples</h2>
-            <p>Use the same sample directory to compare each result style.</p>
+            <h2 id="autocomplete-guide-title">@S["Autocomplete.TryTheExamples"]</h2>
+            <p>@S["Autocomplete.UseTheSameSampleDirectoryToCompareEach"]</p>
             <ol class="autocomplete-steps">
-                <li><span class="autocomplete-step-number" aria-hidden="true">1</span><div><strong>Open a field</strong><p>Focus a contact field to see the available suggestions.</p></div></li>
-                <li><span class="autocomplete-step-number" aria-hidden="true">2</span><div><strong>Narrow the search</strong><p>Enter part of a name or company to find a match.</p></div></li>
-                <li><span class="autocomplete-step-number" aria-hidden="true">3</span><div><strong>Choose or clear</strong><p>Pick a contact and see the current value below the field. Use the clear action to start again.</p></div></li>
+                <li><span class="autocomplete-step-number" aria-hidden="true">1</span><div><strong>@S["Autocomplete.OpenAField"]</strong><p>@S["Autocomplete.FocusAContactFieldToSeeTheAvailable"]</p></div></li>
+                <li><span class="autocomplete-step-number" aria-hidden="true">2</span><div><strong>@S["Autocomplete.NarrowTheSearch"]</strong><p>@S["Autocomplete.EnterPartOfANameOrCompanyTo"]</p></div></li>
+                <li><span class="autocomplete-step-number" aria-hidden="true">3</span><div><strong>@S["Autocomplete.ChooseOrClear"]</strong><p>@S["Autocomplete.PickAContactAndSeeTheCurrentValue"]</p></div></li>
             </ol>
-            <div class="autocomplete-guide-note">Quick search and Detailed results share a value. Decorated results keeps its own selection.</div>
+            <div class="autocomplete-guide-note">@S["Autocomplete.QuickSearchAndDetailedResultsShareAValue"]</div>
         </section>
     </EditForm>
 </div>
@@ -151,7 +153,7 @@
 
     protected override async Task OnInitializedAsync() => _items = await ApplicationServiceService.GetPersons();
 
-    private static string DisplayValue(string value) => string.IsNullOrWhiteSpace(value) ? "Nothing entered yet" : value;
+    private string DisplayValue(string value) => string.IsNullOrWhiteSpace(value) ? S.Text("Nothing entered yet") : value;
 
     private static string Initials(string name) => string.IsNullOrWhiteSpace(name) ? "?"
         : string.Concat(name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(2).Select(part => char.ToUpperInvariant(part[0])));

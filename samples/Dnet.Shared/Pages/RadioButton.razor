@@ -2,47 +2,49 @@
 
 @using Dnet.Blazor.Components.RadioButton
 
-<DemoPage Id="demo-radio-button" Title="Radio button" Category="Selection controls"
-          Description="Present a small set of alternatives and let people choose exactly one."
-          Badge="Single choice">
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
+<DemoPage Id="demo-radio-button" Title="@S["RadioButton.RadioButton"]" Category="@S["SlideToggle.SelectionControls"]"
+          Description="@S["RadioButton.PresentASmallSetOfAlternativesAndLet"]"
+          Badge="@S["RadioButton.SingleChoice"]">
     <div class="demo-grid">
-        <DemoCard Id="radio-delivery" Title="Choose a delivery option"
-                  Description="Compare the available methods. Selecting another option updates your delivery summary.">
+        <DemoCard Id="radio-delivery" Title="@S["RadioButton.ChooseADeliveryOption"]"
+                  Description="@S["RadioButton.CompareTheAvailableMethodsSelectingAnotherOptionUpdates"]">
             <ChildContent>
                 <fieldset class="radio-options">
-                    <legend>Delivery method</legend>
+                    <legend>@S["RadioButton.DeliveryMethod"]</legend>
                     <DnetInputRadioGroup Name="delivery-method" @bind-Value="_delivery">
                         <div class="demo-option-row">
-                            <DnetInputRadioButton Name="delivery-method" Value="DeliveryMethod.Standard">Standard delivery</DnetInputRadioButton>
+                            <DnetInputRadioButton Name="delivery-method" Value="DeliveryMethod.Standard">@S["RadioButton.StandardDelivery"]</DnetInputRadioButton>
                         </div>
-                        <p class="demo-info">Arrives in 3–5 business days · Free</p>
+                        <p class="demo-info">@S["RadioButton.ArrivesIn35BusinessDaysFree"]</p>
                         <div class="demo-option-row">
-                            <DnetInputRadioButton Name="delivery-method" Value="DeliveryMethod.Express">Express delivery</DnetInputRadioButton>
+                            <DnetInputRadioButton Name="delivery-method" Value="DeliveryMethod.Express">@S["RadioButton.ExpressDelivery"]</DnetInputRadioButton>
                         </div>
-                        <p class="demo-info">Arrives the next business day · €9.00</p>
+                        <p class="demo-info">@S["RadioButton.ArrivesTheNextBusinessDay900"]</p>
                         <div class="demo-option-row">
-                            <DnetInputRadioButton Name="delivery-method" Value="DeliveryMethod.Collection" Disabled="true" TextPlacedBefore="true">Collect in store</DnetInputRadioButton>
+                            <DnetInputRadioButton Name="delivery-method" Value="DeliveryMethod.Collection" Disabled="true" TextPlacedBefore="true">@S["RadioButton.CollectInStore"]</DnetInputRadioButton>
                         </div>
-                        <p class="demo-info">Currently unavailable for this order.</p>
+                        <p class="demo-info">@S["RadioButton.CurrentlyUnavailableForThisOrder"]</p>
                     </DnetInputRadioGroup>
                 </fieldset>
             </ChildContent>
             <Footer>
-                <span class="demo-value" role="status">Selected: @DeliveryLabel</span>
+                <span class="demo-value" role="status">@S.Format("Common.Selected0", S.Text(DeliveryLabel))</span>
             </Footer>
         </DemoCard>
 
-        <DemoCard Title="Delivery summary" Description="A single value represents the choice for the entire group.">
+        <DemoCard Title="@S["RadioButton.DeliverySummary"]" Description="@S["RadioButton.ASingleValueRepresentsTheChoiceForThe"]">
             <div class="demo-stack">
                 <div class="demo-preview" role="status">
-                    <span class="demo-info">Your delivery</span>
-                    <p class="demo-value">@DeliveryLabel</p>
-                    <span class="demo-muted">@DeliveryDescription</span>
+                    <span class="demo-info">@S["RadioButton.YourDelivery"]</span>
+                    <p class="demo-value">@S.Display(DeliveryLabel)</p>
+                    <span class="demo-muted">@S.Display(DeliveryDescription)</span>
                 </div>
                 <ul class="demo-bullets">
-                    <li>Click an option or its label to select it.</li>
-                    <li>Choose one option from the group at a time.</li>
-                    <li>Use radio buttons when all alternatives should be visible.</li>
+                    <li>@S["RadioButton.ClickAnOptionOrItsLabelToSelect"]</li>
+                    <li>@S["RadioButton.ChooseOneOptionFromTheGroupAtA"]</li>
+                    <li>@S["RadioButton.UseRadioButtonsWhenAllAlternativesShouldBe"]</li>
                 </ul>
             </div>
         </DemoCard>

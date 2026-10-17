@@ -2,14 +2,16 @@
 @using Dnet.Blazor.Components.Skeleton
 @using Dnet.Blazor.Components.Button
 
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
 <div class="container-fluid" style="padding-top: 10px;">
     <div class="dnet-page-content-left-margin dnet-m-t-20" style="max-width: 800px;">
-        <h1 class="dnet-app-comp-name">Skeleton</h1>
-        <p>Anticipa la forma del contenido mientras llegan los datos.</p>
+        <h1 class="dnet-app-comp-name">@S["Skeleton.Skeleton"]</h1>
+        <p>@S["Skeleton.PreviewTheContentLayoutWhileDataIsLoading"]</p>
 
         <section class="dnet-m-t-20" aria-labelledby="skeleton-shapes-title"
                  style="padding: 24px; border-radius: 12px; background: var(--dnet-sys-surface); border: 1px solid var(--dnet-sys-border);">
-            <h2 id="skeleton-shapes-title" style="font-size: 1.125rem; margin-top: 0;">Un perfil a punto de aparecer</h2>
+            <h2 id="skeleton-shapes-title" style="font-size: 1.125rem; margin-top: 0;">@S["Skeleton.AProfileAboutToAppear"]</h2>
             <div style="display: flex; align-items: center; gap: 16px;">
                 <DnetSkeleton Height="64px" Width="140px" Circle="true" id="skeleton-circle" />
                 <div style="flex: 1; min-width: 0;">
@@ -22,31 +24,31 @@
         </section>
 
         <section class="dnet-m-t-20" aria-labelledby="skeleton-content-title">
-            <h2 id="skeleton-content-title" style="font-size: 1.125rem;">Del estado de carga al contenido</h2>
+            <h2 id="skeleton-content-title" style="font-size: 1.125rem;">@S["Skeleton.FromLoadingStateToContent"]</h2>
             <DnetButton Variant="DnetButtonVariant.Outlined" id="skeleton-loading-toggle" OnClick="() => _loading = !_loading">
-                @(_loading ? "Mostrar contenido" : "Simular carga")
+                @S.Display(_loading ? "Mostrar contenido" : "Simular carga")
             </DnetButton>
-            <p id="skeleton-loading-status" role="status">@(_loading ? "Cargando el perfil…" : "Perfil disponible")</p>
+            <p id="skeleton-loading-status" role="status">@S.Display(_loading ? "Cargando el perfil…" : "Perfil disponible")</p>
             <div style="width: 128px; margin-bottom: 16px;">
                 <DnetSkeleton Circle="true" Height="50%" Visible="_loading" id="skeleton-circle-wrapped">
-                    <div style="display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 50%; color: var(--dnet-sys-on-primary); background: var(--dnet-sys-primary-emphasis); font-weight: 700;">AL</div>
+                    <div style="display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 50%; color: var(--dnet-sys-on-primary); background: var(--dnet-sys-primary-emphasis); font-weight: 700;">@S["Skeleton.AL"]</div>
                 </DnetSkeleton>
             </div>
             <DnetSkeleton Visible="_loading" id="skeleton-wrapped" style="--dnet-skeleton-border-radius: 12px;">
                 <div style="padding: 24px; border: 1px solid var(--dnet-sys-border); border-radius: 12px; background: var(--dnet-sys-surface);">
-                    <h3 style="font-size: 1rem; margin: 0 0 8px;">Tu próximo proyecto</h3>
-                    <p style="margin: 0 0 16px;">Escribe una idea. Seguirá aquí después de volver a cargar.</p>
-                    <label for="skeleton-state-input" style="display: block; margin-bottom: 6px;">Una idea para recordar</label>
+                    <h3 style="font-size: 1rem; margin: 0 0 8px;">@S["Skeleton.YourNextProject"]</h3>
+                    <p style="margin: 0 0 16px;">@S["Skeleton.WriteAnIdeaItWillStayHereAfter"]</p>
+                    <label for="skeleton-state-input" style="display: block; margin-bottom: 6px;">@S["Skeleton.AnIdeaToRemember"]</label>
                     <input id="skeleton-state-input" @bind="_note" @bind:event="oninput"
                            style="width: 100%; box-sizing: border-box; padding: 10px; color: var(--dnet-sys-on-surface); background: var(--dnet-sys-surface); border: 1px solid var(--dnet-sys-border-strong); border-radius: 4px;" />
-                    <DnetButton id="skeleton-content-action" style="margin-top: 12px;" OnClick="() => _saved++">Guardar idea</DnetButton>
-                    <p id="skeleton-action-count" style="margin: 8px 0 0;">Ideas guardadas: @_saved</p>
+                    <DnetButton id="skeleton-content-action" style="margin-top: 12px;" OnClick="() => _saved++">@S["Skeleton.SaveIdea"]</DnetButton>
+                    <p id="skeleton-action-count" style="margin: 8px 0 0;">@S.Format("Common.SavedIdeas0", _saved)</p>
                 </div>
             </DnetSkeleton>
         </section>
 
         <section class="dnet-m-t-20" aria-labelledby="skeleton-static-title" dir="rtl">
-            <h2 id="skeleton-static-title" style="font-size: 1rem;">También sin animación</h2>
+            <h2 id="skeleton-static-title" style="font-size: 1rem;">@S["Skeleton.WithoutAnimationToo"]</h2>
             <DnetSkeleton Animate="false" Height="14px" Width="75%" id="skeleton-static" />
             <DnetSkeleton Animate="false" Height="14px" Width="55%" style="margin-top: 10px;" />
         </section>

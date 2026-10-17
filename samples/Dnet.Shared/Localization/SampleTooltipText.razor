@@ -1,0 +1,5 @@
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+<span>@S.Message(Text)</span>
+@code {
+    [Parameter] public string Text { get; set; } = string.Empty;
+}

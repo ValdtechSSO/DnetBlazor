@@ -20,7 +20,7 @@ public sealed class FormFieldAppearanceTests
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
         var page = await browser.NewPageAsync(new() { ViewportSize = new() { Width = width, Height = 1000 } });
-        await page.GotoAsync($"{BaseUrl.TrimEnd('/')}/Forms");
+        await BrowserReady.OpenAsync(page, $"{BaseUrl.TrimEnd('/')}/Forms");
         var appearance = page.Locator("#form-appearance-select");
         await Assertions.Expect(appearance).ToHaveValueAsync("Fill");
         await page.EvaluateAsync("theme => document.documentElement.dataset.dnetTheme = theme", theme);
@@ -57,7 +57,7 @@ public sealed class FormFieldAppearanceTests
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
         var page = await browser.NewPageAsync();
-        await page.GotoAsync($"{BaseUrl.TrimEnd('/')}/Forms");
+        await BrowserReady.OpenAsync(page, $"{BaseUrl.TrimEnd('/')}/Forms");
         var field = page.Locator("form .dnet-form-field-plain-wrapper").First;
         var control = field.Locator(".dnet-form-field-plain-control-container");
         await Assertions.Expect(page.Locator("#form-appearance-select")).ToHaveValueAsync("Fill");

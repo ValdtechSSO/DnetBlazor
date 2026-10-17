@@ -100,9 +100,9 @@ public static class ComponentScenarios
         new(
             "dialog",
             "/Dialog",
-            "button:has-text(\"Show Dialog\")",
+            "#dialog-open",
             [VisualState.Default, VisualState.Open],
-            OpenSelector: "button:has-text(\"Show Dialog\")",
+            OpenSelector: "#dialog-open",
             PageCaptureStates: [VisualState.Open]),
 
         new(
@@ -188,9 +188,9 @@ public static class ComponentScenarios
         new(
             "floating-panel",
             "/FloatingPanel",
-            "button:has-text(\"Show Panel\")",
+            "#floating-panel-open",
             [VisualState.Default, VisualState.Open],
-            OpenSelector: "button:has-text(\"Show Panel\")",
+            OpenSelector: "#floating-panel-open",
             PageCaptureStates: [VisualState.Open]),
 
         new(
@@ -233,7 +233,7 @@ public static class ComponentScenarios
         new(
             "toast",
             "/Toast",
-            "button:has-text(\"Show Toast\")",
+            "#toast-show",
             [VisualState.Default],
             PageCaptureStates: [VisualState.Default]), // the open toast is timer/position-driven (counter + stack offset); not deterministic
 
@@ -243,6 +243,7 @@ public static class ComponentScenarios
             "#tooltip-basic-trigger",
             [VisualState.Default, VisualState.Hover],
             HoverSelector: "#tooltip-basic-trigger",
+            StateAssertion: "() => { const hint = document.querySelector('[role=tooltip]'); if (!hint) return false; const h = hint.getBoundingClientRect(), t = document.querySelector('#tooltip-basic-trigger').getBoundingClientRect(); return h.width > 0 && h.height > 0 && getComputedStyle(hint).visibility === 'visible' && Math.max(0, t.left - h.right, h.left - t.right) <= 17 && Math.max(0, t.top - h.bottom, h.top - t.bottom) <= 17; }",
             PageCaptureStates: [VisualState.Hover]),
 
         new(

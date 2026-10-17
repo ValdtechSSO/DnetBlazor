@@ -11,7 +11,12 @@
 
 .dnet-dashboard-right-container {
     min-width: 0;
-    gap: 12px;
+    gap: 8px;
+}
+
+.dnet-dashboard-icon-wrapper {
+    flex: 0 0 24px;
+    width: 24px;
 }
 
 .dnet-dashboard-preferences {

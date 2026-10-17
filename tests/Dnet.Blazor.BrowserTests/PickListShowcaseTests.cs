@@ -136,39 +136,39 @@ public sealed class PickListShowcaseTests
         var (page, errors) = await OpenAsync(browser, theme, width);
         var localized = page.Locator("#picklist-localized");
         var counter = localized.Locator(".dnet-pick-list-counter");
-        var search = localized.GetByRole(AriaRole.Searchbox, new() { Name = "Buscar equipos", Exact = true });
+        var search = localized.GetByRole(AriaRole.Searchbox, new() { Name = "Search teams", Exact = true });
         var protectedTeam = Toggle(localized, "Alicante Thunder");
 
         await Assertions.Expect(protectedTeam).ToBeCheckedAsync();
         await Assertions.Expect(protectedTeam).ToBeDisabledAsync();
-        await Assertions.Expect(Row(localized, "Alicante Thunder")).ToContainTextAsync("Fijo");
-        await Assertions.Expect(localized.GetByRole(AriaRole.Navigation, new() { Name = "Paginación de equipos", Exact = true })).ToBeVisibleAsync();
+        await Assertions.Expect(Row(localized, "Alicante Thunder")).ToContainTextAsync("Fixed");
+        await Assertions.Expect(localized.GetByRole(AriaRole.Navigation, new() { Name = "Team pagination", Exact = true })).ToBeVisibleAsync();
         await protectedTeam.EvaluateAsync("element => element.click()");
         await Toggle(localized, "Bilbao Titans").FocusAsync();
         await Toggle(localized, "Bilbao Titans").PressAsync("Space");
-        await Assertions.Expect(counter).ToHaveTextAsync("Seleccionados: 2 / 7");
+        await Assertions.Expect(counter).ToHaveTextAsync("Selected: 2 / 7");
 
-        await localized.GetByRole(AriaRole.Button, new() { Name = "Seleccionar página", Exact = true }).ClickAsync();
-        await Assertions.Expect(counter).ToHaveTextAsync("Seleccionados: 4 / 7");
-        var next = localized.GetByRole(AriaRole.Button, new() { Name = "Página siguiente", Exact = true });
+        await localized.GetByRole(AriaRole.Button, new() { Name = "Select page", Exact = true }).ClickAsync();
+        await Assertions.Expect(counter).ToHaveTextAsync("Selected: 4 / 7");
+        var next = localized.GetByRole(AriaRole.Button, new() { Name = "Next page", Exact = true });
         await next.FocusAsync();
         await next.PressAsync("Enter");
         await Assertions.Expect(localized.Locator(".dnet-pick-list-item")).ToHaveCountAsync(3);
-        await localized.GetByRole(AriaRole.Button, new() { Name = "Seleccionar página", Exact = true }).ClickAsync();
-        await Assertions.Expect(counter).ToHaveTextAsync("Seleccionados: 7 / 7");
+        await localized.GetByRole(AriaRole.Button, new() { Name = "Select page", Exact = true }).ClickAsync();
+        await Assertions.Expect(counter).ToHaveTextAsync("Selected: 7 / 7");
 
         await search.FillAsync("Huelva");
         await Assertions.Expect(localized.Locator(".dnet-pick-list-item")).ToHaveCountAsync(1);
         await Assertions.Expect(Toggle(localized, "Faro Eagles")).ToBeCheckedAsync();
-        await localized.GetByRole(AriaRole.Button, new() { Name = "Limpiar", Exact = true }).ClickAsync();
-        await Assertions.Expect(counter).ToHaveTextAsync("Seleccionados: 1 / 7");
+        await localized.GetByRole(AriaRole.Button, new() { Name = "Clear", Exact = true }).ClickAsync();
+        await Assertions.Expect(counter).ToHaveTextAsync("Selected: 1 / 7");
         await Assertions.Expect(page.Locator("#picklist-localized-value .demo-value")).ToHaveTextAsync("Alicante Thunder");
         await Assertions.Expect(Toggle(localized, "Faro Eagles")).Not.ToBeCheckedAsync();
 
         await search.FillAsync("no-team-matches-this-query");
-        await Assertions.Expect(localized.Locator(".dnet-pick-list-status")).ToHaveTextAsync("No se encontraron equipos");
-        await Assertions.Expect(localized.GetByRole(AriaRole.Button, new() { Name = "Seleccionar página", Exact = true })).ToBeDisabledAsync();
-        await Assertions.Expect(counter).ToHaveTextAsync("Seleccionados: 1 / 7");
+        await Assertions.Expect(localized.Locator(".dnet-pick-list-status")).ToHaveTextAsync("No matching teams");
+        await Assertions.Expect(localized.GetByRole(AriaRole.Button, new() { Name = "Select page", Exact = true })).ToBeDisabledAsync();
+        await Assertions.Expect(counter).ToHaveTextAsync("Selected: 1 / 7");
         await search.FillAsync(string.Empty);
         await Assertions.Expect(search).ToBeFocusedAsync();
         await Assertions.Expect(protectedTeam).ToBeCheckedAsync();
@@ -205,7 +205,7 @@ public sealed class PickListShowcaseTests
         await page.AddInitScriptAsync($"localStorage.setItem('dnet.theme', JSON.stringify({serializedTheme}));");
         var baseUrl = (Environment.GetEnvironmentVariable("DNET_BLAZOR_BASE_URL") ?? "http://127.0.0.1:5101").TrimEnd('/');
         await BrowserLanguage.UseEnglishAsync(page);
-        await page.GotoAsync($"{baseUrl}/PickList");
+        await BrowserReady.OpenAsync(page, $"{baseUrl}/PickList");
         await Assertions.Expect(page.Locator("#demo-picklist")).ToBeVisibleAsync();
         return (page, errors);
     }

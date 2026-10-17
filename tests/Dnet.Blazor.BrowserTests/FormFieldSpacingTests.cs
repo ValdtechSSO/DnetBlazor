@@ -20,7 +20,7 @@ public sealed class FormFieldSpacingTests
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
         var page = await browser.NewPageAsync(new() { ViewportSize = new() { Width = width, Height = 1000 } });
-        await page.GotoAsync($"{BaseUrl.TrimEnd('/')}/Forms");
+        await BrowserReady.OpenAsync(page, $"{BaseUrl.TrimEnd('/')}/Forms");
         await Assertions.Expect(page.Locator("#spacing-counter textarea")).ToHaveValueAsync("Input");
         await page.EvaluateAsync("theme => document.documentElement.dataset.dnetTheme = theme", theme);
 
@@ -98,7 +98,7 @@ public sealed class FormFieldSpacingTests
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
         var page = await browser.NewPageAsync();
-        await page.GotoAsync($"{BaseUrl.TrimEnd('/')}/Forms");
+        await BrowserReady.OpenAsync(page, $"{BaseUrl.TrimEnd('/')}/Forms");
         var field = page.Locator("#spacing-empty");
         var input = field.Locator("input");
         await Assertions.Expect(input).ToHaveValueAsync("");
@@ -146,7 +146,7 @@ public sealed class FormFieldSpacingTests
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
         var page = await browser.NewPageAsync();
-        await page.GotoAsync($"{BaseUrl.TrimEnd('/')}/Forms");
+        await BrowserReady.OpenAsync(page, $"{BaseUrl.TrimEnd('/')}/Forms");
         await Assertions.Expect(page.Locator("#spacing-counter textarea")).ToHaveValueAsync("Input");
 
         // Different values at every scope prove both inheritance and the closer override.

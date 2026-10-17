@@ -10,14 +10,16 @@
 		<Description>Set of Components for Blazor Framework</Description>
 		<Copyright>Datalnet</Copyright>
 		<PackageTags>Blazor-Components-Datalnet</PackageTags>
-		<PackageVersion>6.0.17-rc.2</PackageVersion>
+		<PackageVersion>6.0.18-rc.2</PackageVersion>
 		<PackageProjectUrl>https://datalnet.com/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ValdtechSSO/DnetBlazor</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
-			- Added DnetPillTabs with optional counts, selection binding, keyboard navigation and RTL support.
-			- Added horizontal scrolling with hidden scrollbars and adaptive edge fades.
-			- Added a sample, component documentation and simultaneous VS Code launch profiles.
+			- Added Spoiler, Timeline and Skeleton components.
+			- Added live Spanish and English control localization, preserving values, selections and explicit labels.
+			- Added filled form fields, consistent control sizing and Filled/Outlined button variants.
+			- Improved grid filters, alignment, responsive panels, lists and component showcases.
+			- Added optional application text localization callbacks for open dialogs and toasts.
 			- Targets .NET 11 RC2.
 		</PackageReleaseNotes>
 	</PropertyGroup>

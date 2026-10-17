@@ -1,3 +1,4 @@
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
 <section id="@Id" class="demo-card" data-demo-card="@Title" aria-labelledby="@TitleId">
     @if (!string.IsNullOrWhiteSpace(Title))
     {
@@ -9,12 +10,12 @@
             <div>
                 @if (!string.IsNullOrWhiteSpace(Eyebrow))
                 {
-                    <p class="demo-card-eyebrow">@Eyebrow</p>
+                    <p class="demo-card-eyebrow">@S.Text(Eyebrow)</p>
                 }
-                <h2 id="@TitleId">@Title</h2>
+                <h2 id="@TitleId">@S.Text(Title)</h2>
                 @if (!string.IsNullOrWhiteSpace(Description))
                 {
-                    <p class="demo-card-description">@Description</p>
+                    <p class="demo-card-description">@S.Text(Description)</p>
                 }
             </div>
         </header>

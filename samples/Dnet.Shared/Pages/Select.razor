@@ -4,17 +4,19 @@
 @using Dnet.Blazor.Components.Form
 @using Dnet.Blazor.Components.Select
 
-<DemoPage Id="demo-select" Title="Select" Category="Selection controls"
-          Description="Choose from a focused list of options, connect dependent fields and bind the selected value to the type you need."
-          Badge="Typed selections">
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
+<DemoPage Id="demo-select" Title="@S["Select.Select"]" Category="@S["SlideToggle.SelectionControls"]"
+          Description="@S["Select.ChooseFromAFocusedListOfOptionsConnect"]"
+          Badge="@S["Select.TypedSelections"]">
     <div class="demo-grid">
-        <DemoCard Id="select-dependent" Title="Connected selections"
-                  Description="Choose an API resource first, then select one of the resource types that belong to it.">
+        <DemoCard Id="select-dependent" Title="@S["Select.ConnectedSelections"]"
+                  Description="@S["Select.ChooseAnAPIResourceFirstThenSelectOne"]">
             <ChildContent>
                 <EditForm Model="_right">
                     <DataAnnotationsValidator />
                     <div class="demo-stack">
-                        <DnetFormField Label="API resource" IsRequired="true">
+                        <DnetFormField Label="@S["Select.APIResource"]" IsRequired="true">
                             <ChildContent>
                                 <DnetSelect Value="@_right.ApiResourceName" TValue="string"
                                             ValueChanged="ApiResourceChangeHandler"
@@ -23,14 +25,14 @@
                                             DisplayValueConverter="@(value => value.Name)"
                                             ValueConverter="@(value => value.Name)"
                                             OnItemSelected="ApiResourceItemSelected"
-                                            PlaceHolder="Select a resource" />
+                                            PlaceHolder="@S["Select.SelectAResource"]" />
                             </ChildContent>
                             <ErrorContent>
-                                <ValidationMessage For="@(() => _right.ApiResourceName)" />
+                                <SampleValidationMessage For="@(() => _right.ApiResourceName)" />
                             </ErrorContent>
                         </DnetFormField>
 
-                        <DnetFormField Label="Resource type" IsRequired="true">
+                        <DnetFormField Label="@S["Select.ResourceType"]" IsRequired="true">
                             <ChildContent>
                                 <DnetSelect Value="@_right.ResourceType" TValue="string"
                                             ValueChanged="ApiResourceObjectChangeHandler"
@@ -39,58 +41,58 @@
                                             DisplayValueConverter="@(value => value.Name)"
                                             ValueConverter="@(value => value.Name)"
                                             OnItemSelected="ApiResourceObjectItemSelected"
-                                            PlaceHolder="Select a resource type"
+                                            PlaceHolder="@S["Select.SelectAResourceType"]"
                                             @ref="_apiResourceObjectReference" />
                             </ChildContent>
                             <ErrorContent>
-                                <ValidationMessage For="@(() => _right.ResourceType)" />
+                                <SampleValidationMessage For="@(() => _right.ResourceType)" />
                             </ErrorContent>
                         </DnetFormField>
-                        <p class="demo-muted">Changing the resource clears the previous resource type so the choices stay consistent.</p>
+                        <p class="demo-muted">@S["Select.ChangingTheResourceClearsThePreviousResourceType"]</p>
                     </div>
                 </EditForm>
             </ChildContent>
             <Footer>
-                <span class="demo-value" role="status">Resource: @SelectionLabel(_right.ApiResourceName) · Type: @SelectionLabel(_right.ResourceType)</span>
+                <span class="demo-value" role="status">@S.Format("Common.Resource0Type1", S.Text(SelectionLabel(_right.ApiResourceName)), S.Text(SelectionLabel(_right.ResourceType)))</span>
             </Footer>
         </DemoCard>
 
-        <DemoCard Id="select-numeric" Title="Display a name, store an ID"
-                  Description="Show the same readable options while binding an integer resource identifier.">
+        <DemoCard Id="select-numeric" Title="@S["Select.DisplayANameStoreAnID"]"
+                  Description="@S["Select.ShowTheSameReadableOptionsWhileBindingAn"]">
             <ChildContent>
                 <EditForm Model="_numericSelection">
                     <DataAnnotationsValidator />
                     <div class="demo-stack">
-                        <DnetFormField Label="API resource" IsRequired="true">
+                        <DnetFormField Label="@S["Select.APIResource"]" IsRequired="true">
                             <ChildContent>
                                 <DnetSelect TValue="int" @bind-Value="_numericSelection.ApiResourceId"
                                             Items="_apiResources" TItem="ApiResourceDto"
                                             DisplayValueConverter="@(value => value.Name)"
                                             ValueConverter="@(value => value.ApiResourceId)"
-                                            PlaceHolder="Select a resource" />
+                                            PlaceHolder="@S["Select.SelectAResource"]" />
                             </ChildContent>
                             <ErrorContent>
-                                <ValidationMessage For="@(() => _numericSelection.ApiResourceId)" />
+                                <SampleValidationMessage For="@(() => _numericSelection.ApiResourceId)" />
                             </ErrorContent>
                         </DnetFormField>
                         <div class="demo-preview">
-                            <span class="demo-info">Selected resource</span>
-                            <p class="demo-value">@NumericResourceName</p>
-                            <span class="demo-muted">The form value is the numeric identifier, rather than the display name.</span>
+                            <span class="demo-info">@S["Select.SelectedResource"]</span>
+                            <p class="demo-value">@S.Display(NumericResourceName)</p>
+                            <span class="demo-muted">@S["Select.TheFormValueIsTheNumericIdentifierRather"]</span>
                         </div>
                     </div>
                 </EditForm>
             </ChildContent>
             <Footer>
-                <span class="demo-value" role="status">Resource ID: @(_numericSelection.ApiResourceId == 0 ? "Not selected" : _numericSelection.ApiResourceId.ToString())</span>
+                <span class="demo-value" role="status">@S.Format("Common.ResourceID0", S.Display(_numericSelection.ApiResourceId == 0 ? "Not selected" : _numericSelection.ApiResourceId.ToString()))</span>
             </Footer>
         </DemoCard>
 
-        <DemoCard Title="A focused choice" Description="Use a select when people need one value from a list and space is limited.">
+        <DemoCard Title="@S["Select.AFocusedChoice"]" Description="@S["Select.UseASelectWhenPeopleNeedOneValue"]">
             <ul class="demo-bullets">
-                <li>Open a field to browse its available options.</li>
-                <li>Use the arrow keys to move, Enter to select and Escape to close.</li>
-                <li>Dependent options are refreshed when the parent selection changes.</li>
+                <li>@S["Select.OpenAFieldToBrowseItsAvailableOptions"]</li>
+                <li>@S["Select.UseTheArrowKeysToMoveEnterTo"]</li>
+                <li>@S["Select.DependentOptionsAreRefreshedWhenTheParentSelection"]</li>
             </ul>
         </DemoCard>
     </div>

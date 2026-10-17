@@ -13,6 +13,9 @@ namespace Dnet.Blazor.Components.Toast.Infrastructure.Models
 
         public string? Text { get; set; }
 
+        /// <summary>Resolves application-owned title, message and action labels at render time.</summary>
+        public Func<string, string>? TextLocalizer { get; set; }
+
         public ToastType ToastType { get; set; }
 
         public string? ToastTypeIconClass { get; set; }

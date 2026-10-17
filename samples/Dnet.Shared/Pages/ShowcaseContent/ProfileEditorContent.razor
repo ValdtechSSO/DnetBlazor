@@ -8,20 +8,22 @@
 @inject IDialogService DialogService
 @inject IFloatingPanelService FloatingPanelService
 
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
 <div class="profile-editor @(Floating ? "profile-editor-floating" : string.Empty)">
     @if (Floating)
     {
-        <header class="profile-editor-header"><p>Contact details</p><h2>Edit profile</h2></header>
+        <header class="profile-editor-header"><p>@S["Autocomplete.ContactDetails"]</p><h2 id="showcase-profile-heading">@S["ProfileEditorContent.EditProfile"]</h2></header>
     }
-    <p class="profile-editor-description">Keep this contact's details up to date. Changes are saved only when you choose Save profile.</p>
+    <p class="profile-editor-description">@S["ProfileEditorContent.KeepThisContactSDetailsUpToDate"]</p>
     <EditForm Model="_profile" OnValidSubmit="SaveProfile" class="profile-editor-form">
         <DataAnnotationsValidator />
         <div class="profile-editor-fields">
-            <div class="profile-editor-field"><DnetFormField Label="Full name" IsRequired="true"><ChildContent><DnetInputText id="showcase-profile-name" @bind-Value="_profile.Name" aria-label="Full name" autocomplete="name" /></ChildContent><ErrorContent><ValidationMessage For="@(() => _profile.Name)" /></ErrorContent></DnetFormField></div>
-            <div class="profile-editor-field"><DnetFormField Label="Email address" IsRequired="true"><ChildContent><DnetInputText id="showcase-profile-email" @bind-Value="_profile.Email" aria-label="Email address" autocomplete="email" /></ChildContent><ErrorContent><ValidationMessage For="@(() => _profile.Email)" /></ErrorContent></DnetFormField></div>
-            <div class="profile-editor-field"><DnetFormField Label="Job title"><ChildContent><DnetInputText id="showcase-profile-role" @bind-Value="_profile.Role" aria-label="Job title" autocomplete="organization-title" /></ChildContent></DnetFormField></div>
+            <div class="profile-editor-field"><DnetFormField Label="@S["ProfileEditorContent.FullName"]" IsRequired="true"><ChildContent><DnetInputText id="showcase-profile-name" @bind-Value="_profile.Name" aria-label="@S["ProfileEditorContent.FullName"]" autocomplete="name" /></ChildContent><ErrorContent><SampleValidationMessage For="@(() => _profile.Name)" /></ErrorContent></DnetFormField></div>
+            <div class="profile-editor-field"><DnetFormField Label="@S["ProfileEditorContent.EmailAddress"]" IsRequired="true"><ChildContent><DnetInputText id="showcase-profile-email" @bind-Value="_profile.Email" aria-label="@S["ProfileEditorContent.EmailAddress"]" autocomplete="email" /></ChildContent><ErrorContent><SampleValidationMessage For="@(() => _profile.Email)" /></ErrorContent></DnetFormField></div>
+            <div class="profile-editor-field"><DnetFormField Label="@S["FormValidation.JobTitle"]"><ChildContent><DnetInputText id="showcase-profile-role" @bind-Value="_profile.Role" aria-label="@S["FormValidation.JobTitle"]" autocomplete="organization-title" /></ChildContent></DnetFormField></div>
         </div>
-        <footer class="profile-editor-actions"><DnetButton id="showcase-profile-cancel" Variant="DnetButtonVariant.Outlined" OnClick="Cancel">Cancel</DnetButton><DnetButton id="showcase-profile-save" class="profile-editor-save" ButtonType="submit">Save profile</DnetButton></footer>
+        <footer class="profile-editor-actions"><DnetButton id="showcase-profile-cancel" Variant="DnetButtonVariant.Outlined" OnClick="Cancel">@S["Theming.Cancel"]</DnetButton><DnetButton id="showcase-profile-save" class="profile-editor-save" ButtonType="submit">@S["FormValidation.SaveProfile"]</DnetButton></footer>
     </EditForm>
 </div>
 

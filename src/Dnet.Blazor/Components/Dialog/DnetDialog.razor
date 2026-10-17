@@ -12,7 +12,7 @@
 
 <div class="@DialogCssClasses">
     <div class="dnet-dialog-header">
-        <h1 class="dnet-dialog-title">@(LocalizedTitleKey is null ? Title : Localizer[LocalizedTitleKey])</h1>
+        <h1 class="dnet-dialog-title">@(LocalizedTitleKey is null ? TextLocalizer?.Invoke(Title) ?? Title : Localizer[LocalizedTitleKey])</h1>
         <span @onclick="CloseDialog" class="dnet-dialog-icon-wrapper">
             <span class="dnet-dialog-icon dnet-dialog-close-icon" unselectable="on"></span>
         </span>
@@ -26,6 +26,8 @@
 
 @code {
     private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+    /// <summary>Resolves an application-owned title without replacing dialog content.</summary>
+    [Parameter] public Func<string, string>? TextLocalizer { get; set; }
 
     [CascadingParameter(Name = "DnetLocalizedDialogTitle")]
     private string? LocalizedTitleKey { get; set; }

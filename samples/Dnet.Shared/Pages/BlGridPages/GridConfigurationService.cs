@@ -8,6 +8,8 @@ namespace Dnet.App.Shared.Pages.BlGridPages;
 
 public class GridConfigurationService : IGridConfigurationService
 {
+    private readonly Dnet.App.Shared.Localization.SampleLocalizer S;
+    public GridConfigurationService(Dnet.App.Shared.Localization.SampleLocalizer texts) => S = texts;
     public GridOptions<Person> GetGridOptions()
     {
         return new GridOptions<Person>()
@@ -37,7 +39,7 @@ public class GridConfigurationService : IGridConfigurationService
              new GridColumn<Person> {
                             ColumnId = 1,
                             ColumnOrder = 1,
-                            HeaderName = "Name",
+                            HeaderName = S.Text("Name"),
                             DataField = "Name",
                             Width= width,
                             Height= height,
@@ -49,7 +51,7 @@ public class GridConfigurationService : IGridConfigurationService
                         new GridColumn<Person> {
                             ColumnId = 2,
                              ColumnOrder = 2,
-                            HeaderName = "Gender",
+                            HeaderName = S.Text("Gender"),
                             DataField = "Gender",
                             Width= width,
                             Height= height,
@@ -59,7 +61,7 @@ public class GridConfigurationService : IGridConfigurationService
                         new GridColumn<Person> {
                             ColumnId = 3,
                             ColumnOrder = 3,
-                            HeaderName = "IsActive",
+                            HeaderName = S.Text("IsActive"),
                             DataField = "IsActive",
                             Width= 150,
                             Height= height,
@@ -70,7 +72,7 @@ public class GridConfigurationService : IGridConfigurationService
                         new GridColumn<Person> {
                             ColumnId = 4,
                             ColumnOrder = 4,
-                            HeaderName = "Age",
+                            HeaderName = S.Text("Age"),
                             DataField = "Age",
                             Width= width,
                             Height= height,
@@ -82,7 +84,7 @@ public class GridConfigurationService : IGridConfigurationService
                         new GridColumn<Person> {
                             ColumnId = 5,
                             ColumnOrder = 5,
-                            HeaderName = "Company",
+                            HeaderName = S.Text("Company"),
                             DataField = "Company",
                             Width= width,
                             Height= height,
@@ -92,7 +94,7 @@ public class GridConfigurationService : IGridConfigurationService
                         new GridColumn<Person> {
                             ColumnId = 6,
                             ColumnOrder = 6,
-                            HeaderName = "Email",
+                            HeaderName = S.Text("Email"),
                             DataField = "Email",
                             Width= width,
                             Height= height,
@@ -102,7 +104,7 @@ public class GridConfigurationService : IGridConfigurationService
                           new GridColumn<Person> {
                             ColumnId = 7,
                             ColumnOrder = 7,
-                            HeaderName = "Phone",
+                            HeaderName = S.Text("Phone"),
                             DataField = "Phone",
                             Width= width,
                             Height= height,
@@ -112,7 +114,7 @@ public class GridConfigurationService : IGridConfigurationService
                            new GridColumn<Person> {
                             ColumnId = 8,
                             ColumnOrder = 8,
-                            HeaderName = "Address",
+                            HeaderName = S.Text("Address"),
                             DataField = "Address",
                             Width= width,
                             Height= height,

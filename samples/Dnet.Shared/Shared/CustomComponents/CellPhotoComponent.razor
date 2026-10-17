@@ -2,6 +2,8 @@
 @using Dnet.App.Shared.Infrastructure.Entities
 @using Dnet.Blazor.Components.Grid.Infrastructure.Entities
 
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
 <div style="display: flex; width: 100%; align-items: center; justify-content: center; height: 100%">
   <span class="blg-no-pic blg-no-pic-grey">
 

@@ -60,6 +60,7 @@ namespace Dnet.Blazor.Components.Dialog.Infrastructure.Services
                 if (componentType != null && parameters.Any()) x.AddAttribute(2, "Parameters", parameters);
                 x.AddAttribute(3, "Title", dialogConfig.Title);
                 x.AddAttribute(4, "DialogClass", dialogConfig.DialogClass);
+                x.AddAttribute(5, "TextLocalizer", dialogConfig.TextLocalizer);
                 x.CloseComponent();
             });
 

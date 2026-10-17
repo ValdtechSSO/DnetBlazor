@@ -31,7 +31,8 @@ public sealed class OverlayBehaviorTests
             }
         };
 
-        await page.GotoAsync($"{baseUrl.TrimEnd('/')}/Dialog", new()
+        await BrowserLanguage.UseEnglishAsync(page);
+        await BrowserReady.OpenAsync(page, $"{baseUrl.TrimEnd('/')}/Dialog", new()
         {
             WaitUntil = WaitUntilState.NetworkIdle
         });

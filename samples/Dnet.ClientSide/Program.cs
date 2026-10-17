@@ -19,6 +19,7 @@ namespace Dnet.App.ClientSide
             builder.Services.AddHttpClient("WebHostURL", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
 
             builder.Services.AddDnetBlazor();
+            builder.Services.AddScoped<Dnet.App.Shared.Localization.SampleLocalizer>();
 
             builder.Services.AddScoped(typeof(IApplicationServiceService), typeof(ApplicationServiceService));
 

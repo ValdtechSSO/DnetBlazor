@@ -70,7 +70,7 @@
         new("modern", "Moderno", "Modern")
     ];
 
-    private string Text(string spanish, string english) => Localizer.Culture.TwoLetterISOLanguageName == "en" ? english : spanish;
+    private string Text(string spanish, string english) => S.Text(english);
     private void Select(string value) => ConnectedPanelService.Close(new OverlayResult
     {
         OverlayReferenceId = OverlayReferenceId,

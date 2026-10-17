@@ -36,7 +36,7 @@
     <div class="dnet-toast__body">
         @if (!string.IsNullOrWhiteSpace(Title))
         {
-            <p class="dnet-toast__title">@Title</p>
+            <p class="dnet-toast__title">@LocalizeText(Title)</p>
         }
 
         @if (ComponentType is not null)
@@ -53,7 +53,7 @@
         }
         else if (!string.IsNullOrWhiteSpace(Text))
         {
-            <p class="dnet-toast__message">@Text</p>
+            <p class="dnet-toast__message">@LocalizeText(Text)</p>
         }
 
         @if (HasActions)
@@ -66,7 +66,7 @@
                                 style="--dnet-btn-foreground:currentColor;--dnet-btn-border-color:currentColor"
                                 data-quiet="@(action.Quiet ? "true" : null)"
                                 OnClick="() => HandleActionAsync(action)">
-                        @action.Label
+                        @LocalizeText(action.Label)
                     </DnetButton>
                 }
             </div>
@@ -88,6 +88,9 @@
 </div>
 
 @code {
+    /// <summary>Resolves application-owned text without replacing toast state or actions.</summary>
+    [Parameter] public Func<string, string>? TextLocalizer { get; set; }
+    private string LocalizeText(string value) => TextLocalizer?.Invoke(value) ?? value;
     [CascadingParameter]
     private int OverlayReferenceId { get; set; }
 

@@ -207,7 +207,7 @@ public sealed class PillTabsShowcaseTests
         var serializedTheme = System.Text.Json.JsonSerializer.Serialize(theme);
         await page.AddInitScriptAsync($"localStorage.setItem('dnet.theme', JSON.stringify({serializedTheme}));");
         var baseUrl = (Environment.GetEnvironmentVariable("DNET_BLAZOR_BASE_URL") ?? "http://127.0.0.1:5101").TrimEnd('/');
-        await page.GotoAsync($"{baseUrl}/PillTabs");
+        await BrowserReady.OpenAsync(page, $"{baseUrl}/PillTabs");
         await Assertions.Expect(page.Locator("#demo-pill-tabs")).ToBeVisibleAsync();
         return (page, errors);
     }

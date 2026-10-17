@@ -39,6 +39,20 @@
         Parent?.AddTab(this);
     }
 
+    private string? _previousLabel;
+    private bool _previousDisabled;
+    private bool _previousHidden;
+    private bool _receivedParameters;
+    protected override void OnParametersSet()
+    {
+        var changed = _receivedParameters && (_previousLabel != Label || _previousDisabled != Disabled || _previousHidden != IsHidden);
+        _previousLabel = Label;
+        _previousDisabled = Disabled;
+        _previousHidden = IsHidden;
+        _receivedParameters = true;
+        if (changed) Parent?.NotifyTabChanged();
+    }
+
     public void Dispose() => Parent?.RemoveTab(this);
 
 }

@@ -1,16 +1,17 @@
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
 <div id="@Id" class="demo-page" data-demo-page="@Title" aria-labelledby="@TitleId">
     <header class="demo-page-header">
         <div>
-            <p class="demo-eyebrow">@Category</p>
-            <h1 id="@TitleId" class="demo-page-title">@Title</h1>
+            <p class="demo-eyebrow">@S.Text(Category)</p>
+            <h1 id="@TitleId" class="demo-page-title">@S.Text(Title)</h1>
             @if (!string.IsNullOrWhiteSpace(Description))
             {
-                <p class="demo-page-description">@Description</p>
+                <p class="demo-page-description">@S.Text(Description)</p>
             }
         </div>
         @if (!string.IsNullOrWhiteSpace(Badge))
         {
-            <span class="demo-page-badge">@Badge</span>
+            <span class="demo-page-badge">@S.Text(Badge)</span>
         }
     </header>
     <div class="demo-page-content">@ChildContent</div>

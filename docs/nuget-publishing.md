@@ -17,7 +17,7 @@ La autenticación usa [Trusted Publishing de NuGet.org](https://learn.microsoft.
    | Campo | Valor |
    | --- | --- |
    | Proveedor | GitHub Actions |
-   | Organización/propietario | `datalnet` |
+   | Organización/propietario | `ValdtechSSO` |
    | Repositorio | `DnetBlazor` |
    | Archivo de workflow | `publish-nuget.yml` |
    | Entorno de GitHub | `nuget` |
@@ -35,8 +35,8 @@ conserven los valores anteriores.
 Desde `main`, cuando el contenido y las notas de versión estén listos:
 
 ```bash
-git tag v5.0.5
-git push origin v5.0.5
+git tag -a v6.0.18-rc.2 -m "Dnet.Blazor 6.0.18-rc.2"
+git push origin v6.0.18-rc.2
 ```
 
 La etiqueta inicia el flujo y la publicación quedará esperando la aprobación del
@@ -49,7 +49,7 @@ reemplazar una versión ya publicada: `--skip-duplicate` hace segura una repetic
 del workflow, pero no vuelve a publicar el mismo paquete.
 
 Las versiones preliminares se publican igual, por ejemplo con la etiqueta
-`v5.0.5-rc.1`.
+`v6.0.18-rc.2`.
 
 ## Lista de comprobación de release
 

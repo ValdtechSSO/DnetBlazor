@@ -1,5 +1,9 @@
 @using Dnet.App.Shared.Shared
 @using Dnet.App.Shared.Pages
+@using Dnet.Blazor.Localization
+@inject Dnet.App.Shared.Localization.SampleLocalizer S
+
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
 
 <Router AppAssembly="@typeof(Dialog).Assembly">
     <Found Context="routeData">
@@ -8,7 +12,7 @@
     </Found>
     <NotFound>
         <LayoutView Layout="@typeof(MainLayout)">
-            <p role="alert">Sorry, there's nothing at this address.</p>
+            <p role="alert">@S["App.PageNotFound"]</p>
         </LayoutView>
     </NotFound>
 </Router>

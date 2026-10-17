@@ -43,20 +43,20 @@ public sealed class ImageEditorShowcaseTests
         await editor.GetByRole(AriaRole.Button, new() { Name = "Cancel", Exact = true }).ClickAsync();
         await Assertions.Expect(page.Locator(".dnet-image-editor")).ToHaveCountAsync(0);
         await Assertions.Expect(preview).ToHaveAttributeAsync("src", savedDemo!);
-        await Assertions.Expect(page.Locator("#image-editor-status")).ToContainTextAsync("Edición cancelada");
+        await Assertions.Expect(page.Locator("#image-editor-status")).ToContainTextAsync("Editing cancelled");
 
         await input.SetInputFilesAsync(new FilePayload
         {
             Name = "unsupported.svg", MimeType = "image/svg+xml", Buffer = Encoding.UTF8.GetBytes("<svg xmlns='http://www.w3.org/2000/svg'/>")
         });
-        await Assertions.Expect(page.Locator("#image-editor-error")).ToContainTextAsync("formato no está admitido");
+        await Assertions.Expect(page.Locator("#image-editor-error")).ToContainTextAsync("format is not supported");
         await Assertions.Expect(preview).ToHaveAttributeAsync("src", savedDemo!);
         await Assertions.Expect(page.Locator(".dnet-image-editor")).ToHaveCountAsync(0);
         await input.SetInputFilesAsync(new FilePayload
         {
             Name = "invalid.png", MimeType = "image/png", Buffer = Encoding.UTF8.GetBytes("This is not an image.")
         });
-        await Assertions.Expect(page.Locator("#image-editor-error")).ToContainTextAsync("no contiene una imagen");
+        await Assertions.Expect(page.Locator("#image-editor-error")).ToContainTextAsync("does not contain a valid");
         await Assertions.Expect(preview).ToHaveAttributeAsync("src", savedDemo!);
 
         // A valid signature does not imply the browser can decode the image.
@@ -111,7 +111,7 @@ public sealed class ImageEditorShowcaseTests
         await Assertions.Expect(page.Locator("#image-editor-result-empty")).ToBeVisibleAsync();
         await Assertions.Expect(preview).ToHaveCountAsync(0);
         await Assertions.Expect(page.Locator("#image-editor-download")).ToHaveCountAsync(0);
-        await Assertions.Expect(page.Locator("#image-editor-status")).ToContainTextAsync("Resultado eliminado");
+        await Assertions.Expect(page.Locator("#image-editor-status")).ToContainTextAsync("Result removed");
         await page.Locator("#image-editor-demo").ClickAsync();
         editor = await ReadyEditorAsync(page);
         await editor.GetByRole(AriaRole.Button, new() { Name = "Cancel", Exact = true }).ClickAsync();
@@ -206,7 +206,7 @@ public sealed class ImageEditorShowcaseTests
         var serializedTheme = System.Text.Json.JsonSerializer.Serialize(theme);
         await page.AddInitScriptAsync($"localStorage.setItem('dnet.theme', JSON.stringify({serializedTheme}));");
         await BrowserLanguage.UseEnglishAsync(page);
-        await page.GotoAsync($"{BaseUrl}/ImageEditor");
+        await BrowserReady.OpenAsync(page, $"{BaseUrl}/ImageEditor");
         await Assertions.Expect(page.Locator("#demo-image-editor")).ToBeVisibleAsync();
         return (page, errors);
     }

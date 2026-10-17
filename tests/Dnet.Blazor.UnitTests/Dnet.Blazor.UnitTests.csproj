@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../src/Dnet.Blazor/Dnet.Blazor.csproj" />
+    <ProjectReference Include="../../samples/Dnet.Shared/Dnet.App.Shared.csproj" />
   </ItemGroup>
 
 </Project>

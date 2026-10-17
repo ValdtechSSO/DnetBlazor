@@ -4,15 +4,17 @@
 @using Dnet.Blazor.Components.Form
 @implements IDisposable
 
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
 <div id="validation-page" class="validation-page" aria-labelledby="validation-title">
     <header class="validation-header">
         <div>
-            <p class="validation-eyebrow">Forms / Validation</p>
-            <h1 id="validation-title" class="validation-title">Employee profile</h1>
-            <p class="validation-description">Keep employee details and addresses in one place. Fields marked with * are required.</p>
+            <p class="validation-eyebrow">@S["FormValidation.FormsValidation"]</p>
+            <h1 id="validation-title" class="validation-title">@S["FormValidation.EmployeeProfile"]</h1>
+            <p class="validation-description">@S["FormValidation.KeepEmployeeDetailsAndAddressesInOnePlace"]</p>
         </div>
         <span class="validation-status-pill @(_saved ? "is-saved" : _formInvalid ? "is-invalid" : "is-valid")">
-            @(_saved ? "Saved" : _formInvalid ? "Needs attention" : "Ready to save")
+            @S.Display(_saved ? "Saved" : _formInvalid ? "Needs attention" : "Ready to save")
         </span>
     </header>
 
@@ -23,28 +25,28 @@
                     <span class="validation-heading-icon" aria-hidden="true">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.5" /><path d="M5 21v-2a7 7 0 0 1 14 0v2" /></svg>
                     </span>
-                    <div><h2 id="validation-personal-title">Personal details</h2><p>The essentials for an employee profile.</p></div>
+                    <div><h2 id="validation-personal-title">@S["FormValidation.PersonalDetails"]</h2><p>@S["FormValidation.TheEssentialsForAnEmployeeProfile"]</p></div>
                 </div>
                 <div class="validation-card-body validation-fields">
                     <div class="validation-field">
-                        <DnetFormField Label="First name" UseClearButton="true" IsRequired="true">
-                            <ChildContent><DnetInputText @ref='_requiredInputs["validation-first-name"]' id="validation-first-name" @bind-Value="_worker.Name" aria-label="First name" aria-required="true" aria-invalid="@InvalidAttribute(_worker, nameof(Worker.Name))" aria-describedby="validation-first-name-help" autocomplete="given-name" /></ChildContent>
+                        <DnetFormField Label="@S["FormValidation.FirstName"]" UseClearButton="true" IsRequired="true">
+                            <ChildContent><DnetInputText @ref='_requiredInputs["validation-first-name"]' id="validation-first-name" @bind-Value="_worker.Name" aria-label="@S["FormValidation.FirstName"]" aria-required="true" aria-invalid="@InvalidAttribute(_worker, nameof(Worker.Name))" aria-describedby="validation-first-name-help" autocomplete="given-name" /></ChildContent>
                         </DnetFormField>
-                        <div id="validation-first-name-help" class="validation-field-note"><ValidationMessage For="@(() => _worker.Name)" /></div>
+                        <div id="validation-first-name-help" class="validation-field-note"><SampleValidationMessage For="@(() => _worker.Name)" /></div>
                     </div>
                     <div class="validation-field">
-                        <DnetFormField Label="Last name" UseClearButton="true" IsRequired="true">
-                            <ChildContent><DnetInputText @ref='_requiredInputs["validation-last-name"]' id="validation-last-name" @bind-Value="_worker.LastName" aria-label="Last name" aria-required="true" aria-invalid="@InvalidAttribute(_worker, nameof(Worker.LastName))" aria-describedby="validation-last-name-help" autocomplete="family-name" /></ChildContent>
+                        <DnetFormField Label="@S["FormValidation.LastName"]" UseClearButton="true" IsRequired="true">
+                            <ChildContent><DnetInputText @ref='_requiredInputs["validation-last-name"]' id="validation-last-name" @bind-Value="_worker.LastName" aria-label="@S["FormValidation.LastName"]" aria-required="true" aria-invalid="@InvalidAttribute(_worker, nameof(Worker.LastName))" aria-describedby="validation-last-name-help" autocomplete="family-name" /></ChildContent>
                         </DnetFormField>
-                        <div id="validation-last-name-help" class="validation-field-note"><ValidationMessage For="@(() => _worker.LastName)" /></div>
+                        <div id="validation-last-name-help" class="validation-field-note"><SampleValidationMessage For="@(() => _worker.LastName)" /></div>
                     </div>
                     <div class="validation-field validation-field-wide">
-                        <DnetFormField Label="Job title" UseClearButton="true" IsRequired="true">
-                            <ChildContent><DnetInputText @ref='_requiredInputs["validation-job-title"]' id="validation-job-title" @bind-Value="_worker.JobTitle" aria-label="Job title" aria-required="true" aria-invalid="@InvalidAttribute(_worker, nameof(Worker.JobTitle))" aria-describedby="validation-job-title-help" autocomplete="organization-title" /></ChildContent>
+                        <DnetFormField Label="@S["FormValidation.JobTitle"]" UseClearButton="true" IsRequired="true">
+                            <ChildContent><DnetInputText @ref='_requiredInputs["validation-job-title"]' id="validation-job-title" @bind-Value="_worker.JobTitle" aria-label="@S["FormValidation.JobTitle"]" aria-required="true" aria-invalid="@InvalidAttribute(_worker, nameof(Worker.JobTitle))" aria-describedby="validation-job-title-help" autocomplete="organization-title" /></ChildContent>
                         </DnetFormField>
                         <div id="validation-job-title-help" class="validation-field-note">
-                            <ValidationMessage For="@(() => _worker.JobTitle)" />
-                            @if (!HasError(_worker, nameof(Worker.JobTitle))) { <span>Use the employee's current role.</span> }
+                            <SampleValidationMessage For="@(() => _worker.JobTitle)" />
+                            @if (!HasError(_worker, nameof(Worker.JobTitle))) { <span>@S["FormValidation.UseTheEmployeeSCurrentRole"]</span> }
                         </div>
                     </div>
                 </div>
@@ -55,7 +57,7 @@
                     <span class="validation-heading-icon" aria-hidden="true">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z" /><circle cx="12" cy="10" r="2.5" /></svg>
                     </span>
-                    <div><h2 id="validation-addresses-title">Addresses</h2><p>Add a postal code for each address. City and town are optional.</p></div>
+                    <div><h2 id="validation-addresses-title">@S["FormValidation.Addresses"]</h2><p>@S["FormValidation.AddAPostalCodeForEachAddressCity"]</p></div>
                 </div>
                 <div class="validation-card-body validation-address-grid">
                     @for (var index = 0; index < _worker.Addresses.Count; index++)
@@ -65,30 +67,30 @@
                         var prefix = $"validation-address-{index}";
                         <article @key="address" class="validation-address-card" aria-labelledby="@(prefix + "-title")">
                             <div class="validation-address-header">
-                                <h3 id="@(prefix + "-title")">Address @addressNumber</h3>
-                                <span class="validation-address-badge">@(index == 0 ? "Primary" : "Additional")</span>
+                                <h3 id="@(prefix + "-title")">@S.Format("Common.Address0", addressNumber)</h3>
+                                <span class="validation-address-badge">@S.Display(index == 0 ? "Primary" : "Additional")</span>
                             </div>
-                            <p class="validation-address-description">@(index == 0 ? "The main contact location." : "An additional contact location.")</p>
+                            <p class="validation-address-description">@S.Display(index == 0 ? "The main contact location." : "An additional contact location.")</p>
                             <div class="validation-fields">
                                 <div class="validation-field">
-                                    <DnetFormField Label="City" UseClearButton="true">
-                                        <ChildContent><DnetInputText id="@(prefix + "-city")" @bind-Value="address.City" aria-label="@($"City, address {addressNumber}")" aria-describedby="@(prefix + "-city-help")" autocomplete="address-level2" /></ChildContent>
+                                    <DnetFormField Label="@S["FormValidation.City"]" UseClearButton="true">
+                                        <ChildContent><DnetInputText id="@(prefix + "-city")" @bind-Value="address.City" aria-label="@S.Format("Common.CityAddress0", addressNumber)" aria-describedby="@(prefix + "-city-help")" autocomplete="address-level2" /></ChildContent>
                                     </DnetFormField>
-                                    <div id="@(prefix + "-city-help")" class="validation-field-note"><span>Optional</span></div>
+                                    <div id="@(prefix + "-city-help")" class="validation-field-note"><span>@S["FormValidation.Optional"]</span></div>
                                 </div>
                                 <div class="validation-field">
-                                    <DnetFormField Label="Town" UseClearButton="true">
-                                        <ChildContent><DnetInputText id="@(prefix + "-town")" @bind-Value="address.Town" aria-label="@($"Town, address {addressNumber}")" aria-describedby="@(prefix + "-town-help")" autocomplete="address-level3" /></ChildContent>
+                                    <DnetFormField Label="@S["FormValidation.Town"]" UseClearButton="true">
+                                        <ChildContent><DnetInputText id="@(prefix + "-town")" @bind-Value="address.Town" aria-label="@S.Format("Common.TownAddress0", addressNumber)" aria-describedby="@(prefix + "-town-help")" autocomplete="address-level3" /></ChildContent>
                                     </DnetFormField>
-                                    <div id="@(prefix + "-town-help")" class="validation-field-note"><span>Optional</span></div>
+                                    <div id="@(prefix + "-town-help")" class="validation-field-note"><span>@S["FormValidation.Optional"]</span></div>
                                 </div>
                                 <div class="validation-field validation-field-wide">
-                                    <DnetFormField Label="Postal code" UseClearButton="true" IsRequired="true">
-                                        <ChildContent><DnetInputText @ref='_requiredInputs[prefix + "-postal"]' id="@(prefix + "-postal")" @bind-Value="address.PostalCode" aria-label="@($"Postal code, address {addressNumber}")" aria-required="true" aria-invalid="@InvalidAttribute(address, nameof(Address.PostalCode))" aria-describedby="@(prefix + "-postal-help")" autocomplete="postal-code" /></ChildContent>
+                                    <DnetFormField Label="@S["FormValidation.PostalCode"]" UseClearButton="true" IsRequired="true">
+                                        <ChildContent><DnetInputText @ref='_requiredInputs[prefix + "-postal"]' id="@(prefix + "-postal")" @bind-Value="address.PostalCode" aria-label="@S.Format("Common.PostalCodeAddress02", addressNumber)" aria-required="true" aria-invalid="@InvalidAttribute(address, nameof(Address.PostalCode))" aria-describedby="@(prefix + "-postal-help")" autocomplete="postal-code" /></ChildContent>
                                     </DnetFormField>
                                     <div id="@(prefix + "-postal-help")" class="validation-field-note">
-                                        <ValidationMessage For="@(() => address.PostalCode)" />
-                                        @if (!HasError(address, nameof(Address.PostalCode))) { <span>Include letters or spaces if needed.</span> }
+                                        <SampleValidationMessage For="@(() => address.PostalCode)" />
+                                        @if (!HasError(address, nameof(Address.PostalCode))) { <span>@S["FormValidation.IncludeLettersOrSpacesIfNeeded"]</span> }
                                     </div>
                                 </div>
                             </div>
@@ -99,55 +101,55 @@
 
             <div id="validation-actions" class="validation-actions">
                 <div class="validation-action-copy">
-                    <strong>@(_formInvalid ? "A few details are still missing" : "Everything is ready")</strong>
-                    <span>@(_formInvalid ? "Complete the required fields to save." : "Review the profile, then save your changes.")</span>
+                    <strong>@S.Display(_formInvalid ? "A few details are still missing" : "Everything is ready")</strong>
+                    <span>@S.Display(_formInvalid ? "Complete the required fields to save." : "Review the profile, then save your changes.")</span>
                 </div>
                 <div class="validation-action-buttons">
-                    <DnetButton Variant="DnetButtonVariant.Outlined" id="validation-reset" class="validation-reset" OnClick="ResetForm">Reset</DnetButton>
+                    <DnetButton Variant="DnetButtonVariant.Outlined" id="validation-reset" class="validation-reset" OnClick="ResetForm">@S["FormValidation.Reset"]</DnetButton>
                     <DnetButton id="validation-save" class="validation-save" ButtonType="submit" disabled="@_formInvalid">
                         <IconContent><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg></IconContent>
-                        <ChildContent>Save profile</ChildContent>
+                        <ChildContent>@S["FormValidation.SaveProfile"]</ChildContent>
                     </DnetButton>
                 </div>
             </div>
-            <p id="validation-status" class="validation-feedback" role="status" aria-live="polite">@_saveStatus</p>
+            <p id="validation-status" class="validation-feedback" role="status" aria-live="polite">@S.Display(_saveStatus)</p>
         </div>
 
-        <aside class="validation-sidebar" aria-label="Profile validation">
+        <aside class="validation-sidebar" aria-label="@S["FormValidation.ProfileValidation"]">
             <section id="validation-overview" class="validation-card validation-overview" aria-labelledby="validation-overview-title">
-                <h2 id="validation-overview-title">Validation overview</h2>
-                <p class="validation-overview-intro">A quick check before saving.</p>
-                <div class="validation-completion"><strong>@CompletedRequiredFields <span>/ @RequiredFieldCount</span></strong><span>required fields complete</span></div>
-                <progress class="validation-progress" value="@CompletedRequiredFields" max="@RequiredFieldCount" aria-label="Required fields completed"></progress>
+                <h2 id="validation-overview-title">@S["FormValidation.ValidationOverview"]</h2>
+                <p class="validation-overview-intro">@S["FormValidation.AQuickCheckBeforeSaving"]</p>
+                <div class="validation-completion"><strong>@S.Display(CompletedRequiredFields) <span>/ @S.Display(RequiredFieldCount)</span></strong><span>@S["FormValidation.RequiredFieldsComplete"]</span></div>
+                <progress class="validation-progress" value="@CompletedRequiredFields" max="@RequiredFieldCount" aria-label="@S["FormValidation.RequiredFieldsCompleted"]"></progress>
                 <ul class="validation-checklist">
-                    <li class="@(PersonalDetailsComplete ? "is-complete" : null)"><span aria-hidden="true">@(PersonalDetailsComplete ? "✓" : "○")</span>Personal details</li>
+                    <li class="@(PersonalDetailsComplete ? "is-complete" : null)"><span aria-hidden="true">@S.Display(PersonalDetailsComplete ? "✓" : "○")</span>@S["FormValidation.PersonalDetails"]</li>
                     @for (var index = 0; index < _worker.Addresses.Count; index++)
                     {
                         var complete = !string.IsNullOrWhiteSpace(_worker.Addresses[index].PostalCode);
-                        <li class="@(complete ? "is-complete" : null)"><span aria-hidden="true">@(complete ? "✓" : "○")</span>Address @(index + 1)</li>
+                        <li class="@(complete ? "is-complete" : null)"><span aria-hidden="true">@S.Display(complete ? "✓" : "○")</span>@S.Format("Common.Address0", index + 1)</li>
                     }
                 </ul>
                 <div id="validation-summary" class="validation-summary">
                     @if (_formInvalid)
                     {
-                        <h3>@_issues.Count @(_issues.Count == 1 ? "field needs" : "fields need") attention</h3>
+                        <h3>@S.Format("Common.0FieldsNeedAttention", _issues.Count)</h3>
                         <ul>
                             @foreach (var issue in _issues)
                             {
-                                <li><a href="@($"FormValidation#{issue.InputId}")" @onclick="() => FocusIssue(issue)">@issue.Label</a><span>@issue.Message</span></li>
+                                <li><a href="@($"FormValidation#{issue.InputId}")" @onclick="() => FocusIssue(issue)">@S.Display(issue.Label)</a><span>@S.Display(issue.Message)</span></li>
                             }
                         </ul>
                     }
                     else
                     {
-                        <p class="validation-ready">All required fields are complete.</p>
+                        <p class="validation-ready">@S["FormValidation.AllRequiredFieldsAreComplete"]</p>
                     }
                 </div>
             </section>
             <section class="validation-note-card" aria-labelledby="validation-note-title">
-                <h3 id="validation-note-title">What is checked?</h3>
-                <p>First name, last name, job title and each postal code are required. Feedback updates as you edit.</p>
-                <p>This is a demo form. Saving confirms the details locally.</p>
+                <h3 id="validation-note-title">@S["FormValidation.WhatIsChecked"]</h3>
+                <p>@S["FormValidation.FirstNameLastNameJobTitleAndEach"]</p>
+                <p>@S["FormValidation.ThisIsADemoFormSavingConfirmsThe"]</p>
             </section>
         </aside>
     </EditForm>

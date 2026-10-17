@@ -8,28 +8,30 @@
 @inject IToastService ToastService
 @implements IDisposable
 
-<DemoPage Id="demo-toast" Title="Toast" Category="Components / Feedback" Description="Keep people informed with timely messages and a useful next action, while their work stays in view." Badge="Four message types">
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
+<DemoPage Id="demo-toast" Title="@S["Toast.Toast"]" Category="@S["Toast.ComponentsFeedback"]" Description="@S["Toast.KeepPeopleInformedWithTimelyMessagesAndA"]" Badge="@S["Toast.FourMessageTypes"]">
     <div class="demo-grid">
-        <DemoCard Id="toast-basic" Title="The right message for the moment" Eyebrow="01 / Notification" Description="Choose a tone and open a notification. Its action reports a result back to this example.">
+        <DemoCard Id="toast-basic" Title="@S["Toast.TheRightMessageForTheMoment"]" Eyebrow="@S["Toast.01Notification"]" Description="@S["Toast.ChooseAToneAndOpenANotificationIts"]">
             <ChildContent>
                 <div class="demo-stack">
-                    <div class="toast-message-preview demo-preview"><span class="toast-preview-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z" /><path d="M10 21h4" /></svg></span><div><strong>@Message.Title</strong><p>@Message.Text</p></div></div>
-                    <EditForm Model="_settings"><DnetFormField Label="Toast type"><ChildContent><DnetSelect TValue="string" TItem="string" @bind-Value="_settings.Type" Items="_types" DisplayValueConverter="type => type" ValueConverter="type => type" ResponsiveLabel="Toast type" /></ChildContent></DnetFormField></EditForm>
-                    <div class="demo-actions"><DnetButton id="toast-show" OnClick="ShowToast">Show Toast</DnetButton></div>
-                    <p class="demo-muted">The message stays visible for eight seconds. Hover over it to give yourself more time.</p>
+                    <div class="toast-message-preview demo-preview"><span class="toast-preview-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z" /><path d="M10 21h4" /></svg></span><div><strong>@S.Display(Message.Title)</strong><p>@S.Display(Message.Text)</p></div></div>
+                    <EditForm Model="_settings"><DnetFormField Label="@S["Toast.ToastType"]"><ChildContent><DnetSelect TValue="string" TItem="string" @bind-Value="_settings.Type" Items="_types" DisplayValueConverter="type => S.Text(type)" ValueConverter="type => type" ResponsiveLabel="@S["Toast.ToastType"]" /></ChildContent></DnetFormField></EditForm>
+                    <div class="demo-actions"><DnetButton id="toast-show" OnClick="ShowToast">@S["Toast.ShowToast"]</DnetButton></div>
+                    <p class="demo-muted">@S["Toast.TheMessageStaysVisibleForEightSecondsHover"]</p>
                 </div>
             </ChildContent>
-            <Footer><p id="toast-action-result" class="toast-status" role="status">@_status</p></Footer>
+            <Footer><p id="toast-action-result" class="toast-status" role="status">@S.Display(_status)</p></Footer>
         </DemoCard>
-        <DemoCard Id="toast-stack" Title="A calm place for busy moments" Eyebrow="02 / Stacking & queue" Description="Send five notifications together. Four appear first, with the fifth waiting for space.">
+        <DemoCard Id="toast-stack" Title="@S["Toast.ACalmPlaceForBusyMoments"]" Eyebrow="@S["Toast.02StackingQueue"]" Description="@S["Toast.SendFiveNotificationsTogetherFourAppearFirstWith"]">
             <ChildContent>
                 <div class="demo-stack">
-                    <div class="toast-stack-preview demo-preview" aria-hidden="true"><div><span class="toast-tone is-success"></span><strong>Report ready</strong><small>Success</small></div><div><span class="toast-tone is-info"></span><strong>New activity</strong><small>Information</small></div><div><span class="toast-tone is-warning"></span><strong>Review needed</strong><small>Warning</small></div><div><span class="toast-tone is-danger"></span><strong>Upload failed</strong><small>Danger</small></div><p>+1 notification in the queue</p></div>
-                    <div class="demo-actions"><DnetButton id="toast-show-stack" OnClick="ShowToastStack">Show toast stack</DnetButton></div>
-                    <p class="demo-muted">Dismiss any message to reveal the next one. The stack stays together at the bottom right.</p>
+                    <div class="toast-stack-preview demo-preview" aria-hidden="true"><div><span class="toast-tone is-success"></span><strong>@S["Toast.ReportReady"]</strong><small>@S["Toast.Success"]</small></div><div><span class="toast-tone is-info"></span><strong>@S["Toast.NewActivity"]</strong><small>@S["Toast.Information"]</small></div><div><span class="toast-tone is-warning"></span><strong>@S["Toast.ReviewNeeded"]</strong><small>@S["Toast.Warning"]</small></div><div><span class="toast-tone is-danger"></span><strong>@S["Toast.UploadFailed"]</strong><small>@S["Toast.Danger"]</small></div><p>@S["Toast.1NotificationInTheQueue"]</p></div>
+                    <div class="demo-actions"><DnetButton id="toast-show-stack" OnClick="ShowToastStack">@S["Toast.ShowToastStack"]</DnetButton></div>
+                    <p class="demo-muted">@S["Toast.DismissAnyMessageToRevealTheNextOne"]</p>
                 </div>
             </ChildContent>
-            <Footer><span id="toast-stack-result" role="status">@_stackStatus</span></Footer>
+            <Footer><span id="toast-stack-result" role="status">@S.Display(_stackStatus)</span></Footer>
         </DemoCard>
     </div>
 </DemoPage>
@@ -53,8 +55,7 @@
     {
         var message = Message;
         _status = $"{_settings.Type} notification opened · choose {message.Action}";
-        ToastService.Show(new ToastConfig
-        {
+        ToastService.Show(new ToastConfig { TextLocalizer = S.Message,
             Title = message.Title, Text = message.Text, ToastType = SelectedType,
             ToastPostion = ToastPostion.BottomRight, Duration = 8000,
             Actions = [new ToastAction { Label = message.Action, OnClick = () => RecordActionAsync(message.Action) }, new ToastAction { Label = "Dismiss", Quiet = true, OnClick = () => RecordActionAsync("Dismissed") }]
@@ -70,8 +71,8 @@
     private void ShowToastStack()
     {
         foreach (var type in new[] { ToastType.Success, ToastType.Information, ToastType.Warning, ToastType.Danger })
-            ToastService.Show(new ToastConfig { Title = $"{type} notification", Text = "One place for every update, without covering your work.", ToastType = type, ToastPostion = ToastPostion.BottomRight, Duration = 12000, MaxVisible = 4 });
-        ToastService.Show(new ToastConfig { Title = "The next update", Text = "This notification waited until there was room in the stack.", ToastType = ToastType.Information, ToastPostion = ToastPostion.BottomRight, Duration = 12000, MaxVisible = 4 });
+            ToastService.Show(new ToastConfig { TextLocalizer = S.Message, Title = $"{type} notification", Text = "One place for every update, without covering your work.", ToastType = type, ToastPostion = ToastPostion.BottomRight, Duration = 12000, MaxVisible = 4 });
+        ToastService.Show(new ToastConfig { TextLocalizer = S.Message, Title = "The next update", Text = "This notification waited until there was room in the stack.", ToastType = ToastType.Information, ToastPostion = ToastPostion.BottomRight, Duration = 12000, MaxVisible = 4 });
         _stackStatus = "Batch sent · four visible notifications and one queued";
     }
 

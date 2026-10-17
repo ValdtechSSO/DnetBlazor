@@ -162,7 +162,7 @@
     {
         AppName = "Datalnet Blazor Components";
         AppDescription = "";
-        AppVersion = "v.6.0.17-rc.2";
+        AppVersion = "v.6.0.18-rc.2";
         Title = "Ready to eat";
         UserName = "admin@datalnet.com";
         PersonName = "Adrian Mustelier";
@@ -211,7 +211,7 @@
     }
 
     private string Text(string spanish, string english) =>
-        Localizer.Culture.TwoLetterISOLanguageName == "en" ? english : spanish;
+        S.Text(english);
 
     private static string LanguageName(string language) => language == "en" ? "English" : "Español";
 

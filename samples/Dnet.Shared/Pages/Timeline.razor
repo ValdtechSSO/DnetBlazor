@@ -2,129 +2,131 @@
 @using Dnet.Blazor.Components.Timeline
 @using Dnet.Blazor.Components.Button
 
-<DemoPage Id="demo-timeline" Title="Timeline" Category="Historias y procesos"
-          Description="Da contexto a cada momento. Acompaña un pedido, recorre los hitos de un proyecto o reúne la actividad de tu equipo en una historia fácil de seguir."
-          Badge="Momentos · Estados · Personas">
-    <DemoCard Id="timeline-order-card" Title="Tu pedido, paso a paso" Eyebrow="Pedido #2048"
-              Description="Una vista clara de lo que ya ha ocurrido, lo que está en marcha y lo que viene después.">
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
+<DemoPage Id="demo-timeline" Title="@S["Timeline.Timeline"]" Category="@S["Timeline.StoriesAndProcesses"]"
+          Description="@S["Timeline.GiveContextToEveryMomentFollowAnOrder"]"
+          Badge="@S["Timeline.MomentsStatesPeople"]">
+    <DemoCard Id="timeline-order-card" Title="@S["Timeline.YourOrderStepByStep"]" Eyebrow="@S["Timeline.Order2048"]"
+              Description="@S["Timeline.AClearViewOfWhatHasHappenedWhat"]">
         <ChildContent>
             <div class="timeline-order-layout">
                 <div class="timeline-order-story">
-                    <DnetTimeline AriaLabel="Seguimiento del pedido 2048" id="timeline-default">
-                        <DnetTimelineItem Title="Pedido confirmado" Status="OrderStatus(0)" StatusLabel="@OrderStatusLabel(0)"
-                                          Timestamp="16 oct · 09:15" DateTime="2026-10-16T09:15:00+02:00" id="timeline-confirmed">
-                            <ChildContent><p>Hemos recibido tu pedido y el pago se ha realizado correctamente.</p></ChildContent>
+                    <DnetTimeline AriaLabel="@S["Timeline.Order2048Tracking"]" id="timeline-default">
+                        <DnetTimelineItem Title="@S["Timeline.OrderConfirmed"]" Status="OrderStatus(0)" StatusLabel="@S.Text(OrderStatusLabel(0))"
+                                          Timestamp="@S["Common.Oct160915"]" DateTime="2026-10-16T09:15:00+02:00" id="timeline-confirmed">
+                            <ChildContent><p>@S["Timeline.WeReceivedYourOrderAndThePaymentWas"]</p></ChildContent>
                         </DnetTimelineItem>
-                        <DnetTimelineItem Title="Preparando tu paquete" Status="OrderStatus(1)" StatusLabel="@OrderStatusLabel(1)"
-                                          Timestamp="16 oct · 10:30" DateTime="2026-10-16T10:30:00+02:00" id="timeline-preparing">
+                        <DnetTimelineItem Title="@S["Timeline.PreparingYourPackage"]" Status="OrderStatus(1)" StatusLabel="@S.Text(OrderStatusLabel(1))"
+                                          Timestamp="@S["Common.Oct161030"]" DateTime="2026-10-16T10:30:00+02:00" id="timeline-preparing">
                             <ChildContent>
-                                <p>@(_orderStage > 1 ? "Productos revisados y paquete listo para salir del almacén." : "Estamos reuniendo tus productos y preparando todo para el envío.")</p>
-                                <a href="/PillTabs" id="timeline-event-link" class="timeline-related-link">Explorar otras formas de organizar estados</a>
+                                <p>@S.Text(_orderStage > 1 ? "Productos revisados y paquete listo para salir del almacén." : "Estamos reuniendo tus productos y preparando todo para el envío.")</p>
+                                <a href="/PillTabs" id="timeline-event-link" class="timeline-related-link">@S["Timeline.ExploreOtherWaysToOrganizeStates"]</a>
                             </ChildContent>
                         </DnetTimelineItem>
-                        <DnetTimelineItem Title="En camino" Status="OrderStatus(2)" StatusLabel="@OrderStatusLabel(2)"
-                                          Timestamp="@(_orderStage >= 2 ? "16 oct · 15:30" : "Próxima actualización")"
+                        <DnetTimelineItem Title="@S["Timeline.OnTheWay"]" Status="OrderStatus(2)" StatusLabel="@S.Text(OrderStatusLabel(2))"
+                                          Timestamp="@(_orderStage >= 2 ? S.Text("16 oct · 15:30") : S.Text("Próxima actualización"))"
                                           DateTime="@(_orderStage >= 2 ? "2026-10-16T15:30:00+02:00" : null)" id="timeline-shipping">
-                            <ChildContent><p>@(_orderStage > 2 ? "Tu paquete ha llegado al centro de reparto de destino." : _orderStage == 2 ? "Tu paquete ya ha salido del almacén y está en camino." : "Te avisaremos cuando el paquete salga del almacén.")</p></ChildContent>
+                            <ChildContent><p>@S.Text(_orderStage > 2 ? "Tu paquete ha llegado al centro de reparto de destino." : _orderStage == 2 ? "Tu paquete ya ha salido del almacén y está en camino." : "Te avisaremos cuando el paquete salga del almacén.")</p></ChildContent>
                         </DnetTimelineItem>
-                        <DnetTimelineItem Title="Entrega" Status="OrderStatus(3)" StatusLabel="@OrderStatusLabel(3)"
-                                          Timestamp="@(_orderStage == 4 ? "17 oct · 10:15" : "17 oct · de 09:00 a 14:00")"
+                        <DnetTimelineItem Title="@S["Timeline.Delivery"]" Status="OrderStatus(3)" StatusLabel="@S.Text(OrderStatusLabel(3))"
+                                          Timestamp="@(_orderStage == 4 ? S.Text("17 oct · 10:15") : S.Text("17 oct · de 09:00 a 14:00"))"
                                           DateTime="@(_orderStage == 4 ? "2026-10-17T10:15:00+02:00" : null)" id="timeline-delivery">
-                            <ChildContent><p>@(_orderStage == 4 ? "Pedido entregado. Todo listo para disfrutar de tus productos." : "El último paso: recibir tu pedido en la dirección que has elegido.")</p></ChildContent>
+                            <ChildContent><p>@S.Display(_orderStage == 4 ? "Pedido entregado. Todo listo para disfrutar de tus productos." : "El último paso: recibir tu pedido en la dirección que has elegido.")</p></ChildContent>
                         </DnetTimelineItem>
                     </DnetTimeline>
                 </div>
                 <aside class="timeline-order-details" aria-labelledby="timeline-order-details-title">
-                    <span class="timeline-tag">Ejemplo interactivo</span>
-                    <h3 id="timeline-order-details-title">Todo bajo control</h3>
+                    <span class="timeline-tag">@S["Timeline.InteractiveExample"]</span>
+                    <h3 id="timeline-order-details-title">@S["Timeline.EverythingUnderControl"]</h3>
                     <dl class="timeline-order-facts">
-                        <div><dt>Estado del pedido</dt><dd id="timeline-order-state">@OrderState</dd></div>
-                        <div><dt>Entrega prevista</dt><dd>17 de octubre · 09:00–14:00</dd></div>
-                        <div><dt>Modalidad</dt><dd>Entrega a domicilio</dd></div>
+                        <div><dt>@S["Timeline.OrderStatus"]</dt><dd id="timeline-order-state">@S.Display(OrderState)</dd></div>
+                        <div><dt>@S["Timeline.ExpectedDelivery"]</dt><dd>@S["Timeline.October1709001400"]</dd></div>
+                        <div><dt>@S["Timeline.Method"]</dt><dd>@S["Timeline.HomeDelivery"]</dd></div>
                     </dl>
                     <div class="timeline-progress">
-                        <label for="timeline-order-progress">@_orderStage de 4 pasos completados</label>
-                        <progress id="timeline-order-progress" max="4" value="@_orderStage">@_orderStage de 4</progress>
+                        <label for="timeline-order-progress">@S.Format("Common.0Of4StepsCompleted", _orderStage)</label>
+                        <progress id="timeline-order-progress" max="4" value="@_orderStage">@S.Format("Common.0Of4", _orderStage)</progress>
                     </div>
                     <div class="demo-actions">
-                        <DnetButton id="timeline-advance" disabled="@(_orderStage == 4)" OnClick="AdvanceOrder">@NextAction</DnetButton>
-                        <DnetButton Variant="DnetButtonVariant.Outlined" id="timeline-reset" disabled="@(_orderStage == 1)" OnClick="ResetOrder">Reiniciar</DnetButton>
+                        <DnetButton id="timeline-advance" disabled="@(_orderStage == 4)" OnClick="AdvanceOrder">@S.Display(NextAction)</DnetButton>
+                        <DnetButton Variant="DnetButtonVariant.Outlined" id="timeline-reset" disabled="@(_orderStage == 1)" OnClick="ResetOrder">@S["Timeline.Reset"]</DnetButton>
                     </div>
-                    <p class="demo-status">Avanza el ejemplo para ver cómo el pedido cambia de estado. Puedes reiniciarlo en cualquier momento.</p>
+                    <p class="demo-status">@S["Timeline.AdvanceTheExampleToSeeTheOrderChange"]</p>
                 </aside>
             </div>
         </ChildContent>
-        <Footer><span id="timeline-order-value" class="demo-value" role="status">@_orderStage de 4 pasos completados · @OrderState</span></Footer>
+        <Footer><span id="timeline-order-value" class="demo-value" role="status">@S.Format("Common.0Of4StepsCompleted1", _orderStage, S.Text(OrderState))</span></Footer>
     </DemoCard>
 
-    <DemoCard Id="timeline-project-card" Title="Un proyecto que crece" Eyebrow="Hitos del proyecto"
-              Description="Una historia compartida, con espacio para los logros y el contexto de cada etapa. En móvil, los hitos siguen el mismo orden en una sola columna.">
+    <DemoCard Id="timeline-project-card" Title="@S["Timeline.AGrowingProject"]" Eyebrow="@S["Timeline.ProjectMilestones"]"
+              Description="@S["Timeline.ASharedStoryWithRoomForAchievementsAnd"]">
         <ChildContent>
-            <DnetTimeline Alignment="DnetTimelineAlignment.Alternate" AriaLabel="Historia del proyecto" id="timeline-alternate">
-                <DnetTimelineItem Title="La primera idea" Status="DnetTimelineItemStatus.Completed" StatusLabel="Completado"
-                                  Timestamp="12 de enero" DateTime="2026-01-12" id="timeline-alternate-first">
-                    <ChildContent><p>Un pequeño equipo imaginó una manera más sencilla de trabajar juntos. De esa conversación nació el primer prototipo.</p></ChildContent>
-                    <OppositeContent><div class="timeline-milestone"><span class="timeline-tag">Enero 2026</span><strong>Descubrir el problema</strong><span>Producto y diseño · Primera propuesta</span></div></OppositeContent>
+            <DnetTimeline Alignment="DnetTimelineAlignment.Alternate" AriaLabel="@S["Timeline.ProjectHistory"]" id="timeline-alternate">
+                <DnetTimelineItem Title="@S["Timeline.TheFirstIdea"]" Status="DnetTimelineItemStatus.Completed" StatusLabel="@S["Timeline.Completed"]"
+                                  Timestamp="@S["Common.January12"]" DateTime="2026-01-12" id="timeline-alternate-first">
+                    <ChildContent><p>@S["Timeline.ASmallTeamImaginedAnEasierWayTo"]</p></ChildContent>
+                    <OppositeContent><div class="timeline-milestone"><span class="timeline-tag">@S["Timeline.January2026"]</span><strong>@S["Timeline.DiscoverTheProblem"]</strong><span>@S["Timeline.ProductAndDesignFirstProposal"]</span></div></OppositeContent>
                 </DnetTimelineItem>
-                <DnetTimelineItem Title="Un espacio para todos" Status="DnetTimelineItemStatus.Current" StatusLabel="En curso"
-                                  Timestamp="16 de octubre" DateTime="2026-10-16" id="timeline-alternate-second">
-                    <ChildContent><p>Probamos las primeras experiencias con las personas que las van a usar. Sus comentarios nos ayudan a preparar el siguiente paso.</p></ChildContent>
-                    <OppositeContent><div class="timeline-milestone"><span class="timeline-tag">Octubre 2026</span><strong>Escuchar y mejorar</strong><span>Equipo de experiencia · Pruebas con usuarios</span></div></OppositeContent>
+                <DnetTimelineItem Title="@S["Timeline.APlaceForEveryone"]" Status="DnetTimelineItemStatus.Current" StatusLabel="@S["Timeline.InProgress"]"
+                                  Timestamp="@S["Common.October16"]" DateTime="2026-10-16" id="timeline-alternate-second">
+                    <ChildContent><p>@S["Timeline.WeTryTheFirstExperiencesWithThePeople"]</p></ChildContent>
+                    <OppositeContent><div class="timeline-milestone"><span class="timeline-tag">@S["Timeline.October2026"]</span><strong>@S["Timeline.ListenAndImprove"]</strong><span>@S["Timeline.ExperienceTeamUserResearch"]</span></div></OppositeContent>
                 </DnetTimelineItem>
-                <DnetTimelineItem Title="El siguiente capítulo" Status="DnetTimelineItemStatus.Pending" StatusLabel="Pendiente"
-                                  Timestamp="Próximo hito" id="timeline-alternate-third">
-                    <ChildContent><p>Abriremos las puertas a nuevas ideas y nuevas formas de colaborar, con lo aprendido durante las primeras pruebas.</p></ChildContent>
-                    <OppositeContent><div class="timeline-milestone"><span class="timeline-tag">Lo que viene</span><strong>Compartir el resultado</strong><span>Todo el equipo · Próximo lanzamiento</span></div></OppositeContent>
+                <DnetTimelineItem Title="@S["Timeline.TheNextChapter"]" Status="DnetTimelineItemStatus.Pending" StatusLabel="@S["Timeline.Pending"]"
+                                  Timestamp="@S["Common.NextMilestone"]" id="timeline-alternate-third">
+                    <ChildContent><p>@S["Timeline.WeWillOpenTheDoorToNewIdeas"]</p></ChildContent>
+                    <OppositeContent><div class="timeline-milestone"><span class="timeline-tag">@S["Timeline.ComingNext"]</span><strong>@S["Timeline.ShareTheResult"]</strong><span>@S["Timeline.TheWholeTeamNextLaunch"]</span></div></OppositeContent>
                 </DnetTimelineItem>
             </DnetTimeline>
         </ChildContent>
-        <Footer><span class="demo-info">Un hito completado, uno en curso y una nueva etapa por delante.</span></Footer>
+        <Footer><span class="demo-info">@S["Timeline.OneCompletedMilestoneOneInProgressAndA"]</span></Footer>
     </DemoCard>
 
     <div class="demo-grid">
-        <DemoCard Id="timeline-activity-card" Title="Las personas detrás del cambio" Eyebrow="Actividad del equipo"
-                  Description="Los marcadores personalizados dan identidad a cada actualización. El nombre y el contexto siempre acompañan al evento.">
+        <DemoCard Id="timeline-activity-card" Title="@S["Timeline.ThePeopleBehindTheChange"]" Eyebrow="@S["Timeline.TeamActivity"]"
+                  Description="@S["Timeline.CustomMarkersGiveEachUpdateAnIdentityEvery"]">
             <ChildContent>
-                <DnetTimeline Alignment="DnetTimelineAlignment.End" AriaLabel="Actividad del equipo" id="timeline-end">
-                    <DnetTimelineItem Title="Ana actualizó la propuesta" Status="DnetTimelineItemStatus.Completed" StatusLabel="Completado"
-                                      Timestamp="16 oct · 10:10" DateTime="2026-10-16T10:10:00+02:00" id="timeline-activity-ana">
-                        <BulletContent>A</BulletContent>
-                        <ChildContent><p>Los nuevos bocetos ya están listos para compartir con el equipo.</p></ChildContent>
+                <DnetTimeline Alignment="DnetTimelineAlignment.End" AriaLabel="@S["Timeline.TeamActivity"]" id="timeline-end">
+                    <DnetTimelineItem Title="@S["Timeline.AnaUpdatedTheProposal"]" Status="DnetTimelineItemStatus.Completed" StatusLabel="@S["Timeline.Completed"]"
+                                      Timestamp="@S["Common.Oct161010"]" DateTime="2026-10-16T10:10:00+02:00" id="timeline-activity-ana">
+                        <BulletContent>@S["Timeline.A"]</BulletContent>
+                        <ChildContent><p>@S["Timeline.TheNewSketchesAreReadyToShareWith"]</p></ChildContent>
                     </DnetTimelineItem>
-                    <DnetTimelineItem Title="Lucas está revisando los detalles" Status="DnetTimelineItemStatus.Current" StatusLabel="En curso"
-                                      Timestamp="16 oct · 10:30" DateTime="2026-10-16T10:30:00+02:00" id="timeline-activity-lucas">
-                        <BulletContent>L</BulletContent>
-                        <ChildContent><p>Una última mirada antes de dar el siguiente paso.</p></ChildContent>
+                    <DnetTimelineItem Title="@S["Timeline.LucasIsReviewingTheDetails"]" Status="DnetTimelineItemStatus.Current" StatusLabel="@S["Timeline.InProgress"]"
+                                      Timestamp="@S["Common.Oct161030"]" DateTime="2026-10-16T10:30:00+02:00" id="timeline-activity-lucas">
+                        <BulletContent>@S["Timeline.L"]</BulletContent>
+                        <ChildContent><p>@S["Timeline.AFinalLookBeforeTheNextStep"]</p></ChildContent>
                     </DnetTimelineItem>
-                    <DnetTimelineItem Title="Marina preparará el lanzamiento" Status="DnetTimelineItemStatus.Pending" StatusLabel="Pendiente"
-                                      Timestamp="Próxima revisión" id="timeline-activity-marina">
-                        <BulletContent>M</BulletContent>
-                        <ChildContent><p>El siguiente encuentro servirá para compartir la versión final.</p></ChildContent>
+                    <DnetTimelineItem Title="@S["Timeline.MarinaWillPrepareTheLaunch"]" Status="DnetTimelineItemStatus.Pending" StatusLabel="@S["Timeline.Pending"]"
+                                      Timestamp="@S["Common.NextReview"]" id="timeline-activity-marina">
+                        <BulletContent>@S["Timeline.M"]</BulletContent>
+                        <ChildContent><p>@S["Timeline.TheNextMeetingWillHelpUsShareThe"]</p></ChildContent>
                     </DnetTimelineItem>
                 </DnetTimeline>
             </ChildContent>
-            <Footer><span class="demo-info">Tres personas, una historia compartida.</span></Footer>
+            <Footer><span class="demo-info">@S["Timeline.ThreePeopleOneSharedStory"]</span></Footer>
         </DemoCard>
 
-        <DemoCard Id="timeline-direction-card" Title="La misma historia, otra dirección" Eyebrow="Lectura de derecha a izquierda"
-                  Description="Esta solicitud en árabe conserva el orden de los eventos y adapta el recorrido a la dirección de lectura de la interfaz.">
+        <DemoCard Id="timeline-direction-card" Title="@S["Timeline.TheSameStoryInAnotherDirection"]" Eyebrow="@S["Timeline.RightToLeftReading"]"
+                  Description="@S["Timeline.ThisArabicRequestKeepsTheEventOrderAnd"]">
             <ChildContent>
-                <DnetTimeline AriaLabel="متابعة الطلب" dir="rtl" lang="ar" id="timeline-rtl">
-                    <DnetTimelineItem Title="تم استلام الطلب" Status="DnetTimelineItemStatus.Completed" StatusLabel="مكتمل"
+                <DnetTimeline AriaLabel="@S["Common.RequestTracking"]" dir="rtl" lang="@S.Culture.TwoLetterISOLanguageName" id="timeline-rtl">
+                    <DnetTimelineItem Title="@S["Common.RequestReceived"]" Status="DnetTimelineItemStatus.Completed" StatusLabel="@S["Common.Completed"]"
                                       Timestamp="09:00" DateTime="2026-10-16T09:00:00+02:00" id="timeline-rtl-received">
-                        <ChildContent><p>وصلت جميع المستندات، ويمكننا الآن بدء المراجعة.</p></ChildContent>
+                        <ChildContent><p>@S["Common.AllDocumentsHaveArrivedWeCanStartTheReview"]</p></ChildContent>
                     </DnetTimelineItem>
-                    <DnetTimelineItem Title="المراجعة جارية" Status="DnetTimelineItemStatus.Current" StatusLabel="قيد التنفيذ"
+                    <DnetTimelineItem Title="@S["Common.ReviewInProgress"]" Status="DnetTimelineItemStatus.Current" StatusLabel="@S["Common.InProgress"]"
                                       Timestamp="10:45" DateTime="2026-10-16T10:45:00+02:00" id="timeline-rtl-review">
-                        <ChildContent><p>يتحقق الفريق من المعلومات قبل إرسال الرد.</p></ChildContent>
+                        <ChildContent><p>@S["Common.TheTeamIsCheckingTheInformationBeforeReplying"]</p></ChildContent>
                     </DnetTimelineItem>
-                    <DnetTimelineItem Title="القرار النهائي" Status="DnetTimelineItemStatus.Pending" StatusLabel="قيد الانتظار"
-                                      Timestamp="التحديث القادم" id="timeline-rtl-resolution">
-                        <ChildContent><p>ستصلك رسالة تأكيد عند اكتمال مراجعة طلبك.</p></ChildContent>
+                    <DnetTimelineItem Title="@S["Common.FinalDecision"]" Status="DnetTimelineItemStatus.Pending" StatusLabel="@S["Common.Pending2"]"
+                                      Timestamp="@S["Common.NextUpdate"]" id="timeline-rtl-resolution">
+                        <ChildContent><p>@S["Common.YouWillReceiveConfirmationWhenYourRequestHasBeen"]</p></ChildContent>
                     </DnetTimelineItem>
                 </DnetTimeline>
             </ChildContent>
-            <Footer><span class="demo-info">El orden de los eventos se mantiene en todas las direcciones.</span></Footer>
+            <Footer><span class="demo-info">@S["Timeline.EventsKeepTheirOrderInEveryDirection"]</span></Footer>
         </DemoCard>
     </div>
 </DemoPage>

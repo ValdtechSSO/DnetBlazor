@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## Version 6.0.18-rc.2 (October 2026)
+
+- Reduced the sample header spacing between user details and the account icon.
+
+- Localized example screens and their opened content with separate Spanish and
+  English application resources. Navigation menu labels remain unchanged.
+  Existing values, selections and validation state survive language changes.
+- Added optional `TextLocalizer` callbacks to DialogConfig/DnetDialog and
+  ToastConfig/DnetToast for live application-owned titles, messages and actions.
+- Step and tab headers refresh when their supplied labels change, preserving
+  the active step/tab and completion state during language switches.
+
 - Added shared control localization with Spanish as the default and English as
   the second language, including regional formats, live updates in open panels,
   accessible labels and parsing messages. Explicit text overrides and per-user

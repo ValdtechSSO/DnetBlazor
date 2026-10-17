@@ -39,7 +39,8 @@ public sealed class GridRowSpanHoverTests
             Body = personsJson
         }));
 
-        await page.GotoAsync($"{baseUrl.TrimEnd('/')}/BlGrid", new()
+        await BrowserLanguage.UseEnglishAsync(page);
+        await BrowserReady.OpenAsync(page, $"{baseUrl.TrimEnd('/')}/BlGrid", new()
         {
             WaitUntil = WaitUntilState.NetworkIdle,
             Timeout = 60_000

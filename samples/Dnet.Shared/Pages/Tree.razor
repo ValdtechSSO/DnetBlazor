@@ -2,53 +2,55 @@
 @using Dnet.Blazor.Components.Tree
 @using Dnet.Blazor.Components.Button
 
-<DemoPage Id="demo-tree" Title="Tree view" Category="Data display"
-          Description="Explore a nested collection and make selections at any level, from a whole category to a single item." Badge="Nested selection">
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
+<DemoPage Id="demo-tree" Title="@S["Tree.TreeView"]" Category="@S["Tree.DataDisplay"]"
+          Description="@S["Tree.ExploreANestedCollectionAndMakeSelectionsAt"]" Badge="@S["Tree.NestedSelection"]">
     <div class="demo-grid">
-        <DemoCard Id="tree-catalog-card" Title="Browse the catalog" Eyebrow="Expandable hierarchy"
-                  Description="Open a category to explore its contents. Selecting a parent also selects the items inside it.">
+        <DemoCard Id="tree-catalog-card" Title="@S["Tree.BrowseTheCatalog"]" Eyebrow="@S["Tree.ExpandableHierarchy"]"
+                  Description="@S["Tree.OpenACategoryToExploreItsContentsSelecting"]">
             <ChildContent>
                 <div class="demo-actions tree-actions">
-                    <DnetButton Variant="DnetButtonVariant.Outlined" id="tree-expand-all" OnClick="() => Expand(true)">Expand all</DnetButton>
-                    <DnetButton Variant="DnetButtonVariant.Outlined" id="tree-collapse-all" OnClick="() => Expand(false)">Collapse all</DnetButton>
+                    <DnetButton Variant="DnetButtonVariant.Outlined" id="tree-expand-all" OnClick="() => Expand(true)">@S["Tree.ExpandAll"]</DnetButton>
+                    <DnetButton Variant="DnetButtonVariant.Outlined" id="tree-collapse-all" OnClick="() => Expand(false)">@S["Tree.CollapseAll"]</DnetButton>
                 </div>
                 <div id="tree-catalog" class="tree-stage">
-                    <DnetTree @ref="_tree" TNode="Food" Nodes="_treeData" DisplayValueConverter="food => food.Name"
+                    <DnetTree @ref="_tree" TNode="Food" Nodes="_treeData" DisplayValueConverter="food => S.Text(food.Name)"
                               ChildNodes="food => food.Children" CheckboxSelection="true"
                               OnTreeNodeClicked="NodeClicked" OnCheckboxClicked="CheckboxClicked" OnSelectionChange="SelectionChanged">
-                        <NodeContent><span class="tree-node-label">@context.Name</span></NodeContent>
+                        <NodeContent><span class="tree-node-label">@S.Display(context.Name)</span></NodeContent>
                     </DnetTree>
                 </div>
             </ChildContent>
-            <Footer><span id="tree-current-node" role="status">@_nodeStatus</span></Footer>
+            <Footer><span id="tree-current-node" role="status">@S.Display(_nodeStatus)</span></Footer>
         </DemoCard>
         <div class="demo-stack">
-            <DemoCard Id="tree-selection-card" Title="Selected items" Description="The selection includes both categories and individual items.">
+            <DemoCard Id="tree-selection-card" Title="@S["Tree.SelectedItems"]" Description="@S["Tree.TheSelectionIncludesBothCategoriesAndIndividualItems"]">
                 <ChildContent>
                     @if (_selectedFoods.Count == 0)
                     {
-                        <div class="tree-empty"><strong>Your selection is empty</strong><p class="demo-muted">Use a checkbox in the catalog to select an item or a whole branch.</p></div>
+                        <div class="tree-empty"><strong>@S["Tree.YourSelectionIsEmpty"]</strong><p class="demo-muted">@S["Tree.UseACheckboxInTheCatalogToSelect"]</p></div>
                     }
                     else
                     {
                         <ul id="tree-selected-names" class="demo-bullets">
                             @foreach (var food in _selectedFoods)
                             {
-                                <li>@food.Name</li>
+                                <li>@S.Display(food.Name)</li>
                             }
                         </ul>
                     }
                 </ChildContent>
-                <Footer><span id="tree-selected-count" role="status">@_selectedFoods.Count selected</span></Footer>
+                <Footer><span id="tree-selected-count" role="status">@S.Format("Common.0Selected", _selectedFoods.Count)</span></Footer>
             </DemoCard>
-            <DemoCard Id="tree-guide" Title="Explore a branch" Description="A familiar hierarchy keeps related information together.">
+            <DemoCard Id="tree-guide" Title="@S["Tree.ExploreABranch"]" Description="@S["Tree.AFamiliarHierarchyKeepsRelatedInformationTogether"]">
                 <ul class="demo-bullets">
-                    <li>Use the chevron to expand or collapse a category.</li>
-                    <li>Select a label to make it the current item.</li>
-                    <li>Use a checkbox to add an item to your selection.</li>
+                    <li>@S["Tree.UseTheChevronToExpandOrCollapseA"]</li>
+                    <li>@S["Tree.SelectALabelToMakeItTheCurrent"]</li>
+                    <li>@S["Tree.UseACheckboxToAddAnItemTo"]</li>
                 </ul>
-                <p id="tree-expand-value" class="demo-info" role="status">@_expansionStatus</p>
-                <p id="tree-checkbox-value" class="demo-info" role="status">@_checkboxStatus</p>
+                <p id="tree-expand-value" class="demo-info" role="status">@S.Display(_expansionStatus)</p>
+                <p id="tree-checkbox-value" class="demo-info" role="status">@S.Display(_checkboxStatus)</p>
             </DemoCard>
         </div>
     </div>

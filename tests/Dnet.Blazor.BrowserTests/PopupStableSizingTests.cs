@@ -36,7 +36,8 @@ public sealed class PopupStableSizingTests
 
         foreach (var demo in new[] { "basic", "rich", "decorated" })
         {
-            await page.GotoAsync($"{BaseUrl}/Autocomplete");
+            await BrowserLanguage.UseEnglishAsync(page);
+            await BrowserReady.OpenAsync(page, $"{BaseUrl}/Autocomplete");
             var input = page.Locator($"#autocomplete-{demo}-input");
             await Assertions.Expect(input).ToBeVisibleAsync();
             await input.FocusAsync();
@@ -81,13 +82,15 @@ public sealed class PopupStableSizingTests
             await CloseAsync(page, panel);
         }
 
-        await page.GotoAsync($"{BaseUrl}/Select");
+        await BrowserLanguage.UseEnglishAsync(page);
+        await BrowserReady.OpenAsync(page, $"{BaseUrl}/Select");
         for (var index = 0; index < 3; index++)
         {
             var trigger = page.Locator(".dnet-desktop-content .dnet-plain-select").Nth(index);
             await CheckSelectAsync(page, trigger, width, $"Select example {index}");
         }
-        await page.GotoAsync($"{BaseUrl}/Forms");
+        await BrowserLanguage.UseEnglishAsync(page);
+        await BrowserReady.OpenAsync(page, $"{BaseUrl}/Forms");
         await CheckSelectAsync(page, page.Locator(".dnet-desktop-content .dnet-plain-select").First, width, "Forms gender");
         Assert.Empty(errors);
     }
@@ -104,7 +107,8 @@ public sealed class PopupStableSizingTests
         await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
         var page = await NewPageAsync(browser, initialWidth, "dark");
         await RouteContactsAsync(page);
-        await page.GotoAsync($"{BaseUrl}/Autocomplete");
+        await BrowserLanguage.UseEnglishAsync(page);
+        await BrowserReady.OpenAsync(page, $"{BaseUrl}/Autocomplete");
         var input = page.Locator("#autocomplete-basic-input");
         await Assertions.Expect(input).ToBeVisibleAsync();
         await input.FocusAsync();

@@ -2,24 +2,26 @@
 @using Dnet.Blazor.Components.Tabs
 @using Dnet.Blazor.Components.Tabs.Infrastructure.Models
 
-<DemoPage Id="demo-tabs" Title="Tabs" Category="Navigation"
-          Description="Keep related views in one workspace, with a clear active section and room for longer navigation." Badge="18 sections">
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
+<DemoPage Id="demo-tabs" Title="@S["Tabs.Tabs"]" Category="@S["Stepper.Navigation"]"
+          Description="@S["Tabs.KeepRelatedViewsInOneWorkspaceWithA"]" Badge="@S["Tabs.18Sections"]">
     <div class="demo-stack">
-    <DemoCard Id="tabs-workspace" Title="Project workspace" Eyebrow="Scrollable navigation"
-              Description="Choose a section to change the view. Billing is unavailable in this workspace.">
+    <DemoCard Id="tabs-workspace" Title="@S["Tabs.ProjectWorkspace"]" Eyebrow="@S["Tabs.ScrollableNavigation"]"
+              Description="@S["Tabs.ChooseASectionToChangeTheViewBilling"]">
         <ChildContent>
             <div class="tabs-stage">
                 <DnetTabGroup mat-align-tabs="start" OnTabClicked="TabClicked" TabHeaderBorder="false">
                     @foreach (var section in _sections)
                     {
-                        <DnetTab Label="@section.Title" Disabled="@(section.Title == "Billing")">
+                        <DnetTab Label="@S.Text(section.Title)" Disabled="@(section.Title == "Billing")">
                             <div class="tabs-panel">
-                                <p class="tabs-panel-eyebrow">Northstar workspace</p>
-                                <h3>@section.Title</h3>
-                                <p class="demo-muted">@section.Description</p>
+                                <p class="tabs-panel-eyebrow">@S["Tabs.NorthstarWorkspace"]</p>
+                                <h3>@S.Display(section.Title)</h3>
+                                <p class="demo-muted">@S.Display(section.Description)</p>
                                 <div class="tabs-metrics">
-                                    <div><span class="demo-info">Project</span><strong>Website launch</strong></div>
-                                    <div><span class="demo-info">Workspace status</span><strong>On track</strong></div>
+                                    <div><span class="demo-info">@S["Tabs.Project"]</span><strong>@S["Chips.WebsiteLaunch"]</strong></div>
+                                    <div><span class="demo-info">@S["Tabs.WorkspaceStatus"]</span><strong>@S["Tabs.OnTrack"]</strong></div>
                                 </div>
                             </div>
                         </DnetTab>
@@ -27,18 +29,18 @@
                 </DnetTabGroup>
             </div>
         </ChildContent>
-        <Footer><span class="demo-value" id="tabs-current-label" role="status">Active section: <strong>@_activeSection</strong></span></Footer>
+        <Footer><span class="demo-value" id="tabs-current-label" role="status">@S["Tabs.ActiveSection"] <strong>@S.Display(_activeSection)</strong></span></Footer>
     </DemoCard>
 
     <div class="demo-grid">
-        <DemoCard Id="tabs-navigation-guide" Title="Explore every section" Description="Long navigation stays together in a single row.">
-            <p class="demo-muted">Use the arrows at the ends of the tab strip to reveal more sections, then choose the view you need.</p>
+        <DemoCard Id="tabs-navigation-guide" Title="@S["Tabs.ExploreEverySection"]" Description="@S["Tabs.LongNavigationStaysTogetherInASingleRow"]">
+            <p class="demo-muted">@S["Tabs.UseTheArrowsAtTheEndsOfThe"]</p>
         </DemoCard>
-        <DemoCard Id="tabs-keyboard-guide" Title="Keyboard navigation" Description="Move through available tabs without leaving the keyboard.">
+        <DemoCard Id="tabs-keyboard-guide" Title="@S["Tabs.KeyboardNavigation"]" Description="@S["Tabs.MoveThroughAvailableTabsWithoutLeavingTheKeyboard"]">
             <ul class="demo-bullets">
-                <li>Use the arrow keys to move between tabs.</li>
-                <li>Home and End move to the first and last available section.</li>
-                <li>Disabled sections stay visible and cannot be selected.</li>
+                <li>@S["Tabs.UseTheArrowKeysToMoveBetweenTabs"]</li>
+                <li>@S["Tabs.HomeAndEndMoveToTheFirstAnd"]</li>
+                <li>@S["Tabs.DisabledSectionsStayVisibleAndCannotBeSelected"]</li>
             </ul>
         </DemoCard>
     </div>

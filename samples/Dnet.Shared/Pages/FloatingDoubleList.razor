@@ -5,24 +5,26 @@
 @using Dnet.Blazor.Components.Form
 @using Dnet.Blazor.Components.List
 
-<DemoPage Id="demo-floating-doublelist" Title="Floating Double List" Category="Selección y asignación"
-          Description="Organiza un equipo desde un selector compacto. Abre el panel, busca a una persona y muévela entre las dos listas sin perder el contexto."
-          Badge="Buscar · Asignar · Revisar">
-    <DemoCard Id="floating-doublelist-assignment" Title="Un equipo, sin cambiar de pantalla" Eyebrow="01 / Asignación de proyecto"
-              Description="Elige quién participa en el proyecto Atlas. Los cambios se reflejan al momento en el selector y en el resumen del equipo.">
+<DnetLocalizationObserver OnChanged="RefreshSampleLanguage" />
+
+<DemoPage Id="demo-floating-doublelist" Title="@S["FloatingDoubleList.FloatingDoubleList"]" Category="@S["FloatingDoubleList.SelectionAndAssignment"]"
+          Description="@S["FloatingDoubleList.OrganizeATeamFromACompactFieldOpen"]"
+          Badge="@S["FloatingDoubleList.SearchAssignReview"]">
+    <DemoCard Id="floating-doublelist-assignment" Title="@S["FloatingDoubleList.OneTeamOnTheSamePage"]" Eyebrow="@S["FloatingDoubleList.01ProjectAssignment"]"
+              Description="@S["FloatingDoubleList.ChooseWhoJoinsProjectAtlasChangesAppearImmediately"]">
         <ChildContent>
             <div class="floating-doublelist-workspace">
                 <div class="demo-stack">
-                    <div class="floating-doublelist-context"><span class="floating-doublelist-tag">Proyecto Atlas</span><span class="demo-info">10 personas · 1 responsable fijo</span></div>
+                    <div class="floating-doublelist-context"><span class="floating-doublelist-tag">@S["FloatingDoubleList.ProjectAtlas"]</span><span class="demo-info">@S["FloatingDoubleList.10People1FixedLead"]</span></div>
                     <EditForm Model="_form">
                         <div id="floating-doublelist-field">
-                            <DnetFormField Label="Personas asignadas" IsRequired="true">
+                            <DnetFormField Label="@S["FloatingDoubleList.AssignedPeople"]" IsRequired="true">
                                 <ChildContent>
                                     <DnetFloatingDoubleList @key="_fieldRevision" TItem="Contact" @bind-Value="_form.Selection"
                                                             LeftItems="_availablePeople" RightItems="_assignedPeople"
                                                             LeftListOptions="_availableOptions" RightListOptions="_assignedOptions"
                                                             SearchControlOptions="SearchLabels" EqualityComparer="Comparer"
-                                                            DisplayValueConverter="person => person.Name" DisplayName="Personas asignadas"
+                                                            DisplayValueConverter="person => person.Name" DisplayName="@S["FloatingDoubleList.AssignedPeople"]"
                                                             SideForSelections="ListToShow.Right" DisabledClearButton="true"
                                                             Width="450px" Height="430px" MaxWidth="calc(100vw - 24px)" MaxHeight="calc(100dvh - 64px)"
                                                             InputItemHeight="24" OnSelectionChanged="SelectionChanged">
@@ -30,7 +32,7 @@
                                         <ListItemContent Context="person">
                                             <span class="floating-doublelist-person-copy">
                                                 <span class="dnet-list-item-headline floating-doublelist-person-name">@person.Name</span>
-                                                <span class="dnet-list-item-supporting-text floating-doublelist-person-role">@(person.IsLocked ? "Fijo · " : null)@person.Role</span>
+                                                <span class="dnet-list-item-supporting-text floating-doublelist-person-role">@(person.IsLocked ? S.Text("Fixed · ") : null)@S.Display(person.Role)</span>
                                             </span>
                                         </ListItemContent>
                                     </DnetFloatingDoubleList>
@@ -38,70 +40,81 @@
                             </DnetFormField>
                         </div>
                     </EditForm>
-                    <p id="floating-doublelist-status" class="demo-status" role="status">@_lastAction</p>
-                    <p class="demo-info">La selección se conserva al cerrar y volver a abrir el panel. Taylor Morgan permanece en el equipo como responsable del proyecto.</p>
+                    <p id="floating-doublelist-status" class="demo-status" role="status">@S.Display(_lastAction)</p>
+                    <p class="demo-info">@S["FloatingDoubleList.YourSelectionStaysWhenThePanelClosesAnd"]</p>
                 </div>
                 <aside class="floating-doublelist-guide" aria-labelledby="floating-doublelist-guide-title">
-                    <span class="floating-doublelist-guide-eyebrow">Cómo funciona</span>
-                    <h3 id="floating-doublelist-guide-title">Del directorio al equipo</h3>
+                    <span class="floating-doublelist-guide-eyebrow">@S["FloatingDoubleList.HowItWorks"]</span>
+                    <h3 id="floating-doublelist-guide-title">@S["FloatingDoubleList.FromDirectoryToTeam"]</h3>
                     <ol class="floating-doublelist-steps">
-                        <li><span aria-hidden="true">1</span><div><strong>Encuentra a la persona</strong><p>Busca por nombre en disponibles o asignados.</p></div></li>
-                        <li><span aria-hidden="true">2</span><div><strong>Cambia su asignación</strong><p>Pulsa su nombre para moverla. En escritorio también puedes arrastrarla a la otra lista.</p></div></li>
-                        <li><span aria-hidden="true">3</span><div><strong>Revisa el resultado</strong><p>En móvil, usa el conmutador del panel para cambiar de lista.</p></div></li>
+                        <li><span aria-hidden="true">1</span><div><strong>@S["FloatingDoubleList.FindThePerson"]</strong><p>@S["FloatingDoubleList.SearchByNameInAvailableOrAssignedPeople"]</p></div></li>
+                        <li><span aria-hidden="true">2</span><div><strong>@S["FloatingDoubleList.ChangeTheirAssignment"]</strong><p>@S["FloatingDoubleList.ClickTheirNameToMoveThemOnDesktop"]</p></div></li>
+                        <li><span aria-hidden="true">3</span><div><strong>@S["FloatingDoubleList.ReviewTheResult"]</strong><p>@S["FloatingDoubleList.OnMobileUseThePanelToggleToSwitch"]</p></div></li>
                     </ol>
                 </aside>
             </div>
         </ChildContent>
         <Footer>
             <div class="floating-doublelist-metrics" role="status">
-                <span id="floating-doublelist-available-count"><strong>@_availablePeople.Count</strong> disponibles</span>
-                <span id="floating-doublelist-assigned-count"><strong>@_assignedPeople.Count</strong> asignadas</span>
-                <span><strong>1</strong> responsable fijo</span>
+                <span id="floating-doublelist-available-count"><strong>@S.Display(_availablePeople.Count)</strong> @S["FloatingDoubleList.Available"]</span>
+                <span id="floating-doublelist-assigned-count"><strong>@S.Display(_assignedPeople.Count)</strong> @S["FloatingDoubleList.Assigned"]</span>
+                <span><strong>1</strong> @S["FloatingDoubleList.FixedLead"]</span>
             </div>
         </Footer>
     </DemoCard>
 
     <div class="demo-grid">
-        <DemoCard Id="floating-doublelist-team" Title="El equipo de Atlas" Eyebrow="02 / Resumen en directo"
-                  Description="Estas personas tienen acceso al proyecto. El resumen se actualiza al añadir o devolver a alguien.">
+        <DemoCard Id="floating-doublelist-team" Title="@S["FloatingDoubleList.TheAtlasTeam"]" Eyebrow="@S["FloatingDoubleList.02LiveSummary"]"
+                  Description="@S["FloatingDoubleList.ThesePeopleHaveAccessToTheProjectThe"]">
             <ChildContent>
                 <ul id="floating-doublelist-roster" class="floating-doublelist-roster">
                     @foreach (var person in _assignedPeople.OrderBy(person => person.Name))
                     {
                         <li @key="person.Id">
                             <span class="floating-doublelist-avatar" aria-hidden="true">@Initials(person.Name)</span>
-                            <span class="floating-doublelist-person-copy"><strong>@person.Name</strong><span>@person.Role</span></span>
-                            @if (person.IsLocked) { <span class="floating-doublelist-fixed">Fijo</span> }
+                            <span class="floating-doublelist-person-copy"><strong>@person.Name</strong><span>@S.Display(person.Role)</span></span>
+                            @if (person.IsLocked) { <span class="floating-doublelist-fixed">@S["PickList.Fixed"]</span> }
                         </li>
                     }
                 </ul>
-                <div class="demo-actions floating-doublelist-reset"><DnetButton id="floating-doublelist-reset" Variant="DnetButtonVariant.Outlined" OnClick="ResetAssignment">Restaurar equipo inicial</DnetButton></div>
+                <div class="demo-actions floating-doublelist-reset"><DnetButton id="floating-doublelist-reset" Variant="DnetButtonVariant.Outlined" OnClick="ResetAssignment">@S["FloatingDoubleList.RestoreTheInitialTeam"]</DnetButton></div>
             </ChildContent>
-            <Footer><span class="demo-info">Restaura las cinco personas iniciales y limpia las búsquedas del selector.</span></Footer>
+            <Footer><span class="demo-info">@S["FloatingDoubleList.RestoreTheOriginalFivePeopleAndClearThe"]</span></Footer>
         </DemoCard>
 
-        <DemoCard Id="floating-doublelist-readonly-card" Title="Una selección de solo lectura" Eyebrow="03 / Estado deshabilitado"
-                  Description="El mismo equipo puede mostrarse en un campo deshabilitado cuando la asignación no se puede editar.">
+        <DemoCard Id="floating-doublelist-readonly-card" Title="@S["FloatingDoubleList.AReadOnlySelection"]" Eyebrow="@S["FloatingDoubleList.03DisabledState"]"
+                  Description="@S["FloatingDoubleList.TheSameTeamCanAppearInADisabled"]">
             <div class="demo-stack">
                 <EditForm Model="_form">
                     <div id="floating-doublelist-readonly">
-                        <DnetFormField Label="Equipo actual">
+                        <DnetFormField Label="@S["FloatingDoubleList.CurrentTeam"]">
                             <DnetFloatingDoubleList @key="_selectionRevision" TItem="Contact" @bind-Value="_form.Selection"
                                                     LeftItems="_availablePeople" RightItems="_assignedPeople"
                                                     LeftListOptions="_availableOptions" RightListOptions="_assignedOptions"
-                                                    DisplayValueConverter="person => person.Name" DisplayName="Equipo actual"
+                                                    DisplayValueConverter="person => person.Name" DisplayName="@S["FloatingDoubleList.CurrentTeam"]"
                                                     SideForSelections="ListToShow.Right" Disabled="true" DisabledClearButton="true" InputItemHeight="24" />
                         </DnetFormField>
                     </div>
                 </EditForm>
-                <div class="floating-doublelist-readonly-note"><strong>Visible, sin editar</strong><p>El campo acompaña los cambios del ejemplo principal y mantiene su estado deshabilitado.</p></div>
-                <p class="demo-info">Los nombres se mantienen en una sola línea. El resumen del equipo permite revisar la selección completa.</p>
+                <div class="floating-doublelist-readonly-note"><strong>@S["FloatingDoubleList.VisibleReadOnly"]</strong><p>@S["FloatingDoubleList.TheFieldFollowsChangesInTheMainExample"]</p></div>
+                <p class="demo-info">@S["FloatingDoubleList.NamesStayOnASingleLineTheTeam"]</p>
             </div>
         </DemoCard>
     </div>
 </DemoPage>
 
 @code {
+    private Task RefreshSampleLanguage() => InvokeAsync(() =>
+    {
+        _availableOptions.HeaderText = S.Text(_availableOptions.HeaderText);
+        _assignedOptions.HeaderText = S.Text(_assignedOptions.HeaderText);
+        SearchLabels.LeftLabel = S.Text(SearchLabels.LeftLabel);
+        SearchLabels.RightLabel = S.Text(SearchLabels.RightLabel);
+        SearchLabels.LeftPlaceHolder = S.Text(SearchLabels.LeftPlaceHolder);
+        SearchLabels.RightPlaceHolder = S.Text(SearchLabels.RightPlaceHolder);
+        StateHasChanged();
+    });
+
     #nullable enable
 
     private readonly Contact[] _people =
@@ -118,7 +131,7 @@
         new(10, "Cameron Reed", "Plataforma e infraestructura")
     ];
     private static readonly IEqualityComparer<Contact> Comparer = new ContactComparer();
-    private static readonly SearchControlOptions SearchLabels = new()
+    private readonly SearchControlOptions SearchLabels = new()
     {
         LeftLabel = "Buscar", LeftPlaceHolder = "Por nombre",
         RightLabel = "Buscar", RightPlaceHolder = "Por nombre"
@@ -137,16 +150,17 @@
         _availableOptions = CreateOptions("Disponibles");
         _assignedOptions = CreateOptions("Asignados");
         RestorePeople();
+        _ = RefreshSampleLanguage();
     }
 
-    private static ListOptions<Contact> CreateOptions(string title) => new()
+    private ListOptions<Contact> CreateOptions(string title) => new()
     {
         DisplayValueConverter = person => person.Name,
-        SupportTextValueConverter = person => person.Role,
+        SupportTextValueConverter = person => S.Text(person.Role),
         SearchValueConverter = person => person.Name,
         SortedData = person => person.Name,
         DisableItem = person => person.IsLocked,
-        HeaderText = title,
+        HeaderText = S.Text(title),
         ItemSize = 56,
         PageSize = 10,
         EnableServerSide = false,

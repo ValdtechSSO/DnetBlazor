@@ -49,7 +49,7 @@ public sealed class ShowcasePageTests
 
         foreach (var route in Routes)
         {
-            await page.GotoAsync($"{baseUrl}/{route}");
+            await BrowserReady.OpenAsync(page, $"{baseUrl}/{route}");
             var root = page.Locator("[data-demo-page]");
             await Assertions.Expect(root).ToBeVisibleAsync();
             await Assertions.Expect(root.Locator("h1")).ToHaveCountAsync(1);

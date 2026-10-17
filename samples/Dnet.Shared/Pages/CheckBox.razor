@@ -2,45 +2,47 @@
 
 @using Dnet.Blazor.Components.Checkbox
 
-<DemoPage Id="demo-checkbox" Title="Checkbox" Category="Selection controls"
-          Description="Let people choose several independent options, with a clear label for every choice."
-          Badge="Multiple choices">
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
+<DemoPage Id="demo-checkbox" Title="@S["CheckBox.Checkbox"]" Category="@S["SlideToggle.SelectionControls"]"
+          Description="@S["CheckBox.LetPeopleChooseSeveralIndependentOptionsWithA"]"
+          Badge="@S["Chips.MultipleChoices"]">
     <div class="demo-grid">
-        <DemoCard Id="checkbox-preferences" Title="Communication preferences"
-                  Description="Choose the updates you would like to receive. Your selection is reflected immediately.">
+        <DemoCard Id="checkbox-preferences" Title="@S["CheckBox.CommunicationPreferences"]"
+                  Description="@S["CheckBox.ChooseTheUpdatesYouWouldLikeToReceive"]">
             <ChildContent>
                 <fieldset class="checkbox-options">
-                    <legend>Keep in touch</legend>
+                    <legend>@S["CheckBox.KeepInTouch"]</legend>
                     <div class="demo-option-row">
-                        <DnetInputCheckbox @bind-Value="_productUpdates">Product updates</DnetInputCheckbox>
+                        <DnetInputCheckbox @bind-Value="_productUpdates">@S["CheckBox.ProductUpdates"]</DnetInputCheckbox>
                     </div>
-                    <p class="demo-info">New features and improvements, delivered occasionally.</p>
+                    <p class="demo-info">@S["CheckBox.NewFeaturesAndImprovementsDeliveredOccasionally"]</p>
                     <div class="demo-option-row">
-                        <DnetInputCheckbox @bind-Value="_researchInvitations">Research invitations</DnetInputCheckbox>
+                        <DnetInputCheckbox @bind-Value="_researchInvitations">@S["CheckBox.ResearchInvitations"]</DnetInputCheckbox>
                     </div>
-                    <p class="demo-info">Help shape the next release by sharing your feedback.</p>
+                    <p class="demo-info">@S["CheckBox.HelpShapeTheNextReleaseBySharingYour"]</p>
                     <div class="demo-option-row">
-                        <DnetInputCheckbox @bind-Value="_securityAlerts" Disabled="true" TextPlacedBefore="true">Security alerts</DnetInputCheckbox>
+                        <DnetInputCheckbox @bind-Value="_securityAlerts" Disabled="true" TextPlacedBefore="true">@S["CheckBox.SecurityAlerts"]</DnetInputCheckbox>
                     </div>
-                    <p class="demo-info">Required account notices are always enabled.</p>
+                    <p class="demo-info">@S["CheckBox.RequiredAccountNoticesAreAlwaysEnabled"]</p>
                 </fieldset>
             </ChildContent>
             <Footer>
-                <span class="demo-value" role="status">@SelectedCount of 3 preferences enabled</span>
+                <span class="demo-value" role="status">@S.Format("Common.0Of3PreferencesEnabled", SelectedCount)</span>
             </Footer>
         </DemoCard>
 
-        <DemoCard Title="Your preferences" Description="Independent choices can be combined; selecting one does not clear another.">
+        <DemoCard Title="@S["CheckBox.YourPreferences"]" Description="@S["CheckBox.IndependentChoicesCanBeCombinedSelectingOneDoes"]">
             <div class="demo-stack">
                 <div class="demo-preview">
-                    <span class="demo-info">Optional communications</span>
-                    <p class="demo-value">@OptionalPreferences</p>
-                    <span class="demo-muted">Security alerts remain enabled for your account.</span>
+                    <span class="demo-info">@S["CheckBox.OptionalCommunications"]</span>
+                    <p class="demo-value">@S.Display(OptionalPreferences)</p>
+                    <span class="demo-muted">@S["CheckBox.SecurityAlertsRemainEnabledForYourAccount"]</span>
                 </div>
                 <ul class="demo-bullets">
-                    <li>Click a label or use Space to change a focused checkbox.</li>
-                    <li>Disabled options explain a setting that cannot be changed.</li>
-                    <li>Use checkboxes when more than one answer can apply.</li>
+                    <li>@S["CheckBox.ClickALabelOrUseSpaceToChange"]</li>
+                    <li>@S["CheckBox.DisabledOptionsExplainASettingThatCannotBe"]</li>
+                    <li>@S["CheckBox.UseCheckboxesWhenMoreThanOneAnswerCan"]</li>
                 </ul>
             </div>
         </DemoCard>

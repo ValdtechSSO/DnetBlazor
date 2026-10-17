@@ -1,66 +1,68 @@
 @page "/PickList"
 @using Dnet.Blazor.Components.PickList
 
-<DemoPage Id="demo-picklist" Title="PickList" Category="Selection controls"
-          Description="Turn a long list into a focused selection. Find teams, choose a page at a time and keep your shortlist as you explore."
-          Badge="Search · Select · Keep">
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
+<DemoPage Id="demo-picklist" Title="@S["PickList.PickList"]" Category="@S["SlideToggle.SelectionControls"]"
+          Description="@S["PickList.TurnALongListIntoAFocusedSelection"]"
+          Badge="@S["PickList.SearchSelectKeep"]">
     <div class="demo-grid">
-        <DemoCard Id="picklist-local" Title="Choose participating teams" Eyebrow="Local collection"
-                  Description="Build the lineup for your next competition. Search by team or city, or select every team on the current page.">
+        <DemoCard Id="picklist-local" Title="@S["PickList.ChooseParticipatingTeams"]" Eyebrow="@S["PickList.LocalCollection"]"
+                  Description="@S["PickList.BuildTheLineupForYourNextCompetitionSearch"]">
             <ChildContent>
                 <div class="demo-stack">
-                    <div class="picklist-context"><span class="picklist-tag">Season 2026</span><span class="demo-muted">7 teams available</span></div>
+                    <div class="picklist-context"><span class="picklist-tag">@S["PickList.Season2026"]</span><span class="demo-muted">@S["PickList.7TeamsAvailable"]</span></div>
                     <PickList TItem="Team" TKey="int" Items="@_teams"
                               ItemKey="team => team.Id" SearchTextSelector="SearchableText"
                               @bind-SelectedKeys="_localSelectedKeys" PageSize="4">
                         <ItemTemplate Context="team">
                             <span class="picklist-team">
                                 <span class="picklist-avatar" aria-hidden="true">@team.Initials</span>
-                                <span class="picklist-copy"><span class="picklist-name">@team.Name</span><span class="picklist-city">@team.City</span></span>
+                                <span class="picklist-copy"><span class="picklist-name">@team.Name</span><span class="picklist-city">@S.Display(team.City)</span></span>
                             </span>
                         </ItemTemplate>
                     </PickList>
-                    <p class="demo-status">Your selection stays with you when you search or change pages.</p>
+                    <p class="demo-status">@S["PickList.YourSelectionStaysWithYouWhenYouSearch"]</p>
                 </div>
             </ChildContent>
             <Footer>
                 <div id="picklist-local-value" class="picklist-summary" role="status">
-                    <span class="demo-info">@SelectionCount(_localSelectedKeys.Count)</span>
-                    <span class="demo-value">@SelectionSummary(_localSelectedKeys)</span>
+                    <span class="demo-info">@S.Message(SelectionCount(_localSelectedKeys.Count))</span>
+                    <span class="demo-value">@S.Message(SelectionSummary(_localSelectedKeys))</span>
                 </div>
             </Footer>
         </DemoCard>
 
-        <DemoCard Id="picklist-provider" Title="Explore the team directory" Eyebrow="Paged collection"
-                  Description="Browse the directory three teams at a time. Keep a single shortlist across pages and search results.">
+        <DemoCard Id="picklist-provider" Title="@S["PickList.ExploreTheTeamDirectory"]" Eyebrow="@S["PickList.PagedCollection"]"
+                  Description="@S["PickList.BrowseTheDirectoryThreeTeamsAtATime"]">
             <ChildContent>
                 <div class="demo-stack">
-                    <div class="picklist-context"><span class="picklist-tag">League directory</span><span class="demo-muted">3 teams per page</span></div>
+                    <div class="picklist-context"><span class="picklist-tag">@S["PickList.LeagueDirectory"]</span><span class="demo-muted">@S["PickList.3TeamsPerPage"]</span></div>
                     <PickList TItem="Team" TKey="int" ItemsProvider="LoadTeamsAsync"
                               ItemKey="team => team.Id" @bind-SelectedKeys="_providerSelectedKeys" PageSize="3">
                         <ItemTemplate Context="team">
                             <span class="picklist-team">
                                 <span class="picklist-avatar" aria-hidden="true">@team.Initials</span>
-                                <span class="picklist-copy"><span class="picklist-name">@team.Name</span><span class="picklist-city">@team.City</span></span>
+                                <span class="picklist-copy"><span class="picklist-name">@team.Name</span><span class="picklist-city">@S.Display(team.City)</span></span>
                             </span>
                         </ItemTemplate>
                     </PickList>
-                    <p id="picklist-provider-note" class="demo-status">@(_providerSelectedKeys.Contains(99)
+                    <p id="picklist-provider-note" class="demo-status">@S.Display(_providerSelectedKeys.Contains(99)
                         ? "An archived team is still on your shortlist. Clear the selection to remove it."
                         : "Selections remain available even when their teams are outside the current results.")</p>
                 </div>
             </ChildContent>
             <Footer>
                 <div id="picklist-provider-value" class="picklist-summary" role="status">
-                    <span class="demo-info">@SelectionCount(_providerSelectedKeys.Count)</span>
-                    <span class="demo-value">@SelectionSummary(_providerSelectedKeys)</span>
+                    <span class="demo-info">@S.Message(SelectionCount(_providerSelectedKeys.Count))</span>
+                    <span class="demo-value">@S.Message(SelectionSummary(_providerSelectedKeys))</span>
                 </div>
             </Footer>
         </DemoCard>
 
         <div class="demo-span-all">
-            <DemoCard Id="picklist-localized" Title="Una selección para tu liga" Eyebrow="Localized experience"
-                      Description="Every search, action and page control can speak your users' language. A protected team stays included while the rest remain editable.">
+            <DemoCard Id="picklist-localized" Title="@S["PickList.ASelectionForYourLeague"]" Eyebrow="@S["PickList.LocalizedExperience"]"
+                      Description="@S["PickList.EverySearchActionAndPageControlCanSpeak"]">
                 <ChildContent>
                     <div class="picklist-localized-layout">
                         <div class="demo-stack">
@@ -70,32 +72,32 @@
                                 <ItemTemplate Context="team">
                                     <span class="picklist-team">
                                         <span class="picklist-avatar" aria-hidden="true">@team.Initials</span>
-                                        <span class="picklist-copy"><span class="picklist-name">@team.Name</span><span class="picklist-city">@team.City</span></span>
+                                        <span class="picklist-copy"><span class="picklist-name">@team.Name</span><span class="picklist-city">@S.Display(team.City)</span></span>
                                         @if (team.Id == 1)
                                         {
-                                            <span class="picklist-locked">Fijo</span>
+                                            <span class="picklist-locked">@S["PickList.Fixed"]</span>
                                         }
                                     </span>
                                 </ItemTemplate>
                             </PickList>
                         </div>
                         <aside class="picklist-guide" aria-labelledby="picklist-guide-title">
-                            <span class="picklist-tag">Listo para tu equipo</span>
-                            <h3 id="picklist-guide-title">Tu liga, tus equipos</h3>
-                            <p class="demo-muted">Busca por nombre o ciudad y reúne los equipos que participarán esta temporada.</p>
+                            <span class="picklist-tag">@S["PickList.ReadyForYourTeam"]</span>
+                            <h3 id="picklist-guide-title">@S["PickList.YourLeagueYourTeams"]</h3>
+                            <p class="demo-muted">@S["PickList.SearchByNameOrCityAndBringTogether"]</p>
                             <ul class="demo-bullets">
-                                <li>Seleccionar página añade los equipos visibles.</li>
-                                <li>Los equipos elegidos se conservan al buscar.</li>
-                                <li>Alicante Thunder es fijo y permanece seleccionado al limpiar.</li>
+                                <li>@S["PickList.SelectPageAddsTheVisibleTeams"]</li>
+                                <li>@S["PickList.YourSelectedTeamsStaySelectedAsYouSearch"]</li>
+                                <li>@S["PickList.AlicanteThunderIsFixedAndStaysSelectedWhen"]</li>
                             </ul>
-                            <p class="demo-info">Sin coincidencias, la lista muestra un mensaje en español para ayudarte a continuar.</p>
+                            <p class="demo-info">@S["PickList.WhenNothingMatchesTheListShowsAHelpful"]</p>
                         </aside>
                     </div>
                 </ChildContent>
                 <Footer>
                     <div id="picklist-localized-value" class="picklist-summary" role="status">
-                        <span class="demo-info">@_localizedSelectedKeys.Count @(_localizedSelectedKeys.Count == 1 ? "equipo seleccionado" : "equipos seleccionados") · 1 fijo</span>
-                        <span class="demo-value">@SelectionSummary(_localizedSelectedKeys)</span>
+                        <span class="demo-info">@S.Format("Common.0TeamsSelected1Fixed", _localizedSelectedKeys.Count)</span>
+                        <span class="demo-value">@S.Message(SelectionSummary(_localizedSelectedKeys))</span>
                     </div>
                 </Footer>
             </DemoCard>
@@ -119,23 +121,23 @@
     private IReadOnlySet<int> _providerSelectedKeys = new HashSet<int> { 2, 99 };
     private IReadOnlySet<int> _localizedSelectedKeys = new HashSet<int> { 1 };
 
-    private static PickListStrings SpanishStrings { get; } = new()
+    private PickListStrings SpanishStrings => new()
     {
-        SearchPlaceholder = "Buscar equipos",
-        SelectedLabel = "Seleccionados",
-        SelectVisibleLabel = "Seleccionar página",
-        ClearLabel = "Limpiar",
-        EmptyLabel = "No hay equipos",
-        NoResultsLabel = "No se encontraron equipos",
-        PaginationLabel = "Paginación de equipos",
-        PageText = "Página",
-        OfText = "de",
-        FirstPageLabel = "Primera página",
-        PreviousPageLabel = "Página anterior",
-        PageLabelFormat = "Página {0}",
-        NextPageLabel = "Página siguiente",
-        LastPageLabel = "Última página",
-        LoadingLabel = "Cargando…"
+        SearchPlaceholder = S.Text("Buscar equipos"),
+        SelectedLabel = S.Text("Seleccionados"),
+        SelectVisibleLabel = S.Text("Seleccionar página"),
+        ClearLabel = S.Text("Limpiar"),
+        EmptyLabel = S.Text("No hay equipos"),
+        NoResultsLabel = S.Text("No se encontraron equipos"),
+        PaginationLabel = S.Text("Paginación de equipos"),
+        PageText = S.Text("Página"),
+        OfText = S.Text("de"),
+        FirstPageLabel = S.Text("Primera página"),
+        PreviousPageLabel = S.Text("Página anterior"),
+        PageLabelFormat = S.Text("Página {0}"),
+        NextPageLabel = S.Text("Página siguiente"),
+        LastPageLabel = S.Text("Última página"),
+        LoadingLabel = S.Text("Cargando…")
     };
 
     private static string SearchableText(Team team) => $"{team.Name} {team.City}";
@@ -145,7 +147,7 @@
     {
         if (keys.Count == 0) return "No teams selected";
         var names = _teams.Where(team => keys.Contains(team.Id)).Select(team => team.Name);
-        return string.Join(", ", keys.Contains(99) ? names.Append("Archived team") : names);
+        return string.Join(", ", keys.Contains(99) ? names.Append(S.Text("Archived team")) : names);
     }
 
     private async ValueTask<PickListItemsProviderResult<Team>> LoadTeamsAsync(PickListItemsProviderRequest request)

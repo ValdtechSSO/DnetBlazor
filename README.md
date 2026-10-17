@@ -3,7 +3,7 @@
 Blazor component library for .NET 11 RC2, compatible with Blazor WebAssembly and
 interactive server-side applications.
 
-**Current version:** 6.0.17-rc.2. See the [changelog](Changelog.md) for release
+**Current version:** 6.0.18-rc.2. See the [changelog](Changelog.md) for release
 details.
 
 ## Building from source
@@ -77,7 +77,7 @@ shape. Compare the variants in `/Buttons`.
 Install the package:
 
 ```bash
-dotnet add package Dnet.Blazor --version 6.0.17-rc.2
+dotnet add package Dnet.Blazor --version 6.0.18-rc.2
 ```
 
 Register the services in `Program.cs`:
@@ -119,11 +119,11 @@ Each release ships a machine-readable reference: every component's parameters,
 every styling token, plus setup and theming guides. Plain markdown, so it works
 with Claude, Codex, Cursor, Gemini CLI or anything else that reads project docs.
 
-**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/download/v6.0.17-rc.2/dnet-blazor-agent-reference-6.0.17-rc.2.zip)**
+**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/download/v6.0.18-rc.2/dnet-blazor-agent-reference-6.0.18-rc.2.zip)**
 — attached to every release.
 
 ```bash
-unzip dnet-blazor-agent-reference-6.0.17-rc.2.zip -d docs/
+unzip dnet-blazor-agent-reference-6.0.18-rc.2.zip -d docs/
 ```
 
 Then point your agent at it. The archive's `AGENTS-snippet.md` has text you can
@@ -137,6 +137,16 @@ npx degit ValdtechSSO/DnetBlazor/docs/ai/reference docs/dnet-blazor
 
 The reference is a snapshot of the version it ships with — grab the matching one
 when you upgrade the package.
+
+## What's new in 6.0.18-rc.2
+
+- Added Spoiler, Timeline and Skeleton, with refreshed component showcases.
+- Added Spanish and English localization for controls and all example screens;
+  language changes preserve selections, entered values and open content.
+- Added filled form fields, consistent control sizing, pill buttons and explicit
+  primary/outlined action variants, using `#5B5CE0` as the default primary color.
+- Improved grid filters, column alignment, connected panels and responsive lists.
+- Refined the header and navigation, including connected language/theme pickers.
 
 ## What's new in 6.0.17-rc.2
 
@@ -250,6 +260,7 @@ when you upgrade the package.
 ## Documentation
 
 - [Localization: Spanish default and English](docs/localization.md)
+- [Example screens: application translations](docs/sample-localization.md)
 - [PickList guide](docs/pick-list.md)
 - [Overlay guide](docs/overlay.md)
 - [Styling guide](docs/styling/README.md)

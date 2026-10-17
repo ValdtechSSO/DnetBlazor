@@ -3,6 +3,8 @@ namespace Dnet.Blazor.Components.Dialog.Infrastructure.Models
     public class DialogConfig
     {
         public string? Title { get; set; }
+        /// <summary>Resolves an application-owned title at render time.</summary>
+        public Func<string, string>? TextLocalizer { get; set; }
 
         internal string? LocalizedTitleKey { get; set; }
 

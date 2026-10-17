@@ -2,60 +2,62 @@
 
 @using Dnet.Blazor.Components.SlideToggle
 
-<DemoPage Id="demo-slide-toggle" Title="Slide toggle" Category="Selection controls"
-          Description="Turn a setting on or off with a switch that communicates its current state at a glance."
-          Badge="Instant settings">
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
+<DemoPage Id="demo-slide-toggle" Title="@S["SlideToggle.SlideToggle"]" Category="@S["SlideToggle.SelectionControls"]"
+          Description="@S["SlideToggle.TurnASettingOnOrOffWithA"]"
+          Badge="@S["SlideToggle.InstantSettings"]">
     <div class="demo-grid">
-        <DemoCard Id="toggle-preferences" Title="Workspace preferences"
-                  Description="These settings take effect as soon as you change them.">
+        <DemoCard Id="toggle-preferences" Title="@S["SlideToggle.WorkspacePreferences"]"
+                  Description="@S["SlideToggle.TheseSettingsTakeEffectAsSoonAsYou"]">
             <ChildContent>
                 <div class="demo-stack">
                     <div>
                         <div class="demo-option-row">
-                            <DnetSlideToggle @bind-Value="_notifications">Notifications</DnetSlideToggle>
+                            <DnetSlideToggle @bind-Value="_notifications">@S["SlideToggle.Notifications"]</DnetSlideToggle>
                         </div>
-                        <p class="demo-info">Receive a notification when someone mentions you.</p>
+                        <p class="demo-info">@S["SlideToggle.ReceiveANotificationWhenSomeoneMentionsYou"]</p>
                     </div>
                     <div>
                         <div class="demo-option-row">
-                            <DnetSlideToggle @bind-Value="_automaticUpdates" TextPlacedBefore="true">Automatic updates</DnetSlideToggle>
+                            <DnetSlideToggle @bind-Value="_automaticUpdates" TextPlacedBefore="true">@S["SlideToggle.AutomaticUpdates"]</DnetSlideToggle>
                         </div>
-                        <p class="demo-info">Keep your workspace up to date automatically.</p>
+                        <p class="demo-info">@S["SlideToggle.KeepYourWorkspaceUpToDateAutomatically"]</p>
                     </div>
                 </div>
             </ChildContent>
             <Footer>
-                <span class="demo-value" role="status">Notifications @State(_notifications) · Automatic updates @State(_automaticUpdates)</span>
+                <span class="demo-value" role="status">@S.Format("Common.Notifications0AutomaticUpdates1", State(_notifications), State(_automaticUpdates))</span>
             </Footer>
         </DemoCard>
 
-        <DemoCard Title="Settings row" Description="A full-width switch keeps the setting name and its control aligned across a panel.">
+        <DemoCard Title="@S["SlideToggle.SettingsRow"]" Description="@S["SlideToggle.AFullWidthSwitchKeepsTheSettingName"]">
             <ChildContent>
                 <div class="demo-stack">
                     <div>
                         <div class="demo-option-row">
-                            <DnetSlideToggle @bind-Value="_fullWidth" FullWidth="true">Compact workspace</DnetSlideToggle>
+                            <DnetSlideToggle @bind-Value="_fullWidth" FullWidth="true">@S["SlideToggle.CompactWorkspace"]</DnetSlideToggle>
                         </div>
-                        <p class="demo-info">Use a denser layout for your workspace.</p>
+                        <p class="demo-info">@S["SlideToggle.UseADenserLayoutForYourWorkspace"]</p>
                     </div>
                     <div>
                         <div class="demo-option-row">
-                            <DnetSlideToggle @bind-Value="_disabled" Disabled="true">Account protection</DnetSlideToggle>
+                            <DnetSlideToggle @bind-Value="_disabled" Disabled="true">@S["SlideToggle.AccountProtection"]</DnetSlideToggle>
                         </div>
-                        <p class="demo-info">Managed by your organization and always enabled.</p>
+                        <p class="demo-info">@S["SlideToggle.ManagedByYourOrganizationAndAlwaysEnabled"]</p>
                     </div>
                 </div>
             </ChildContent>
             <Footer>
-                <span class="demo-value" role="status">Compact workspace @State(_fullWidth) · Account protection on</span>
+                <span class="demo-value" role="status">@S.Format("Common.CompactWorkspace0AccountProtectionOn", State(_fullWidth))</span>
             </Footer>
         </DemoCard>
 
-        <DemoCard Title="Clear, immediate feedback" Description="Use a switch for an independent setting that takes effect immediately.">
+        <DemoCard Title="@S["SlideToggle.ClearImmediateFeedback"]" Description="@S["SlideToggle.UseASwitchForAnIndependentSettingThat"]">
             <ul class="demo-bullets">
-                <li>Click the label or press Space while the switch has focus.</li>
-                <li>Describe the setting itself so the label works in either state.</li>
-                <li>Explain why a setting is disabled beside the control.</li>
+                <li>@S["SlideToggle.ClickTheLabelOrPressSpaceWhileThe"]</li>
+                <li>@S["SlideToggle.DescribeTheSettingItselfSoTheLabelWorks"]</li>
+                <li>@S["SlideToggle.ExplainWhyASettingIsDisabledBesideThe"]</li>
             </ul>
         </DemoCard>
     </div>
@@ -67,5 +69,5 @@
     private bool _fullWidth;
     private bool _disabled = true;
 
-    private static string State(bool value) => value ? "on" : "off";
+    private string State(bool value) => S.Text(value ? "on" : "off");
 }

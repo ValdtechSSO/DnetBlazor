@@ -45,7 +45,7 @@ public sealed class GridAdvancedFilterTests
         await page.AddInitScriptAsync(
             $"localStorage.setItem('dnet.theme', JSON.stringify({JsonSerializer.Serialize(theme)}));");
         await BrowserLanguage.UseEnglishAsync(page);
-        await page.GotoAsync($"{baseUrl}/AdvancedFilteringExample");
+        await BrowserReady.OpenAsync(page, $"{baseUrl}/AdvancedFilteringExample");
         await Assertions.Expect(page.Locator("html")).ToHaveAttributeAsync("data-dnet-theme", theme);
         await ExpectResultsAsync(page, names);
 

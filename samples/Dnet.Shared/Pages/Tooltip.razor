@@ -7,22 +7,24 @@
 @inject ITooltipService TooltipService
 @implements IDisposable
 
-<DemoPage Id="demo-tooltip" Title="Tooltip" Category="Components / Feedback" Description="Offer a little more context at just the right moment. Hover over a trigger or reach it with the Tab key." Badge="Pointer & keyboard">
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
+<DemoPage Id="demo-tooltip" Title="@S["Tooltip.Tooltip"]" Category="@S["Toast.ComponentsFeedback"]" Description="@S["Tooltip.OfferALittleMoreContextAtJustThe"]" Badge="@S["Tooltip.PointerKeyboard"]">
     <div class="demo-grid-three">
-        <DemoCard Id="tooltip-basic" Title="A useful hint" Eyebrow="01 / Immediate" Description="Short, helpful context that appears as soon as you need it.">
-            <ChildContent><div class="tooltip-stage demo-preview"><button id="tooltip-basic-trigger" @ref="_basicTarget" class="tooltip-trigger" type="button" @onmouseenter="() => SetHover(0, true)" @onmouseleave="() => SetHover(0, false)" @onfocus="() => SetFocus(0, true)" @onblur="() => SetFocus(0, false)" @onkeydown="args => HandleKey(0, args)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 11v6M12 7v1" /></svg><span>Show tooltip</span></button></div></ChildContent>
-            <Footer>Appears immediately · no delay</Footer>
+        <DemoCard Id="tooltip-basic" Title="@S["Tooltip.AUsefulHint"]" Eyebrow="@S["Tooltip.01Immediate"]" Description="@S["Tooltip.ShortHelpfulContextThatAppearsAsSoonAs"]">
+            <ChildContent><div class="tooltip-stage demo-preview"><button id="tooltip-basic-trigger" @ref="_basicTarget" class="tooltip-trigger" type="button" @onmouseenter="() => SetHover(0, true)" @onmouseleave="() => SetHover(0, false)" @onfocus="() => SetFocus(0, true)" @onblur="() => SetFocus(0, false)" @onkeydown="args => HandleKey(0, args)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 11v6M12 7v1" /></svg><span>@S["Tooltip.ShowTooltip"]</span></button></div></ChildContent>
+            <Footer>@S["Tooltip.AppearsImmediatelyNoDelay"]</Footer>
         </DemoCard>
-        <DemoCard Id="tooltip-delay" Title="Give it a moment" Eyebrow="02 / Delayed" Description="A brief pause keeps hints from appearing as the pointer passes by.">
-            <ChildContent><div class="tooltip-stage demo-preview"><button id="tooltip-delay-trigger" @ref="_delayTarget" class="tooltip-trigger" type="button" @onmouseenter="() => SetHover(1, true)" @onmouseleave="() => SetHover(1, false)" @onfocus="() => SetFocus(1, true)" @onblur="() => SetFocus(1, false)" @onkeydown="args => HandleKey(1, args)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg><span>Show tooltip with delay</span></button></div></ChildContent>
-            <Footer>Waits 500ms · leaving cancels the hint</Footer>
+        <DemoCard Id="tooltip-delay" Title="@S["Tooltip.GiveItAMoment"]" Eyebrow="@S["Tooltip.02Delayed"]" Description="@S["Tooltip.ABriefPauseKeepsHintsFromAppearingAs"]">
+            <ChildContent><div class="tooltip-stage demo-preview"><button id="tooltip-delay-trigger" @ref="_delayTarget" class="tooltip-trigger" type="button" @onmouseenter="() => SetHover(1, true)" @onmouseleave="() => SetHover(1, false)" @onfocus="() => SetFocus(1, true)" @onblur="() => SetFocus(1, false)" @onkeydown="args => HandleKey(1, args)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg><span>@S["Tooltip.ShowTooltipWithDelay"]</span></button></div></ChildContent>
+            <Footer>@S["Tooltip.Waits500msLeavingCancelsTheHint"]</Footer>
         </DemoCard>
-        <DemoCard Id="tooltip-component" Title="A richer introduction" Eyebrow="03 / Custom content" Description="Use a small component when a name needs a little more context.">
-            <ChildContent><div class="tooltip-stage demo-preview"><button id="tooltip-component-trigger" @ref="_componentTarget" class="tooltip-trigger" type="button" @onmouseenter="() => SetHover(2, true)" @onmouseleave="() => SetHover(2, false)" @onfocus="() => SetFocus(2, true)" @onblur="() => SetFocus(2, false)" @onkeydown="args => HandleKey(2, args)"><span class="tooltip-trigger-avatar" aria-hidden="true">TM</span><span>Show tooltip with component</span></button></div></ChildContent>
-            <Footer>Custom content · a 300ms pause</Footer>
+        <DemoCard Id="tooltip-component" Title="@S["Tooltip.ARicherIntroduction"]" Eyebrow="@S["Tooltip.03CustomContent"]" Description="@S["Tooltip.UseASmallComponentWhenANameNeeds"]">
+            <ChildContent><div class="tooltip-stage demo-preview"><button id="tooltip-component-trigger" @ref="_componentTarget" class="tooltip-trigger" type="button" @onmouseenter="() => SetHover(2, true)" @onmouseleave="() => SetHover(2, false)" @onfocus="() => SetFocus(2, true)" @onblur="() => SetFocus(2, false)" @onkeydown="args => HandleKey(2, args)"><span class="tooltip-trigger-avatar" aria-hidden="true">@S["Dialog.TM"]</span><span>@S["Tooltip.ShowTooltipWithComponent"]</span></button></div></ChildContent>
+            <Footer>@S["Tooltip.CustomContentA300msPause"]</Footer>
         </DemoCard>
     </div>
-    <div class="tooltip-keyboard-note"><span aria-hidden="true">⌨</span><p><strong>Try it with your keyboard.</strong> Tab to any example to reveal its hint. Press Escape to dismiss it and keep focus on the trigger.</p></div>
+    <div class="tooltip-keyboard-note"><span aria-hidden="true">⌨</span><p><strong>@S["Tooltip.TryItWithYourKeyboard"]</strong> @S["Tooltip.TabToAnyExampleToRevealItsHint"]</p></div>
 </DemoPage>
 
 @code {
@@ -48,7 +50,7 @@
         else
         {
             config.Text = index == 0 ? "Helpful context, right where you need it." : "A little patience reveals this extra detail.";
-            _references[index] = TooltipService.Show(config, target);
+            _references[index] = TooltipService.Show<SampleTooltipText>(config, new Dictionary<string, object> { ["Text"] = config.Text }, target);
         }
     }
     private void HandleKey(int index, KeyboardEventArgs args) { if (args.Key == "Escape") CloseTooltip(index); }

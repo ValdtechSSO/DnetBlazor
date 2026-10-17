@@ -5,18 +5,20 @@
 @implements IAsyncDisposable
 @inject IJSRuntime JSRuntime
 
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
 <section id="theme-studio" class="theme-studio" aria-labelledby="theme-studio-title">
     <header class="theme-studio-header">
         <div>
-            <p class="theme-eyebrow">Design system</p>
-            <h1 id="theme-studio-title" class="theme-title">Theme studio</h1>
-            <p class="theme-description">Customize colors, spacing and shape. Preview changes as you go.</p>
+            <p class="theme-eyebrow">@S["Theming.DesignSystem"]</p>
+            <h1 id="theme-studio-title" class="theme-title">@S["Theming.ThemeStudio"]</h1>
+            <p class="theme-description">@S["Theming.CustomizeColorsSpacingAndShapePreviewChangesAs"]</p>
         </div>
         <div class="theme-header-actions">
-            <DnetButton id="theme-reset" Variant="DnetButtonVariant.Outlined" class="theme-secondary-action" OnClick="ResetTheme">Reset changes</DnetButton>
+            <DnetButton id="theme-reset" Variant="DnetButtonVariant.Outlined" class="theme-secondary-action" OnClick="ResetTheme">@S["Theming.ResetChanges"]</DnetButton>
             <DnetButton id="theme-copy" class="theme-primary-action" OnClick="CopyTheme" style="@PrimaryButtonStyle">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" /><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3" /></svg>
-                <span>@(_copyStatus.StartsWith("CSS copied", StringComparison.Ordinal) ? "Copied!" : "Copy CSS")</span>
+                <span>@S.Display(_copyStatus.StartsWith("CSS copied", StringComparison.Ordinal) ? "Copied!" : "Copy CSS")</span>
             </DnetButton>
         </div>
     </header>
@@ -25,116 +27,116 @@
         <aside class="theme-controls" aria-labelledby="theme-controls-title">
             <div class="theme-card">
                 <div class="theme-card-header">
-                    <h2 id="theme-controls-title" class="theme-card-title">Appearance</h2>
-                    <p class="theme-card-description">Start with a theme, then make it yours.</p>
+                    <h2 id="theme-controls-title" class="theme-card-title">@S["Theming.Appearance"]</h2>
+                    <p class="theme-card-description">@S["Theming.StartWithAThemeThenMakeItYours"]</p>
                 </div>
                 <div class="theme-control-group">
-                    <label class="theme-control-label" for="theme-select">Theme</label>
+                    <label class="theme-control-label" for="theme-select">@S["Theming.Theme"]</label>
                     <div class="theme-select-wrapper">
                     <select id="theme-select" class="theme-select" value="@_theme" @onchange="ChangeTheme">
-                        <option value="">Light</option>
-                        <option value="dark">Dark</option>
-                        <option value="compact">Compact</option>
-                        <option value="high-contrast">High contrast</option>
-                        <option value="modern">Modern</option>
+                        <option value="">@S["Theming.Light"]</option>
+                        <option value="dark">@S["Theming.Dark"]</option>
+                        <option value="compact">@S["Theming.Compact"]</option>
+                        <option value="high-contrast">@S["Theming.HighContrast"]</option>
+                        <option value="modern">@S["Theming.Modern"]</option>
                     </select>
                     <svg class="theme-select-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="m3 6 5 5 5-5" /></svg>
                     </div>
                 </div>
                 <div class="theme-control-group">
-                    <label class="theme-control-label" for="theme-primary-color">Primary color</label>
+                    <label class="theme-control-label" for="theme-primary-color">@S["Theming.PrimaryColor"]</label>
                     <div class="theme-color-control">
                         <input id="theme-primary-color" class="theme-color-input" type="color" value="@_primaryColor" @oninput="ChangePrimaryColor" />
                         <span class="theme-color-value">@_primaryColor.ToUpperInvariant()</span>
                     </div>
-                    <div class="theme-color-presets" aria-label="Color presets">
+                    <div class="theme-color-presets" aria-label="@S["Theming.ColorPresets"]">
                         @foreach (var preset in ColorPresets)
                         {
                             <button type="button" class="theme-color-preset" style="background-color:@preset.Color;"
-                                    aria-label="@preset.Name" aria-pressed="@(_primaryColor.Equals(preset.Color, StringComparison.OrdinalIgnoreCase) ? "true" : "false")"
+                                    aria-label="@S.Text(preset.Name)" aria-pressed="@(_primaryColor.Equals(preset.Color, StringComparison.OrdinalIgnoreCase) ? "true" : "false")"
                                     @onclick="() => SetPrimaryColor(preset.Color)"></button>
                         }
                     </div>
                 </div>
                 <hr class="theme-control-divider" />
                 <div class="theme-control-group">
-                    <label class="theme-control-label" for="theme-density">Density unit <span class="theme-value-badge">@_spaceUnit px</span></label>
+                    <label class="theme-control-label" for="theme-density">@S["Theming.DensityUnit"] <span class="theme-value-badge">@S.Display(_spaceUnit) px</span></label>
                     <div class="theme-range-row">
                         <input id="theme-density" class="theme-range" style="--_theme-density-fill:@((_spaceUnit - 2) * 100 / 6)%;" type="range" min="2" max="8" step="1" value="@_spaceUnit" @oninput="ChangeSpaceUnit" />
                     </div>
-                    <div class="theme-range-labels"><span>Compact</span><span>Spacious</span></div>
+                    <div class="theme-range-labels"><span>@S["Theming.Compact"]</span><span>@S["Theming.Spacious"]</span></div>
                 </div>
                 <div class="theme-control-group">
-                    <span id="theme-shape-label" class="theme-control-label">Button shape <span class="theme-value-badge">@(_radius >= 100 ? "Pill" : $"{_radius} px")</span></span>
+                    <span id="theme-shape-label" class="theme-control-label">@S["Theming.ButtonShape"] <span class="theme-value-badge">@(_radius >= 100 ? S.Text("Pill") : $"{_radius} px")</span></span>
                     <div class="theme-shape-options" role="group" aria-labelledby="theme-shape-label">
-                        <button id="theme-radius-square" type="button" class="theme-shape-option" aria-pressed="@(_radius == 0 ? "true" : "false")" @onclick="() => SetRadius(0)"><span class="theme-shape-sample theme-shape-square" aria-hidden="true"></span>Square</button>
-                        <button id="theme-radius-soft" type="button" class="theme-shape-option" aria-pressed="@(_radius > 0 && _radius < 100 ? "true" : "false")" @onclick="() => SetRadius(6)"><span class="theme-shape-sample theme-shape-soft" aria-hidden="true"></span>Soft</button>
-                        <button id="theme-radius-pill" type="button" class="theme-shape-option" aria-pressed="@(_radius >= 100 ? "true" : "false")" @onclick="() => SetRadius(999)"><span class="theme-shape-sample theme-shape-pill" aria-hidden="true"></span>Pill</button>
+                        <button id="theme-radius-square" type="button" class="theme-shape-option" aria-pressed="@(_radius == 0 ? "true" : "false")" @onclick="() => SetRadius(0)"><span class="theme-shape-sample theme-shape-square" aria-hidden="true"></span>@S["Theming.Square"]</button>
+                        <button id="theme-radius-soft" type="button" class="theme-shape-option" aria-pressed="@(_radius > 0 && _radius < 100 ? "true" : "false")" @onclick="() => SetRadius(6)"><span class="theme-shape-sample theme-shape-soft" aria-hidden="true"></span>@S["Theming.Soft"]</button>
+                        <button id="theme-radius-pill" type="button" class="theme-shape-option" aria-pressed="@(_radius >= 100 ? "true" : "false")" @onclick="() => SetRadius(999)"><span class="theme-shape-sample theme-shape-pill" aria-hidden="true"></span>@S["Theming.Pill"]</button>
                     </div>
                 </div>
             </div>
-            <p class="theme-settings-note">Changes apply across the example app. Reset restores the selected theme's defaults.</p>
+            <p class="theme-settings-note">@S["Theming.ChangesApplyAcrossTheExampleAppResetRestores"]</p>
         </aside>
 
         <div class="theme-preview-column">
             <div class="theme-preview-header">
-                <span class="theme-preview-label">Component preview</span>
-                <span class="theme-live-badge"><span class="theme-live-dot" aria-hidden="true"></span>Live preview</span>
+                <span class="theme-preview-label">@S["Theming.ComponentPreview"]</span>
+                <span class="theme-live-badge"><span class="theme-live-dot" aria-hidden="true"></span>@S["Theming.LivePreview"]</span>
             </div>
             <div class="theming-preview theme-preview-surface">
                 <div class="theme-preview-toolbar">
-                    <div class="theme-preview-brand"><span class="theme-preview-logo" aria-hidden="true">D</span>Dnet workspace</div>
-                    <span class="theme-preview-theme">@ThemeName</span>
+                    <div class="theme-preview-brand"><span class="theme-preview-logo" aria-hidden="true">@S["Theming.D"]</span>@S["Theming.DnetWorkspace"]</div>
+                    <span class="theme-preview-theme">@S.Display(ThemeName)</span>
                 </div>
                 <div class="theme-preview-content">
-                    <h2 class="theme-preview-title">Workspace settings</h2>
-                    <p class="theme-preview-description">A few familiar components, styled with your current theme.</p>
+                    <h2 class="theme-preview-title">@S["Theming.WorkspaceSettings"]</h2>
+                    <p class="theme-preview-description">@S["Theming.AFewFamiliarComponentsStyledWithYourCurrent"]</p>
                     <div class="theme-preview-form">
-                        <DnetFormField Label="Workspace name">
-                            <ChildContent><DnetInputText @bind-Value="_workspaceName" aria-label="Workspace name" /></ChildContent>
+                        <DnetFormField Label="@S["Theming.WorkspaceName"]">
+                            <ChildContent><DnetInputText @bind-Value="_workspaceName" aria-label="@S["Theming.WorkspaceName"]" /></ChildContent>
                         </DnetFormField>
-                        <DnetFormField Label="Contact email">
-                            <ChildContent><DnetInputText @bind-Value="_contactEmail" aria-label="Contact email" /></ChildContent>
+                        <DnetFormField Label="@S["Theming.ContactEmail"]">
+                            <ChildContent><DnetInputText @bind-Value="_contactEmail" aria-label="@S["Theming.ContactEmail"]" /></ChildContent>
                         </DnetFormField>
                     </div>
                     <div class="theme-preview-actions">
-                        <DnetButton id="theme-preview-primary" class="theme-example-primary" OnClick="SavePreview" style="@PrimaryButtonStyle">Save changes</DnetButton>
-                        <DnetButton id="theme-preview-secondary" Variant="DnetButtonVariant.Outlined" class="theme-example-secondary" OnClick="ResetPreview">Cancel</DnetButton>
-                        <span class="theme-preview-status" role="status">@_previewStatus</span>
+                        <DnetButton id="theme-preview-primary" class="theme-example-primary" OnClick="SavePreview" style="@PrimaryButtonStyle">@S["Theming.SaveChanges"]</DnetButton>
+                        <DnetButton id="theme-preview-secondary" Variant="DnetButtonVariant.Outlined" class="theme-example-secondary" OnClick="ResetPreview">@S["Theming.Cancel"]</DnetButton>
+                        <span class="theme-preview-status" role="status">@S.Display(_previewStatus)</span>
                     </div>
-                    <div class="theme-palette" aria-label="Theme palette">
-                        <div class="theme-palette-item"><div class="theme-palette-swatch" style="background:var(--dnet-sys-primary);"></div><span class="theme-palette-name">Primary</span><span class="theme-palette-value">@_primaryColor.ToUpperInvariant()</span></div>
-                        <div class="theme-palette-item"><div class="theme-palette-swatch" style="background:var(--dnet-sys-surface-raised);"></div><span class="theme-palette-name">Surface</span><span class="theme-palette-value">Raised</span></div>
-                        <div class="theme-palette-item"><div class="theme-palette-swatch" style="background:var(--dnet-sys-on-surface);"></div><span class="theme-palette-name">Content</span><span class="theme-palette-value">On surface</span></div>
+                    <div class="theme-palette" aria-label="@S["Theming.ThemePalette"]">
+                        <div class="theme-palette-item"><div class="theme-palette-swatch" style="background:var(--dnet-sys-primary);"></div><span class="theme-palette-name">@S["Theming.Primary"]</span><span class="theme-palette-value">@_primaryColor.ToUpperInvariant()</span></div>
+                        <div class="theme-palette-item"><div class="theme-palette-swatch" style="background:var(--dnet-sys-surface-raised);"></div><span class="theme-palette-name">@S["Theming.Surface"]</span><span class="theme-palette-value">@S["Theming.Raised"]</span></div>
+                        <div class="theme-palette-item"><div class="theme-palette-swatch" style="background:var(--dnet-sys-on-surface);"></div><span class="theme-palette-name">@S["Theming.Content"]</span><span class="theme-palette-value">@S["Theming.OnSurface"]</span></div>
                     </div>
                 </div>
             </div>
 
             <div class="theme-scope-examples">
                 <article class="theme-scope-example">
-                    <h2 class="theme-scope-heading">Local overrides</h2>
-                    <p class="theme-scope-description">Customize a section or just one component.</p>
+                    <h2 class="theme-scope-heading">@S["Theming.LocalOverrides"]</h2>
+                    <p class="theme-scope-description">@S["Theming.CustomizeASectionOrJustOneComponent"]</p>
                     <div class="theme-scope-actions" style="--dnet-btn-background:#dfeff7;--dnet-btn-foreground:#12334a;">
-                        <DnetButton>Subtree override</DnetButton>
-                        <DnetButton style="--dnet-btn-background:#a63636;--dnet-btn-foreground:#ffffff;">Instance override</DnetButton>
+                        <DnetButton>@S["Theming.SubtreeOverride"]</DnetButton>
+                        <DnetButton style="--dnet-btn-background:#a63636;--dnet-btn-foreground:#ffffff;">@S["Theming.InstanceOverride"]</DnetButton>
                     </div>
                 </article>
                 <DnetThemeScope Theme="dark" Class="theme-dark-example">
                     <article class="theme-scope-example">
-                    <h2 class="theme-scope-heading">An independent theme</h2>
-                    <p class="theme-scope-description">A dark section, even inside a light interface.</p>
-                    <div class="theme-scope-actions"><DnetButton Variant="DnetButtonVariant.Outlined">Nested dark scope</DnetButton></div>
+                    <h2 class="theme-scope-heading">@S["Theming.AnIndependentTheme"]</h2>
+                    <p class="theme-scope-description">@S["Theming.ADarkSectionEvenInsideALightInterface"]</p>
+                    <div class="theme-scope-actions"><DnetButton Variant="DnetButtonVariant.Outlined">@S["Theming.NestedDarkScope"]</DnetButton></div>
                     </article>
                 </DnetThemeScope>
             </div>
 
             <section class="theme-code-card" aria-labelledby="theme-code-title">
                 <div class="theme-code-header">
-                    <h2 id="theme-code-title" class="theme-card-title">Your theme CSS</h2>
-                    <span class="theme-preview-badge">@ThemeName</span>
+                    <h2 id="theme-code-title" class="theme-card-title">@S["Theming.YourThemeCSS"]</h2>
+                    <span class="theme-preview-badge">@S.Display(ThemeName)</span>
                 </div>
                 <pre id="theme-css-output" class="theme-code-output"><code>@ThemeCss</code></pre>
-                <div id="theme-copy-status" class="theme-copy-status" role="status" aria-live="polite">@_copyStatus</div>
+                <div id="theme-copy-status" class="theme-copy-status" role="status" aria-live="polite">@S.Display(_copyStatus)</div>
             </section>
         </div>
     </div>

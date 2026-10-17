@@ -1,4 +1,4 @@
-﻿@using Dnet.App.Shared.Infrastructure.Entities
+@using Dnet.App.Shared.Infrastructure.Entities
 @using Dnet.Blazor.Components.Button
 @using Dnet.Blazor.Components.FloatingPanel.Infrastructure.Interfaces
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Enums
@@ -6,18 +6,20 @@
 
 @inject IFloatingPanelService FloatingPanelService
 
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
 <div class="dnet-panel in-floating-panel">
     <div class="dnet-panel-header">
         <div class="dsec-panel-content">
-            <span class="dsec-panel-content-title">Edit user profile</span>
+            <span class="dsec-panel-content-title">@S["FloatingPanelTestContent.EditUserProfile"]</span>
         </div>
     </div>
     <div class="dnet-panel-content">
         <FormFieldTest Person="@Person"></FormFieldTest>
     </div>
     <div class="dnet-panel-footer">
-        <DnetButton Variant="DnetButtonVariant.Outlined" OnClick="CancelOverlay" class="dnet-m-r-10">Close</DnetButton>
-        <DnetButton OnClick="CloseOverlay" InitialFocus="true" class="dnet-m-r-10">Ok</DnetButton>
+        <DnetButton Variant="DnetButtonVariant.Outlined" OnClick="CancelOverlay" class="dnet-m-r-10">@S["FloatingPanelTestContent.Close"]</DnetButton>
+        <DnetButton OnClick="CloseOverlay" InitialFocus="true" class="dnet-m-r-10">@S["FloatingPanelTestContent.Ok"]</DnetButton>
     </div>
 </div>
 

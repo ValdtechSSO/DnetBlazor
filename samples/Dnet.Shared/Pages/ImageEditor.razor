@@ -7,96 +7,98 @@
 @implements IDisposable
 @inject IHttpClientFactory ClientFactory
 
-<DemoPage Id="demo-image-editor" Title="Image Editor" Category="Imágenes y contenido"
-          Description="Encuentra el encuadre, ajusta la orientación y prepara una imagen para compartir. Empieza con un archivo propio o explora el editor con el logo de ejemplo."
-          Badge="Experimental">
-    <DemoCard Id="image-editor-upload-card" Title="Un buen resultado empieza por tu imagen" Eyebrow="01 · Elige y edita"
-              Description="Abre una imagen y trabaja con una vista previa de la selección antes de aplicar los cambios.">
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
+<DemoPage Id="demo-image-editor" Title="@S["ImageEditor.ImageEditor"]" Category="@S["ImageEditor.ImagesAndContent"]"
+          Description="@S["ImageEditor.FindTheFramingAdjustTheOrientationAndPrepare"]"
+          Badge="@S["ImageEditor.Experimental"]">
+    <DemoCard Id="image-editor-upload-card" Title="@S["ImageEditor.AGoodResultStartsWithYourImage"]" Eyebrow="@S["ImageEditor.01ChooseAndEdit"]"
+              Description="@S["ImageEditor.OpenAnImageAndPreviewYourSelectionBefore"]">
         <ChildContent>
             <div class="image-workspace">
                 <div class="image-upload-zone">
                     <span class="image-upload-symbol" aria-hidden="true">
                         <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="5" width="24" height="22" rx="4" /><circle cx="11" cy="12" r="2.5" /><path d="m5 23 7-7 5 5 4-4 6 6" /></svg>
                     </span>
-                    <h3>Haz espacio para una nueva imagen</h3>
-                    <p>Selecciona una foto o un recurso gráfico para empezar.</p>
+                    <h3>@S["ImageEditor.MakeRoomForANewImage"]</h3>
+                    <p>@S["ImageEditor.ChooseAPhotoOrGraphicToGetStarted"]</p>
                     <label class="image-file-action" aria-disabled="@(_isLoading ? "true" : "false")">
-                        <span>@(_isLoading ? "Preparando imagen…" : "Seleccionar imagen")</span>
+                        <span>@S.Display(_isLoading ? "Preparando imagen…" : "Seleccionar imagen")</span>
                         <InputFile id="image-editor-file" class="image-file-input" OnChange="LoadFiles"
                                    accept="image/png,image/jpeg,.png,.jpg,.jpeg" disabled="@_isLoading"
-                                   aria-label="Seleccionar una imagen PNG o JPEG" aria-describedby="image-editor-file-help" />
+                                   aria-label="@S["ImageEditor.SelectAPNGOrJPEGImage"]" aria-describedby="image-editor-file-help" />
                     </label>
-                    <span id="image-editor-file-help" class="image-upload-hint">PNG o JPEG · Hasta 15 MB por imagen</span>
+                    <span id="image-editor-file-help" class="image-upload-hint">@S["ImageEditor.PNGOrJPEGUpTo15MBPer"]</span>
                     <div class="image-demo-action">
-                        <DnetButton Variant="DnetButtonVariant.Outlined" id="image-editor-demo" OnClick="LoadDemoImage" disabled="@_isLoading">Probar con el logo</DnetButton>
+                        <DnetButton Variant="DnetButtonVariant.Outlined" id="image-editor-demo" OnClick="LoadDemoImage" disabled="@_isLoading">@S["ImageEditor.TryTheLogo"]</DnetButton>
                     </div>
                 </div>
                 <aside class="image-workflow" aria-labelledby="image-editor-guide-title">
-                    <span class="image-tag">De principio a fin</span>
-                    <h3 id="image-editor-guide-title">Tu imagen, en tres pasos</h3>
+                    <span class="image-tag">@S["ImageEditor.FromStartToFinish"]</span>
+                    <h3 id="image-editor-guide-title">@S["ImageEditor.YourImageInThreeSteps"]</h3>
                     <ol class="image-steps">
-                        <li><span class="image-step-number" aria-hidden="true">1</span><div><strong>Elige el archivo</strong><p>Trabaja con una imagen de tu equipo o con el ejemplo incluido.</p></div></li>
-                        <li><span class="image-step-number" aria-hidden="true">2</span><div><strong>Cuida el encuadre</strong><p>Ajusta la selección, gira o refleja la imagen y comprueba la vista previa.</p></div></li>
-                        <li><span class="image-step-number" aria-hidden="true">3</span><div><strong>Aplica y descarga</strong><p>Confirma con Apply. El resultado aparecerá aquí, listo para guardar.</p></div></li>
+                        <li><span class="image-step-number" aria-hidden="true">1</span><div><strong>@S["ImageEditor.ChooseTheFile"]</strong><p>@S["ImageEditor.WorkWithAnImageFromYourDeviceOr"]</p></div></li>
+                        <li><span class="image-step-number" aria-hidden="true">2</span><div><strong>@S["ImageEditor.RefineTheFraming"]</strong><p>@S["ImageEditor.AdjustTheSelectionRotateOrFlipTheImage"]</p></div></li>
+                        <li><span class="image-step-number" aria-hidden="true">3</span><div><strong>@S["ImageEditor.ApplyAndDownload"]</strong><p>@S["ImageEditor.ConfirmWithApplyYourResultWillAppearHere"]</p></div></li>
                     </ol>
-                    <p class="image-local-note">La edición se realiza en tu navegador.</p>
+                    <p class="image-local-note">@S["ImageEditor.EditingTakesPlaceInYourBrowser"]</p>
                 </aside>
             </div>
         </ChildContent>
         <Footer>
-            <p id="image-editor-status" class="demo-status" role="status">@_status</p>
+            <p id="image-editor-status" class="demo-status" role="status">@S.Display(_status)</p>
             @if (!string.IsNullOrEmpty(_error))
             {
-                <p id="image-editor-error" class="image-error" role="alert">@_error</p>
+                <p id="image-editor-error" class="image-error" role="alert">@S.Display(_error)</p>
             }
         </Footer>
     </DemoCard>
 
     <div class="demo-grid">
-        <DemoCard Id="image-editor-result-card" Title="Tu imagen preparada" Eyebrow="02 · Revisa el resultado"
-                  Description="La última edición confirmada se conserva aquí mientras pruebas otro encuadre.">
+        <DemoCard Id="image-editor-result-card" Title="@S["ImageEditor.YourImageReady"]" Eyebrow="@S["ImageEditor.02ReviewTheResult"]"
+                  Description="@S["ImageEditor.YourLastConfirmedEditStaysHereWhileYou"]">
             <ChildContent>
                 <div class="demo-stack">
                     @if (string.IsNullOrEmpty(_imageUrl))
                     {
                         <div id="image-editor-result-empty" class="image-result-empty">
                             <svg aria-hidden="true" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="5" width="24" height="22" rx="4" /><path d="m10 17 4 4 8-9" /></svg>
-                            <strong>El próximo encuadre va aquí</strong>
-                            <p>Aplica los cambios en el editor para ver tu imagen y descargarla.</p>
+                            <strong>@S["ImageEditor.YourNextCropGoesHere"]</strong>
+                            <p>@S["ImageEditor.ApplyChangesInTheEditorToPreviewAnd"]</p>
                         </div>
                     }
                     else
                     {
                         <div class="image-result-preview">
-                            <img id="image-editor-result-image" src="@_imageUrl" alt="Resultado de la edición de @_resultName" />
+                            <img id="image-editor-result-image" src="@_imageUrl" alt="@S.Format("Common.EditedImageOf0", _resultName)" />
                         </div>
                         <dl class="image-result-facts">
-                            <div><dt>Archivo</dt><dd id="image-editor-result-name">@_resultName</dd></div>
-                            <div><dt>Formato</dt><dd id="image-editor-result-format">@(_resultMime == ImageFormat.PNG ? "PNG" : "JPEG")</dd></div>
-                            <div><dt>Tamaño</dt><dd id="image-editor-result-size">@FormatSize(_resultBytes.Length)</dd></div>
+                            <div><dt>@S["ImageEditor.File"]</dt><dd id="image-editor-result-name">@_resultName</dd></div>
+                            <div><dt>@S["ImageEditor.Format"]</dt><dd id="image-editor-result-format">@S.Display(_resultMime == ImageFormat.PNG ? "PNG" : "JPEG")</dd></div>
+                            <div><dt>@S["ImageEditor.Size"]</dt><dd id="image-editor-result-size">@FormatSize(_resultBytes.Length)</dd></div>
                         </dl>
                         <div class="demo-actions">
-                            <a id="image-editor-download" class="image-download" href="@_imageUrl" download="@_resultName">Descargar imagen <span aria-hidden="true">↓</span></a>
-                            <DnetButton Variant="DnetButtonVariant.Outlined" id="image-editor-reopen" OnClick="ReopenResult" disabled="@_isLoading">Volver a editar</DnetButton>
-                            <DnetButton Variant="DnetButtonVariant.Outlined" id="image-editor-clear" OnClick="ClearResult" disabled="@_isLoading">Quitar imagen</DnetButton>
+                            <a id="image-editor-download" class="image-download" href="@_imageUrl" download="@_resultName">@S["ImageEditor.DownloadImage"] <span aria-hidden="true">↓</span></a>
+                            <DnetButton Variant="DnetButtonVariant.Outlined" id="image-editor-reopen" OnClick="ReopenResult" disabled="@_isLoading">@S["ImageEditor.EditAgain"]</DnetButton>
+                            <DnetButton Variant="DnetButtonVariant.Outlined" id="image-editor-clear" OnClick="ClearResult" disabled="@_isLoading">@S["ImageEditor.RemoveImage"]</DnetButton>
                         </div>
                     }
                 </div>
             </ChildContent>
-            <Footer><span class="demo-info">Cancelar una edición conserva el último resultado que hayas confirmado.</span></Footer>
+            <Footer><span class="demo-info">@S["ImageEditor.CancellingAnEditPreservesYourLastConfirmedResult"]</span></Footer>
         </DemoCard>
 
-        <DemoCard Id="image-editor-tools-card" Title="Pequeños ajustes, otro punto de vista" Eyebrow="Explora las herramientas"
-                  Description="Todo lo necesario para preparar el encuadre desde el mismo espacio de trabajo.">
+        <DemoCard Id="image-editor-tools-card" Title="@S["ImageEditor.SmallAdjustmentsADifferentView"]" Eyebrow="@S["ImageEditor.ExploreTheTools"]"
+                  Description="@S["ImageEditor.EverythingYouNeedToPrepareTheFramingIn"]">
             <ChildContent>
                 <div class="image-tool-list">
-                    <div><span class="image-tool-symbol" aria-hidden="true">@CropIcon</span><div><h3>Encuentra la proporción</h3><p>Elige un recorte libre, cuadrado, 4:3 o 16:9. Ajusta su posición y tamaño sobre la imagen.</p></div></div>
-                    <div><span class="image-tool-symbol" aria-hidden="true">@RotateIcon</span><div><h3>Cambia la orientación</h3><p>Gira a izquierda o derecha y refleja en horizontal o vertical para probar otra composición.</p></div></div>
-                    <div><span class="image-tool-symbol" aria-hidden="true">@ZoomIcon</span><div><h3>Acércate al detalle</h3><p>Usa el zoom para trabajar con precisión y la vista previa para comprobar el resultado.</p></div></div>
-                    <div><span class="image-tool-symbol" aria-hidden="true">@ResetIcon</span><div><h3>Prueba con tranquilidad</h3><p>Reset recupera la imagen con la que abriste el editor. Cancel cierra sin sustituir tu resultado.</p></div></div>
+                    <div><span class="image-tool-symbol" aria-hidden="true">@CropIcon</span><div><h3>@S["ImageEditor.FindTheRightRatio"]</h3><p>@S["ImageEditor.ChooseAFreeSquare43Or16"]</p></div></div>
+                    <div><span class="image-tool-symbol" aria-hidden="true">@RotateIcon</span><div><h3>@S["ImageEditor.ChangeOrientation"]</h3><p>@S["ImageEditor.RotateLeftOrRightAndFlipHorizontallyOr"]</p></div></div>
+                    <div><span class="image-tool-symbol" aria-hidden="true">@ZoomIcon</span><div><h3>@S["ImageEditor.GetCloserToTheDetail"]</h3><p>@S["ImageEditor.UseZoomForPreciseAdjustmentsAndCheckThe"]</p></div></div>
+                    <div><span class="image-tool-symbol" aria-hidden="true">@ResetIcon</span><div><h3>@S["ImageEditor.TryWithConfidence"]</h3><p>@S["ImageEditor.ResetRestoresTheImageYouOpenedCancelCloses"]</p></div></div>
                 </div>
             </ChildContent>
-            <Footer><span class="demo-info">Sin cambios, se conservan los bytes originales. Si editas, el resultado mantiene el formato de la imagen.</span></Footer>
+            <Footer><span class="demo-info">@S["ImageEditor.UnchangedImagesKeepTheirOriginalBytesEditedResults"]</span></Footer>
         </DemoCard>
     </div>
 </DemoPage>
@@ -302,8 +304,8 @@
         DisposePendingStream();
     }
 
-    private static string FormatSize(long bytes) => bytes < 1024 * 1024
-        ? $"{bytes / 1024d:0.#} KB" : $"{bytes / (1024d * 1024d):0.#} MB";
+    private string FormatSize(long bytes) => bytes < 1024 * 1024
+        ? (bytes / 1024d).ToString("0.#", S.Culture) + " KB" : (bytes / (1024d * 1024d)).ToString("0.#", S.Culture) + " MB";
 
     private static string? GetMimeType(MemoryStream stream)
     {

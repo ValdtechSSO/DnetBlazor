@@ -1,0 +1,38 @@
+@using System.Linq.Expressions
+@typeparam TValue
+@implements IDisposable
+
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+@if (_context is not null)
+{
+    @foreach (var message in _context.GetValidationMessages(_field))
+    {
+        <div class="validation-message" @attributes="AdditionalAttributes">@S.Message(message)</div>
+    }
+}
+
+@code {
+    [CascadingParameter] private EditContext CurrentEditContext { get; set; }
+    [Parameter, EditorRequired] public Expression<Func<TValue>> For { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
+    private EditContext _context;
+    private FieldIdentifier _field;
+
+    protected override void OnParametersSet()
+    {
+        if (CurrentEditContext is null || For is null)
+            throw new InvalidOperationException("SampleValidationMessage requires an EditContext and a field expression.");
+        if (_context != CurrentEditContext)
+        {
+            if (_context is not null) _context.OnValidationStateChanged -= Changed;
+            _context = CurrentEditContext;
+            _context.OnValidationStateChanged += Changed;
+        }
+        _field = FieldIdentifier.Create(For);
+    }
+    private void Changed(object sender, ValidationStateChangedEventArgs args) => StateHasChanged();
+    public void Dispose()
+    {
+        if (_context is not null) _context.OnValidationStateChanged -= Changed;
+    }
+}

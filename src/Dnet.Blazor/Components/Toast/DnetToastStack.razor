@@ -73,6 +73,7 @@
         builder.AddAttribute(12, nameof(DnetToast.Parameters), entry.Parameters);
         builder.AddAttribute(13, nameof(DnetToast.ContentChild), entry.ContentChild);
         builder.AddAttribute(14, nameof(DnetToast.Dismissed), EventCallback.Factory.Create(this, () => Service.CompleteClose(StackKey, entry.Id)));
+        builder.AddAttribute(15, nameof(DnetToast.TextLocalizer), entry.TextLocalizer);
         builder.CloseComponent();
     };
 

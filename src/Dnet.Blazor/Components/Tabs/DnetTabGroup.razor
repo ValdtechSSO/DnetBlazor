@@ -63,6 +63,7 @@
 
 
 @code {
+    internal void NotifyTabChanged() => _ = InvokeAsync(StateHasChanged);
 
     /// <summary>Gets or sets the child content rendered by the component.</summary>
     [Parameter]

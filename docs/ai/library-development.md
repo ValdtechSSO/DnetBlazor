@@ -171,6 +171,16 @@ wire values and grid filter/sort serialization invariant. Do not set global or
 ambient cultures to change a user's language. Caller-owned business content stays
 in the application's resources. See `docs/localization.md` for public usage.
 
+## Example application localization
+
+Example application copy belongs to `samples/Dnet.Shared/Localization`, with
+Spanish and English resources following the scoped library language. Keep the
+navigation menu unchanged. Use `S[key]`/`S.Format` for new copy and preserve raw
+selection keys and user input. Translate visible validation messages without
+recreating or validating the EditContext on a language change. Dialog and Toast
+accept optional `TextLocalizer` callbacks for application-owned copy. See
+`docs/sample-localization.md` for the sample workflow.
+
 ## Reference files
 
 - `docs/ai/architecture.md` — the three layers, rules R1–R10, themes, the

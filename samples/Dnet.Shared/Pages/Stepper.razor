@@ -3,24 +3,26 @@
 @using Dnet.Blazor.Components.Checkbox
 @using Dnet.Blazor.Components.Button
 
-<DemoPage Id="demo-stepper" Title="Stepper" Category="Navigation"
-          Description="Turn a longer task into focused stages, with flexible navigation or a guided sequence." Badge="Two orientations">
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
+<DemoPage Id="demo-stepper" Title="@S["Stepper.Stepper"]" Category="@S["Stepper.Navigation"]"
+          Description="@S["Stepper.TurnALongerTaskIntoFocusedStagesWith"]" Badge="@S["Stepper.TwoOrientations"]">
     <div class="demo-stack">
-    <DemoCard Id="stepper-horizontal-card" Title="Plan a project" Eyebrow="Horizontal · Free navigation"
-              Description="Move between stages to review a project brief. Each stage keeps its place in the workflow.">
+    <DemoCard Id="stepper-horizontal-card" Title="@S["Stepper.PlanAProject"]" Eyebrow="@S["Stepper.HorizontalFreeNavigation"]"
+              Description="@S["Stepper.MoveBetweenStagesToReviewAProjectBrief"]">
         <ChildContent>
-            <div class="stepper-scroll" tabindex="0" aria-label="Project workflow; scroll horizontally on smaller screens">
+            <div class="stepper-scroll" tabindex="0" aria-label="@S["Stepper.ProjectWorkflowScrollHorizontallyOnSmallerScreens"]">
                 <div class="stepper-horizontal-stage">
                     <DnetStepper @ref="_horizontalStepper" id="stepper-horizontal" OnSelectionChange="HorizontalChanged"
                                  Orientation="(int)StepperOrientation.Horizontal">
                         @foreach (var stage in _stages)
                         {
-                            <DnetStep Label="@stage.Title">
+                            <DnetStep Label="@S.Text(stage.Title)">
                                 <div class="stepper-content">
-                                    <p class="stepper-kicker">Project brief · @stage.Title</p>
-                                    <h3>@stage.Heading</h3>
-                                    <p class="demo-muted">@stage.Description</p>
-                                    <div class="stepper-detail"><span class="demo-info">Website launch</span><strong>@stage.Detail</strong></div>
+                                    <p class="stepper-kicker">@S.Format("Common.ProjectBrief0", S.Text(stage.Title))</p>
+                                    <h3>@S.Display(stage.Heading)</h3>
+                                    <p class="demo-muted">@S.Display(stage.Description)</p>
+                                    <div class="stepper-detail"><span class="demo-info">@S["Chips.WebsiteLaunch"]</span><strong>@S.Display(stage.Detail)</strong></div>
                                 </div>
                             </DnetStep>
                         }
@@ -28,16 +30,16 @@
                 </div>
             </div>
             <div class="demo-actions">
-                <DnetButton Variant="DnetButtonVariant.Outlined" id="stepper-horizontal-back" disabled="@(_horizontalStep == 1)" OnClick="() => MoveHorizontal(-1)">Previous stage</DnetButton>
-                <DnetButton Variant="DnetButtonVariant.Outlined" id="stepper-horizontal-next" disabled="@(_horizontalStep == _stages.Length)" OnClick="() => MoveHorizontal(1)">Next stage</DnetButton>
+                <DnetButton Variant="DnetButtonVariant.Outlined" id="stepper-horizontal-back" disabled="@(_horizontalStep == 1)" OnClick="() => MoveHorizontal(-1)">@S["Stepper.PreviousStage"]</DnetButton>
+                <DnetButton Variant="DnetButtonVariant.Outlined" id="stepper-horizontal-next" disabled="@(_horizontalStep == _stages.Length)" OnClick="() => MoveHorizontal(1)">@S["Stepper.NextStage"]</DnetButton>
             </div>
         </ChildContent>
-        <Footer><span id="stepper-horizontal-value" role="status">Stage @_horizontalStep of @_stages.Length · @_stages[_horizontalStep - 1].Title</span></Footer>
+        <Footer><span id="stepper-horizontal-value" role="status">@S.Format("Common.Stage0Of12", _horizontalStep, _stages.Length, S.Text(_stages[_horizontalStep - 1].Title))</span></Footer>
     </DemoCard>
 
     <div class="demo-grid">
-        <DemoCard Id="stepper-linear-card" Title="Launch checklist" Eyebrow="Vertical · Linear navigation"
-                  Description="Complete the current stage before moving forward. Earlier stages remain available for review.">
+        <DemoCard Id="stepper-linear-card" Title="@S["Stepper.LaunchChecklist"]" Eyebrow="@S["Stepper.VerticalLinearNavigation"]"
+                  Description="@S["Stepper.CompleteTheCurrentStageBeforeMovingForwardEarlier"]">
             <ChildContent>
                 <DnetStepper @ref="_linearStepper" id="stepper-linear" OnSelectionChange="LinearChanged"
                              Orientation="(int)StepperOrientation.Vertical" Linear="true">
@@ -45,33 +47,33 @@
                     {
                         <DnetStep Completed="stage.Completed">
                             <StepHeaderTemplate>
-                                <div class="dnet-step-icon dnet-step-icon-state-number"><span>@(stage.Index + 1)</span></div>
-                                <span class="stepper-custom-label">@stage.Title</span>
+                                <div class="dnet-step-icon dnet-step-icon-state-number"><span>@S.Display(stage.Index + 1)</span></div>
+                                <span class="stepper-custom-label">@S.Display(stage.Title)</span>
                             </StepHeaderTemplate>
                             <ChildContent>
                                 <div class="stepper-linear-content">
-                                    <p class="demo-muted">@stage.Checklist</p>
-                                    <DnetInputCheckbox id="@($"stepper-complete-{stage.Index + 1}")" @bind-Value="stage.Completed">Mark this stage complete</DnetInputCheckbox>
+                                    <p class="demo-muted">@S.Display(stage.Checklist)</p>
+                                    <DnetInputCheckbox id="@($"stepper-complete-{stage.Index + 1}")" @bind-Value="stage.Completed">@S["Stepper.MarkThisStageComplete"]</DnetInputCheckbox>
                                 </div>
                             </ChildContent>
                         </DnetStep>
                     }
                 </DnetStepper>
                 <div class="demo-actions">
-                    <DnetButton Variant="DnetButtonVariant.Outlined" id="stepper-linear-back" disabled="@(_linearStep == 1)" OnClick="() => MoveLinear(-1)">Back</DnetButton>
-                    <DnetButton id="stepper-linear-next" disabled="@(_linearStep == _stages.Length || !_stages[_linearStep - 1].Completed)" OnClick="() => MoveLinear(1)">Continue</DnetButton>
+                    <DnetButton Variant="DnetButtonVariant.Outlined" id="stepper-linear-back" disabled="@(_linearStep == 1)" OnClick="() => MoveLinear(-1)">@S["Stepper.Back"]</DnetButton>
+                    <DnetButton id="stepper-linear-next" disabled="@(_linearStep == _stages.Length || !_stages[_linearStep - 1].Completed)" OnClick="() => MoveLinear(1)">@S["Stepper.Continue"]</DnetButton>
                 </div>
             </ChildContent>
-            <Footer><span id="stepper-linear-value" role="status">@_stages.Count(stage => stage.Completed) of @_stages.Length stages complete · Current: @_stages[_linearStep - 1].Title</span></Footer>
+            <Footer><span id="stepper-linear-value" role="status">@S.Format("Common.0Of1StagesCompleteCurrent2", _stages.Count(stage => stage.Completed), _stages.Length, S.Text(_stages[_linearStep - 1].Title))</span></Footer>
         </DemoCard>
-        <DemoCard Id="stepper-guide" Title="A clear path to launch" Description="A workflow can support exploration and still make progress visible.">
+        <DemoCard Id="stepper-guide" Title="@S["Stepper.AClearPathToLaunch"]" Description="@S["Stepper.AWorkflowCanSupportExplorationAndStillMake"]">
             <ol class="demo-bullets">
-                <li><strong>Details:</strong> agree on the outcome and project scope.</li>
-                <li><strong>Team:</strong> confirm ownership and collaborators.</li>
-                <li><strong>Review:</strong> check the brief and gather approval.</li>
-                <li><strong>Launch:</strong> share the plan and begin delivery.</li>
+                <li><strong>@S["Stepper.Details"]</strong> @S["Stepper.AgreeOnTheOutcomeAndProjectScope"]</li>
+                <li><strong>@S["Stepper.Team"]</strong> @S["Stepper.ConfirmOwnershipAndCollaborators"]</li>
+                <li><strong>@S["Stepper.Review"]</strong> @S["Stepper.CheckTheBriefAndGatherApproval"]</li>
+                <li><strong>@S["Stepper.Launch"]</strong> @S["Stepper.ShareThePlanAndBeginDelivery"]</li>
             </ol>
-            <div class="demo-preview"><span class="demo-info">Try the linear example</span><p class="demo-muted">Complete Details to enable Continue, then return to an earlier stage to review it.</p></div>
+            <div class="demo-preview"><span class="demo-info">@S["Stepper.TryTheLinearExample"]</span><p class="demo-muted">@S["Stepper.CompleteDetailsToEnableContinueThenReturnTo"]</p></div>
         </DemoCard>
     </div>
     </div>

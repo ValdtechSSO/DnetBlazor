@@ -11,6 +11,7 @@ internal sealed class ToastEntry
     public string? Title { get; init; }
 
     public string? Text { get; init; }
+    public Func<string, string>? TextLocalizer { get; init; }
 
     public ToastType ToastType { get; init; }
 

@@ -17,7 +17,7 @@ public sealed class TimelineTests
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
         var page = await browser.NewPageAsync();
-        await page.GotoAsync($"{BaseUrl.TrimEnd('/')}/Timeline");
+        await BrowserReady.OpenAsync(page, $"{BaseUrl.TrimEnd('/')}/Timeline");
         var root = page.Locator("#timeline-default");
         await Assertions.Expect(root).ToBeVisibleAsync();
         Assert.Equal("OL", await root.EvaluateAsync<string>("element => element.tagName"));
@@ -40,7 +40,7 @@ public sealed class TimelineTests
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
         var page = await browser.NewPageAsync(new() { ViewportSize = new() { Width = 1440, Height = 1000 } });
-        await page.GotoAsync($"{BaseUrl.TrimEnd('/')}/Timeline");
+        await BrowserReady.OpenAsync(page, $"{BaseUrl.TrimEnd('/')}/Timeline");
         var alternate = page.Locator("#timeline-alternate");
         await Assertions.Expect(alternate).ToBeVisibleAsync();
         Assert.True(await alternate.EvaluateAsync<bool>("element => { const items = element.querySelectorAll(':scope > li'); const first = items[0].querySelector('.dnet-timeline-content').getBoundingClientRect(); const second = items[1].querySelector('.dnet-timeline-content').getBoundingClientRect(); return first.left > second.right; }"));

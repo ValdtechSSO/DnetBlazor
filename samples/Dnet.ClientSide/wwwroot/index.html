@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-dnet-theme="dark">
+<html data-dnet-theme="dark" lang="es-ES">
 
 <head>
     <meta charset="utf-8" />
@@ -34,7 +34,19 @@
 </head>
 
 <body>
-    <div id="app">Loading...</div>
+    <div id="app">Cargando…</div>
+    <script>
+        (() => {
+            try {
+                const language = JSON.parse(localStorage.getItem("dnet.language") ?? '"es-ES"');
+                const english = typeof language === "string" && language.startsWith("en");
+                document.documentElement.lang = english ? "en-US" : "es-ES";
+                document.getElementById("app").textContent = english ? "Loading…" : "Cargando…";
+            } catch {
+                // Keep the default language when the saved preference is invalid.
+            }
+        })();
+    </script>
 
     <!-- Blazor runtime and Dnet.Blazor bundle -->
     <script src="_framework/blazor.webassembly.js"></script>

@@ -1,6 +1,8 @@
+
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
 <div class="tooltip-person">
-    <span class="tooltip-person-avatar" aria-hidden="true">TM</span>
-    <div><strong>@Title</strong><span>Product designer · London</span><small>Part of the Design team</small></div>
+    <span class="tooltip-person-avatar" aria-hidden="true">@S["Dialog.TM"]</span>
+    <div><strong>@S.Display(Title)</strong><span>@S["TestTooltipContent.ProductDesignerLondon"]</span><small>@S["TestTooltipContent.PartOfTheDesignTeam"]</small></div>
 </div>
 
 @code {

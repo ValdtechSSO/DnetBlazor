@@ -219,6 +219,7 @@ public class ToastService : IToastService
     {
         Title = config.Title,
         Text = config.Text,
+        TextLocalizer = config.TextLocalizer,
         ToastType = config.ToastType,
         TypeIconClass = config.ToastTypeIconClass,
         CloseIconClass = config.ToastCloseIconClass,

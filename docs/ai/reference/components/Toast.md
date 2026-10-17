@@ -11,6 +11,7 @@
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
+| `TextLocalizer` | `Func<string, string>?` | — | Resolves application-owned text without replacing toast state or actions. |
 | `ComponentType` | `Type?` | — | Gets or sets the component type rendered dynamically. |
 | `ContentChild` | `RenderFragment?` | — | Gets or sets custom content rendered by the component. |
 | `Parameters` | `IDictionary<string, object>?` | — | Gets or sets parameters passed to the dynamically rendered component. |

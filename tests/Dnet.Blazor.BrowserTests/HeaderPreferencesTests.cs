@@ -32,7 +32,7 @@ public sealed class HeaderPreferencesTests
         await page.AddInitScriptAsync($"if (localStorage.getItem('dnet.theme') === null) localStorage.setItem('dnet.theme', JSON.stringify({initialTheme}));");
         await page.RouteAsync("https://fonts.googleapis.com/**", request => request.AbortAsync());
         var baseUrl = (Environment.GetEnvironmentVariable("DNET_BLAZOR_BASE_URL") ?? "http://127.0.0.1:5101").TrimEnd('/');
-        await page.GotoAsync(baseUrl + "/Localization");
+        await BrowserReady.OpenAsync(page, baseUrl + "/Localization");
         await Assertions.Expect(page.Locator("#demo-localization")).ToBeVisibleAsync();
         var language = BrowserHeaderPreferences.Control(page, "language");
         var themeControl = BrowserHeaderPreferences.Control(page, "theme");

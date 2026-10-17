@@ -154,6 +154,8 @@
         Steps.Add(step);
     }
 
+    internal void NotifyStepChanged() => _ = InvokeAsync(StateHasChanged);
+
     private bool IsNextStepVisible(DnetDynamicStep step)
     {
         var index = Steps.IndexOf(step);

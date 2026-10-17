@@ -1,4 +1,6 @@
-﻿@code {
+
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+@code {
 
     [Parameter]
     public string ContentData { get; set; }

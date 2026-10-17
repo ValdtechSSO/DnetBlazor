@@ -45,14 +45,14 @@ public sealed class FilteringExampleTests
         await page.RouteAsync("https://fonts.googleapis.com/**", route => route.AbortAsync());
         await page.AddInitScriptAsync(
             $"localStorage.setItem('dnet.theme', JSON.stringify({JsonSerializer.Serialize(theme)}));");
-        await page.GotoAsync($"{baseUrl}/FilteringExample");
+        await BrowserReady.OpenAsync(page, $"{baseUrl}/FilteringExample");
         await Assertions.Expect(page.Locator("html")).ToHaveAttributeAsync("data-dnet-theme", theme);
 
         var fields = page.Locator(".blg-header-container > .blg-filter-cell .blg-filter-field");
         await Assertions.Expect(fields).ToHaveCountAsync(Columns.Length);
         var headers = await page.Locator(".blg-header-container > [role=columnheader][title]")
             .EvaluateAllAsync<string[]>("headers => headers.map(header => header.title)");
-        Assert.Equal(Columns, headers);
+        Assert.Equal(new[] { "Activo", "Edad", "Nombre", "Género", "Empresa", "Correo electrónico", "Teléfono", "Dirección" }, headers);
         foreach (var column in Columns)
         {
             var field = Field(page, column);

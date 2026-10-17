@@ -17,7 +17,8 @@ public sealed class SkeletonTests
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
         var page = await browser.NewPageAsync();
-        await page.GotoAsync($"{BaseUrl.TrimEnd('/')}/Skeleton");
+        await BrowserLanguage.UseEnglishAsync(page);
+        await BrowserReady.OpenAsync(page, $"{BaseUrl.TrimEnd('/')}/Skeleton");
         var root = page.Locator("#skeleton-wrapped");
         var content = root.Locator(".dnet-skeleton-content");
         var input = page.Locator("#skeleton-state-input");
@@ -57,7 +58,8 @@ public sealed class SkeletonTests
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
         var page = await browser.NewPageAsync(new() { ViewportSize = new() { Width = 1440, Height = 1000 } });
-        await page.GotoAsync($"{BaseUrl.TrimEnd('/')}/Skeleton");
+        await BrowserLanguage.UseEnglishAsync(page);
+        await BrowserReady.OpenAsync(page, $"{BaseUrl.TrimEnd('/')}/Skeleton");
         var circle = page.Locator("#skeleton-circle");
         await Assertions.Expect(circle).ToHaveCSSAsync("width", "64px");
         await Assertions.Expect(circle).ToHaveCSSAsync("height", "64px");

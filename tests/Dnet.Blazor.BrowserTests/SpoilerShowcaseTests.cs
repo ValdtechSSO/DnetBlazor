@@ -29,7 +29,7 @@ public sealed class SpoilerShowcaseTests
         await Assertions.Expect(page.Locator("#spoiler-content-state")).ToHaveTextAsync("Descripción breve");
         await Assertions.Expect(dynamic.Locator(".dnet-spoiler-toggle")).ToBeHiddenAsync();
         await Assertions.Expect(page.Locator("#spoiler-short .dnet-spoiler-toggle")).ToBeHiddenAsync();
-        await Assertions.Expect(rtl).ToHaveAttributeAsync("lang", "ar");
+        await Assertions.Expect(rtl).ToHaveAttributeAsync("lang", "es");
         await Assertions.Expect(rtl).ToHaveAttributeAsync("data-expanded", "true");
         await CheckLayoutAsync(page);
 
@@ -175,7 +175,7 @@ public sealed class SpoilerShowcaseTests
         var serializedTheme = System.Text.Json.JsonSerializer.Serialize(theme);
         await page.AddInitScriptAsync($"localStorage.setItem('dnet.theme', JSON.stringify({serializedTheme}));");
         var baseUrl = (Environment.GetEnvironmentVariable("DNET_BLAZOR_BASE_URL") ?? "http://127.0.0.1:5101").TrimEnd('/');
-        await page.GotoAsync($"{baseUrl}/Spoiler");
+        await BrowserReady.OpenAsync(page, $"{baseUrl}/Spoiler");
         await Assertions.Expect(page.Locator("#demo-spoiler")).ToBeVisibleAsync();
         await Assertions.Expect(page.Locator("#spoiler-basic")).ToHaveAttributeAsync("data-overflow", "true");
         await Assertions.Expect(page.Locator("#spoiler-controlled")).ToHaveAttributeAsync("data-overflow", "true");

@@ -1,66 +1,67 @@
 @page "/Chips"
 @using Dnet.Blazor.Components.Chips
 @using Dnet.Blazor.Components.Button
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
 
-<DemoPage Id="demo-chips" Title="Chips" Category="Selection controls"
-          Description="Keep choices compact, make filters easy to scan and give related items a clear place in your workspace."
-          Badge="Select · Remove · Customize">
+<DemoPage Id="demo-chips" Title="@S["Chips.Chips"]" Category="@S["SlideToggle.SelectionControls"]"
+          Description="@S["Chips.KeepChoicesCompactMakeFiltersEasyToScan"]"
+          Badge="@S["Chips.SelectRemoveCustomize"]">
     <div class="demo-grid">
-        <DemoCard Id="chips-topics" Title="Filter by topic" Eyebrow="Multiple choices"
-                  Description="Choose the topics you want to follow. Select a chip again to remove it from your filters.">
+        <DemoCard Id="chips-topics" Title="@S["Chips.FilterByTopic"]" Eyebrow="@S["Chips.MultipleChoices"]"
+                  Description="@S["Chips.ChooseTheTopicsYouWantToFollowSelect"]">
             <ChildContent>
                 <div class="demo-stack">
-                    <div class="chips-stage demo-preview" role="group" aria-label="Topic filters">
+                    <div class="chips-stage demo-preview" role="group" aria-label="@S["Chips.TopicFilters"]">
                         <DnetChipList Multi="true" OnSelectionChange="TopicsChanged">
                             @foreach (var topic in _topics)
                             {
                                 <DnetChip @key="topic" Value="@topic" ChipSize="ChipSize.Large"
-                                          Selected="@_selectedTopics.Contains(topic)" Removable="false" />
+                                          Selected="@_selectedTopics.Contains(topic)" Removable="false" ><span>@S.Text(topic)</span></DnetChip>
                             }
                         </DnetChipList>
                     </div>
                     <div class="demo-actions">
-                        <DnetButton Variant="DnetButtonVariant.Outlined" id="chips-clear-topics" disabled="@(_selectedTopics.Count == 0)" OnClick="ClearTopics">Clear filters</DnetButton>
+                        <DnetButton Variant="DnetButtonVariant.Outlined" id="chips-clear-topics" disabled="@(_selectedTopics.Count == 0)" OnClick="ClearTopics">@S["Chips.ClearFilters"]</DnetButton>
                     </div>
-                    <p class="demo-muted">Combine several topics without leaving this view.</p>
+                    <p class="demo-muted">@S["Chips.CombineSeveralTopicsWithoutLeavingThisView"]</p>
                 </div>
             </ChildContent>
-            <Footer><span id="chips-topics-value" class="demo-value" role="status">@TopicSummary</span></Footer>
+            <Footer><span id="chips-topics-value" class="demo-value" role="status">@S.Message(TopicSummary)</span></Footer>
         </DemoCard>
 
-        <DemoCard Id="chips-priority" Title="Set a project priority" Eyebrow="Single choice"
-                  Description="Choose one priority for the project. Selecting the active chip again clears the choice.">
+        <DemoCard Id="chips-priority" Title="@S["Chips.SetAProjectPriority"]" Eyebrow="@S["RadioButton.SingleChoice"]"
+                  Description="@S["Chips.ChooseOnePriorityForTheProjectSelectingThe"]">
             <ChildContent>
                 <div class="demo-stack">
-                    <div class="chips-stage demo-preview" role="group" aria-label="Project priority">
+                    <div class="chips-stage demo-preview" role="group" aria-label="@S["Chips.ProjectPriority"]">
                         <DnetChipList OnSelectionChange="PriorityChanged">
                             @foreach (var priority in _priorities)
                             {
                                 <DnetChip @key="priority" Value="@priority" ChipSize="ChipSize.Medium"
-                                          Selected="@(_priority == priority)" Removable="false" />
+                                          Selected="@(_priority == priority)" Removable="false" ><span>@S.Text(priority)</span></DnetChip>
                             }
                         </DnetChipList>
                     </div>
                     <div class="chips-priority-preview">
-                        <span class="demo-info">Website launch</span>
-                        <p class="demo-value">Make room for the work that matters</p>
-                        <span class="demo-muted">Your choice stays visible in the project summary below.</span>
+                        <span class="demo-info">@S["Chips.WebsiteLaunch"]</span>
+                        <p class="demo-value">@S["Chips.MakeRoomForTheWorkThatMatters"]</p>
+                        <span class="demo-muted">@S["Chips.YourChoiceStaysVisibleInTheProjectSummary"]</span>
                     </div>
                 </div>
             </ChildContent>
-            <Footer><span id="chips-priority-value" class="demo-value" role="status">@(_priority.Length == 0 ? "No priority selected" : $"Priority: {_priority}")</span></Footer>
+            <Footer><span id="chips-priority-value" class="demo-value" role="status">@S.Message(_priority.Length == 0 ? "No priority selected" : $"Priority: {_priority}")</span></Footer>
         </DemoCard>
 
-        <DemoCard Id="chips-people" Title="People in this project" Eyebrow="Removable items"
-                  Description="Keep the project team in view. Remove a person with the trailing icon, then restore the example to try again.">
+        <DemoCard Id="chips-people" Title="@S["Chips.PeopleInThisProject"]" Eyebrow="@S["Chips.RemovableItems"]"
+                  Description="@S["Chips.KeepTheProjectTeamInViewRemoveA"]">
             <ChildContent>
                 <div class="demo-stack">
-                    <div class="chips-stage demo-preview" role="group" aria-label="Project team">
+                    <div class="chips-stage demo-preview" role="group" aria-label="@S["Chips.ProjectTeam"]">
                         @if (_people.Count == 0)
                         {
                             <div id="chips-people-empty" class="chips-empty">
-                                <strong>No teammates yet</strong>
-                                <p class="demo-muted">Restore the team to bring everyone back.</p>
+                                <strong>@S["Chips.NoTeammatesYet"]</strong>
+                                <p class="demo-muted">@S["Chips.RestoreTheTeamToBringEveryoneBack"]</p>
                             </div>
                         }
                         <DnetChipList>
@@ -75,53 +76,53 @@
                         </DnetChipList>
                     </div>
                     <div class="demo-actions">
-                        <DnetButton Variant="DnetButtonVariant.Outlined" id="chips-restore-team" disabled="@(_people.Count == 3)" OnClick="RestorePeople">Restore team</DnetButton>
+                        <DnetButton Variant="DnetButtonVariant.Outlined" id="chips-restore-team" disabled="@(_people.Count == 3)" OnClick="RestorePeople">@S["Chips.RestoreTeam"]</DnetButton>
                     </div>
-                    <p id="chips-people-action" class="demo-status" role="status">@_peopleAction</p>
+                    <p id="chips-people-action" class="demo-status" role="status">@S.Message(_peopleAction)</p>
                 </div>
             </ChildContent>
-            <Footer><span id="chips-people-value" class="demo-value" role="status">@_people.Count @(_people.Count == 1 ? "teammate" : "teammates") in this project</span></Footer>
+            <Footer><span id="chips-people-value" class="demo-value" role="status">@S.Format("Common.0TeammatesInThisProject", _people.Count)</span></Footer>
         </DemoCard>
 
-        <DemoCard Id="chips-appearance" Title="Context at a glance" Eyebrow="Icons and states"
-                  Description="Add a recognizable symbol, give an item emphasis or explain why an option is unavailable.">
+        <DemoCard Id="chips-appearance" Title="@S["Chips.ContextAtAGlance"]" Eyebrow="@S["Chips.IconsAndStates"]"
+                  Description="@S["Chips.AddARecognizableSymbolGiveAnItemEmphasis"]">
             <div class="demo-stack">
                 <div class="chips-state-row">
                     <DnetChipList>
                         <DnetChip Value="Commerce" ChipSize="ChipSize.Small" Selectable="false" Removable="false"
                                   AvatarIcon="dnet-app-chips-avatar"
-                                  BackgroungColor="var(--dnet-sys-primary-emphasis)" Color="var(--dnet-sys-on-primary)" />
+                                  BackgroungColor="var(--dnet-sys-primary-emphasis)" Color="var(--dnet-sys-on-primary)" ><span>@S.Text("Commerce")</span></DnetChip>
                     </DnetChipList>
-                    <p class="demo-info">A leading icon adds context to a category.</p>
+                    <p class="demo-info">@S["Chips.ALeadingIconAddsContextToACategory"]</p>
                 </div>
                 <div class="chips-state-row">
                     <span class="chips-disabled" aria-disabled="true">
                         <DnetChipList>
-                            <DnetChip Value="Managed label" ChipSize="ChipSize.Small" Disabled="true" />
+                            <DnetChip Value="Managed label" ChipSize="ChipSize.Small" Disabled="true" ><span>@S.Text("Managed label")</span></DnetChip>
                         </DnetChipList>
                     </span>
-                    <p class="demo-info">This label is managed by the workspace owner. It cannot be selected or removed.</p>
+                    <p class="demo-info">@S["Chips.ThisLabelIsManagedByTheWorkspaceOwner"]</p>
                 </div>
                 <ul class="demo-bullets">
-                    <li>Use Enter or Space to select a focused chip.</li>
-                    <li>The trailing remove icon is a separate action.</li>
-                    <li>Keep labels short so choices are easy to compare.</li>
+                    <li>@S["Chips.UseEnterOrSpaceToSelectAFocused"]</li>
+                    <li>@S["Chips.TheTrailingRemoveIconIsASeparateAction"]</li>
+                    <li>@S["Chips.KeepLabelsShortSoChoicesAreEasyTo"]</li>
                 </ul>
             </div>
         </DemoCard>
 
         <div class="demo-span-all">
-            <DemoCard Id="chips-sizes" Title="Find the right fit" Eyebrow="Four sizes"
-                      Description="Use the same label to compare each size. The large example shows the selected appearance.">
+            <DemoCard Id="chips-sizes" Title="@S["Chips.FindTheRightFit"]" Eyebrow="@S["Chips.FourSizes"]"
+                      Description="@S["Chips.UseTheSameLabelToCompareEachSize"]">
                 <div class="chips-sizes">
                     @foreach (var size in _sizes)
                     {
                         <div class="chips-size-cell">
-                            <div class="chips-size-label"><strong>@size.Label</strong><span>@size.Abbreviation</span></div>
+                            <div class="chips-size-label"><strong>@S.Text(size.Label)</strong><span>@size.Abbreviation</span></div>
                             <div class="chips-size-preview">
                                 <DnetChipList>
                                     <DnetChip Value="Design" ChipSize="size.Size" Selected="@(size.Size == ChipSize.Large)"
-                                              Selectable="false" Removable="false" />
+                                              Selectable="false" Removable="false" ><span>@S.Text("Design")</span></DnetChip>
                                 </DnetChipList>
                             </div>
                         </div>
@@ -149,7 +150,7 @@
 
     private string TopicSummary => _selectedTopics.Count == 0
         ? "No topic filters applied"
-        : $"{_selectedTopics.Count} selected · {string.Join(", ", _topics.Where(_selectedTopics.Contains))}";
+        : $"{_selectedTopics.Count} selected · {string.Join(", ", _topics.Where(_selectedTopics.Contains).Select(S.Text))}";
 
     // Page renders reapply Selected; discard stale list entries after clearing.
     private void TopicsChanged(List<DnetChip> chips) => _selectedTopics = chips

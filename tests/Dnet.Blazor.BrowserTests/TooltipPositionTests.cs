@@ -30,7 +30,8 @@ public sealed class TooltipPositionTests
         var serializedTheme = System.Text.Json.JsonSerializer.Serialize(theme);
         await page.AddInitScriptAsync($"localStorage.setItem('dnet.theme', JSON.stringify({serializedTheme}));");
         await page.RouteAsync("https://fonts.googleapis.com/**", route => route.AbortAsync());
-        await page.GotoAsync($"{baseUrl}/Tooltip");
+        await BrowserLanguage.UseEnglishAsync(page);
+        await BrowserReady.OpenAsync(page, $"{baseUrl}/Tooltip");
         await Assertions.Expect(page.Locator("#demo-tooltip")).ToBeVisibleAsync();
 
         foreach (var variant in new[] { "basic", "delay", "component" })

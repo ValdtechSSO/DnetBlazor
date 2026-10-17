@@ -37,7 +37,8 @@ public sealed class GridColumnAlignmentTests
         {
             Status = 200, ContentType = "application/json", Body = persons
         }));
-        await page.GotoAsync($"{baseUrl}/BlGrid");
+        await BrowserLanguage.UseEnglishAsync(page);
+        await BrowserReady.OpenAsync(page, $"{baseUrl}/BlGrid");
         await page.WaitForFunctionAsync(
             "() => document.querySelectorAll('.blg-center-cols-container [role=gridcell]').length > 0");
 

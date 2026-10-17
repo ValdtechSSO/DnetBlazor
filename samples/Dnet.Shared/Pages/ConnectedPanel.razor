@@ -9,28 +9,30 @@
 @inject IConnectedPanelService ConnectedPanelService
 @implements IDisposable
 
-<DemoPage Id="demo-connected-panel" Title="Connected panel" Category="Components / Overlays" Description="Keep a contextual action close to the control that opened it, without leaving the page." Badge="Anchored overlay">
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
+<DemoPage Id="demo-connected-panel" Title="@S["ConnectedPanel.ConnectedPanel"]" Category="@S["ConnectedPanel.ComponentsOverlays"]" Description="@S["ConnectedPanel.KeepAContextualActionCloseToTheControl"]" Badge="@S["ConnectedPanel.AnchoredOverlay"]">
     <div class="demo-grid">
-        <DemoCard Id="connected-panel-basic" Title="A filter in the right place" Eyebrow="01 / Contact directory" Description="Open the filter beside its trigger and choose a team to update this directory.">
+        <DemoCard Id="connected-panel-basic" Title="@S["ConnectedPanel.AFilterInTheRightPlace"]" Eyebrow="@S["ConnectedPanel.01ContactDirectory"]" Description="@S["ConnectedPanel.OpenTheFilterBesideItsTriggerAndChoose"]">
             <ChildContent>
                 <div class="demo-stack">
-                    <div class="connected-toolbar"><div><strong>Team directory</strong><span>@FilteredContacts.Count() contacts · @_department</span></div><button id="connected-panel-trigger" class="connected-filter-button" type="button" @onclick="ToggleFilter" aria-label="Filter contacts" aria-haspopup="dialog" aria-expanded="@(_reference?.IsAttached == true ? "true" : "false")"><svg @ref="_trigger" class="bi bi-filter" width="24" height="24" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" /></svg></button></div>
+                    <div class="connected-toolbar"><div><strong>@S["ConnectedPanel.TeamDirectory"]</strong><span>@S.Format("Common.0Contacts1", FilteredContacts.Count(), S.Text(_department))</span></div><button id="connected-panel-trigger" class="connected-filter-button" type="button" @onclick="ToggleFilter" aria-label="@S["ConnectedPanel.FilterContacts"]" aria-haspopup="dialog" aria-expanded="@(_reference?.IsAttached == true ? "true" : "false")"><svg @ref="_trigger" class="bi bi-filter" width="24" height="24" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" /></svg></button></div>
                     <div id="connected-panel-contacts" class="connected-contacts">
                         @foreach (var contact in FilteredContacts)
                         {
-                            <div class="connected-contact"><span class="connected-avatar" aria-hidden="true">@contact.Initials</span><div><strong>@contact.Name</strong><span>@contact.Team</span></div><small>@contact.Location</small></div>
+                            <div class="connected-contact"><span class="connected-avatar" aria-hidden="true">@contact.Initials</span><div><strong>@contact.Name</strong><span>@S.Display(contact.Team)</span></div><small>@S.Display(contact.Location)</small></div>
                         }
                     </div>
-                    <div class="demo-actions"><DnetButton Variant="DnetButtonVariant.Outlined" id="connected-panel-reset" OnClick="ResetFilter" disabled="@(_department == "All teams")">Reset filter</DnetButton></div>
+                    <div class="demo-actions"><DnetButton Variant="DnetButtonVariant.Outlined" id="connected-panel-reset" OnClick="ResetFilter" disabled="@(_department == "All teams")">@S["ConnectedPanel.ResetFilter"]</DnetButton></div>
                 </div>
             </ChildContent>
-            <Footer><div id="connected-panel-result" class="demo-value" role="status"><span class="demo-muted">Active filter</span><strong>@_status</strong></div></Footer>
+            <Footer><div id="connected-panel-result" class="demo-value" role="status"><span class="demo-muted">@S["ConnectedPanel.ActiveFilter"]</span><strong>@S.Display(_status)</strong></div></Footer>
         </DemoCard>
-        <DemoCard Id="connected-panel-guide" Title="Context stays in view" Eyebrow="02 / Interaction" Description="Connected panels work well for filters, quick settings and compact actions.">
+        <DemoCard Id="connected-panel-guide" Title="@S["ConnectedPanel.ContextStaysInView"]" Eyebrow="@S["ConnectedPanel.02Interaction"]" Description="@S["ConnectedPanel.ConnectedPanelsWorkWellForFiltersQuickSettings"]">
             <div class="demo-stack">
-                <div class="demo-info"><strong>Connected to the trigger</strong><p>The panel opens alongside the filter button and adapts its position to available space.</p></div>
-                <div class="demo-info"><strong>Apply with confidence</strong><p>Choose a team and select Apply filter. Cancel dismisses the panel without changing the directory.</p></div>
-                <div class="demo-info"><strong>Easy to leave</strong><p>Click outside the panel or press Escape to get back to your contacts.</p></div>
+                <div class="demo-info"><strong>@S["ConnectedPanel.ConnectedToTheTrigger"]</strong><p>@S["ConnectedPanel.ThePanelOpensAlongsideTheFilterButtonAnd"]</p></div>
+                <div class="demo-info"><strong>@S["ConnectedPanel.ApplyWithConfidence"]</strong><p>@S["ConnectedPanel.ChooseATeamAndSelectApplyFilterCancel"]</p></div>
+                <div class="demo-info"><strong>@S["ConnectedPanel.EasyToLeave"]</strong><p>@S["ConnectedPanel.ClickOutsideThePanelOrPressEscapeTo"]</p></div>
             </div>
         </DemoCard>
     </div>

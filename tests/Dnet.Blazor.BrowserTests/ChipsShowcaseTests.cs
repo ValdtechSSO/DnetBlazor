@@ -33,7 +33,8 @@ public sealed class ChipsShowcaseTests
         await page.RouteAsync("https://fonts.googleapis.com/**", route => route.AbortAsync());
         var serializedTheme = System.Text.Json.JsonSerializer.Serialize(theme);
         await page.AddInitScriptAsync($"localStorage.setItem('dnet.theme', JSON.stringify({serializedTheme}));");
-        await page.GotoAsync($"{baseUrl}/Chips");
+        await BrowserLanguage.UseEnglishAsync(page);
+        await BrowserReady.OpenAsync(page, $"{baseUrl}/Chips");
         await Assertions.Expect(page.Locator("#demo-chips")).ToBeVisibleAsync();
         await Assertions.Expect(page.Locator("#chips-clear-topics")).ToBeDisabledAsync();
         await CheckLayoutAsync(page);

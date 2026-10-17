@@ -151,7 +151,8 @@ public sealed class ButtonSizeTests
     {
         var serializedTheme = System.Text.Json.JsonSerializer.Serialize(theme);
         await page.AddInitScriptAsync($"localStorage.setItem('dnet.theme', JSON.stringify({serializedTheme}));");
-        await page.GotoAsync($"{BaseUrl}/Buttons");
+        await BrowserLanguage.UseEnglishAsync(page);
+        await BrowserReady.OpenAsync(page, $"{BaseUrl}/Buttons");
         await Assertions.Expect(page.Locator("#button-small-round")).ToBeVisibleAsync();
         await Assertions.Expect(page.Locator("html")).ToHaveAttributeAsync("data-dnet-theme", theme);
         await page.EvaluateAsync("async () => { await document.fonts.ready; }");

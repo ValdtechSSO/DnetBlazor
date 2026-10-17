@@ -185,7 +185,7 @@ public sealed class TimelineShowcaseTests
         var serializedTheme = System.Text.Json.JsonSerializer.Serialize(theme);
         await page.AddInitScriptAsync($"localStorage.setItem('dnet.theme', JSON.stringify({serializedTheme}));");
         var baseUrl = (Environment.GetEnvironmentVariable("DNET_BLAZOR_BASE_URL") ?? "http://127.0.0.1:5101").TrimEnd('/');
-        await page.GotoAsync($"{baseUrl}/Timeline");
+        await BrowserReady.OpenAsync(page, $"{baseUrl}/Timeline");
         await Assertions.Expect(page.Locator("#demo-timeline")).ToBeVisibleAsync();
         await Assertions.Expect(page.Locator("#timeline-advance")).ToBeEnabledAsync();
         return (page, errors);

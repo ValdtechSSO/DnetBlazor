@@ -4,102 +4,104 @@
 @using Dnet.Blazor.Components.Form
 @using Dnet.Blazor.Components.TimePicker
 
-<DemoPage Id="demo-time-picker" Title="Time picker" Category="Date and time"
-          Description="Type a time or choose from an accessible panel, with intervals and formats that fit your schedule."
-          Badge="TimeOnly values">
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
+<DemoPage Id="demo-time-picker" Title="@S["TimePicker.TimePicker"]" Category="@S["DatePicker.DateAndTime"]"
+          Description="@S["TimePicker.TypeATimeOrChooseFromAnAccessible"]"
+          Badge="@S["TimePicker.TimeOnlyValues"]">
     <div class="demo-grid">
-        <DemoCard Id="time-picker-basic" Title="Schedule a meeting"
-                  Description="Choose any time using the default 24-hour format. Clear the field to start again.">
+        <DemoCard Id="time-picker-basic" Title="@S["TimePicker.ScheduleAMeeting"]"
+                  Description="@S["TimePicker.ChooseAnyTimeUsingTheDefault24Hour"]">
             <ChildContent>
-                <DnetFormField Label="Meeting time" UseClearButton="true">
+                <DnetFormField Label="@S["TimePicker.MeetingTime"]" UseClearButton="true">
                     <ChildContent>
-                        <DnetTimePicker @bind-Value="_meetingTime" aria-label="Meeting time" Placeholder="HH:mm" />
+                        <DnetTimePicker @bind-Value="_meetingTime" aria-label="@S["TimePicker.MeetingTime"]" Placeholder="@S["TimePicker.HHMm"]" />
                     </ChildContent>
                     <SufixContent>
-                        <button class="dnet-timepicker-icon-wrapper" aria-label="Open time picker" type="button">
+                        <button class="dnet-timepicker-icon-wrapper" aria-label="@S["TimePicker.OpenTimePicker"]" type="button">
                             <span class="dnet-timepicker-icon" aria-hidden="true"></span>
                         </button>
                     </SufixContent>
                 </DnetFormField>
             </ChildContent>
-            <Footer><span class="demo-value" role="status">Meeting time: @FormatTime(_meetingTime)</span></Footer>
+            <Footer><span class="demo-value" role="status">@S.Format("Common.MeetingTime0", FormatTime(_meetingTime))</span></Footer>
         </DemoCard>
 
-        <DemoCard Title="Stay within business hours"
-                  Description="Available times run from 08:00 to 18:00, in 15-minute intervals.">
+        <DemoCard Title="@S["TimePicker.StayWithinBusinessHours"]"
+                  Description="@S["TimePicker.AvailableTimesRunFrom0800To18"]">
             <ChildContent>
-                <DnetFormField Label="Business hours · 15 minute steps" UseClearButton="true">
+                <DnetFormField Label="@S["TimePicker.BusinessHours15MinuteSteps"]" UseClearButton="true">
                     <ChildContent>
-                        <DnetTimePicker @bind-Value="_businessTime" aria-label="Business time"
+                        <DnetTimePicker @bind-Value="_businessTime" aria-label="@S["TimePicker.BusinessTime"]"
                                         Min="@(new TimeOnly(8, 0))" Max="@(new TimeOnly(18, 0))"
                                         Interval="@TimeSpan.FromMinutes(15)" />
                     </ChildContent>
                     <SufixContent>
-                        <button class="dnet-timepicker-icon-wrapper" aria-label="Open time picker" type="button">
+                        <button class="dnet-timepicker-icon-wrapper" aria-label="@S["TimePicker.OpenTimePicker"]" type="button">
                             <span class="dnet-timepicker-icon" aria-hidden="true"></span>
                         </button>
                     </SufixContent>
                 </DnetFormField>
             </ChildContent>
-            <Footer><span class="demo-value" role="status">Appointment: @FormatTime(_businessTime)</span></Footer>
+            <Footer><span class="demo-value" role="status">@S.Format("Common.Appointment0", FormatTime(_businessTime))</span></Footer>
         </DemoCard>
 
-        <DemoCard Title="Choose a departure" Description="Offer a short, curated list when only specific departure times are available.">
+        <DemoCard Title="@S["TimePicker.ChooseADeparture"]" Description="@S["TimePicker.OfferAShortCuratedListWhenOnlySpecific"]">
             <ChildContent>
-                <DnetFormField Label="Suggested departures" UseClearButton="true">
+                <DnetFormField Label="@S["TimePicker.SuggestedDepartures"]" UseClearButton="true">
                     <ChildContent>
-                        <DnetTimePicker @bind-Value="_departureTime" aria-label="Departure time" TimeOptions="@_departureOptions" />
+                        <DnetTimePicker @bind-Value="_departureTime" aria-label="@S["TimePicker.DepartureTime"]" TimeOptions="@_departureOptions" />
                     </ChildContent>
                     <SufixContent>
-                        <button class="dnet-timepicker-icon-wrapper" aria-label="Open time picker" type="button">
+                        <button class="dnet-timepicker-icon-wrapper" aria-label="@S["TimePicker.OpenTimePicker"]" type="button">
                             <span class="dnet-timepicker-icon" aria-hidden="true"></span>
                         </button>
                     </SufixContent>
                 </DnetFormField>
             </ChildContent>
-            <Footer><span class="demo-value" role="status">Departure: @FormatTime(_departureTime)</span></Footer>
+            <Footer><span class="demo-value" role="status">@S.Format("Common.Departure0", FormatTime(_departureTime))</span></Footer>
         </DemoCard>
 
-        <DemoCard Title="Use a 12-hour clock" Description="Display AM or PM while keeping the selected value as a TimeOnly.">
+        <DemoCard Title="@S["TimePicker.UseA12HourClock"]" Description="@S["TimePicker.DisplayAMOrPMWhileKeepingTheSelected"]">
             <ChildContent>
-                <DnetFormField Label="12-hour format" UseClearButton="true">
+                <DnetFormField Label="@S["TimePicker.12HourFormat"]" UseClearButton="true">
                     <ChildContent>
-                        <DnetTimePicker @bind-Value="_lunchTime" aria-label="Lunch time"
+                        <DnetTimePicker @bind-Value="_lunchTime" aria-label="@S["TimePicker.LunchTime"]"
                                         Format="h:mm tt" Formats="@_twelveHourFormats"
                                         Interval="@TimeSpan.FromMinutes(30)" />
                     </ChildContent>
                     <SufixContent>
-                        <button class="dnet-timepicker-icon-wrapper" aria-label="Open time picker" type="button">
+                        <button class="dnet-timepicker-icon-wrapper" aria-label="@S["TimePicker.OpenTimePicker"]" type="button">
                             <span class="dnet-timepicker-icon" aria-hidden="true"></span>
                         </button>
                     </SufixContent>
                 </DnetFormField>
             </ChildContent>
-            <Footer><span class="demo-value" role="status">Lunch: @FormatTime(_lunchTime, "h:mm tt")</span></Footer>
+            <Footer><span class="demo-value" role="status">@S.Format("Common.Lunch0", FormatTime(_lunchTime, "h:mm tt"))</span></Footer>
         </DemoCard>
 
-        <DemoCard Title="A fixed reservation" Description="A disabled field can show an existing time that is currently unavailable for editing.">
+        <DemoCard Title="@S["TimePicker.AFixedReservation"]" Description="@S["TimePicker.ADisabledFieldCanShowAnExistingTime"]">
             <ChildContent>
-                <DnetFormField Label="Unavailable">
+                <DnetFormField Label="@S["TimePicker.Unavailable"]">
                     <ChildContent>
-                        <DnetTimePicker @bind-Value="_unavailableTime" aria-label="Unavailable time" Disabled="true" />
+                        <DnetTimePicker @bind-Value="_unavailableTime" aria-label="@S["TimePicker.UnavailableTime"]" Disabled="true" />
                     </ChildContent>
                     <SufixContent>
-                        <button class="dnet-timepicker-icon-wrapper" aria-label="Open time picker" type="button" disabled>
+                        <button class="dnet-timepicker-icon-wrapper" aria-label="@S["TimePicker.OpenTimePicker"]" type="button" disabled>
                             <span class="dnet-timepicker-icon" aria-hidden="true"></span>
                         </button>
                     </SufixContent>
                 </DnetFormField>
             </ChildContent>
-            <Footer><span class="demo-value">Reserved for @FormatTime(_unavailableTime)</span></Footer>
+            <Footer><span class="demo-value">@S.Format("Common.ReservedFor0", FormatTime(_unavailableTime))</span></Footer>
         </DemoCard>
 
-        <DemoCard Title="Typing and keyboard support" Description="The same control supports direct entry and choosing from the panel.">
+        <DemoCard Title="@S["TimePicker.TypingAndKeyboardSupport"]" Description="@S["TimePicker.TheSameControlSupportsDirectEntryAndChoosing"]">
             <ul class="demo-bullets">
-                <li>Type a time in the format shown by the field.</li>
-                <li>Open the clock panel to browse the available options.</li>
-                <li>Use the arrow keys to move, Enter to choose and Escape to close.</li>
-                <li>Use the clear action to remove an optional time.</li>
+                <li>@S["TimePicker.TypeATimeInTheFormatShownBy"]</li>
+                <li>@S["TimePicker.OpenTheClockPanelToBrowseTheAvailable"]</li>
+                <li>@S["TimePicker.UseTheArrowKeysToMoveEnterTo"]</li>
+                <li>@S["TimePicker.UseTheClearActionToRemoveAnOptional"]</li>
             </ul>
         </DemoCard>
     </div>
@@ -122,6 +124,6 @@
 
     private readonly string[] _twelveHourFormats = ["h:mm tt", "hh:mm tt"];
 
-    private static string FormatTime(TimeOnly? value, string format = "HH:mm") =>
-        value?.ToString(format, CultureInfo.InvariantCulture) ?? "No time selected";
+    private string FormatTime(TimeOnly? value, string format = "HH:mm") =>
+        value?.ToString(format, S.Culture) ?? S.Text("No time selected");
 }

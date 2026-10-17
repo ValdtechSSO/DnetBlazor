@@ -2,56 +2,58 @@
 @using Dnet.Blazor.Components.Button
 @using Dnet.Blazor.Components.ExpansionPanel
 
-<DemoPage Id="demo-expansion" Title="Expansion panels" Category="Disclosure"
-          Description="Reveal supporting details when they are needed, while keeping the main view easy to scan." Badge="Multiple or single open">
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
+<DemoPage Id="demo-expansion" Title="@S["Expansion.ExpansionPanels"]" Category="@S["Expansion.Disclosure"]"
+          Description="@S["Expansion.RevealSupportingDetailsWhenTheyAreNeededWhile"]" Badge="@S["Expansion.MultipleOrSingleOpen"]">
     <div class="demo-stack">
-    <DemoCard Id="expansion-faq-card" Title="Workspace questions" Eyebrow="Multiple panels"
-              Description="Open several answers at once, or use the controls to show and hide every answer.">
+    <DemoCard Id="expansion-faq-card" Title="@S["Expansion.WorkspaceQuestions"]" Eyebrow="@S["Expansion.MultiplePanels"]"
+              Description="@S["Expansion.OpenSeveralAnswersAtOnceOrUseThe"]">
         <ChildContent>
             <div class="demo-actions expansion-actions">
-                <DnetButton Variant="DnetButtonVariant.Outlined" id="expansion-expand-all" OnClick="() => ExpandAll(true)">Expand all</DnetButton>
-                <DnetButton Variant="DnetButtonVariant.Outlined" id="expansion-collapse-all" OnClick="() => ExpandAll(false)">Collapse all</DnetButton>
+                <DnetButton Variant="DnetButtonVariant.Outlined" id="expansion-expand-all" OnClick="() => ExpandAll(true)">@S["Tree.ExpandAll"]</DnetButton>
+                <DnetButton Variant="DnetButtonVariant.Outlined" id="expansion-collapse-all" OnClick="() => ExpandAll(false)">@S["Tree.CollapseAll"]</DnetButton>
             </div>
             <DnetExpansionPanel @ref="_faqPanel" id="expansion-faq" OnExpandedChanged="ExpandedChanged"
                                 ExpansionPanelDisplayMode="ExpansionPanelDisplayMode.Spacing">
-                <DnetExpansionPanelItem Title="Invite your team" Description="Members">
-                    <div class="expansion-answer"><p>Invite collaborators from the Members section of your workspace. Each invitation includes a role so everyone knows what they can access.</p><ul class="demo-bullets"><li>Editors can contribute to project work.</li><li>Viewers can follow progress and read shared updates.</li></ul></div>
+                <DnetExpansionPanelItem Title="@S["Expansion.InviteYourTeam"]" Description="@S["Expansion.Members"]">
+                    <div class="expansion-answer"><p>@S["Expansion.InviteCollaboratorsFromTheMembersSectionOfYour"]</p><ul class="demo-bullets"><li>@S["Expansion.EditorsCanContributeToProjectWork"]</li><li>@S["Expansion.ViewersCanFollowProgressAndReadSharedUpdates"]</li></ul></div>
                 </DnetExpansionPanelItem>
-                <DnetExpansionPanelItem Title="Change your plan" Description="Billing">
-                    <div class="expansion-answer"><p>Workspace owners can review plans from Billing. Your current projects stay available while you choose the capacity your team needs.</p></div>
+                <DnetExpansionPanelItem Title="@S["Expansion.ChangeYourPlan"]" Description="@S["Expansion.Billing"]">
+                    <div class="expansion-answer"><p>@S["Expansion.WorkspaceOwnersCanReviewPlansFromBillingYour"]</p></div>
                 </DnetExpansionPanelItem>
-                <DnetExpansionPanelItem Title="Keep files organized" Description="Files">
-                    <div class="expansion-answer"><p>Group related resources by project and use clear names so the team can find the latest version. Archive completed work when a project ends.</p></div>
+                <DnetExpansionPanelItem Title="@S["Expansion.KeepFilesOrganized"]" Description="@S["Expansion.Files"]">
+                    <div class="expansion-answer"><p>@S["Expansion.GroupRelatedResourcesByProjectAndUseClear"]</p></div>
                 </DnetExpansionPanelItem>
-                <DnetExpansionPanelItem Title="Manage notifications" Description="Preferences">
-                    <div class="expansion-answer"><p>Choose the project updates you want to receive. Keep mentions and approvals enabled for work that needs your attention.</p></div>
+                <DnetExpansionPanelItem Title="@S["Expansion.ManageNotifications"]" Description="@S["Expansion.Preferences"]">
+                    <div class="expansion-answer"><p>@S["Expansion.ChooseTheProjectUpdatesYouWantToReceive"]</p></div>
                 </DnetExpansionPanelItem>
             </DnetExpansionPanel>
         </ChildContent>
-        <Footer><span id="expansion-faq-value" role="status">@_faqStatus</span></Footer>
+        <Footer><span id="expansion-faq-value" role="status">@S.Display(_faqStatus)</span></Footer>
     </DemoCard>
 
     <div class="demo-grid">
-        <DemoCard Id="expansion-single-card" Title="Account preferences" Eyebrow="One panel at a time"
-                  Description="Opening a preference closes the previous one. Restricted settings remain visible.">
+        <DemoCard Id="expansion-single-card" Title="@S["Expansion.AccountPreferences"]" Eyebrow="@S["Expansion.OnePanelAtATime"]"
+                  Description="@S["Expansion.OpeningAPreferenceClosesThePreviousOneRestricted"]">
             <DnetExpansionPanel id="expansion-single" Multi="false" OnExpandedChanged="PreferenceChanged">
-                <DnetExpansionPanelItem Title="Profile" Description="Personal">
-                    <div class="expansion-answer"><p>Your name and profile photo help colleagues recognize you across the workspace.</p></div>
+                <DnetExpansionPanelItem Title="@S["Expansion.Profile"]" Description="@S["Expansion.Personal"]">
+                    <div class="expansion-answer"><p>@S["Expansion.YourNameAndProfilePhotoHelpColleaguesRecognize"]</p></div>
                 </DnetExpansionPanelItem>
-                <DnetExpansionPanelItem Title="Security" Description="Access">
-                    <div class="expansion-answer"><p>Review active sessions and keep your sign-in details up to date.</p></div>
+                <DnetExpansionPanelItem Title="@S["Expansion.Security"]" Description="@S["Expansion.Access"]">
+                    <div class="expansion-answer"><p>@S["Expansion.ReviewActiveSessionsAndKeepYourSignIn"]</p></div>
                 </DnetExpansionPanelItem>
-                <DnetExpansionPanelItem Title="Advanced access" Description="Restricted" Disabled="true">
-                    <div class="expansion-answer"><p>This setting is managed by your administrator.</p></div>
+                <DnetExpansionPanelItem Title="@S["Expansion.AdvancedAccess"]" Description="@S["Expansion.Restricted"]" Disabled="true">
+                    <div class="expansion-answer"><p>@S["Expansion.ThisSettingIsManagedByYourAdministrator"]</p></div>
                 </DnetExpansionPanelItem>
             </DnetExpansionPanel>
-            <p id="expansion-single-value" class="demo-info expansion-preference-status" role="status">@_preferenceStatus</p>
+            <p id="expansion-single-value" class="demo-info expansion-preference-status" role="status">@S.Display(_preferenceStatus)</p>
         </DemoCard>
-        <DemoCard Id="expansion-guide" Title="Details at the right moment" Description="Use expansion panels for related information that does not need to stay open.">
+        <DemoCard Id="expansion-guide" Title="@S["Expansion.DetailsAtTheRightMoment"]" Description="@S["Expansion.UseExpansionPanelsForRelatedInformationThatDoes"]">
             <ul class="demo-bullets">
-                <li>Allow several panels when people need to compare answers.</li>
-                <li>Use a single open panel for a focused sequence of settings.</li>
-                <li>Keep titles specific so the content is easy to find.</li>
+                <li>@S["Expansion.AllowSeveralPanelsWhenPeopleNeedToCompare"]</li>
+                <li>@S["Expansion.UseASingleOpenPanelForAFocused"]</li>
+                <li>@S["Expansion.KeepTitlesSpecificSoTheContentIsEasy"]</li>
             </ul>
         </DemoCard>
     </div>

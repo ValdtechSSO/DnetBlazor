@@ -19,7 +19,7 @@ public sealed class DatePickerIconTests
         await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
         var page = await browser.NewPageAsync(new() { ViewportSize = new() { Width = width, Height = 900 } });
         await BrowserLanguage.UseEnglishAsync(page);
-        await page.GotoAsync($"{baseUrl.TrimEnd('/')}/DatePicker");
+        await BrowserReady.OpenAsync(page, $"{baseUrl.TrimEnd('/')}/DatePicker");
         var icons = page.Locator(".dnet-form-field-plain-suffix .dnet-datepicker-icon");
         await Assertions.Expect(icons).ToHaveCountAsync(2);
         await page.EvaluateAsync("theme => document.documentElement.dataset.dnetTheme = theme", theme);

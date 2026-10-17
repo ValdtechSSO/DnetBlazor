@@ -9,6 +9,7 @@
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
+| `TextLocalizer` | `Func<string, string>?` | — | Resolves an application-owned title without replacing dialog content. |
 | `ComponentType` | `Type?` | — | Gets or sets the component type rendered dynamically. |
 | `Parameters` | `IDictionary<string, object>?` | — | Gets or sets parameters passed to the dynamically rendered component. |
 | `Title` | `string` | `string.Empty` | Gets or sets the title displayed by the component. |

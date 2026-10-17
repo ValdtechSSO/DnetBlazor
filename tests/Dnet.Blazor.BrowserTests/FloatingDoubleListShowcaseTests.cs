@@ -250,7 +250,7 @@ public sealed class FloatingDoubleListShowcaseTests
         var serializedTheme = System.Text.Json.JsonSerializer.Serialize(theme);
         await page.AddInitScriptAsync($"localStorage.setItem('dnet.theme', JSON.stringify({serializedTheme}));");
         var baseUrl = (Environment.GetEnvironmentVariable("DNET_BLAZOR_BASE_URL") ?? "http://127.0.0.1:5101").TrimEnd('/');
-        await page.GotoAsync($"{baseUrl}/FloatingDoubleList");
+        await BrowserReady.OpenAsync(page, $"{baseUrl}/FloatingDoubleList");
         await Assertions.Expect(page.Locator("#demo-floating-doublelist")).ToBeVisibleAsync();
         await Assertions.Expect(Field(page)).ToBeVisibleAsync();
         return (page, errors);

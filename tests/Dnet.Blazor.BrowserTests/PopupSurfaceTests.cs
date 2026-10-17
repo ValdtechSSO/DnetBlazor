@@ -97,7 +97,7 @@ public sealed class PopupSurfaceTests
     private static async Task NavigateAsync(IPage page, string baseUrl, string route, string trigger, string theme)
     {
         await BrowserLanguage.UseEnglishAsync(page);
-        await page.GotoAsync(baseUrl + route);
+        await BrowserReady.OpenAsync(page, baseUrl + route);
         await Assertions.Expect(page.Locator(trigger).First).ToBeVisibleAsync();
         await page.EvaluateAsync("theme => document.documentElement.dataset.dnetTheme = theme", theme);
     }

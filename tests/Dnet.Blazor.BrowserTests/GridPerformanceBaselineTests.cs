@@ -46,7 +46,7 @@ public sealed class GridPerformanceBaselineTests(ITestOutputHelper output)
 
         var initialRender = Stopwatch.StartNew();
         await BrowserLanguage.UseEnglishAsync(page);
-        await page.GotoAsync(
+        await BrowserReady.OpenAsync(page,
             $"{baseUrl.TrimEnd('/')}/BlGrid",
             new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle });
 

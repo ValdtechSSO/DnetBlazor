@@ -31,7 +31,8 @@ public sealed class FormValidationPageTests
         page.PageError += (_, error) => pageErrors.Add(error);
         var serializedTheme = System.Text.Json.JsonSerializer.Serialize(theme);
         await page.AddInitScriptAsync($"localStorage.setItem('dnet.theme', JSON.stringify({serializedTheme}));");
-        await page.GotoAsync($"{BaseUrl}/FormValidation");
+        await BrowserLanguage.UseEnglishAsync(page);
+        await BrowserReady.OpenAsync(page, $"{BaseUrl}/FormValidation");
         await Assertions.Expect(page.Locator("#validation-page")).ToBeVisibleAsync();
         await Assertions.Expect(page.Locator("html")).ToHaveAttributeAsync("data-dnet-theme", theme);
 

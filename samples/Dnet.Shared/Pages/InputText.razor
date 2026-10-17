@@ -1,4 +1,4 @@
-﻿@page "/InputText"
+@page "/InputText"
 
 @using System.Drawing
 @using Dnet.App.Shared.Infrastructure.Entities
@@ -6,9 +6,11 @@
 @using Microsoft.AspNetCore.Components;
 @using Microsoft.AspNetCore.Components.Web;
 
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
 <div class="container-fluid" style="padding-top: 10px;">
     <div class="d-flex dnet-m-l-30 dnet-m-t-20">
-        <span class="dnet-m-r-10 dnet-app-comp-name">Forms Field</span>
+        <span class="dnet-m-r-10 dnet-app-comp-name">@S["InputText.FormsField"]</span>
     </div>
     <div class="d-flex dnet-m-l-30 dnet-m-t-30">
         <div style="margin-right:100px; width: 350px;">

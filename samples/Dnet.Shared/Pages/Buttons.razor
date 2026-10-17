@@ -1,35 +1,37 @@
 @page "/Buttons"
 @using Dnet.Blazor.Components.Button
 
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
 <main id="button-showcase" class="button-showcase">
     <header class="button-showcase-header">
         <div>
-            <p class="button-eyebrow">Components / Actions</p>
-            <h1>Buttons</h1>
-            <p class="button-introduction">Primary actions are filled; secondary actions use an outline. Compare both with the three button sizes.</p>
+            <p class="button-eyebrow">@S["Buttons.ComponentsActions"]</p>
+            <h1>@S["Buttons.Buttons"]</h1>
+            <p class="button-introduction">@S["Common.PrimaryActionsAreFilledSecondaryActionsUseAnOutline"]</p>
         </div>
-        <span class="button-default-badge">Filled · Medium · Pill by default</span>
+        <span class="button-default-badge">@S["Buttons.FilledMediumPillByDefault"]</span>
     </header>
 
     <section class="button-interaction-card button-variant-card" aria-labelledby="button-variant-title">
-        <p class="button-card-eyebrow">Action hierarchy</p>
-        <h2 id="button-variant-title">Make the next action clear</h2>
-        <p>Use a filled button for the main task and an outlined button for supporting actions.</p>
+        <p class="button-card-eyebrow">@S["Buttons.ActionHierarchy"]</p>
+        <h2 id="button-variant-title">@S["Buttons.MakeTheNextActionClear"]</h2>
+        <p>@S["Buttons.UseAFilledButtonForTheMainTask"]</p>
         <div class="button-interaction-actions">
-            <DnetButton id="button-variant-filled" OnClick="IncrementCount">Primary action</DnetButton>
-            <DnetButton id="button-variant-outlined" Variant="DnetButtonVariant.Outlined" OnClick="IncrementCount">Secondary action</DnetButton>
+            <DnetButton id="button-variant-filled" OnClick="IncrementCount">@S["Buttons.PrimaryAction"]</DnetButton>
+            <DnetButton id="button-variant-outlined" Variant="DnetButtonVariant.Outlined" OnClick="IncrementCount">@S["Buttons.SecondaryAction"]</DnetButton>
         </div>
     </section>
 
     <section class="button-gallery" aria-labelledby="button-gallery-title">
         <div class="button-gallery-header">
             <div>
-                <h2 id="button-gallery-title">Size and shape</h2>
-                <p>Each example uses the same label, with and without an icon.</p>
+                <h2 id="button-gallery-title">@S["Buttons.SizeAndShape"]</h2>
+                <p>@S["Buttons.EachExampleUsesTheSameLabelWithAnd"]</p>
             </div>
             <label class="button-disable-control" for="button-disable-toggle">
                 <input id="button-disable-toggle" type="checkbox" @bind="_disabled" />
-                Disable examples
+                @S["Buttons.DisableExamples"]
             </label>
         </div>
 
@@ -38,19 +40,19 @@
             var sizeKey = size.Value.ToString().ToLowerInvariant();
             <section class="button-size-card" aria-labelledby="@($"button-size-{sizeKey}")">
                 <div class="button-size-description">
-                    <span class="button-size-height">@size.Height <span>px</span></span>
-                    <h3 id="@($"button-size-{sizeKey}")">@size.Label</h3>
-                    <p>@size.Padding px padding<br />@size.Icon px icon · @size.Gap px gap</p>
+                    <span class="button-size-height">@S.Display(size.Height) <span>@S["Buttons.Px"]</span></span>
+                    <h3 id="@($"button-size-{sizeKey}")">@S.Display(size.Label)</h3>
+                    <p>@S.Format("Common.0PxPadding", size.Padding)<br />@S.Format("Common.0PxIcon1PxGap", size.Icon, size.Gap)</p>
                 </div>
                 <div class="button-shape-grid">
                     @foreach (var shape in Shapes)
                     {
                         <div class="button-shape-group">
-                            <h4>@shape.Label</h4>
+                            <h4>@S.Display(shape.Label)</h4>
                             <div class="button-shape-examples">
                                 <DnetButton id="@($"button-{sizeKey}-{shape.Key}-text")" Size="size.Value"
                                             class="@($"button-example button-shape-{shape.Key}")" disabled="@_disabled">
-                                    Common button
+                                    @S["Buttons.CommonButton"]
                                 </DnetButton>
                                 <DnetButton id="@($"button-{sizeKey}-{shape.Key}")" Size="size.Value"
                                             class="@($"button-example button-shape-{shape.Key}")" disabled="@_disabled">
@@ -59,7 +61,7 @@
                                             <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
                                         </svg>
                                     </IconContent>
-                                    <ChildContent>Common button</ChildContent>
+                                    <ChildContent>@S["Buttons.CommonButton"]</ChildContent>
                                 </DnetButton>
                             </div>
                         </div>
@@ -71,29 +73,29 @@
 
     <div class="button-details-grid">
         <section class="button-interaction-card" aria-labelledby="button-interaction-title">
-            <p class="button-card-eyebrow">Try it</p>
-            <h2 id="button-interaction-title">Ready for an action</h2>
-            <p>The default button uses the medium size. Activate it with a click, Enter or Space.</p>
+            <p class="button-card-eyebrow">@S["Buttons.TryIt"]</p>
+            <h2 id="button-interaction-title">@S["Buttons.ReadyForAnAction"]</h2>
+            <p>@S["Buttons.TheDefaultButtonUsesTheMediumSizeActivate"]</p>
             <div class="button-interaction-actions">
-                <DnetButton id="button-click-demo" class="button-example" OnClick="IncrementCount">Try a button</DnetButton>
-                <DnetButton id="button-disabled-demo" class="button-example" OnClick="IncrementCount" disabled="true">Disabled</DnetButton>
+                <DnetButton id="button-click-demo" class="button-example" OnClick="IncrementCount">@S["Buttons.TryAButton"]</DnetButton>
+                <DnetButton id="button-disabled-demo" class="button-example" OnClick="IncrementCount" disabled="true">@S["Slider.Disabled"]</DnetButton>
             </div>
             <div class="button-action-count">
-                <span>Actions completed</span>
-                <output id="button-click-count" role="status" aria-live="polite">@_clickCount</output>
+                <span>@S["Buttons.ActionsCompleted"]</span>
+                <output id="button-click-count" role="status" aria-live="polite">@S.Display(_clickCount)</output>
             </div>
         </section>
 
         <section class="button-code-card" aria-labelledby="button-code-title">
             <div class="button-code-header">
                 <div>
-                    <p class="button-card-eyebrow">Usage</p>
-                    <h2 id="button-code-title">Add a leading icon</h2>
+                    <p class="button-card-eyebrow">@S["Buttons.Usage"]</p>
+                    <h2 id="button-code-title">@S["Buttons.AddALeadingIcon"]</h2>
                 </div>
-                <span class="button-code-language">Razor</span>
+                <span class="button-code-language">@S["Buttons.Razor"]</span>
             </div>
             <pre><code>@UsageExample</code></pre>
-            <p>The icon follows the selected size. Corner shapes are controlled through <code>--dnet-btn-radius</code>.</p>
+            <p>@S["Buttons.TheIconFollowsTheSelectedSizeCornerShapes"] <code>--dnet-btn-radius</code>.</p>
         </section>
     </div>
 </main>

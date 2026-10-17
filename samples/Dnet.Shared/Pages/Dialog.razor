@@ -9,26 +9,28 @@
 @inject IDialogService DialogService
 @implements IDisposable
 
-<DemoPage Id="demo-dialog" Title="Dialog" Category="Components / Feedback" Description="Bring a focused task to the foreground, then return to the page with a clear result." Badge="Modal overlay">
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
+<DemoPage Id="demo-dialog" Title="@S["Dialog.Dialog"]" Category="@S["Toast.ComponentsFeedback"]" Description="@S["Dialog.BringAFocusedTaskToTheForegroundThen"]" Badge="@S["Dialog.ModalOverlay"]">
     <div class="demo-grid">
-        <DemoCard Id="dialog-basic" Title="A moment to focus" Eyebrow="01 / Profile editor" Description="Open a profile editor, make a change and save it. Cancel leaves the example as it was.">
+        <DemoCard Id="dialog-basic" Title="@S["Dialog.AMomentToFocus"]" Eyebrow="@S["Dialog.01ProfileEditor"]" Description="@S["Dialog.OpenAProfileEditorMakeAChangeAnd"]">
             <ChildContent>
                 <div class="demo-stack">
                     <div class="dialog-profile demo-preview">
-                        <span class="dialog-avatar" aria-hidden="true">TM</span>
-                        <div><strong>Taylor Morgan</strong><span>Product designer</span><small>taylor.morgan@example.com</small></div>
+                        <span class="dialog-avatar" aria-hidden="true">@S["Dialog.TM"]</span>
+                        <div><strong>@S["Dialog.TaylorMorgan"]</strong><span>@S["Dialog.ProductDesigner"]</span><small>taylor.morgan@example.com</small></div>
                     </div>
-                    <label class="demo-option-row dialog-option"><input id="dialog-require-action" type="checkbox" @bind="_requireAction" /><span><strong>Require an explicit action</strong><small>Keep the dialog open when the backdrop is clicked.</small></span></label>
-                    <div class="demo-actions"><DnetButton id="dialog-open" OnClick="ShowDialog">Show Dialog</DnetButton></div>
+                    <label class="demo-option-row dialog-option"><input id="dialog-require-action" type="checkbox" @bind="_requireAction" /><span><strong>@S["Dialog.RequireAnExplicitAction"]</strong><small>@S["Dialog.KeepTheDialogOpenWhenTheBackdropIs"]</small></span></label>
+                    <div class="demo-actions"><DnetButton id="dialog-open" OnClick="ShowDialog">@S["Dialog.ShowDialog"]</DnetButton></div>
                 </div>
             </ChildContent>
-            <Footer><div id="dialog-result" class="demo-value" role="status"><span class="demo-muted">Latest result</span><strong>@_result</strong></div></Footer>
+            <Footer><div id="dialog-result" class="demo-value" role="status"><span class="demo-muted">@S["Dialog.LatestResult"]</span><strong>@S.Display(_result)</strong></div></Footer>
         </DemoCard>
-        <DemoCard Id="dialog-guide" Title="A complete conversation" Eyebrow="02 / Interaction" Description="Use a dialog for a short task that needs the user's attention.">
+        <DemoCard Id="dialog-guide" Title="@S["Dialog.ACompleteConversation"]" Eyebrow="@S["ConnectedPanel.02Interaction"]" Description="@S["Dialog.UseADialogForAShortTaskThat"]">
             <div class="demo-stack">
-                <div class="demo-info"><strong>Open</strong><p>The editor receives its own copy of the profile, ready to change.</p></div>
-                <div class="demo-info"><strong>Complete or dismiss</strong><p>Save returns the updated details. Cancel, the close icon and Escape dismiss the editor.</p></div>
-                <div class="demo-info"><strong>Continue where you left off</strong><p>Focus returns to the opening button when the dialog closes.</p></div>
+                <div class="demo-info"><strong>@S["Dialog.Open"]</strong><p>@S["Dialog.TheEditorReceivesItsOwnCopyOfThe"]</p></div>
+                <div class="demo-info"><strong>@S["Dialog.CompleteOrDismiss"]</strong><p>@S["Dialog.SaveReturnsTheUpdatedDetailsCancelTheClose"]</p></div>
+                <div class="demo-info"><strong>@S["Dialog.ContinueWhereYouLeftOff"]</strong><p>@S["Dialog.FocusReturnsToTheOpeningButtonWhenThe"]</p></div>
             </div>
         </DemoCard>
     </div>
@@ -43,8 +45,7 @@
     private void ShowDialog()
     {
         if (_dialogReference?.IsAttached == true) return;
-        _dialogReference = DialogService.Open(typeof(ProfileEditorContent), new Dictionary<string, object>(), new DialogConfig
-        {
+        _dialogReference = DialogService.Open(typeof(ProfileEditorContent), new Dictionary<string, object>(), new DialogConfig { TextLocalizer = S.Message,
             Title = "Edit profile", Width = "520px", Height = "auto",
             MaxWidth = "calc(100vw - 32px)", MaxHeight = "calc(100dvh - 32px)",
             DisableBackdropClick = _requireAction, InitialFocusSelector = "#showcase-profile-name"

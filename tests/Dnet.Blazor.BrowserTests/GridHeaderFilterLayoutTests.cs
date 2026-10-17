@@ -29,7 +29,8 @@ public sealed class GridHeaderFilterLayoutTests
         {
             Status = 200, ContentType = "application/json", Body = personsJson
         }));
-        await page.GotoAsync($"{baseUrl.TrimEnd('/')}/BlGrid");
+        await BrowserLanguage.UseEnglishAsync(page);
+        await BrowserReady.OpenAsync(page, $"{baseUrl.TrimEnd('/')}/BlGrid");
         await page.WaitForFunctionAsync("() => document.querySelectorAll('.blg-center-cols-container [data-blg-row-id]').length > 0");
         await page.EvaluateAsync("theme => document.documentElement.dataset.dnetTheme = theme", theme);
 
@@ -91,7 +92,7 @@ public sealed class GridHeaderFilterLayoutTests
             await BringIntoCanvasAsync(nameFilter);
             await nameFilter.Locator("input").FillAsync("__grid_header_no_matching_person__");
             await nameFilter.Locator("input").PressAsync("End");
-            await Assertions.Expect(page.Locator(".blg-grid-status")).ToContainTextAsync("No hay resultados");
+            await Assertions.Expect(page.Locator(".blg-grid-status")).ToContainTextAsync("No results");
             await nameFilter.Locator(".dnet-component-icon-wrapper").ClickAsync();
             await Assertions.Expect(nameFilter.Locator("input")).ToHaveValueAsync("");
             await page.WaitForFunctionAsync("() => document.querySelectorAll('.blg-center-cols-container [data-blg-row-id]').length > 0");

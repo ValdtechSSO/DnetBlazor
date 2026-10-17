@@ -12,28 +12,30 @@
 @inject IFloatingPanelService FloatingPanelService
 @implements IDisposable
 
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
 @* This instance class lives in the portal, outside the page's scoped styles. *@
 <style>
     .dnet-floating-panel-container.showcase-profile-floating-panel { height: 100%; }
 </style>
 
-<DemoPage Id="demo-floating-panel" Title="Floating panel" Category="Components / Overlays" Description="Make room for a focused task while keeping the current page as the backdrop." Badge="Flexible placement">
+<DemoPage Id="demo-floating-panel" Title="@S["FloatingPanel.FloatingPanel"]" Category="@S["ConnectedPanel.ComponentsOverlays"]" Description="@S["FloatingPanel.MakeRoomForAFocusedTaskWhileKeeping"]" Badge="@S["FloatingPanel.FlexiblePlacement"]">
     <div class="demo-grid">
-        <DemoCard Id="floating-panel-basic" Title="An editor at your side" Eyebrow="01 / Placement" Description="Choose an edge, then open the same profile editor in a floating panel.">
+        <DemoCard Id="floating-panel-basic" Title="@S["FloatingPanel.AnEditorAtYourSide"]" Eyebrow="@S["FloatingPanel.01Placement"]" Description="@S["FloatingPanel.ChooseAnEdgeThenOpenTheSameProfile"]">
             <ChildContent>
                 <div class="demo-stack">
-                    <div class="floating-placement-demo demo-preview" aria-hidden="true"><div class="floating-placement-canvas"><span></span><span></span><span></span><div class="floating-placement-panel @PlacementClass"><i></i><i></i><i></i></div></div><span>@_settings.Position placement</span></div>
-                    <EditForm Model="_settings"><DnetFormField Label="Panel position"><ChildContent><DnetSelect TValue="string" TItem="string" @bind-Value="_settings.Position" Items="_positions" DisplayValueConverter="position => position" ValueConverter="position => position" ResponsiveLabel="Panel position" /></ChildContent></DnetFormField></EditForm>
-                    <div class="demo-actions"><DnetButton id="floating-panel-open" OnClick="ShowFloatingPanel">Show Panel</DnetButton></div>
+                    <div class="floating-placement-demo demo-preview" aria-hidden="true"><div class="floating-placement-canvas"><span></span><span></span><span></span><div class="floating-placement-panel @PlacementClass"><i></i><i></i><i></i></div></div><span>@S.Format("Common.0Placement", S.Text(_settings.Position))</span></div>
+                    <EditForm Model="_settings"><DnetFormField Label="@S["FloatingPanel.PanelPosition"]"><ChildContent><DnetSelect TValue="string" TItem="string" @bind-Value="_settings.Position" Items="_positions" DisplayValueConverter="position => S.Text(position)" ValueConverter="position => position" ResponsiveLabel="@S["FloatingPanel.PanelPosition"]" /></ChildContent></DnetFormField></EditForm>
+                    <div class="demo-actions"><DnetButton id="floating-panel-open" OnClick="ShowFloatingPanel">@S["FloatingPanel.ShowPanel"]</DnetButton></div>
                 </div>
             </ChildContent>
-            <Footer><div id="floating-panel-result" class="demo-value" role="status"><span class="demo-muted">Latest result</span><strong>@_result</strong></div></Footer>
+            <Footer><div id="floating-panel-result" class="demo-value" role="status"><span class="demo-muted">@S["Dialog.LatestResult"]</span><strong>@S.Display(_result)</strong></div></Footer>
         </DemoCard>
-        <DemoCard Id="floating-panel-guide" Title="Space for the task" Eyebrow="02 / Interaction" Description="Use a floating panel for details that belong alongside the main view.">
+        <DemoCard Id="floating-panel-guide" Title="@S["FloatingPanel.SpaceForTheTask"]" Eyebrow="@S["ConnectedPanel.02Interaction"]" Description="@S["FloatingPanel.UseAFloatingPanelForDetailsThatBelong"]">
             <div class="demo-stack">
-                <div class="demo-info"><strong>One editor, four positions</strong><p>Move between left, right, top and bottom placement to suit the task and screen.</p></div>
-                <div class="demo-info"><strong>A clear outcome</strong><p>Save profile returns the edited details here. Cancel closes the panel without saving.</p></div>
-                <div class="demo-info"><strong>Comfortable on smaller screens</strong><p>The editor stays within the viewport and scrolls when it needs more space.</p></div>
+                <div class="demo-info"><strong>@S["FloatingPanel.OneEditorFourPositions"]</strong><p>@S["FloatingPanel.MoveBetweenLeftRightTopAndBottomPlacement"]</p></div>
+                <div class="demo-info"><strong>@S["FloatingPanel.AClearOutcome"]</strong><p>@S["FloatingPanel.SaveProfileReturnsTheEditedDetailsHereCancel"]</p></div>
+                <div class="demo-info"><strong>@S["FloatingPanel.ComfortableOnSmallerScreens"]</strong><p>@S["FloatingPanel.TheEditorStaysWithinTheViewportAndScrolls"]</p></div>
             </div>
         </DemoCard>
     </div>
@@ -56,7 +58,7 @@
             Postion = position, Width = 440, Height = 560, FloatingPanelClass = "showcase-profile-floating-panel",
             OffsetTop = 16, OffsetBottom = 16, OffsetLeft = 16, OffsetRight = 16,
             HasBackdrop = true, HasTransparentBackdrop = false,
-            Role = "dialog", AriaLabel = "Edit profile", TrapFocus = true,
+            Role = "dialog", AriaLabelledBy = "showcase-profile-heading", TrapFocus = true,
             InitialFocusSelector = "#showcase-profile-name",
             PanelStyle = "max-width:calc(100vw - 32px);max-height:calc(100dvh - 32px);"
         });

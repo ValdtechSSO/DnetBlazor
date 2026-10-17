@@ -31,4 +31,16 @@
 		Parent.AddStep(this);
 	}
 
+    private string? _previousLabel;
+    private bool _previousCompleted;
+    private bool _receivedParameters;
+    protected override void OnParametersSet()
+    {
+        var changed = _receivedParameters && (_previousLabel != Label || _previousCompleted != Completed);
+        _previousLabel = Label;
+        _previousCompleted = Completed;
+        _receivedParameters = true;
+        if (changed) Parent.NotifyStepChanged();
+    }
+
 }

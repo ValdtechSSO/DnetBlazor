@@ -147,6 +147,8 @@ else
         Steps.Add(step);
     }
 
+    internal void NotifyStepChanged() => _ = InvokeAsync(StateHasChanged);
+
     public void GoToStep(int stepId)
     {
         var step = Steps.FirstOrDefault(p => p.Id == stepId);

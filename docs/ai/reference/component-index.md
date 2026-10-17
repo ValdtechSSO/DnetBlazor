@@ -1,6 +1,6 @@
 # Component index
 
-Dnet.Blazor 6.0.17-rc.2. One file per component under `components/`.
+Dnet.Blazor 6.0.18-rc.2. One file per component under `components/`.
 Open only the one you need.
 
 | Component | Use in markup | Parameters | Styling tokens |
@@ -15,7 +15,7 @@ Open only the one you need.
 | [DatePicker](components/DatePicker.md) | `<DnetCalendar>`, `<DnetDatePicker>`, `<DnetDateRangePicker>` | 111 | 8 |
 | [DatePickerWeek](components/DatePickerWeek.md) | `<DnetDatePickerWeek>` | 13 | 7 |
 | [DatePickerWeekRaw](components/DatePickerWeekRaw.md) | `<DnetDatePickerWeekRaw>` | 3 | 5 |
-| [Dialog](components/Dialog.md) | `<DnetDialog>` | 4 | 12 |
+| [Dialog](components/Dialog.md) | `<DnetDialog>` | 5 | 12 |
 | [DynamicStepper](components/DynamicStepper.md) | `<DnetDynamicStep>`, `<DnetDynamicStepper>` | 13 | 1 |
 | [ExpansionPanel](components/ExpansionPanel.md) | `<DnetExpansionPanelItem>` | 10 | 3 |
 | [FloatingDoubleList](components/FloatingDoubleList.md) | `<DnetFloatingDoubleList>` | 32 | 4 |
@@ -40,7 +40,7 @@ Open only the one you need.
 | [Theme](components/Theme.md) | `<DnetThemeScope>` | 3 | — |
 | [TimePicker](components/TimePicker.md) | `<DnetTimePicker>` | 19 | 5 |
 | [Timeline](components/Timeline.md) | `<DnetTimeline>`, `<DnetTimelineItem>` | 13 | 12 |
-| [Toast](components/Toast.md) | `<DnetToast>`, `<DnetToastStack>` | 21 | 15 |
+| [Toast](components/Toast.md) | `<DnetToast>`, `<DnetToastStack>` | 22 | 15 |
 | [Tooltip](components/Tooltip.md) | `<DnetTooltipPanel>` | 10 | 9 |
 | [Tree](components/Tree.md) | `<DnetTree>`, `<DnetTreeNode>` | 20 | 2 |
 | [Virtualize](components/Virtualize.md) | `<Virtualize>` | 7 | — |

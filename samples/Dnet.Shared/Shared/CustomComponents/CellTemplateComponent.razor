@@ -1,14 +1,16 @@
 ﻿@using Dnet.App.Shared.Infrastructure.Entities
 @using Dnet.Blazor.Components.Grid.Infrastructure.Entities
 
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
 @if (RowNode.RowData.IsActive)
 {
-    <span style="color: green">@RowNode.RowData.IsActive</span>
+    <span style="color: green">@S.Display(RowNode.RowData.IsActive)</span>
 
 }
 else
 {
-    <span style="color: red">@RowNode.RowData.IsActive</span>
+    <span style="color: red">@S.Display(RowNode.RowData.IsActive)</span>
 }
 
 @code {

@@ -1,6 +1,8 @@
 @page "/PickList/controlled-rejection"
 @using Dnet.Blazor.Components.PickList
 
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
 <div id="rejected-controlled-inputs">
     <PickList TItem="ProbeItem"
               TKey="int"
@@ -11,12 +13,12 @@
               SelectedKeysChanged="RejectSelectionAsync"
               SearchText="@_searchText"
               SearchTextChanged="RejectSearchAsync">
-        <ItemTemplate Context="item">@item.Name</ItemTemplate>
+        <ItemTemplate Context="item">@S.Display(item.Name)</ItemTemplate>
     </PickList>
 </div>
 
 <output id="controlled-probe-state">
-    Selected: @_selectedKeys.Count; Search: @_searchText
+    @S.Format("Common.Selected0Search1", _selectedKeys.Count, _searchText)
 </output>
 
 <div id="accepted-controlled-search">
@@ -27,7 +29,7 @@
               SearchTextSelector="item => item.Name"
               @bind-SelectedKeys="_acceptedSelectedKeys"
               @bind-SearchText="_acceptedSearchText">
-        <ItemTemplate Context="item">@item.Name</ItemTemplate>
+        <ItemTemplate Context="item">@S.Display(item.Name)</ItemTemplate>
     </PickList>
 </div>
 
@@ -38,7 +40,7 @@
               ItemKey="item => item.Id"
               SearchTextSelector="item => item.Name"
               @bind-SelectedKeys="_uncontrolledSelectedKeys">
-        <ItemTemplate Context="item">@item.Name</ItemTemplate>
+        <ItemTemplate Context="item">@S.Display(item.Name)</ItemTemplate>
     </PickList>
 </div>
 

@@ -1,0 +1,24 @@
+@implements IDisposable
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+@if (_context is not null && _context.GetValidationMessages().Any())
+{
+    <ul class="validation-errors">
+        @foreach (var message in _context.GetValidationMessages())
+        {
+            <li class="validation-message">@S.Message(message)</li>
+        }
+    </ul>
+}
+@code {
+    [CascadingParameter] private EditContext CurrentEditContext { get; set; }
+    private EditContext _context;
+    protected override void OnParametersSet()
+    {
+        if (_context == CurrentEditContext) return;
+        if (_context is not null) _context.OnValidationStateChanged -= Changed;
+        _context = CurrentEditContext;
+        if (_context is not null) _context.OnValidationStateChanged += Changed;
+    }
+    private void Changed(object sender, ValidationStateChangedEventArgs args) => StateHasChanged();
+    public void Dispose() { if (_context is not null) _context.OnValidationStateChanged -= Changed; }
+}

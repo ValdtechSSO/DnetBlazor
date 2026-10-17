@@ -1,4 +1,4 @@
-﻿@using System.ComponentModel.DataAnnotations
+@using System.ComponentModel.DataAnnotations
 @using System.Drawing
 @using Dnet.App.Shared.Infrastructure.Entities
 @using Dnet.Blazor.Components.Button
@@ -19,10 +19,12 @@
 
 @implements IDisposable
 
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
 <div class="" style="display:flex;flex-direction: column;justify-content:space-between; height: calc(100% - 0px); width: 100%;">
     <div class="dnet-panel-header" style="height: 50px">
         <div style="display: flex;align-items: center;height: 100%">
-            <span style="font-size: 0.875rem;font-weight: 700">Edit user profile</span>
+            <span style="font-size: 0.875rem;font-weight: 700">@S["FloatingPanelTestContent.EditUserProfile"]</span>
         </div>
     </div>
     <div class="dnet-panel-content" style="flex: 1 0 calc(100% - 100px); overflow:scroll">
@@ -31,10 +33,10 @@
         </div>
     </div>
     <div class="dnet-panel-footer" style="height: 50px;display: flex;align-items: center;justify-content: flex-end;">
-        <DnetButton Variant="DnetButtonVariant.Outlined" OnClick="CancelOverlay" class="dnet-m-r-10">Close</DnetButton>
-        @* <DnetButton OnClick="ShowDialog" class="dnet-m-r-10">Show Dialog</DnetButton> *@
-        <DnetButton Variant="DnetButtonVariant.Outlined" OnClick="ShowToast" class="dnet-m-r-10">Show Toast</DnetButton>
-        <DnetButton OnClick="CloseOverlay" InitialFocus="true" class="dnet-m-r-10">Ok</DnetButton>
+        <DnetButton Variant="DnetButtonVariant.Outlined" OnClick="CancelOverlay" class="dnet-m-r-10">@S["FloatingPanelTestContent.Close"]</DnetButton>
+        @* <DnetButton OnClick="ShowDialog" class="dnet-m-r-10">@S["Dialog.ShowDialog"]</DnetButton> *@
+        <DnetButton Variant="DnetButtonVariant.Outlined" OnClick="ShowToast" class="dnet-m-r-10">@S["Toast.ShowToast"]</DnetButton>
+        <DnetButton OnClick="CloseOverlay" InitialFocus="true" class="dnet-m-r-10">@S["FloatingPanelTestContent.Ok"]</DnetButton>
     </div>
 </div>
 
@@ -89,8 +91,7 @@
     {
         SecuenceNumber++;
 
-        var dialogConfig = new DialogConfig()
-            {
+        var dialogConfig = new DialogConfig() { TextLocalizer = S.Message,
                 Title = "Editor de imagenes",
                 HasBackdrop = true,
                 HasTransparentBackdrop = false,
@@ -118,8 +119,7 @@
     {
         var text = !string.IsNullOrEmpty(_dialogData) ? $"Dialog Ok result: {_dialogData}" : "Data save in 10 seconds";
 
-        var toastConfig = new ToastConfig
-            {
+        var toastConfig = new ToastConfig { TextLocalizer = S.Message,
                 Title = "Toast title 12:",
                 Text = text,
                 HasBackdrop = false,

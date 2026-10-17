@@ -3,35 +3,37 @@
 @using Dnet.Blazor.Components.Slider
 @using Dnet.Blazor.Components.SlideToggle
 
+<DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
+
 <div class="container-fluid slider-page">
     <div class="d-flex dnet-m-l-30 dnet-m-t-20">
-        <span class="dnet-m-r-10 dnet-app-comp-name">Slider</span>
+        <span class="dnet-m-r-10 dnet-app-comp-name">@S["Slider.Slider"]</span>
     </div>
 
     <div class="slider-demo-grid dnet-m-l-30 dnet-m-t-30">
         <section class="slider-demo-card">
             <div class="slider-demo-heading">
                 <div>
-                    <h2>Basic slider</h2>
-                    <p>Native keyboard behavior with continuous two-way binding.</p>
+                    <h2>@S["Slider.BasicSlider"]</h2>
+                    <p>@S["Slider.NativeKeyboardBehaviorWithContinuousTwoWayBinding"]</p>
                 </div>
-                <output>@_volume%</output>
+                <output>@S.Display(_volume)%</output>
             </div>
             <DnetSlider @bind-Value="_volume"
                         Min="0"
                         Max="100"
                         Step="1"
-                        AriaLabel="Volume"
+                        AriaLabel="@S["Slider.Volume"]"
                         DisplayWith="FormatPercent">
-                Volume
+                @S["Slider.Volume"]
             </DnetSlider>
         </section>
 
         <section class="slider-demo-card">
             <div class="slider-demo-heading">
                 <div>
-                    <h2>Range slider</h2>
-                    <p>Two constrained thumbs select a minimum and maximum.</p>
+                    <h2>@S["Slider.RangeSlider"]</h2>
+                    <p>@S["Slider.TwoConstrainedThumbsSelectAMinimumAndMaximum"]</p>
                 </div>
                 <output>@($"€{_minimumPrice} – €{_maximumPrice}")</output>
             </div>
@@ -41,20 +43,20 @@
                         Min="0"
                         Max="500"
                         Step="10"
-                        StartAriaLabel="Minimum price"
-                        EndAriaLabel="Maximum price"
+                        StartAriaLabel="@S["Slider.MinimumPrice"]"
+                        EndAriaLabel="@S["Slider.MaximumPrice"]"
                         DisplayWith="FormatCurrency">
-                Price range
+                @S["Slider.PriceRange"]
             </DnetSlider>
         </section>
 
         <section class="slider-demo-card">
             <div class="slider-demo-heading">
                 <div>
-                    <h2>Discrete and tick marks</h2>
-                    <p>The value bubble appears while the thumb is focused or dragged.</p>
+                    <h2>@S["Slider.DiscreteAndTickMarks"]</h2>
+                    <p>@S["Slider.TheValueBubbleAppearsWhileTheThumbIs"]</p>
                 </div>
-                <output>@_quality / 10</output>
+                <output>@S.Display(_quality) / 10</output>
             </div>
             <DnetSlider @bind-Value="_quality"
                         Min="0"
@@ -63,21 +65,21 @@
                         Discrete="true"
                         ShowTickMarks="true"
                         Color="DnetSliderColor.Success"
-                        AriaLabel="Quality">
-                Quality
+                        AriaLabel="@S["Slider.Quality"]">
+                @S["Slider.Quality"]
             </DnetSlider>
         </section>
 
         <section class="slider-demo-card">
             <div class="slider-demo-heading">
                 <div>
-                    <h2>Configurable states</h2>
-                    <p>Semantic colors, disabled state and public tokens use the Dnet theme.</p>
+                    <h2>@S["Slider.ConfigurableStates"]</h2>
+                    <p>@S["Slider.SemanticColorsDisabledStateAndPublicTokensUse"]</p>
                 </div>
             </div>
             <div class="slider-demo-options">
-                <DnetSlideToggle @bind-Value="_disabled">Disabled</DnetSlideToggle>
-                <DnetSlideToggle @bind-Value="_showTicks">Show tick marks</DnetSlideToggle>
+                <DnetSlideToggle @bind-Value="_disabled">@S["Slider.Disabled"]</DnetSlideToggle>
+                <DnetSlideToggle @bind-Value="_showTicks">@S["Slider.ShowTickMarks"]</DnetSlideToggle>
             </div>
             <DnetSlider @bind-Value="_risk"
                         Min="0"
@@ -87,13 +89,13 @@
                         ShowTickMarks="_showTicks"
                         Discrete="true"
                         Color="DnetSliderColor.Danger"
-                        AriaLabel="Risk">
-                Risk
+                        AriaLabel="@S["Slider.Risk"]">
+                @S["Slider.Risk"]
             </DnetSlider>
         </section>
 
         <section class="slider-demo-card">
-            <h2>Semantic colors</h2>
+            <h2>@S["Slider.SemanticColors"]</h2>
             <div class="slider-color-list">
                 @foreach (var item in _colors)
                 {
@@ -101,8 +103,8 @@
                                 Min="0"
                                 Max="100"
                                 Color="item.Color"
-                                AriaLabel="@item.Label">
-                        @item.Label
+                                AriaLabel="@S.Text(item.Label)">
+                        @S.Display(item.Label)
                     </DnetSlider>
                 }
             </div>
@@ -111,10 +113,10 @@
         <section class="slider-demo-card" dir="rtl">
             <div class="slider-demo-heading">
                 <div>
-                    <h2>RTL</h2>
-                    <p>The active track, native keyboard direction and labels follow the document direction.</p>
+                    <h2>@S["Slider.RTL"]</h2>
+                    <p>@S["Slider.TheActiveTrackNativeKeyboardDirectionAndLabels"]</p>
                 </div>
-                <output>@_rtlValue</output>
+                <output>@S.Display(_rtlValue)</output>
             </div>
             <DnetSlider @bind-Value="_rtlValue"
                         Min="0"
@@ -122,7 +124,7 @@
                         Step="10"
                         Discrete="true"
                         ShowTickMarks="true"
-                        AriaLabel="RTL value" />
+                        AriaLabel="@S["Slider.RTLValue"]" />
         </section>
     </div>
 </div>
@@ -236,6 +238,6 @@
         ("Warning", DnetSliderColor.Warning, 55)
     ];
 
-    private static string FormatPercent(double value) => $"{value:0}%";
-    private static string FormatCurrency(double value) => $"€{value:0}";
+    private string FormatPercent(double value) => value.ToString("0", S.Culture) + "%";
+    private string FormatCurrency(double value) => S.Culture.TwoLetterISOLanguageName == "en" ? "€" + value.ToString("N0", S.Culture) : value.ToString("N0", S.Culture) + " €";
 }

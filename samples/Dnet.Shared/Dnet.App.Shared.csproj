@@ -29,6 +29,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Localization/SampleStrings.resx" LogicalName="Dnet.App.Shared.Localization.SampleStrings.resources" />
+    <EmbeddedResource Update="Localization/SampleStrings.en.resx" WithCulture="false" LogicalName="Dnet.App.Shared.Localization.SampleEnglishStrings.resources" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="11.0.0-rc.2.26504.105" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="11.0.0-rc.2.26504.105" />
   </ItemGroup>
