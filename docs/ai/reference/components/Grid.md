@@ -105,6 +105,7 @@
 | `OnChangeSelectAllNodes` | `EventCallback<bool>` | — | Raised when change select all nodes occurs. |
 | `OnMouseDown` | `EventCallback<Tuple<string, int>>` | — | Raised when mouse down occurs. |
 | `OnHeaderWithChange` | `EventCallback<int>` | — | Raised when header with change occurs. |
+| `HeaderContainerId` | `string` | `"blgHeaderConatiner"` | Identifies this grid's center header when measuring its complete width. |
 | `OnExpandCollapse` | `EventCallback<bool>` | — | Raised when expand collapse occurs. |
 
 ## `<BlgRow>` — generic over TItem

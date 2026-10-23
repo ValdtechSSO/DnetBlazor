@@ -142,7 +142,7 @@
                                     gridTemplateRowsLeft2 = gridTemplateRowsLeft2 + " var(--_blg-filter-row-height)";
                                 }
 
-                                <div @ref="_eHeaderContainer" id="blgHeaderConatiner"
+                                <div @ref="_eHeaderContainer" id="@_headerContainerId"
                                      @onmousemove="MouseMove"
                                      class="blg-header-container"
                                      role="rowgroup"
@@ -164,7 +164,8 @@
                                                OnMouseDown="OnMouseDown"
                                                Pinned="Pinned.None"
                                                CheckboxSelectionPinned="@(!GridOptions.CheckboxSelectionPinned)"
-                                               OnHeaderWithChange="HeaderWithChange">
+                                               OnHeaderWithChange="HeaderWithChange"
+                                               HeaderContainerId="@_headerContainerId">
                                     </BlgHeader>
                                 </div>
                             }

@@ -300,6 +300,10 @@
     [Parameter]
     public EventCallback<int> OnHeaderWithChange { get; set; }
 
+    /// <summary>Identifies this grid's center header when measuring its complete width.</summary>
+    [Parameter]
+    public string HeaderContainerId { get; set; } = "blgHeaderConatiner";
+
     /// <summary>Raised when expand collapse occurs.</summary>
     [Parameter]
     public EventCallback<bool> OnExpandCollapse { get; set; }
@@ -340,7 +344,7 @@
 
         if (Pinned == Pinned.None)
         {
-            var headerWith = await BlGridInterop.GetHeaderWidth("blgHeaderConatiner");
+            var headerWith = await BlGridInterop.GetHeaderWidth(HeaderContainerId);
 
             if (_headerWith != headerWith)
             {

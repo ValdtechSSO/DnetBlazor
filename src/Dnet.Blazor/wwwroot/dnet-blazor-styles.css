@@ -2856,6 +2856,9 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 
 .blg-body-horizontal-scroll-container {
   height: 100%;
+  /* Classic scrollbars can consume the viewport's full height. A nonzero
+     content height keeps its horizontal overflow measurable in that case. */
+  min-height: 1px;
 }
 
 .blg-selection-checkbox-wrapper {

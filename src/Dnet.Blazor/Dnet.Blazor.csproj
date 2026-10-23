@@ -10,17 +10,13 @@
 		<Description>Set of Components for Blazor Framework</Description>
 		<Copyright>Datalnet</Copyright>
 		<PackageTags>Blazor-Components-Datalnet</PackageTags>
-		<PackageVersion>6.0.19-rc.2</PackageVersion>
+		<PackageVersion>6.0.20-rc.2</PackageVersion>
 		<PackageProjectUrl>https://datalnet.com/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ValdtechSSO/DnetBlazor</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
-			- PickList uses the shared search field and List background, with controlled input synchronization.
-			- PickList searching and clearing preserve the state of a containing EditForm.
-			- List and PickList use consistent spacing, aligned controls and responsive pagination.
-			- Form clear actions use a subtle outlined circle with an X.
-			- Tabs add configurable inner padding, and Stepper examples provide a padded action footer.
-			- Checkboxes and radio buttons add 10px between indicators and text while preserving unlabeled controls.
+			- Grid measures each instance's own header when multiple grids are open.
+			- Grid preserves horizontal scrolling with classic system scrollbars.
 			- Targets .NET 11 RC2.
 		</PackageReleaseNotes>
 	</PropertyGroup>

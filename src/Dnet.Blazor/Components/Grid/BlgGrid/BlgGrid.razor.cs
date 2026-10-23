@@ -128,6 +128,7 @@ public partial class BlgGrid<TItem> : ComponentBase, IVirtualizeJsCallbacks, IAs
     private ElementReference _eCenterContainer { get; set; }
     private ElementReference _eBodyHorizontalScrollContainer { get; set; }
     private ElementReference _eHeaderContainer { get; set; }
+    private readonly string _headerContainerId = $"blg-header-{Guid.NewGuid():N}";
     private ElementReference _eBodyHorizontalScrollViewport { get; set; }
     private ElementReference _eGridContainer { get; set; }
 

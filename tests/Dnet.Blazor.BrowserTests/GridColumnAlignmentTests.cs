@@ -24,7 +24,13 @@ public sealed class GridColumnAlignmentTests
         var baseUrl = (Environment.GetEnvironmentVariable("DNET_BLAZOR_BASE_URL")
             ?? "http://127.0.0.1:5101").TrimEnd('/');
         using var playwright = await Playwright.CreateAsync();
-        await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
+        await using var browser = await playwright.Chromium.LaunchAsync(new()
+        {
+            Headless = true,
+            // Chromium's headless default hides native scrollbars and masks
+            // regressions when a classic scrollbar consumes the viewport height.
+            IgnoreDefaultArgs = new[] { "--hide-scrollbars" }
+        });
         var page = await browser.NewPageAsync(new()
         {
             IgnoreHTTPSErrors = true,

@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## Version 6.0.20-rc.2 (October 2026)
+
+- Grid measures each instance's own header, keeping the horizontal scrollbar
+  aligned when another grid is open in a floating panel.
+- `BlgHeader.HeaderContainerId` allows the owning grid to identify its header;
+  direct header consumers retain the previous default.
+- Grid preserves measurable horizontal overflow when classic scrollbars occupy
+  the full height of the scrollbar viewport.
+
 ## Version 6.0.19-rc.2 (October 2026)
 
 - PickList searching and clearing do not mark a surrounding EditForm modified
