@@ -10,6 +10,26 @@ namespace Dnet.Blazor.UnitTests;
 public sealed class GridHeaderMeasurementTests : BunitContext
 {
     [Fact]
+    public void Legacy_overscan_applies_only_to_the_grid_that_receives_it()
+    {
+        Services.AddDnetBlazor();
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        var sharedOptions = new GridOptions<GridItem> { OverscanCount = 15, UseVirtualization = false };
+
+        var overridden = RenderGrid(sharedOptions, legacyOverscanCount: 4);
+        var usingOptions = RenderGrid(sharedOptions);
+
+        Assert.Equal(15, sharedOptions.OverscanCount);
+        Assert.Equal(4, overridden.Instance.GetDiagnostics().OverscanCount);
+        Assert.Equal(15, usingOptions.Instance.GetDiagnostics().OverscanCount);
+
+#pragma warning disable CS0618
+        overridden.Render(parameters => parameters.Add(grid => grid.OverscanCount, -1));
+#pragma warning restore CS0618
+        Assert.Equal(15, overridden.Instance.GetDiagnostics().OverscanCount);
+    }
+
+    [Fact]
     public void Simultaneous_grids_measure_their_own_headers_and_preserve_their_ids_on_refresh()
     {
         Services.AddDnetBlazor();
@@ -38,7 +58,7 @@ public sealed class GridHeaderMeasurementTests : BunitContext
         Assert.Equal(backgroundId, background.Find(".blg-header-container").Id);
     }
 
-    private IRenderedComponent<BlgGrid<GridItem>> RenderGrid() =>
+    private IRenderedComponent<BlgGrid<GridItem>> RenderGrid(GridOptions<GridItem>? options = null, int legacyOverscanCount = -1) =>
         Render<BlgGrid<GridItem>>(parameters => parameters
             .Add(component => component.GridData, new[] { new GridItem("Resource") })
             .Add(component => component.GridColumns, new List<GridColumn<GridItem>>
@@ -51,10 +71,10 @@ public sealed class GridHeaderMeasurementTests : BunitContext
                     Width = 724
                 }
             })
-            .Add(component => component.GridOptions, new GridOptions<GridItem>
-            {
-                UseVirtualization = false
-            }));
+            .Add(component => component.GridOptions, options ?? new GridOptions<GridItem> { UseVirtualization = false })
+#pragma warning disable CS0618
+            .Add(component => component.OverscanCount, legacyOverscanCount));
+#pragma warning restore CS0618
 
     private sealed record GridItem(string Name);
 }

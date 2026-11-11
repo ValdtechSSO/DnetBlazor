@@ -13,7 +13,7 @@ public partial class BlgGrid<TItem>
         _itemCount = _renderedRowNodes.Count;
         _itemsBefore = 0;
 
-        var fallbackCapacity = Math.Max(1, (Math.Max(0, GridOptions.OverscanCount) * 2) + 1);
+        var fallbackCapacity = Math.Max(1, (EffectiveOverscanCount * 2) + 1);
         _visibleItemCapacity = Math.Max(1, _visibleItemCapacity > 0 ? _visibleItemCapacity : fallbackCapacity);
 
         _loadedItems = _renderedRowNodes;
@@ -108,7 +108,7 @@ public partial class BlgGrid<TItem>
     {
         const int blazorDefaultRootMargin = 50;
         var rowHeight = Math.Max(1, GridOptions.RowHeight);
-        var overscanCount = Math.Max(0, GridOptions.OverscanCount);
+        var overscanCount = EffectiveOverscanCount;
 
         // Virtualize<TItem> uses a 50 px observer margin. A Grid row is much
         // heavier than a typical list item, so begin the next render while half
@@ -185,7 +185,7 @@ public partial class BlgGrid<TItem>
         }
 
         // Align with Virtualize<TItem> in .NET 10: no extra -1
-        var overscanCount = Math.Max(0, GridOptions.OverscanCount);
+        var overscanCount = EffectiveOverscanCount;
         itemsInSpacer = Math.Max(0, (int)Math.Floor(spacerSize / _itemSize) - overscanCount);
 
         visibleItemCapacity = (int)Math.Ceiling(containerSize / _itemSize) + 2 * overscanCount;

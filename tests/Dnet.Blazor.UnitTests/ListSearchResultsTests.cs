@@ -76,6 +76,43 @@ public sealed class ListSearchResultsTests : BunitContext
         await ClearSearchAsync(cut, paginated);
     }
 
+    [Fact]
+    public async Task Server_pagination_waits_for_the_requested_page_to_load()
+    {
+        var requestedPage = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var allowLoad = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var cut = Render<DnetList<Person>>(parameters => parameters
+            .Add(list => list.Items, new List<Person> { new("First") })
+            .Add(list => list.ListOptions, new ListOptions<Person>
+            {
+                DisplayValueConverter = person => person.Name,
+                EnablePagingination = true,
+                EnableServerSide = true,
+                PageSize = 1,
+                ShowFooter = true
+            })
+            .Add(list => list.OnPaginationChanged, async request =>
+            {
+                requestedPage.SetResult(request.PaginationModel.CurrentPage);
+                await allowLoad.Task;
+            }));
+        await cut.InvokeAsync(() => cut.Instance.SetRowData([new("First")], totalItems: 2, currentPage: 1));
+
+        var navigation = cut.Find("button[aria-label='Next page']").ClickAsync();
+        try
+        {
+            Assert.Equal(2, await requestedPage.Task.WaitAsync(TimeSpan.FromSeconds(3)));
+            await cut.InvokeAsync(() => { });
+            Assert.False(navigation.IsCompleted);
+        }
+        finally
+        {
+            allowLoad.SetResult();
+        }
+
+        await navigation.WaitAsync(TimeSpan.FromSeconds(3));
+    }
+
     private IRenderedComponent<DnetList<Person>> RenderList(bool paginated)
         => Render<DnetList<Person>>(parameters => parameters
             .Add(component => component.Items, new List<Person>

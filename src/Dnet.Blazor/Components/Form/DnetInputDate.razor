@@ -39,7 +39,7 @@ else
            class="@_inputTextClass"
            @bind="CurrentValueAsString"
            @bind:event="oninput"
-           @onkeyup="ResetTimer"
+           @onkeyup="HandleTypingAsync"
            @onkeyup:stopPropagation="true"
            @onkeyup:preventDefault="true"
            @onfocus=@(() => Focus())
@@ -107,8 +107,6 @@ else
 
     private bool _hasErrors { get; set; }
 
-    private Timer _debounceTimer;
-
     private IFormEventService _formEventService { get; set; }
 
     private bool _previousDisabled;
@@ -153,15 +151,6 @@ else
     {
         _formEventService = _formFieldCascadingValues?.FormEventService;
 
-        if (ImmediateResponse)
-        {
-            _debounceTimer = new Timer(DebounceTime);
-
-            _debounceTimer.Elapsed += HandleChangeDebouncedDiscard;
-
-            _debounceTimer.AutoReset = false;
-        }
-
         if (!string.IsNullOrEmpty(CurrentValueAsString))
         {
             _hasFocus = true;
@@ -191,6 +180,8 @@ else
     {
         base.OnParametersSet();
 
+        if (!ImmediateResponse) CancelInputDebounce();
+
         (_typeAttributeValue, _format) = Type switch
         {
             InputDateType.Date => ("date", DateFormat),
@@ -208,26 +199,16 @@ else
         }
     }
 
-    public void HandleChangeDebouncedDiscard(Object source, ElapsedEventArgs e)
+    public async void HandleChangeDebouncedDiscard(Object source, ElapsedEventArgs e) =>
+        await DispatchInputNotificationAsync(NotifyStopTypingAsync);
+
+    private Task HandleTypingAsync() => DebounceInputAsync(DebounceTime, NotifyStopTypingAsync);
+
+    private async Task NotifyStopTypingAsync()
     {
-        _ = HandleChangeDebounced(e);
-    }
+        if (_formEventService is not null) _formEventService.RaiseCurrentValue(CurrentValueAsString);
 
-    private async Task HandleChangeDebounced(ElapsedEventArgs e)
-    {
-        await InvokeAsync(async () =>
-        {
-            if (_formEventService is not null) _formEventService.RaiseCurrentValue(CurrentValueAsString);
-
-            await OnStopTyping.InvokeAsync(CurrentValueAsString);
-        });
-    }
-
-    private void ResetTimer(KeyboardEventArgs data)
-    {
-        _debounceTimer.Stop();
-
-        _debounceTimer.Start();
+        await OnStopTyping.InvokeAsync(CurrentValueAsString);
     }
 
     private void HandleChange(ChangeEventArgs e)
@@ -329,12 +310,6 @@ else
 
     public void Dispose()
     {
-        if (ImmediateResponse && _debounceTimer is not null)
-        {
-            _debounceTimer.Elapsed -= HandleChangeDebouncedDiscard;
-            _debounceTimer.Dispose();
-        }
-
         if (_formEventService is not null) _formEventService.OnClearContent -= HandleClearContent;
 
         if (EditContext is not null) EditContext.OnFieldChanged -= HandleOnValidationStateChanged;

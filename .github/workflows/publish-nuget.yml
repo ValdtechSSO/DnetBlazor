@@ -48,6 +48,7 @@ jobs:
       - name: Resolve package version
         id: version
         env:
+          LC_ALL: C
           REQUESTED_VERSION: ${{ inputs.version }}
         shell: bash
         run: |
@@ -57,12 +58,15 @@ jobs:
             VERSION="$REQUESTED_VERSION"
           fi
 
-          if [[ -z "$VERSION" || "$VERSION" == v* || ! "$VERSION" =~ ^[0-9] ]]; then
-            echo "Version must be a NuGet version without the v prefix."
+          number='(0|[1-9][0-9]*)'
+          label="($number|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*)"
+          release_version="^$number\.$number\.$number(-$label(\.$label)*)?$"
+          if [[ ! "$VERSION" =~ $release_version ]]; then
+            echo "Version must use X.Y.Z or X.Y.Z-prerelease without the v prefix."
             exit 1
           fi
 
-          echo "value=$VERSION" >> "$GITHUB_OUTPUT"
+          printf 'value=%s\n' "$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Install frontend dependencies
         run: npm ci --ignore-scripts
@@ -76,8 +80,10 @@ jobs:
       - name: Verify agent reference matches the release version
         id: reference
         shell: bash
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
         run: |
-          EXPECTED="artifacts/dnet-blazor-agent-reference-${{ steps.version.outputs.value }}.zip"
+          EXPECTED="artifacts/dnet-blazor-agent-reference-$VERSION.zip"
           if [[ ! -f "$EXPECTED" ]]; then
             echo "::error::Expected $EXPECTED. Generator produced:"
             ls -1 artifacts/*.zip || true
@@ -96,32 +102,32 @@ jobs:
         run: tests/Dnet.Blazor.BrowserTests/install-playwright.sh --with-deps chromium
 
       - name: Test solution
-        run: dotnet test DnetBlazorComponents.sln --configuration Release --no-build --no-restore --verbosity normal
+        run: bash tests/Dnet.Blazor.BrowserTests/run-with-sample.sh
 
       - name: Pack NuGet package
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
         run: >-
-          dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --no-restore
-          --output ${{ env.PACKAGE_OUTPUT }}
-          -p:PackageVersion=${{ steps.version.outputs.value }}
+          dotnet pack "$PROJECT_PATH" --configuration Release --no-build --no-restore
+          --output "$PACKAGE_OUTPUT"
+          -p:PackageVersion="$VERSION"
           -p:ContinuousIntegrationBuild=true
 
       - name: Validate package
         id: package
         shell: bash
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
         run: |
-          PACKAGE_PATH="$(find "${PACKAGE_OUTPUT}" -maxdepth 1 -type f -name "Dnet.Blazor.*.nupkg" ! -name "*.symbols.nupkg" -print -quit)"
-          if [[ -z "$PACKAGE_PATH" ]]; then
-            echo "The expected Dnet.Blazor package was not created."
+          PACKAGE_PATH="$PACKAGE_OUTPUT/Dnet.Blazor.$VERSION.nupkg"
+          if [[ ! -f "$PACKAGE_PATH" ]]; then
+            echo "The expected package was not created at $PACKAGE_PATH."
             exit 1
           fi
 
-          if [[ "$PACKAGE_PATH" != *".${{ steps.version.outputs.value }}.nupkg" ]]; then
-            echo "Package version does not match the requested release version."
-            exit 1
-          fi
-
-          unzip -l "$PACKAGE_PATH" | grep -q "staticwebassets/dnet-blazor.js"
-          unzip -l "$PACKAGE_PATH" | grep -q "staticwebassets/dnet-blazor-styles.css"
+          package_contents="$(unzip -Z1 "$PACKAGE_PATH")"
+          grep -Fxq "staticwebassets/dnet-blazor.js" <<< "$package_contents"
+          grep -Fxq "staticwebassets/dnet-blazor-styles.css" <<< "$package_contents"
 
           echo "path=$PACKAGE_PATH" >> "$GITHUB_OUTPUT"
 
@@ -139,9 +145,12 @@ jobs:
           user: ${{ secrets.NUGET_USER }}
 
       - name: Publish package to NuGet.org
+        env:
+          PACKAGE_PATH: ${{ steps.package.outputs.path }}
+          NUGET_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
         run: >-
-          dotnet nuget push ${{ steps.package.outputs.path }}
-          --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
+          dotnet nuget push "$PACKAGE_PATH"
+          --api-key "$NUGET_API_KEY"
           --source https://api.nuget.org/v3/index.json
           --skip-duplicate
 

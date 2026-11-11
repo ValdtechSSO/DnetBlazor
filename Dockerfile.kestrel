@@ -2,40 +2,28 @@ FROM mcr.microsoft.com/dotnet/aspnet:11.0.0-alpine3.24 AS base
 EXPOSE 80
 
 # Blazor WASM Client
-FROM mcr.microsoft.com/dotnet/sdk:11.0.100-alpine3.24 AS buildwasm
-COPY global.json /global.json
+FROM mcr.microsoft.com/dotnet/sdk:11.0.100-alpine3.24 AS publishwasm
+WORKDIR /workspace
+COPY global.json ./
+COPY src/Dnet.Blazor/Dnet.Blazor.csproj src/Dnet.Blazor/
+COPY samples/Dnet.Shared/Dnet.App.Shared.csproj samples/Dnet.Shared/
+COPY samples/Dnet.ClientSide/Dnet.App.ClientSide.csproj samples/Dnet.ClientSide/
+RUN dotnet restore samples/Dnet.ClientSide/Dnet.App.ClientSide.csproj
 
-WORKDIR /wasm/src
-COPY /src/Dnet.Blazor/Dnet.Blazor.csproj .
-RUN dotnet restore "Dnet.Blazor.csproj"
-COPY src/. .
+COPY src/Dnet.Blazor/ src/Dnet.Blazor/
+COPY samples/Dnet.Shared/ samples/Dnet.Shared/
+COPY samples/Dnet.ClientSide/ samples/Dnet.ClientSide/
+RUN dotnet publish samples/Dnet.ClientSide/Dnet.App.ClientSide.csproj -c Release --no-restore -o /app/wasm/publish
 
-WORKDIR /wasm/samples
-COPY /samples/Dnet.Shared/Dnet.App.Shared.csproj .
-RUN dotnet restore "Dnet.App.Shared.csproj"
+# Kestrel
+FROM mcr.microsoft.com/dotnet/sdk:11.0.100-alpine3.24 AS publishkestrel
+WORKDIR /workspace
+COPY global.json ./
+COPY samples/Dnet.App.KestrelServer/Dnet.App.KestrelServer.csproj samples/Dnet.App.KestrelServer/
+RUN dotnet restore samples/Dnet.App.KestrelServer/Dnet.App.KestrelServer.csproj
 
-COPY /samples/Dnet.ClientSide/Dnet.App.ClientSide.csproj .
-RUN dotnet restore "Dnet.App.ClientSide.csproj"
-
-COPY samples/. .
-RUN dotnet build "Dnet.ClientSide/Dnet.App.ClientSide.csproj" -c Release -o /app/wasm/build
-
-FROM buildwasm AS publishwasm
-RUN dotnet publish "Dnet.ClientSide/Dnet.App.ClientSide.csproj" -c Release -o /app/wasm/publish
-
-# Kestrel 
-FROM mcr.microsoft.com/dotnet/sdk:11.0.100-alpine3.24 AS buildkestrel
-COPY global.json /global.json
-WORKDIR /src
-COPY ["samples/Dnet.App.KestrelServer/Dnet.App.KestrelServer.csproj", "Dnet.App.KestrelServer/"]
-RUN dotnet restore "Dnet.App.KestrelServer/Dnet.App.KestrelServer.csproj"
-
-WORKDIR "/src/Dnet.App.KestrelServer"
-COPY samples/Dnet.App.KestrelServer/. .
-RUN dotnet build "Dnet.App.KestrelServer.csproj" -c Release -o /app/build
-
-FROM buildkestrel AS publishkestrel
-RUN dotnet publish "Dnet.App.KestrelServer.csproj" -c Release -o /app/publish
+COPY samples/Dnet.App.KestrelServer/ samples/Dnet.App.KestrelServer/
+RUN dotnet publish samples/Dnet.App.KestrelServer/Dnet.App.KestrelServer.csproj -c Release --no-restore -o /app/publish
 COPY --from=publishwasm /app/wasm/publish/wwwroot /app/publish/wwwroot
 
 FROM base AS final

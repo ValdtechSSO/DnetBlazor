@@ -159,8 +159,8 @@
         <div class="dnet-list-footer">
             @if (ListOptions.EnablePagingination == true)
             {
-                <DnetPaginator @ref="_paginator" GridGap="8" OnGoToFirstPage="GoToFirstPage" OnGoToPreviousPage="GoToPreviousPage"
-                    OnGoToNextPage="GoToNextPage" OnGoToLastPage="GoToLastPage" OnGoToSpecificPage="GoToSpecificPage"
+                <DnetPaginator @ref="_paginator" GridGap="8" OnGoToFirstPage="PaginationChanged" OnGoToPreviousPage="PaginationChanged"
+                    OnGoToNextPage="PaginationChanged" OnGoToLastPage="PaginationChanged" OnGoToSpecificPage="PaginationChanged"
                     CurrentPage="_searchModel.PaginationModel.CurrentPage" PageSize="_searchModel.PaginationModel.PageSize"
                     TotalItems="_searchModel.PaginationModel.ItemsCount">
                 </DnetPaginator>
@@ -704,35 +704,7 @@
         {
             AssignRangeRenderedRows();
         }
-    }
 
-    private void GoToFirstPage(int currentPage)
-    {
-        PaginationChanged(currentPage);
-        ManageSelectedNodes();
-    }
-
-    private void GoToPreviousPage(int currentPage)
-    {
-        PaginationChanged(currentPage);
-        ManageSelectedNodes();
-    }
-
-    private void GoToNextPage(int currentPage)
-    {
-        PaginationChanged(currentPage);
-        ManageSelectedNodes();
-    }
-
-    private void GoToLastPage(int currentPage)
-    {
-        PaginationChanged(currentPage);
-        ManageSelectedNodes();
-    }
-
-    private void GoToSpecificPage(int specificPage)
-    {
-        PaginationChanged(specificPage);
         ManageSelectedNodes();
     }
 

@@ -217,23 +217,36 @@ public partial class BlgGrid<TItem>
 
     public async ValueTask DisposeAsync()
     {
+        if (_disposed) return;
+
+        _disposed = true;
         _refreshCts?.Cancel();
 
         try
         {
-            await BlGridInterop.RemoveEventListeners(_eGridContainer);
-            await BlGridInterop.RemoveEventListeners(_eCenterContainer);
+            // Prerendering never reaches OnAfterRenderAsync, so no listeners exist then.
+            if (_windowEventReference is not null)
+            {
+                await BlGridInterop.RemoveEventListeners(_eGridContainer);
+            }
+
+            if (_touchEventReference is not null)
+            {
+                await BlGridInterop.RemoveEventListeners(_eCenterContainer);
+            }
         }
         catch (JSDisconnectedException)
         {
         }
-
-        _windowEventReference?.Dispose();
-        _touchEventReference?.Dispose();
-
-        if (_jsInterop != null)
+        finally
         {
-            await _jsInterop.DisposeAsync();
+            _windowEventReference?.Dispose();
+            _touchEventReference?.Dispose();
+
+            if (_jsInterop is not null)
+            {
+                await _jsInterop.DisposeAsync();
+            }
         }
     }
 }

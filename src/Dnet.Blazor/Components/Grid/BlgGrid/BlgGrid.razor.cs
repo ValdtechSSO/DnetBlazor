@@ -86,6 +86,10 @@ public partial class BlgGrid<TItem> : ComponentBase, IVirtualizeJsCallbacks, IAs
     [Obsolete("Use GridOptions.OverscanCount instead.")]
     public int OverscanCount { get; set; } = -1;
 
+#pragma warning disable CS0618
+    private int EffectiveOverscanCount => Math.Max(0, OverscanCount >= 0 ? OverscanCount : GridOptions.OverscanCount);
+#pragma warning restore CS0618
+
     [Parameter]
     public int PaginatorHeight { get; set; } = 50;
 
@@ -177,6 +181,7 @@ public partial class BlgGrid<TItem> : ComponentBase, IVirtualizeJsCallbacks, IAs
     public IEnumerable<TItem> _gridData { get; set; } = new List<TItem>();
 
     private bool _isExpanded = false;
+    private bool _disposed;
     private DotNetObjectReference<BlgGrid<TItem>>? _windowEventReference;
     private DotNetObjectReference<BlgGrid<TItem>>? _touchEventReference;
     private IEnumerable<TItem>? _gridDataSource;
@@ -252,13 +257,6 @@ public partial class BlgGrid<TItem> : ComponentBase, IVirtualizeJsCallbacks, IAs
             _itemSize = GridOptions.RowHeight;
         }
 
-#pragma warning disable CS0618
-        if (OverscanCount >= 0)
-        {
-            GridOptions.OverscanCount = OverscanCount;
-        }
-#pragma warning restore CS0618
-
         if (dataChanged || columnsChanged || optionsChanged || _isDataNoInitialized || _isColumnsNoInitialized)
         {
             if (dataChanged || _isDataNoInitialized)
@@ -305,7 +303,7 @@ public partial class BlgGrid<TItem> : ComponentBase, IVirtualizeJsCallbacks, IAs
         ItemsBefore = _itemsBefore,
         VisibleItemCapacity = _visibleItemCapacity,
         RenderedItemCount = _itemsToShow.Count,
-        OverscanCount = Math.Max(0, GridOptions.OverscanCount)
+        OverscanCount = EffectiveOverscanCount
     };
 
     private void RebuildLayoutSnapshot() => _layoutSnapshot = GridLayoutSnapshot<TItem>.Create(_gridColumns, GridOptions);
@@ -320,18 +318,26 @@ public partial class BlgGrid<TItem> : ComponentBase, IVirtualizeJsCallbacks, IAs
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (firstRender && !_disposed)
         {
             _firstRender = true;
 
             _windowEventReference = DotNetObjectReference.Create(this);
-            _touchEventReference = DotNetObjectReference.Create(this);
             await BlGridInterop.AddWindowEventListeners(_eGridContainer, _windowEventReference);
+
+            if (_disposed) return;
+
+            _touchEventReference = DotNetObjectReference.Create(this);
             await BlGridInterop.AddTouchListeners(_eCenterContainer, _eBodyHorizontalScrollViewport, _touchEventReference);
+
+            if (_disposed) return;
 
             if (GridOptions.UseVirtualization)
             {
                 await _jsInterop.InitializeAsync(_spacerBefore, _spacerAfter, GetVirtualizationRootMargin());
+
+                if (_disposed) return;
+
                 await DefaultVirtualization();
             }
             else

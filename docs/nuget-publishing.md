@@ -53,6 +53,12 @@ Las versiones preliminares se publican igual, por ejemplo con la etiqueta
 
 ## Lista de comprobación de release
 
+El CI y el flujo de publicación ejecutan ApiCompat al empaquetar. La propiedad
+`PackageValidationBaselineVersion` de `Dnet.Blazor.csproj` identifica la versión
+publicada que sirve de referencia. Usa `dotnet pack src/Dnet.Blazor/Dnet.Blazor.csproj -c Release`
+para ejecutar la misma comprobación en local. Al preparar la siguiente versión,
+usa como referencia la última versión publicada con los mismos frameworks de destino.
+
 Antes de crear la etiqueta, ejecuta `node tools/build-reference.mjs` y confirma
 `docs/ai/reference/`. CI adjunta automáticamente el ZIP de referencia de agentes
 al release de GitHub; el archivo bajo `artifacts/` no se versiona.

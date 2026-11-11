@@ -24,6 +24,7 @@ namespace Dnet.Blazor.Infrastructure.Forms
         private ValidationMessageStore? _parsingValidationMessages;
         private Type? _nullableUnderlyingType;
         private bool _shouldGenerateFieldNames;
+        private CancellationTokenSource? _inputDebounce;
 
         [CascadingParameter] private EditContext? CascadedEditContext { get; set; }
 
@@ -327,12 +328,56 @@ namespace Dnet.Blazor.Infrastructure.Forms
         {
         }
 
+        internal async Task DebounceInputAsync(int milliseconds, Func<Task> notify)
+        {
+            CancelInputDebounce();
+            using var pending = new CancellationTokenSource();
+            _inputDebounce = pending;
+
+            try
+            {
+                await Task.Delay(Math.Max(0, milliseconds), pending.Token);
+            }
+            catch (OperationCanceledException) when (pending.IsCancellationRequested)
+            {
+                return;
+            }
+            finally
+            {
+                if (ReferenceEquals(_inputDebounce, pending))
+                {
+                    _inputDebounce = null;
+                }
+            }
+
+            if (!pending.IsCancellationRequested)
+            {
+                await notify();
+            }
+        }
+
+        internal void CancelInputDebounce() => _inputDebounce?.Cancel();
+
+        internal async Task DispatchInputNotificationAsync(Func<Task> notify)
+        {
+            try
+            {
+                await InvokeAsync(notify);
+            }
+            catch (Exception exception)
+            {
+                await DispatchExceptionAsync(exception);
+            }
+        }
+
         /// <summary>
         /// Releases validation resources owned by the base input. Components that declare their own
         /// <see cref="IDisposable"/> implementation must call this method from their disposal path.
         /// </summary>
         protected void DisposeInputBase()
         {
+            CancelInputDebounce();
+
             // When initialization in the SetParametersAsync method fails, the EditContext property can remain equal to null
             if (EditContext is not null)
             {
