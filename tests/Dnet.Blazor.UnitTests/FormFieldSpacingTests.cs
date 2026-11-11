@@ -2,7 +2,6 @@ using Bunit;
 using Dnet.Blazor.Components.Form;
 using Dnet.Blazor.Infrastructure.Forms;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -68,15 +67,17 @@ public sealed class FormFieldSpacingTests : BunitContext
             .Add(component => component.ChildContent, content));
         var announcements = 0;
         _events.OnCurrentValue += _ => announcements++;
-        await cut.Find("textarea").InputAsync("Input");
-        Assert.Equal("Input", value);
+        var pending = cut.Find("textarea").InputAsync("Input");
+        cut.WaitForAssertion(() => Assert.Equal("Input", value));
+        Assert.False(pending.IsCompleted);
         Assert.Equal(0, announcements);
         Assert.Equal("5 / 20", Normalize(cut.Find(".dnet-form-field-plain-info .dnet-form-field-char-counter").TextContent));
         Assert.Empty(cut.FindAll(".dnet-form-field-header .dnet-form-field-char-counter"));
         Assert.Equal("Supporting text", cut.Find(".dnet-form-field-plain-info .dnet-hint").TextContent.Trim());
 
         // A programmatic clear must supersede the locally observed text, too.
-        await cut.InvokeAsync(() => _events.RaiseCurrentValue(""));
+        await cut.InvokeAsync(_events.RaiseClearContent);
+        await pending.WaitAsync(TimeSpan.FromSeconds(3));
         Assert.Equal("0 / 20", Normalize(cut.Find(".dnet-form-field-char-counter").TextContent));
     }
 
@@ -144,18 +145,24 @@ public sealed class FormFieldSpacingTests : BunitContext
         var field = Render<DnetFormField>(parameters => parameters
             .Add(component => component.ChildContent, Content(false, 60_000)));
         var input = field.FindComponent<TInput>().Instance;
+        var timeout = TimeSpan.FromSeconds(3);
 
         field.Render(parameters => parameters.Add(component => component.ChildContent, Content(true, 10)));
         Assert.Same(input, field.FindComponent<TInput>().Instance);
-        await field.Find(selector).InputAsync(text);
-        await field.Find(selector).KeyUpAsync(new KeyboardEventArgs { Key = "a" }).WaitAsync(TimeSpan.FromSeconds(3));
+        await field.Find(selector).InputAsync(text).WaitAsync(timeout);
         Assert.Equal(text, Assert.Single(notifications));
 
         field.Render(parameters => parameters.Add(component => component.ChildContent, Content(true, 60_000)));
-        var pending = field.Find(selector).KeyUpAsync(new KeyboardEventArgs { Key = "b" });
+        var pending = field.Find(selector).InputAsync("");
+        Assert.False(pending.IsCompleted);
+        await field.InvokeAsync(_events.RaiseClearContent);
+        await pending.WaitAsync(timeout);
+        Assert.Single(notifications);
+
+        pending = field.Find(selector).InputAsync(text);
         Assert.False(pending.IsCompleted);
         field.Render(parameters => parameters.Add(component => component.ChildContent, Content(false, 60_000)));
-        await pending.WaitAsync(TimeSpan.FromSeconds(3));
+        await pending.WaitAsync(timeout);
         Assert.Single(notifications);
     }
 

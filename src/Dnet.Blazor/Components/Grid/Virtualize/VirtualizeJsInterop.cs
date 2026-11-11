@@ -44,16 +44,24 @@ namespace Dnet.Blazor.Components.Grid.Virtualize
 
         public async ValueTask DisposeAsync()
         {
-            if (_selfReference != null)
+            var reference = _selfReference;
+            if (reference is null)
             {
-                try
-                {
-                    await _jsRuntime.InvokeVoidAsync($"{JsFunctionsPrefix}.dispose", _selfReference);
-                }
-                catch (JSDisconnectedException)
-                {
-                    // If the browser is gone, we don't need it to clean up any browser-side state
-                }
+                return;
+            }
+
+            _selfReference = null;
+            try
+            {
+                await _jsRuntime.InvokeVoidAsync($"{JsFunctionsPrefix}.dispose", reference);
+            }
+            catch (JSDisconnectedException)
+            {
+                // The circuit can close before the browser receives the cleanup call.
+            }
+            finally
+            {
+                reference.Dispose();
             }
         }
     }

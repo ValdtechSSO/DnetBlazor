@@ -26,7 +26,8 @@
     @if (ListOptions.EnableSearching)
     {
         <form class="dnet-list-form" @onsubmit="PreventSearchSubmit" @onsubmit:preventDefault="true">
-            <DnetFormField Label="@Label" UseClearButton="true" IsRequired="true">
+            <DnetFormField Label="@Label" UseClearButton="true" IsRequired="true"
+                           Appearance="@(UsePlainControl ? FormAppearance.Fill : FormAppearance.Standard)">
                 <PrefixContent>
                     <span class="dnet-list-search-icon dnet-list-search-icon-default" unselectable="on"></span>
                 </PrefixContent>
@@ -237,7 +238,7 @@
     public string Label { get => _label ?? ListOptions.SearchInputLabel ?? Localizer["Common.Search"]; set => _label = value; }
     private string? _label;
 
-    /// <summary>Gets or sets whether the component use plain control.</summary>
+    /// <summary>Uses a filled search field by default. Set to false for the standard transparent appearance.</summary>
     [Parameter]
     public bool UsePlainControl { get; set; } = true;
 
@@ -698,7 +699,7 @@
 
         if (ListOptions.EnableServerSide)
         {
-            await OnPaginationChanged.InvokeAsync(_searchModel);
+            await OnPaginationChanged.InvokeAsync(CreatePaginationRequest(_searchModel));
         }
         else
         {
@@ -707,6 +708,31 @@
 
         ManageSelectedNodes();
     }
+
+    private static SearchModel CreatePaginationRequest(SearchModel model) => new()
+    {
+        PaginationModel = new PaginationModel
+        {
+            CurrentPage = model.PaginationModel.CurrentPage,
+            PageSize = model.PaginationModel.PageSize,
+            ItemsCount = model.PaginationModel.ItemsCount
+        },
+        SortModel = model.SortModel is { } sort
+            ? new SortModel { ColumnName = sort.ColumnName, Order = sort.Order }
+            : null!,
+        AdvancedFilterModels = model.AdvancedFilterModels?.Select(filter => new AdvancedFilterModel
+        {
+            Column = filter.Column,
+            Value = filter.Value,
+            AdditionalValue = filter.AdditionalValue,
+            Type = filter.Type,
+            Operator = filter.Operator,
+            AdditionalOperator = filter.AdditionalOperator,
+            Condition = filter.Condition,
+            DateFormat = filter.DateFormat,
+            FilterLinkCondition = filter.FilterLinkCondition
+        }).ToList()!
+    };
 
     private void ManageSelectedNodes()
     {

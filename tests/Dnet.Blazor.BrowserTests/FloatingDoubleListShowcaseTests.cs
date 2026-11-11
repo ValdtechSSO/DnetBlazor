@@ -157,11 +157,8 @@ public sealed class FloatingDoubleListShowcaseTests
         await Assertions.Expect(List(page, assigned)).ToBeVisibleAsync();
     }
 
-    private static async Task SearchAsync(IPage page, bool assigned, string value)
-    {
-        await SearchInput(page, assigned).FillAsync(value);
-        await SearchInput(page, assigned).PressAsync("End");
-    }
+    private static Task SearchAsync(IPage page, bool assigned, string value) =>
+        SearchInput(page, assigned).FillAsync(value);
 
     private static async Task ExpectCountsAsync(IPage page, int available, int assigned)
     {

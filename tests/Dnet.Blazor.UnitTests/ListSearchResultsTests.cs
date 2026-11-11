@@ -2,8 +2,8 @@ using Bunit;
 using Dnet.Blazor.Components.Form;
 using Dnet.Blazor.Components.List;
 using Dnet.Blazor.Components.Paginator;
+using Dnet.Blazor.Infrastructure.Models.SearchModels;
 using Dnet.Blazor.Localization;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -17,6 +17,26 @@ public sealed class ListSearchResultsTests : BunitContext
         Services.AddTransient<IFormEventService, FormEventService>();
         Services.AddScoped(typeof(DnetListDragAndDropService<>), typeof(DnetListDragAndDropService<>));
         Services.AddScoped<IPaginator, Paginator>();
+    }
+
+    [Fact]
+    public async Task UsePlainControl_switches_the_search_background_and_preserves_the_active_query()
+    {
+        var cut = RenderList(paginated: false);
+        var input = cut.FindComponent<DnetInputText>().Instance;
+        Assert.Equal(FormAppearance.Fill, cut.FindComponent<DnetFormField>().Instance.Appearance);
+
+        await SearchAsync(cut, "ali", "Alice", "Alina");
+        cut.Render(parameters => parameters.Add(list => list.UsePlainControl, false));
+
+        Assert.Equal(FormAppearance.Standard, cut.FindComponent<DnetFormField>().Instance.Appearance);
+        Assert.Same(input, cut.FindComponent<DnetInputText>().Instance);
+        Assert.Equal("ali", cut.Find(".dnet-list-form input").GetAttribute("value"));
+        AssertRows(cut, "Alice", "Alina");
+        await ClearSearchAsync(cut, paginated: false);
+
+        cut.Render(parameters => parameters.Add(list => list.UsePlainControl, true));
+        Assert.Equal(FormAppearance.Fill, cut.FindComponent<DnetFormField>().Instance.Appearance);
     }
 
     [Theory]
@@ -113,6 +133,69 @@ public sealed class ListSearchResultsTests : BunitContext
         await navigation.WaitAsync(TimeSpan.FromSeconds(3));
     }
 
+    [Fact]
+    public async Task Concurrent_server_page_requests_keep_their_own_pagination_sort_and_filters()
+    {
+        var firstRequest = new TaskCompletionSource<SearchModel>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var secondRequest = new TaskCompletionSource<SearchModel>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var releaseFirst = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var timeout = TimeSpan.FromSeconds(3);
+        var pageReadAfterAwait = 0;
+        var cut = Render<DnetList<Person>>(parameters => parameters
+            .Add(list => list.Items, new List<Person> { new("First") })
+            .Add(list => list.ListOptions, new ListOptions<Person>
+            {
+                DisplayValueConverter = person => person.Name,
+                EnablePagingination = true,
+                EnableServerSide = true,
+                EnableSearching = true,
+                ServerSideSearchColumns = [nameof(Person.Name)],
+                ServerSideSortColumn = nameof(Person.Name),
+                PageSize = 1,
+                ShowFooter = true
+            })
+            .Add(list => list.OnPaginationChanged, async request =>
+            {
+                if (request.PaginationModel.CurrentPage == 2)
+                {
+                    firstRequest.SetResult(request);
+                    await releaseFirst.Task;
+                    pageReadAfterAwait = request.PaginationModel.CurrentPage;
+                }
+                else
+                {
+                    secondRequest.SetResult(request);
+                }
+            }));
+        await cut.Find(".dnet-list-form input").InputAsync("First").WaitAsync(timeout);
+        await cut.InvokeAsync(() => cut.Instance.SetRowData([new("First")], totalItems: 3, currentPage: 1));
+
+        var firstNavigation = cut.Find("button[aria-label='Next page']").ClickAsync();
+        try
+        {
+            await firstRequest.Task.WaitAsync(timeout);
+            await cut.Find("button[aria-label='Next page']").ClickAsync().WaitAsync(timeout);
+        }
+        finally
+        {
+            releaseFirst.SetResult();
+        }
+
+        await firstNavigation.WaitAsync(timeout);
+        var first = await firstRequest.Task.WaitAsync(timeout);
+        var second = await secondRequest.Task.WaitAsync(timeout);
+        Assert.Equal(2, pageReadAfterAwait);
+        Assert.Equal(3, second.PaginationModel.CurrentPage);
+        Assert.Equal(1, second.PaginationModel.PageSize);
+        Assert.Equal(3, second.PaginationModel.ItemsCount);
+        Assert.NotSame(first.PaginationModel, second.PaginationModel);
+        Assert.NotSame(first.SortModel, second.SortModel);
+        Assert.Equal(nameof(Person.Name), second.SortModel.ColumnName);
+        var secondFilter = Assert.Single(second.AdvancedFilterModels);
+        Assert.NotSame(Assert.Single(first.AdvancedFilterModels), secondFilter);
+        Assert.Equal("First", secondFilter.Value);
+    }
+
     private IRenderedComponent<DnetList<Person>> RenderList(bool paginated)
         => Render<DnetList<Person>>(parameters => parameters
             .Add(component => component.Items, new List<Person>
@@ -138,10 +221,7 @@ public sealed class ListSearchResultsTests : BunitContext
         string query,
         params string[] expected)
     {
-        // The debounce can finish a render between a DOM lookup and dispatch.
-        // Perform both on the renderer thread so the handler cannot go stale.
-        await cut.InvokeAsync(() => cut.Find(".dnet-list-form input").InputAsync(query));
-        await cut.InvokeAsync(() => cut.Find(".dnet-list-form input").KeyUpAsync(new KeyboardEventArgs { Key = "a" }));
+        await cut.Find(".dnet-list-form input").InputAsync(query).WaitAsync(TimeSpan.FromSeconds(3));
         cut.WaitForAssertion(() => AssertRows(cut, expected), TimeSpan.FromSeconds(3));
     }
 

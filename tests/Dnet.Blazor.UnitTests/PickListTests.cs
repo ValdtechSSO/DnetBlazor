@@ -51,7 +51,6 @@ public sealed class PickListTests : BunitContext
         var cut = RenderLocal(selected, _ => { });
 
         await cut.Find("input[role=searchbox]").InputAsync("burgos");
-        await cut.Find("input[role=searchbox]").KeyUpAsync(new Microsoft.AspNetCore.Components.Web.KeyboardEventArgs { Key = "s" });
         Assert.Single(cut.FindAll(".dnet-pick-list-item"));
         await cut.WaitForElement(".dnet-component-clear-button").ParentElement!.ClickAsync();
 
@@ -93,7 +92,6 @@ public sealed class PickListTests : BunitContext
             .Add(component => component.ChildContent, content));
 
         await cut.Find("input[role=searchbox]").InputAsync("burgos");
-        await cut.Find("input[role=searchbox]").KeyUpAsync(new Microsoft.AspNetCore.Components.Web.KeyboardEventArgs { Key = "s" });
 
         Assert.Single(cut.FindAll(".dnet-pick-list-item"));
         Assert.Contains("Burgos", cut.Markup);

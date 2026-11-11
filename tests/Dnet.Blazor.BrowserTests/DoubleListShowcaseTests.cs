@@ -225,12 +225,8 @@ public sealed class DoubleListShowcaseTests
         await Assertions.Expect(Panel(page, assigned)).ToBeVisibleAsync();
     }
 
-    private static async Task SearchAsync(IPage page, bool assigned, string value)
-    {
-        var input = SearchInput(page, assigned);
-        await input.FillAsync(value);
-        await input.PressAsync("End");
-    }
+    private static Task SearchAsync(IPage page, bool assigned, string value) =>
+        SearchInput(page, assigned).FillAsync(value);
 
     private static async Task ExpectCountsAsync(IPage page, int available, int assigned)
     {

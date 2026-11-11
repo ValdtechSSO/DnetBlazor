@@ -39,7 +39,7 @@ else
            class="@_inputTextClass"
            @bind="CurrentValueAsString"
            @bind:event="oninput"
-           @onkeyup="HandleTypingAsync"
+           @bind:after="HandleInputAsync"
            @onkeyup:stopPropagation="true"
            @onkeyup:preventDefault="true"
            @onfocus=@(() => Focus())
@@ -202,7 +202,7 @@ else
     public async void HandleChangeDebouncedDiscard(Object source, ElapsedEventArgs e) =>
         await DispatchInputNotificationAsync(NotifyStopTypingAsync);
 
-    private Task HandleTypingAsync() => DebounceInputAsync(DebounceTime, NotifyStopTypingAsync);
+    private Task HandleInputAsync() => DebounceInputAsync(DebounceTime, NotifyStopTypingAsync);
 
     private async Task NotifyStopTypingAsync()
     {
@@ -285,6 +285,7 @@ else
 
     private async Task HandleClearContentAsync()
     {
+        CancelInputDebounce();
         CurrentValue = default;
 
         if (EditContext is not null)

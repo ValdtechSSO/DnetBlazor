@@ -358,8 +358,6 @@
                 observers.mutationObserverBefore.disconnect();
                 observers.mutationObserverAfter.disconnect();
 
-                dotNetHelper.dispose();
-
                 delete observersByDotNetId[dotNetHelper._id];
             }
         }

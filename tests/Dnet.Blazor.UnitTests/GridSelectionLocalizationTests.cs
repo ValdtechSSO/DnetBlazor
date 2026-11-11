@@ -16,7 +16,6 @@ using Dnet.Blazor.Infrastructure.Models.SearchModels;
 using Dnet.Blazor.Infrastructure.Models.SearchModels.FilterModels;
 using Dnet.Blazor.Infrastructure.Services;
 using Dnet.Blazor.Localization;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -90,7 +89,6 @@ public sealed class GridSelectionLocalizationTests : BunitContext
             .Add(component => component.ListOptions, ListOptions("People")));
         Assert.Equal("Buscar", cut.FindComponent<DnetInputText>().Instance.AdditionalAttributes!["aria-label"]);
         await cut.InvokeAsync(() => cut.Find("input").InputAsync("Al"));
-        await cut.InvokeAsync(() => cut.Find("input").KeyUpAsync(new KeyboardEventArgs { Key = "l" }));
         cut.WaitForAssertion(() => Assert.Single(cut.FindAll(".dnet-list-item")), TimeSpan.FromSeconds(3));
 
         await cut.InvokeAsync(() => Localizer.SetCulture("en-US"));

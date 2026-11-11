@@ -33,7 +33,7 @@ else
               class="@_textareaClass"
               @bind="CurrentValueAsString"
               @bind:event="oninput"
-              @onkeyup="HandleTypingAsync"
+              @bind:after="HandleInputAsync"
               @onkeyup:stopPropagation="true"
               @onkeyup:preventDefault="true"
               @onchange="HandleChange"
@@ -150,7 +150,7 @@ else
     public async void HandleChangeDebouncedDiscard(Object source, ElapsedEventArgs e) =>
         await DispatchInputNotificationAsync(NotifyStopTypingAsync);
 
-    private Task HandleTypingAsync() => DebounceInputAsync(DebounceTime, NotifyStopTypingAsync);
+    private Task HandleInputAsync() => DebounceInputAsync(DebounceTime, NotifyStopTypingAsync);
 
     private async Task NotifyStopTypingAsync()
     {
@@ -240,6 +240,7 @@ else
 
     private async Task HandleClearContentAsync()
     {
+        CancelInputDebounce();
         CurrentValue = null;
 
         if (EditContext is not null)

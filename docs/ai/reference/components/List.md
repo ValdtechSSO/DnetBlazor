@@ -23,7 +23,7 @@
 | `ListOptions` | `ListOptions<TItem>` | `new()` | Gets or sets the list options used by this component. |
 | `PlaceHolder` | `string` | Computed | Gets or sets placeholder text displayed when the input is empty. |
 | `Label` | `string` | Computed | Gets or sets the label displayed for the component. |
-| `UsePlainControl` | `bool` | `true` | Gets or sets whether the component use plain control. |
+| `UsePlainControl` | `bool` | `true` | Uses a filled search field by default. Set to false for the standard transparent appearance. |
 | `OnTransfer` | `EventCallback<TItem>` | — | Raised when transfer occurs. |
 
 ## Styling tokens
