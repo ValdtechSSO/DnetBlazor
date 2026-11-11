@@ -10,6 +10,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
     <PackageReference Include="bunit" Version="2.11.3" />
+    <!-- Use the final .NET 11 packages for bUnit's remaining prerelease dependencies. -->
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="11.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="11.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="11.0.0" />
     <PackageReference Include="AngleSharp" Version="1.8.1" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">

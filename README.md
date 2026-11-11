@@ -1,16 +1,17 @@
 # DnetBlazor
 
-Blazor component library for .NET 11 RC2, compatible with Blazor WebAssembly and
+Blazor component library for .NET 11, compatible with Blazor WebAssembly and
 interactive server-side applications.
 
-**Current version:** 6.0.20-rc.2. See the [changelog](Changelog.md) for release
+**Current version:** 6.0.20. See the [changelog](Changelog.md) for release
 details.
 
 ## Building from source
 
-Install the [.NET 11 RC2 SDK](https://dotnet.microsoft.com/download/dotnet/11.0)
-(`11.0.100-rc.2.26504.105`, pinned in `global.json`) and Node.js 22. The library,
-samples and tests target `net11.0` and use the matching RC2 packages.
+Install the [.NET 11 SDK](https://dotnet.microsoft.com/download/dotnet/11.0)
+(`11.0.100`, pinned in `global.json`) and Node.js 22. The library, samples and
+tests target `net11.0`, with stable ASP.NET Core and Microsoft.Extensions
+dependencies at `11.0.0`.
 Applications consuming this build must also target .NET 11.
 
 ```bash
@@ -77,7 +78,7 @@ shape. Compare the variants in `/Buttons`.
 Install the package:
 
 ```bash
-dotnet add package Dnet.Blazor --version 6.0.20-rc.2
+dotnet add package Dnet.Blazor --version 6.0.20
 ```
 
 Register the services in `Program.cs`:
@@ -119,11 +120,11 @@ Each release ships a machine-readable reference: every component's parameters,
 every styling token, plus setup and theming guides. Plain markdown, so it works
 with Claude, Codex, Cursor, Gemini CLI or anything else that reads project docs.
 
-**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/download/v6.0.20-rc.2/dnet-blazor-agent-reference-6.0.20-rc.2.zip)**
+**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/download/v6.0.20/dnet-blazor-agent-reference-6.0.20.zip)**
 — attached to every release.
 
 ```bash
-unzip dnet-blazor-agent-reference-6.0.20-rc.2.zip -d docs/
+unzip dnet-blazor-agent-reference-6.0.20.zip -d docs/
 ```
 
 Then point your agent at it. The archive's `AGENTS-snippet.md` has text you can
@@ -138,8 +139,9 @@ npx degit ValdtechSSO/DnetBlazor/docs/ai/reference docs/dnet-blazor
 The reference is a snapshot of the version it ships with — grab the matching one
 when you upgrade the package.
 
-## What's new in 6.0.20-rc.2
+## What's new in 6.0.20
 
+- Updated to .NET 11 final with the `11.0.100` SDK and `11.0.0` packages.
 - Grid measures the header of its own instance, including when another grid is
   open in a floating panel.
 - Horizontal scrolling works when classic scrollbars occupy the scrollbar

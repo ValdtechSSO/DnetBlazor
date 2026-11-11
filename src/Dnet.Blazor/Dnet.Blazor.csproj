@@ -10,14 +10,14 @@
 		<Description>Set of Components for Blazor Framework</Description>
 		<Copyright>Datalnet</Copyright>
 		<PackageTags>Blazor-Components-Datalnet</PackageTags>
-		<PackageVersion>6.0.20-rc.2</PackageVersion>
+		<PackageVersion>6.0.20</PackageVersion>
 		<PackageProjectUrl>https://datalnet.com/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ValdtechSSO/DnetBlazor</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
 			- Grid measures each instance's own header when multiple grids are open.
 			- Grid preserves horizontal scrolling with classic system scrollbars.
-			- Targets .NET 11 RC2.
+			- Targets .NET 11 with stable ASP.NET Core and Microsoft.Extensions 11.0.0 packages.
 		</PackageReleaseNotes>
 	</PropertyGroup>
 
@@ -40,10 +40,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Components" Version="11.0.0-rc.2.26504.105" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="11.0.0-rc.2.26504.105" />
-		<PackageReference Include="Microsoft.Extensions.Localization" Version="11.0.0-rc.2.26504.105" />
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="11.0.0-rc.2.26504.105" />
+		<PackageReference Include="Microsoft.AspNetCore.Components" Version="11.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="11.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Localization" Version="11.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="11.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## Version 6.0.20 (November 2026)
+
+- Updated to .NET 11 final with SDK `11.0.100` and stable ASP.NET Core and
+  Microsoft.Extensions packages at `11.0.0`.
+- Updated the Alpine SDK and runtime images used to build and host the samples.
+
 ## Version 6.0.20-rc.2 (October 2026)
 
 - Grid measures each instance's own header, keeping the horizontal scrollbar
