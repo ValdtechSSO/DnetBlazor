@@ -42,6 +42,13 @@ already cost time in this repo.
 One component per PR. The linter cannot see appearance: always check the result
 by eye in `samples/` before calling a change done.
 
+## .NET skills
+
+Use the [project's .NET skills](.agents/skills/README.md) with the conventions in
+this file and the library development guide. When applying the Blazor interop
+guidance, preserve the public `dnet-blazor.js` entry point and existing bundle
+layout. For test execution, follow the [repository test overlay](.agents/skill-overlays/dotnet-test/run-tests.md).
+
 ## Styling contract
 
 - Before editing component styles, read `docs/styling/component-token-contract.md`.
