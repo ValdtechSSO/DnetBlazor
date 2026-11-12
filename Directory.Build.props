@@ -1,0 +1,5 @@
+<Project>
+  <PropertyGroup>
+    <DnetBlazorVersion>6.0.20</DnetBlazorVersion>
+  </PropertyGroup>
+</Project>

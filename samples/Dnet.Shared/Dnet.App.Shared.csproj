@@ -2,7 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net11.0</TargetFramework>
+    <DemoVersion Condition="'$(DNET_DEMO_VERSION)' == ''">$(DnetBlazorVersion)</DemoVersion>
+    <DemoVersion Condition="'$(DNET_DEMO_VERSION)' != ''">$(DNET_DEMO_VERSION)</DemoVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyMetadata Include="DnetDemoVersion" Value="$(DemoVersion)" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Shared\BlGridComponent\**" />

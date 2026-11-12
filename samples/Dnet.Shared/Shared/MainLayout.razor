@@ -21,6 +21,7 @@
 @using Dnet.Blazor.Components.Overlay.Infrastructure.Services
 @using Dnet.Blazor.Components.AdminLayout.Menu
 @using Dnet.Blazor.Localization
+@using System.Reflection
 @implements IAsyncDisposable
 
 @inject IThemeMessageService<ThemeConfigData> ThemeMessageService
@@ -150,7 +151,9 @@
 
     private string AppDescription { get; set; }
 
-    private string AppVersion { get; set; }
+    private static readonly string AppVersion = typeof(MainLayout).Assembly
+        .GetCustomAttributes<AssemblyMetadataAttribute>()
+        .Single(attribute => attribute.Key == "DnetDemoVersion").Value!;
 
     private string Title { get; set; }
 
@@ -162,7 +165,6 @@
     {
         AppName = "Datalnet Blazor Components";
         AppDescription = "";
-        AppVersion = "v.6.0.19-rc.2";
         Title = "Ready to eat";
         UserName = "admin@datalnet.com";
         PersonName = "Adrian Mustelier";

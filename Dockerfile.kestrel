@@ -4,7 +4,7 @@ EXPOSE 80
 # Blazor WASM Client
 FROM mcr.microsoft.com/dotnet/sdk:11.0.100-alpine3.24 AS publishwasm
 WORKDIR /workspace
-COPY global.json ./
+COPY global.json Directory.Build.props ./
 COPY src/Dnet.Blazor/Dnet.Blazor.csproj src/Dnet.Blazor/
 COPY samples/Dnet.Shared/Dnet.App.Shared.csproj samples/Dnet.Shared/
 COPY samples/Dnet.ClientSide/Dnet.App.ClientSide.csproj samples/Dnet.ClientSide/
@@ -13,12 +13,13 @@ RUN dotnet restore samples/Dnet.ClientSide/Dnet.App.ClientSide.csproj
 COPY src/Dnet.Blazor/ src/Dnet.Blazor/
 COPY samples/Dnet.Shared/ samples/Dnet.Shared/
 COPY samples/Dnet.ClientSide/ samples/Dnet.ClientSide/
+ARG DNET_DEMO_VERSION
 RUN dotnet publish samples/Dnet.ClientSide/Dnet.App.ClientSide.csproj -c Release --no-restore -o /app/wasm/publish
 
 # Kestrel
 FROM mcr.microsoft.com/dotnet/sdk:11.0.100-alpine3.24 AS publishkestrel
 WORKDIR /workspace
-COPY global.json ./
+COPY global.json Directory.Build.props ./
 COPY samples/Dnet.App.KestrelServer/Dnet.App.KestrelServer.csproj samples/Dnet.App.KestrelServer/
 RUN dotnet restore samples/Dnet.App.KestrelServer/Dnet.App.KestrelServer.csproj
 

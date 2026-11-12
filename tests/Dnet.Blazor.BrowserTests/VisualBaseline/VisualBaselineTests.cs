@@ -205,6 +205,13 @@ public sealed class VisualBaselineTests
         var captureSelector = state == VisualState.Selected
             ? scenario.SelectedCaptureSelector ?? scenario.RootSelector
             : scenario.RootSelector;
+        if (capturePage)
+        {
+            // Freeze the demo version to the text in the reference screenshots.
+            // The production header version is checked independently of the visual baseline.
+            await page.Locator("#app-tenant-name span").EvaluateAllAsync<object?>(
+                "elements => elements.forEach(element => element.textContent = 'v.6.0.19-rc.2')");
+        }
         var bytes = capturePage
             ? await page.ScreenshotAsync()
             : await page.Locator(captureSelector).First.ScreenshotAsync();
