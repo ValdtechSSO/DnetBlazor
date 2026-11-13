@@ -77,8 +77,9 @@ public sealed class PopupSurfaceTests
             Assert.True(actual.Shadow == shadow, $"{popup.Name} shadow: expected {shadow}, got {actual.Shadow}.");
             Assert.True(actual.Readable, $"{popup.Name} must retain visible foreground text.");
             Assert.True(actual.Border, $"{popup.Name} must not introduce a contrasting panel outline.");
+            // The popup owns the surface: the nested calendar does not repaint it.
             if (popup.Name == "DatePicker")
-                await Assertions.Expect(panel.Locator(".dnet-calendar")).ToHaveCSSAsync("background-color", background);
+                await Assertions.Expect(panel.Locator(".dnet-calendar")).ToHaveCSSAsync("background-color", "rgba(0, 0, 0, 0)");
 
             if (popup.BackgroundToken is not null)
                 await CheckBackgroundOverrideAsync(page, panel, popup.BackgroundToken, background);
@@ -118,7 +119,7 @@ public sealed class PopupSurfaceTests
         await panel.EvaluateAsync("(element, { token, color }) => element.closest('[data-dnet-overlay-id]').style.setProperty(token, color)", new { token, color = hostColor });
         await Assertions.Expect(panel).ToHaveCSSAsync("background-color", hostColor);
         if (token == "--dnet-calendar-background")
-            await Assertions.Expect(panel.Locator(".dnet-calendar")).ToHaveCSSAsync("background-color", hostColor);
+            await Assertions.Expect(panel.Locator(".dnet-calendar")).ToHaveCSSAsync("background-color", "rgba(0, 0, 0, 0)");
         await panel.EvaluateAsync("(element, token) => element.closest('[data-dnet-overlay-id]').style.removeProperty(token)", token);
         await page.EvaluateAsync("token => document.documentElement.style.removeProperty(token)", token);
         await Assertions.Expect(panel).ToHaveCSSAsync("background-color", original);

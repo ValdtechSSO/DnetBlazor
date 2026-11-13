@@ -1928,15 +1928,17 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-datepicker-content {
-  --_background: var(--dnet-calendar-background, var(--dnet-sys-surface-raised));
+  --_background: var(--dnet-calendar-background, var(--dnet-sys-material-popup));
 
   box-sizing: border-box;
   width: 100%;
   overflow: hidden;
   border: 0;
   border-radius: var(--_radius);
-  box-shadow: var(--dnet-sys-elevation-3);
-  background: var(--_background);
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-3);
+  background: var(--dnet-sys-material-sheen), var(--_background);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   color: var(--_foreground);
 }
 
@@ -1952,8 +1954,10 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   font-size: var(--dnet-sys-text-sm);
 }
 
+/* The popup content owns the material: the nested calendar no longer repaints
+   the same fill on top of it. */
 .dnet-datepicker-content > .dnet-calendar {
-  --_background: var(--dnet-calendar-background, var(--dnet-sys-surface-raised));
+  --_background: var(--dnet-sys-transparent);
 
   border: 0;
   border-radius: 0;
