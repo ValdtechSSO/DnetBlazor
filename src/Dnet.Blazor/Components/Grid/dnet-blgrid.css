@@ -129,6 +129,9 @@
   display: flex;
   flex: 1 1 auto;
   min-width: 0;
+  /* Scrolled columns stop at the pinned zones instead of running under
+     them: translucent pinned cells (glass themes) would show them. */
+  overflow-x: clip;
 }
 
 .blg-center-cols-viewport {

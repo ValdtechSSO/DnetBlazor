@@ -30,6 +30,9 @@
   the ghost material's sheen, rim and lift. Without effect by default. Keyboard focus shows the
   Checkbox ring in every theme (visual change: before, the global focus
   reset hid it).
+- Grid: horizontally scrolled columns stop at the pinned zones instead of
+  running under them, so translucent pinned cells (Liquid Glass) no longer
+  show the text of the columns beneath.
 - Grid: selecting all, from the header or with `SelectAll()`, leaves out the
   rows `DisableRow` disables. Before, the header did so only in the tree while
   the rendered body and `SelectAll()` selected them too. A disabled row's
