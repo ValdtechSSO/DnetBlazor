@@ -1168,7 +1168,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   --_border-color: var(--dnet-list-border-color, var(--dnet-autocomplete-list-border-color, var(--dnet-sys-transparent)));
   --_radius: var(--dnet-list-border-radius, var(--dnet-autocomplete-list-border-radius, var(--dnet-sys-radius-lg)));
   --_wrapper-padding: var(--dnet-list-wrapper-horizontal-padding, var(--dnet-autocomplete-list-wrapper-horizontal-padding, var(--dnet-sys-space-2)));
-  --_background: var(--dnet-list-background-color, var(--dnet-autocomplete-list-background-color, var(--dnet-sys-surface-raised)));
+  --_background: var(--dnet-list-background-color, var(--dnet-autocomplete-list-background-color, var(--dnet-sys-material-popup)));
   --_shadow: var(--dnet-list-box-shadow, var(--dnet-autocomplete-list-box-shadow, var(--dnet-sys-elevation-3)));
 
   display: flex;
@@ -1181,8 +1181,10 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   padding-top: var(--_wrapper-padding);
   padding-bottom: var(--_wrapper-padding);
   transition: opacity 0.5s ease-in-out;
-  background-color: var(--_background);
-  box-shadow: var(--_shadow);
+  background: var(--dnet-sys-material-sheen), var(--_background);
+  box-shadow: var(--dnet-sys-material-highlight), var(--_shadow);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   overflow: hidden;
 }
 .dnet-autocomplete-list-wrapper .dnet-item-fadeout {
