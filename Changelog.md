@@ -2,6 +2,29 @@
 
 ## Unreleased
 
+## Version 6.1.0 (November 2026)
+
+- New material tokens in the system layer: `--dnet-sys-canvas`,
+  `--dnet-sys-material-{page,chrome,card,popup,control,ghost}`, the mechanics
+  `--dnet-sys-material-{backdrop,highlight,sheen}` and
+  `--dnet-sys-scrim-backdrop`. `--dnet-sys-surface*` stay opaque colours; the
+  materials describe how containers are painted. Their defaults reproduce the
+  previous rendering, so existing themes do not change.
+- `DesktopLayout`, popups (Select, Autocomplete, connected and floating panels,
+  floating double lists, date, week and time pickers, dialogs, toasts and Grid
+  advanced filters), the modal backdrop, ExpansionPanel, PillTabs, Tabs,
+  Stepper, fill form fields and filled and outlined buttons consume them.
+- New `liquid-glass` and `liquid-glass-dark` themes: translucent, blurred
+  containers over a gradient canvas, with opaque fallbacks for reduced
+  transparency, forced colors and browsers without `backdrop-filter`.
+  `npm run check:contrast` verifies their worst-case WCAG AA contrast in CI.
+- Form field corners read `--dnet-form-field-radius`, falling back to
+  `--dnet-sys-radius-md` (5px by default). Visual change: fields in the
+  `modern` theme, which sets that radius to 10px, now have 10px corners.
+- The left `DesktopLayout` column carries `z-index: 200` so its menu flyouts
+  stay above content that creates its own stacking context.
+- The sample registers both themes in the header and the theme studio.
+
 ## Version 6.0.20 (November 2026)
 
 - Updated to .NET 11 final with SDK `11.0.100` and stable ASP.NET Core and

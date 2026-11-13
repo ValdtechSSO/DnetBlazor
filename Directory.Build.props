@@ -1,5 +1,5 @@
 <Project>
   <PropertyGroup>
-    <DnetBlazorVersion>6.0.20</DnetBlazorVersion>
+    <DnetBlazorVersion>6.1.0</DnetBlazorVersion>
   </PropertyGroup>
 </Project>
