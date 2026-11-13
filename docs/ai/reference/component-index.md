@@ -38,7 +38,7 @@ Open only the one you need.
 | [Stepper](components/Stepper.md) | `<DnetStep>`, `<DnetStepper>` | 13 | 1 |
 | [Tabs](components/Tabs.md) | `<DnetTab>`, `<DnetTabBody>`, `<DnetTabGroup>` | 12 | 5 |
 | [Theme](components/Theme.md) | `<DnetThemeScope>` | 3 | — |
-| [TimePicker](components/TimePicker.md) | `<DnetTimePicker>` | 19 | 5 |
+| [TimePicker](components/TimePicker.md) | `<DnetTimePicker>` | 19 | 6 |
 | [Timeline](components/Timeline.md) | `<DnetTimeline>`, `<DnetTimelineItem>` | 13 | 12 |
 | [Toast](components/Toast.md) | `<DnetToast>`, `<DnetToastStack>` | 22 | 15 |
 | [Tooltip](components/Tooltip.md) | `<DnetTooltipPanel>` | 10 | 9 |
