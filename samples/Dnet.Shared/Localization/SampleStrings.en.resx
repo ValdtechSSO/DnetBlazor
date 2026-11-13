@@ -1878,9 +1878,6 @@
   <data name="Common.TheTeamIsCheckingTheInformationBeforeReplying" xml:space="preserve">
     <value>The team is checking the information before replying.</value>
   </data>
-  <data name="Common.TheTextInTheNameColumnIsTooLong" xml:space="preserve">
-    <value>The text in the Name column is too long for a row</value>
-  </data>
   <data name="Common.TheWorkspaceKeeps12RecentEventsSoYouCan" xml:space="preserve">
     <value>The workspace keeps 12 recent events so you can review the team's progress.</value>
   </data>
