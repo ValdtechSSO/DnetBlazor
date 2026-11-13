@@ -9043,14 +9043,18 @@ select.mat-input-element::-ms-value {
   --_foreground: var(--dnet-btn-foreground, var(--dnet-sys-on-primary));
   --_border: var(--dnet-btn-border-color, var(--dnet-sys-transparent));
   border: 1px solid var(--_border);
+  /* Rim only: a sheen would lower white-on-primary text contrast. */
+  box-shadow: var(--dnet-sys-material-highlight);
 }
 
 .dnet-button-variant-outlined {
-  --_background: var(--dnet-btn-background, var(--dnet-button-background-color, var(--dnet-sys-transparent)));
+  --_background: var(--dnet-btn-background, var(--dnet-button-background-color, var(--dnet-sys-material-ghost)));
   --_foreground: var(--dnet-btn-foreground, var(--dnet-sys-primary-content));
   --_hover: var(--dnet-btn-background-hover, var(--dnet-button-hover-color, color-mix(in srgb, var(--_foreground) 10%, var(--_background))));
   --_border: var(--dnet-btn-border-color, var(--_foreground));
   border: 1px solid var(--_border);
+  background: var(--dnet-sys-material-sheen), var(--_background);
+  box-shadow: var(--dnet-sys-material-highlight);
 }
 
 .dnet-button:is(.dnet-button-variant-filled, .dnet-button-variant-outlined):focus-visible {
