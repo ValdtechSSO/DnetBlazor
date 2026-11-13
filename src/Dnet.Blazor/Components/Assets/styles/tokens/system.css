@@ -56,3 +56,32 @@
   --dnet-sys-motion-normal: 200ms;
   --dnet-sys-motion-ease: cubic-bezier(0.35, 0, 0.25, 1);
 }
+
+/* ------------------------------------------------------------ materiales
+ * Cómo se pinta un contenedor: relleno, desenfoque, brillo de borde y reflejo.
+ * --dnet-sys-surface* sigue siendo un color opaco (lo que se recorta contra el
+ * fondo: anillos de foco, marcas, texto inverso); el material es aparte.
+ *
+ * Los valores por defecto reproducen exactamente lo que se pintaba antes de que
+ * existieran, así que ningún tema que no los defina cambia. Las mecánicas
+ * (backdrop, highlight, sheen, scrim-backdrop) no tienen efecto por defecto.
+ *
+ * El bloque se repite en cada ámbito de tema (:where, especificidad 0) para que
+ * sus var() se resuelvan contra el --dnet-sys-surface* de ese ámbito: si solo se
+ * declararan en :root, un DnetThemeScope o el host de overlays heredaría el
+ * material ya resuelto en <html> con los colores del tema global.
+ */
+:root,
+:where([data-dnet-theme]:not([data-dnet-theme=""])) {
+  --dnet-sys-canvas: var(--dnet-sys-surface);
+  --dnet-sys-material-page: var(--dnet-sys-surface);
+  --dnet-sys-material-chrome: var(--dnet-sys-surface);
+  --dnet-sys-material-card: var(--dnet-sys-surface);
+  --dnet-sys-material-popup: var(--dnet-sys-surface-raised);
+  --dnet-sys-material-control: color-mix(in srgb, var(--dnet-sys-on-surface) 12%, var(--dnet-sys-surface));
+  --dnet-sys-material-ghost: var(--dnet-sys-transparent);
+  --dnet-sys-material-backdrop: none;
+  --dnet-sys-material-highlight: inset 0 0 0 0 var(--dnet-sys-transparent);
+  --dnet-sys-material-sheen: none;
+  --dnet-sys-scrim-backdrop: none;
+}
