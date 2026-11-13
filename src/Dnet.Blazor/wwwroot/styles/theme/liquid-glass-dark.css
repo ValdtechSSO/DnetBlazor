@@ -145,9 +145,6 @@
   --dnet-grid-headercell-default-background-color: var(--dnet-sys-transparent);
   --dnet-grid-border-color: var(--dnet-sys-transparent);
   --dnet-grid-header-foreground-color: var(--dnet-sys-on-surface-muted);
-  /* Scrollbar: a translucent accent pill, stronger on hover. */
-  --dnet-grid-grid-foreground-color: color-mix(in srgb, var(--dnet-sys-primary-content) 55%, transparent);
-  --dnet-grid-grid-foreground-color-hover: color-mix(in srgb, var(--dnet-sys-primary-content) 80%, transparent);
   /* Grid selection checkboxes: the same glass face as Checkbox. */
   --dnet-grid-checkbox-size: var(--dnet-checkbox-size);
   --dnet-grid-checkbox-radius: var(--dnet-checkbox-border-radius);
