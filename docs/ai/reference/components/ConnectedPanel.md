@@ -20,7 +20,7 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
-| `--dnet-connected-panel-background` | `#ffffff` <br><sub>via `--dnet-sys-surface-raised`</sub> |
+| `--dnet-connected-panel-background` | `#ffffff` <br><sub>via `--dnet-sys-material-popup`</sub> |
 | `--dnet-connected-panel-padding` | `2px` |
 | `--dnet-dialog-border-radius` | `10px` <br><sub>via `--dnet-sys-radius-lg`</sub> |
 
