@@ -154,6 +154,14 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-grid-cell-horizontal-padding` | `12px` |
 | `--dnet-grid-cell-pinnedleft-border-bottom` | `1px solid var(--dnet-sys-border)` |
 | `--dnet-grid-cell-pinnedright-border-bottom` | `1px solid var(--dnet-sys-border)` |
+| `--dnet-grid-checkbox-background` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
+| `--dnet-grid-checkbox-background-checked` | `#5b5ce0` <br><sub>via `--dnet-sys-primary`</sub> |
+| `--dnet-grid-checkbox-border-color` | `#e1e3e1` <br><sub>via `--dnet-sys-border-strong`</sub> |
+| `--dnet-grid-checkbox-mark-color` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
+| `--dnet-grid-checkbox-mark-image` | `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/></svg>")` |
+| `--dnet-grid-checkbox-mark-size` | `0.625rem` |
+| `--dnet-grid-checkbox-radius` | `0px` |
+| `--dnet-grid-checkbox-size` | `18px` |
 | `--dnet-grid-clicked-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 14%, transparent)` <br><sub>via `--dnet-sys-state-pressed`</sub> |
 | `--dnet-grid-disabled-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 38%, transparent)` <br><sub>via `--dnet-sys-state-disabled-fg`</sub> |
 | `--dnet-grid-focus-color` | `currentColor` |

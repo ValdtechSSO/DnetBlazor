@@ -22,6 +22,12 @@
   `--dnet-grid-padding` shape the grid itself, which paints the card material.
   The first and last cell of each row carry `blg-cell-row-start` and
   `blg-cell-row-end`. Without effect by default.
+- Grid selection checkboxes can take the Checkbox glass face:
+  `--dnet-grid-checkbox-size`, `-radius`, `-border-color`, `-background`,
+  `-background-checked`, `-mark-color`, `-mark-size` and `-mark-image`, plus
+  the ghost material's sheen, rim and lift. Without effect by default. Keyboard focus shows the
+  Checkbox ring in every theme (visual change: before, the global focus
+  reset hid it).
 - Chips read the material mechanics like buttons: the ghost sheen, rim and
   elevation on the face, and the accent sheen and rim once selected. Without
   effect by default.

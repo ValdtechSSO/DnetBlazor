@@ -214,21 +214,32 @@
 }
 
 [type="checkbox"].blg-checkbox-no-label {
+  /* Selection checkboxes. A theme can give them the glass face of the
+     Checkbox component: the material mechanics come from the system layer,
+     and with the defaults below the box stays square, bordered and filled
+     when checked. */
+  --_check-size: var(--dnet-grid-checkbox-size, 18px);
+  --_check-radius: var(--dnet-grid-checkbox-radius, 0px);
+  --_check-border: var(--dnet-grid-checkbox-border-color, var(--dnet-sys-border-strong));
+  --_check-face: var(--dnet-grid-checkbox-background, var(--dnet-sys-surface));
+  --_check-mark: var(--dnet-grid-checkbox-mark-color, var(--dnet-sys-surface));
+  --_check-mark-size: var(--dnet-grid-checkbox-mark-size, 0.625rem);
+  --_check-mark-image: var(--dnet-grid-checkbox-mark-image, url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/></svg>"));
   appearance: none;
-  background: var(--dnet-sys-surface);
-  border: 1px solid var(--dnet-sys-border-strong);
-  border-radius: 0;
-  box-shadow: none;
+  background: var(--dnet-sys-material-sheen), var(--_check-face);
+  border: 1px solid var(--_check-border);
+  border-radius: var(--_check-radius);
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-lift);
   box-sizing: border-box;
   cursor: pointer;
   display: inline-grid;
   flex: 0 0 auto;
-  height: 18px;
+  height: var(--_check-size);
   margin: 0;
   padding: 0;
   place-content: center;
   position: relative;
-  width: 18px;
+  width: var(--_check-size);
 }
 
 [type="checkbox"].blg-checkbox-no-label.negative {
@@ -236,18 +247,18 @@
 }
 
 [type="checkbox"].blg-checkbox-no-label:checked {
-  background: var(--dnet-sys-primary);
-  border-color: var(--dnet-sys-primary);
+  --_check-face: var(--dnet-grid-checkbox-background-checked, var(--dnet-sys-primary));
+  --_check-border: var(--_check-face);
 }
 
 [type="checkbox"].blg-checkbox-no-label::after {
-  background-color: var(--dnet-sys-surface);
+  background-color: var(--_check-mark);
   content: "";
-  height: 0.625rem;
-  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/></svg>");
+  height: var(--_check-mark-size);
+  -webkit-mask-image: var(--_check-mark-image);
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-size: contain;
-  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/></svg>");
+  mask-image: var(--_check-mark-image);
   mask-repeat: no-repeat;
   mask-size: contain;
   opacity: 0;
@@ -255,7 +266,7 @@
   transition:
     opacity 90ms ease,
     transform 90ms ease;
-  width: 0.625rem;
+  width: var(--_check-mark-size);
 }
 
 [type="checkbox"].blg-checkbox-no-label:checked::after {
@@ -266,6 +277,10 @@
 [type="checkbox"].blg-checkbox-no-label:focus-visible {
   outline: 2px solid var(--dnet-sys-primary);
   outline-offset: 2px;
+  /* The library's global :focus reset removes the outline: the ring is drawn
+     as a shadow, as on Checkbox. */
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-lift),
+              0 0 0 2px var(--dnet-sys-surface), 0 0 0 4px var(--dnet-sys-focus-ring);
 }
 
 [type="checkbox"].blg-checkbox-no-label:disabled {
