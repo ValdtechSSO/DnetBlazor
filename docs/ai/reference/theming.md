@@ -149,7 +149,8 @@ fields) and `ghost` (outlined buttons), plus `--dnet-sys-material-backdrop`
 (blur), `-highlight` (inset rim) and `-sheen` (image over the fill),
 `-accent-sheen` and `-accent-highlight` (filled buttons), `-ghost-elevation`
 (outlined buttons), `-focus` (fill form fields), `-lift` (checkbox and radio
-button faces), and `--dnet-sys-scrim-backdrop`. Defaults reproduce the opaque look, so only a
+button faces), `-well-shadow` (slide toggle track), and
+`--dnet-sys-scrim-backdrop`. Defaults reproduce the opaque look, so only a
 material theme such as `liquid-glass` changes them. Replace its background with
 `--dnet-sys-canvas`; give your own containers the same look with:
 

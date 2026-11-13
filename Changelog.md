@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- New material mechanic `--dnet-sys-material-well-shadow`, the inner shadow
+  and rim of recessed tracks (slide toggle). Without effect by default.
 - New material mechanic `--dnet-sys-material-lift`, the drop shadow of small
   glass faces (checkbox, radio button). Without effect by default.
 - Checkbox, RadioButton and Chips show a focus ring for keyboard focus in
