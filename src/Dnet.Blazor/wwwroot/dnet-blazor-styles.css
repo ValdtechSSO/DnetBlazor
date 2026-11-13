@@ -2571,7 +2571,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 /*! FloatingPanel — migrado a tokens (6.0). Generado una vez; se edita a mano. */
 
 .dnet-floating-panel-container {
-  --_background: var(--dnet-sys-surface-raised);
+  --_background: var(--dnet-sys-material-popup);
   --_radius: var(--dnet-sys-radius-lg);
   --_elevation: var(--dnet-sys-elevation-3);
 
@@ -2583,8 +2583,10 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   overflow: hidden;
   width: 100%;
   height: calc(100dvh - 0px);
-  box-shadow: var(--_elevation);
-  background: var(--_background);
+  box-shadow: var(--dnet-sys-material-highlight), var(--_elevation);
+  background: var(--dnet-sys-material-sheen), var(--_background);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   color: var(--dnet-sys-on-surface-emphasis);
 }
 
