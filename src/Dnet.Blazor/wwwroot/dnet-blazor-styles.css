@@ -2320,7 +2320,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   --_radius: var(--dnet-dialog-border-radius, var(--dnet-sys-radius-lg));
   --_max-height: var(--dnet-dialog-max-height, 100%);
   --_elevation: var(--dnet-dialog-elevation, var(--dnet-sys-elevation-3));
-  --_background: var(--dnet-dialog-background, var(--dnet-sys-surface-raised));
+  --_background: var(--dnet-dialog-background, var(--dnet-sys-material-popup));
   --_foreground: var(--dnet-dialog-foreground, var(--dnet-sys-on-surface-emphasis));
   --_title-font-size: var(--dnet-dialog-title-font-size, var(--dnet-sys-text-xl));
   --_header-margin-bottom: var(--dnet-dialog-header-margin-bottom, 15px);
@@ -2336,8 +2336,10 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   height: 100%;
   min-height: inherit;
   max-height: inherit;
-  box-shadow: var(--_elevation);
-  background: var(--_background);
+  box-shadow: var(--dnet-sys-material-highlight), var(--_elevation);
+  background: var(--dnet-sys-material-sheen), var(--_background);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   color: var(--_foreground);
 }
 
