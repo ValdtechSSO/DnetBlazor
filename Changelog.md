@@ -30,6 +30,9 @@
   the ghost material's sheen, rim and lift. Without effect by default. Keyboard focus shows the
   Checkbox ring in every theme (visual change: before, the global focus
   reset hid it).
+- Grid: horizontal wheel and trackpad gestures, and Shift + wheel, over the
+  rows scroll the columns. Before, only the grid's scrollbar (hidden until
+  hovered on macOS) or a touch drag did.
 - Grid: horizontally scrolled columns stop at the pinned zones instead of
   running under them, so translucent pinned cells (Liquid Glass) no longer
   show the text of the columns beneath.

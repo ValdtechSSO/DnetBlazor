@@ -111,15 +111,42 @@
             pendingScrollInfo = null;
         };
 
+        // The body has no native horizontal scroll: the columns move with the
+        // grid's own scrollbar. Horizontal wheel and trackpad gestures (and
+        // Shift + wheel) over the rows, pinned zones included, drive that
+        // scrollbar; its scroll event moves the columns as a drag would.
+        const wheelTarget = elementRef.closest('.blg-viewport') || elementRef;
+        const wheelHandler = function (e) {
+            if (scrollElementRef.clientWidth === 0 || getComputedStyle(scrollElementRef).display === 'none') return;
+
+            let deltaX = e.deltaX;
+            let deltaY = e.deltaY;
+            if (e.shiftKey && deltaX === 0) {
+                deltaX = deltaY;
+                deltaY = 0;
+            }
+            if (Math.abs(deltaX) <= Math.abs(deltaY)) return;
+
+            const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? scrollElementRef.clientWidth : 1;
+            const before = scrollElementRef.scrollLeft;
+            scrollElementRef.scrollLeft = before + deltaX * unit;
+
+            // At either end the gesture is left to the page (history swipes).
+            if (scrollElementRef.scrollLeft !== before) e.preventDefault();
+        };
+
         elementRef.addEventListener('touchstart', touchStartHandler, { passive: true });
         elementRef.addEventListener('touchmove', touchMoveHandler, { passive: false });
         elementRef.addEventListener('touchend', touchEndHandler, { passive: true });
+        wheelTarget.addEventListener('wheel', wheelHandler, { passive: false });
 
         const state = listenerStateByElement.get(elementRef) || {};
         state.touch = {
             touchStartHandler,
             touchMoveHandler,
             touchEndHandler,
+            wheelTarget,
+            wheelHandler,
             cancelAnimationFrame: () => {
                 if (animationFrame !== null) window.cancelAnimationFrame(animationFrame);
             }
@@ -254,6 +281,7 @@
                 elementRef.removeEventListener('touchstart', state.touch.touchStartHandler);
                 elementRef.removeEventListener('touchmove', state.touch.touchMoveHandler);
                 elementRef.removeEventListener('touchend', state.touch.touchEndHandler);
+                state.touch.wheelTarget.removeEventListener('wheel', state.touch.wheelHandler);
                 state.touch.cancelAnimationFrame();
             }
             listenerStateByElement.delete(elementRef);
