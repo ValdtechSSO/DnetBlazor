@@ -99,7 +99,7 @@ when tokenising: deriving beats enumerating.
 opaque: focus-ring gaps, checkmarks, inverse text and masks are cut out against
 them. Containers read `--dnet-sys-material-*` (canvas, page, chrome, card, popup,
 control, ghost) plus the mechanics (`backdrop`, `highlight`, `sheen`,
-`accent-sheen`, `accent-highlight`, `ghost-elevation`, `focus`) and
+`accent-sheen`, `accent-highlight`, `ghost-elevation`, `focus`, `lift`) and
 `--dnet-sys-scrim-backdrop`. Their defaults are what components painted before,
 so a theme that ignores them is unaffected. They are declared on `:root` and
 again on `:where([data-dnet-theme])`, so their `var()`s resolve against the

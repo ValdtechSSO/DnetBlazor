@@ -115,6 +115,9 @@
   --dnet-sys-material-accent-highlight: inset 0 0 0 0 var(--dnet-sys-transparent);
   --dnet-sys-material-ghost-elevation: 0 0 0 0 var(--dnet-sys-transparent);
   --dnet-sys-material-focus: 0 0 0 0 var(--dnet-sys-transparent);
+  /* Small glass faces inside another surface (checkbox, radio button) sit on
+     a tight shadow of their own. Without effect here. */
+  --dnet-sys-material-lift: 0 0 0 0 var(--dnet-sys-transparent);
 }
 
 /*! Sass shared (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */

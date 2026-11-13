@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- New material mechanic `--dnet-sys-material-lift`, the drop shadow of small
+  glass faces (checkbox, radio button). Without effect by default.
+
 ## Version 6.1.0 (November 2026)
 
 - New material tokens in the system layer: `--dnet-sys-canvas`,
