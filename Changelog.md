@@ -33,6 +33,11 @@
 - Grid: horizontal wheel and trackpad gestures, and Shift + wheel, over the
   rows scroll the columns. Before, only the grid's scrollbar (hidden until
   hovered on macOS) or a touch drag did.
+- Grid: its horizontal scrollbar stays visible on desktop. An inherited
+  `scrollbar-color` or `scrollbar-width` (an app's body style, for example)
+  no longer switches it to the native overlay scrollbar that macOS hides
+  until the columns already move. Browsers without `::-webkit-scrollbar`
+  get a thin scrollbar in the grid's colours.
 - Grid: horizontally scrolled columns stop at the pinned zones instead of
   running under them, so translucent pinned cells (Liquid Glass) no longer
   show the text of the columns beneath.

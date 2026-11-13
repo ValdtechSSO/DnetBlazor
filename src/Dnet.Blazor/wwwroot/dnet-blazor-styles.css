@@ -2966,6 +2966,12 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   overflow: hidden;
   flex: 1 1 auto;
   overflow-x: scroll;
+  /* The grid draws this scrollbar itself (::-webkit-scrollbar, further down)
+     and it stays visible. An inherited scrollbar-color or scrollbar-width,
+     such as an app's body style, would switch Chromium back to the native
+     overlay scrollbar, hidden on macOS until the columns already move. */
+  scrollbar-color: auto;
+  scrollbar-width: auto;
 }
 
 .blg-body-horizontal-scroll-container {
@@ -3575,6 +3581,14 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 .blg-arcadia-theme ::-webkit-scrollbar-track {
   background: var(--dnet-grid-grid-background-color, var(--blg-grid-background-color, var(--dnet-sys-transparent)));
+}
+/* Browsers without ::-webkit-scrollbar style the grid's scrollbar with the
+   standard properties and the same colours. */
+@supports not selector(::-webkit-scrollbar) {
+  .blg-arcadia-theme .blg-body-horizontal-scroll-viewport {
+    scrollbar-width: thin;
+    scrollbar-color: var(--dnet-grid-grid-foreground-color, var(--blg-grid-foreground-color, color-mix(in srgb, var(--dnet-sys-on-surface) 41%, var(--dnet-sys-surface)))) var(--dnet-grid-grid-background-color, var(--blg-grid-background-color, var(--dnet-sys-transparent)));
+  }
 }
 .blg-arcadia-theme body {
   scrollbar-face-color: var(--dnet-grid-grid-foreground-color, var(--blg-grid-foreground-color, color-mix(in srgb, var(--dnet-sys-on-surface) 41%, var(--dnet-sys-surface))));
