@@ -141,6 +141,12 @@
   --dnet-grid-border-color: var(--dnet-sys-transparent);
   --dnet-grid-header-foreground-color: var(--dnet-sys-on-surface-muted);
 
+  /* Chips: glass like the buttons, keeping their own corners. Unselected
+     chips are ghost glass; a selected chip takes the accent fill. */
+  --dnet-chips-background: var(--dnet-sys-material-ghost);
+  --dnet-chips-background-hover: color-mix(in srgb, var(--dnet-sys-primary) 8%, var(--dnet-sys-material-ghost));
+  --dnet-chips-background-selected: var(--dnet-sys-primary);
+
   /* AdminLayout: the minified menu flyout floats over the content and defaults
      to the border colour, which is translucent here. Nested in the column it
      cannot blur (backdrop root), so it takes the popup fill instead. */

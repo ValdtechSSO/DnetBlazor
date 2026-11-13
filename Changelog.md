@@ -32,6 +32,9 @@
   of their own: control material, an 8px gap, rounded ends and a hairline
   outline. The header sits on the glass without fills or separators, and
   selected and clicked rows take an accent tint.
+- The Liquid Glass themes render chips as glass like the buttons, keeping
+  their own corners: unselected chips are ghost glass, and a selected chip
+  takes the accent fill with its sheen and glow.
 
 ## Version 6.1.0 (November 2026)
 
