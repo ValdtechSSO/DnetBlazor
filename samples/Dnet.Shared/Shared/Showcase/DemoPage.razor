@@ -1,5 +1,5 @@
 <DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
-<div id="@Id" class="demo-page" data-demo-page="@Title" aria-labelledby="@TitleId">
+<div id="@Id" class="demo-page @(Fill ? "demo-page-fill" : null)" data-demo-page="@Title" aria-labelledby="@TitleId">
     <header class="demo-page-header">
         <div>
             <p class="demo-eyebrow">@S.Text(Category)</p>
@@ -23,6 +23,8 @@
     [Parameter] public string Category { get; set; } = "Components";
     [Parameter] public string Description { get; set; } = string.Empty;
     [Parameter] public string Badge { get; set; } = string.Empty;
+    /// <summary>Full width, with the content filling the rest of the page (data grids).</summary>
+    [Parameter] public bool Fill { get; set; }
     [Parameter] public RenderFragment ChildContent { get; set; }
     private string TitleId => $"{Id}-title";
 }
