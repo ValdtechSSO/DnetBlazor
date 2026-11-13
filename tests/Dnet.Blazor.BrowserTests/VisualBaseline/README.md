@@ -160,6 +160,19 @@ alguno de esos componentes adquiere feedback visual de hover, debe eliminarse
 de esta excepción y el golden nuevo debe diferir de `default` en ambas
 plataformas.
 
+## Escenarios con tema
+
+`ComponentScenario` acepta `Theme`. Si viene informado, el harness guarda el
+tema en `localStorage` (`dnet.theme`) antes de cargar la página, espera a que
+`<html>` lo aplique y nombra los goldens `<nombre>-<tema>-<estado>-<viewport>.png`,
+junto a los del tema por defecto. `DNET_VISUAL_SCENARIO` selecciona por ese
+nombre completo (por ejemplo `select-liquid-glass`).
+
+Chromium headless aplica `backdrop-filter` (comprobado en macOS con los temas
+`liquid-glass`: el fondo y el velo modal salen desenfocados), así que los goldens
+de vidrio protegen también el desenfoque. Confirmarlo en la primera captura
+Linux de CI.
+
 ## Ajuste de tolerancia
 
 Cada escenario acepta `MaxDiffPixels` y `ChannelThreshold`. Los valores por
