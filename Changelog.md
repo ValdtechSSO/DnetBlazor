@@ -4,10 +4,11 @@
 
 - New material mechanic `--dnet-sys-material-lift`, the drop shadow of small
   glass faces (checkbox, radio button). Without effect by default.
-- Checkbox and RadioButton show a focus ring for keyboard focus in every
-  theme: a 2px gap in `--dnet-sys-surface` and 2px in `--dnet-sys-focus-ring`.
-  Visual change: before, keyboard focus was not visible. Pointer use looks the
-  same.
+- Checkbox, RadioButton and Chips show a focus ring for keyboard focus in
+  every theme: a 2px gap in `--dnet-sys-surface` and 2px in
+  `--dnet-sys-focus-ring`. A chip's remove button shows a 2px ring in the
+  chip's text colour. Visual change: before, keyboard focus was not visible.
+  Pointer use looks the same.
 - Checkbox and RadioButton faces paint the ghost material (`ghost`, `sheen`,
   `highlight`, `lift`). Without effect by default. The checkmark draws itself
   when the user allows motion.

@@ -1801,6 +1801,11 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   --_shadow: var(--dnet-sys-material-accent-highlight);
 }
 
+/* Keyboard focus: a ring outside the chip, as on buttons, over its own shadow. */
+.dnet-chip.dnet-standard-chip:focus-visible {
+  box-shadow: var(--_shadow), 0 0 0 2px var(--dnet-sys-surface), 0 0 0 4px var(--dnet-sys-focus-ring);
+}
+
 .dnet-standard-chip:not([aria-pressed="true"]):hover {
   background-color: var(--dnet-chips-background-hover, var(--dnet-sys-surface-hover));
 }
@@ -1885,6 +1890,14 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   -moz-appearance: none;
   padding: 0;
   background: none;
+}
+
+/* The remove button sits inside the chip: its ring takes the chip's text
+   colour, which always contrasts with the chip, at full opacity. */
+.dnet-chip.dnet-standard-chip .dnet-chip-remove:focus-visible {
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px currentColor;
+  opacity: 1;
 }
 
 .dnet-chips-icon-wrapper {
