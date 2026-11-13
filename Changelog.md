@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- DynamicStepper reads the same `--dnet-step-*` tokens as Stepper, except
+  `-header-flex` and `-header-overflow`: its steps already sit in equal
+  columns. Its rail spans the gap between columns. Without visual change by
+  default.
 - Stepper: new `--dnet-step-*` tokens let a theme stack each icon over its
   label in equal columns (`-header-direction`, `-header-flex`,
   `-header-overflow`, `-icon-margin`, `-line-display`); paint the icons

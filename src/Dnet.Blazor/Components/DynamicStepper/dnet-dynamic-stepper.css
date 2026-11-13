@@ -2,9 +2,37 @@
 
 .dnet-horizontal-dstepper-header-container {
   --_font-size: var(--dnet-step-font-size, var(--dnet-sys-text-md));
+  --_column-gap: 0.3rem;
+  /* A theme can stack each icon over its label, with a rail in place of the
+     lines between steps. Shares the Stepper's tokens. */
+  --_header-direction: var(--dnet-step-header-direction, row);
+  --_icon-margin: var(--dnet-step-icon-margin, 0 8px 0 0);
+  --_icon-size: var(--dnet-step-icon-size, 24px);
+  --_line-display: var(--dnet-step-line-display, block);
+  /* Icon faces: upcoming, completed (painted over the number) and current. */
+  --_icon-background: var(--dnet-step-icon-background, var(--dnet-sys-on-surface-subtle));
+  --_icon-color: var(--dnet-step-icon-color, var(--dnet-sys-on-primary));
+  --_icon-shadow: var(--dnet-step-icon-shadow, none);
+  --_icon-font-size: var(--dnet-step-icon-font-size, inherit);
+  --_icon-font-weight: var(--dnet-step-icon-font-weight, inherit);
+  --_icon-done: var(--dnet-step-icon-background-done, none);
+  --_icon-current: var(--dnet-step-icon-background-current, var(--dnet-sys-primary-emphasis));
+  --_icon-shadow-current: var(--dnet-step-icon-shadow-current, none);
+  --_icon-scale-current: var(--dnet-step-icon-scale-current, none);
+  --_label-align: var(--dnet-step-label-align, inherit);
+  --_label-weight: var(--dnet-step-label-weight, inherit);
+  --_label-weight-current: var(--dnet-step-label-weight-current, var(--_label-weight));
+  --_label-upcoming: var(--dnet-step-label-color-upcoming, inherit);
+  /* The rail runs from each icon's centre to the next one's; the part before
+     the current step is filled. Without paint by default. */
+  --_rail-top: var(--dnet-step-rail-top, 0px);
+  --_rail: var(--dnet-step-rail-background, none);
+  --_rail-shadow: var(--dnet-step-rail-shadow, none);
+  --_rail-done: var(--dnet-step-rail-background-done, none);
+  --_rail-shadow-done: var(--dnet-step-rail-shadow-done, none);
 
   display: grid;
-  gap: 0.3rem;
+  gap: var(--_column-gap);
   overflow: hidden;
   align-items: center;
   width: 100%;
@@ -14,14 +42,33 @@
   width: 100%;
   transition: grid-column 0.3s ease-in-out, opacity 0.3s ease-in-out;
   display: flex;
-  flex-direction: row;
+  flex-direction: var(--_header-direction);
   align-items: center;
   justify-content: flex-start;
   opacity: 1;
+  position: relative;
   visibility: visible;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   outline: none;
+}
+
+/* Rail segment from this step's icon to the next visible step's. */
+.dnet-dstep-header:has(> .dnet-dstepper-horizontal-line)::before {
+  background: var(--_rail);
+  border-radius: var(--dnet-sys-radius-pill);
+  box-shadow: var(--_rail-shadow);
+  content: "";
+  height: 8px;
+  inset-inline-start: 50%;
+  position: absolute;
+  top: var(--_rail-top);
+  width: calc(100% + var(--_column-gap));
+}
+
+.dnet-dstep-header:has(~ .dnet-dstep-selected)::before {
+  background: var(--_rail-done);
+  box-shadow: var(--_rail-shadow-done);
 }
 
 .dnet-dstep-header.hidden {
@@ -42,13 +89,18 @@
 }
 
 .dnet-dstep-header .dnet-dstep-icon {
-  background-color: var(--dnet-sys-on-surface-subtle);
-  color: var(--dnet-sys-on-primary);
+  background: var(--_icon-background);
+  box-shadow: var(--_icon-shadow);
+  color: var(--_icon-color);
+  font-size: var(--_icon-font-size);
+  font-weight: var(--_icon-font-weight);
 }
 
 .dnet-horizontal-dstepper-header .dnet-dstep-icon {
-  margin-right: 8px;
+  height: var(--_icon-size);
+  margin: var(--_icon-margin);
   flex: none;
+  width: var(--_icon-size);
 }
 
 .dnet-dstep-header .dnet-dstep-icon-selected, .dnet-dstep-header .dnet-dstep-icon-state-done, .dnet-dstep-header .dnet-dstep-icon-state-edit {
@@ -57,8 +109,19 @@
 }
 
 .dnet-dstep-header.dnet-dstep-selected .dnet-dstep-icon {
-  background-color: var(--dnet-sys-primary-emphasis);
+  background: var(--_icon-current);
+  box-shadow: var(--_icon-shadow-current);
   color: var(--dnet-sys-on-primary);
+  scale: var(--_icon-scale-current);
+}
+
+/* Completed steps, the ones before the current: a face over the number. */
+.dnet-dstep-header:has(~ .dnet-dstep-selected) .dnet-dstep-icon::after {
+  background: var(--_icon-done);
+  border-radius: inherit;
+  content: "";
+  inset: 0;
+  position: absolute;
 }
 
 .dnet-dstep-icon {
@@ -81,7 +144,18 @@
   min-width: 50px;
   vertical-align: middle;
   font-size: var(--_font-size);
+  font-weight: var(--_label-weight);
   margin-right: 0.3rem;
+  text-align: var(--_label-align);
+}
+
+.dnet-dstep-header.dnet-dstep-selected .dnet-dstep-label {
+  font-weight: var(--_label-weight-current);
+}
+
+/* Steps after the current one. */
+.dnet-dstep-header.dnet-dstep-selected ~ .dnet-dstep-header .dnet-dstep-label {
+  color: var(--_label-upcoming);
 }
 
 .dnet-dstepper-horizontal-line {
@@ -89,6 +163,7 @@
 
   border-top-width: 1px;
   border-top-style: solid;
+  display: var(--_line-display);
   flex: auto;
   height: 0;
   min-width: 32px;
@@ -114,6 +189,6 @@
     display: none;
   }
   .dnet-horizontal-dstepper-header-container {
-    gap: 0px;
+    --_column-gap: 0px;
   }
 }
