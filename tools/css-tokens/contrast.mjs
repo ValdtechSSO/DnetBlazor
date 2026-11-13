@@ -16,6 +16,9 @@
  *   ghost
  *   primary       on-primary over the primary fill, plain and under the accent
  *                 sheen at the height where a button label starts
+ *   selection     checkbox mark and radio dot over the ghost face, and their
+ *                 borders over the card and over the face, at WCAG 1.4.11
+ *                 (3:1 for non-text), also over each opaque fallback face
  *
  * The backdrop-filter `saturate()` of the theme is applied to the canvas before
  * composing. Blur only mixes colours that already lie between the stops, so
@@ -25,7 +28,8 @@
  *
  * Inputs must be literals the gate can read: text tokens and material fills as
  * #hex or rgb(); canvas as gradients whose first stop is #hex plus a final #hex
- * base colour. Anything else (var(), color-mix()) fails the gate.
+ * base colour. Anything else (var(), color-mix()) fails the gate. Selection
+ * tokens may also be var(--dnet-sys-…) of a literal declared in the same block.
  *
  *   node tools/css-tokens/contrast.mjs        # or: npm run check:contrast
  */
@@ -35,6 +39,7 @@ import { join, resolve } from "node:path";
 const repositoryRoot = resolve(import.meta.dirname, "../..");
 const themeRoot = join(repositoryRoot, "src/Dnet.Blazor/wwwroot/styles/theme");
 const threshold = 4.5;
+const nonTextThreshold = 3;
 
 const textTokens = [
     "on-surface",
@@ -46,6 +51,10 @@ const textTokens = [
 ];
 const ghostTextTokens = ["on-surface", "primary-content"];
 const levels = ["chrome", "card", "popup", "control", "ghost"];
+// Selection controls paint a ghost face inside a card: marks sit on the face,
+// borders between the card and the face.
+const selectionMarks = ["checkbox-checkmark-path", "radio-button-background"];
+const selectionBorders = ["checkbox-border-color", "radio-button-border-color", "radio-button-checked-border-color"];
 
 // ------------------------------------------------------------------ parsing
 
@@ -296,6 +305,35 @@ function readLiteral(declarations, name, problems) {
     return color;
 }
 
+/** Reads a --dnet-<name> colour: a literal, or var(--dnet-sys-…) of a literal in the same block. */
+function readComponentColor(declarations, name, problems) {
+    const value = declarations.get(`--dnet-${name}`);
+    if (value === undefined) {
+        problems.push(`--dnet-${name} is not declared`);
+        return null;
+    }
+    const reference = /^var\(\s*--dnet-sys-([-a-z0-9]+)\s*\)$/.exec(value);
+    if (reference) {
+        return readLiteral(declarations, reference[1], problems);
+    }
+    const color = parseColor(value);
+    if (!color) {
+        problems.push(`--dnet-${name} must be a #hex or rgb() literal or var(--dnet-sys-…), found: ${value}`);
+    }
+    return color;
+}
+
+function checkSelection(theme, level, selection, face, card, results) {
+    for (const token of selectionMarks) {
+        const minimum = Math.min(...face.map((background) => contrast(selection[token], background)));
+        results.push({ theme, level, token, minimum, threshold: nonTextThreshold });
+    }
+    for (const token of selectionBorders) {
+        const minimum = Math.min(...[...card, ...face].map((background) => contrast(selection[token], background)));
+        results.push({ theme, level, token, minimum, threshold: nonTextThreshold });
+    }
+}
+
 /** Worst-case backgrounds for each material level. */
 function backgroundsFor(fills, canvas, saturation, sheen) {
     const backdrop = [...canvas.stops.map((stop) => over(stop, canvas.base)), canvas.base]
@@ -343,6 +381,8 @@ function checkTheme(file) {
     const saturation = parseSaturation(declarations.get("--dnet-sys-material-backdrop"));
     const accentSheen = parseGradientAt(
         declarations.get("--dnet-sys-material-accent-sheen"), 0.34, problems, "--dnet-sys-material-accent-sheen");
+    const selection = Object.fromEntries(
+        [...selectionMarks, ...selectionBorders].map((token) => [token, readComponentColor(declarations, token, problems)]));
 
     if (problems.length > 0) {
         return { theme, problems, results };
@@ -366,6 +406,7 @@ function checkTheme(file) {
             minimum: contrast(text["on-primary"], over(accentSheen, text.primary)),
         });
     }
+    checkSelection(theme, "selection", selection, backgrounds.ghost, backgrounds.card, results);
 
     // Opaque fallbacks: every block nested in @supports/@media that restates fills.
     for (const fallback of rules.filter((rule) => rule.atRule !== null && rule.selector === main.selector)) {
@@ -382,6 +423,14 @@ function checkTheme(file) {
             const label = fallback.atRule.startsWith("@supports") ? "no-backdrop" : "reduced";
             checkLevel(theme, `${level} (${label})`, level === "ghost" ? ghostTextTokens : textTokens,
                 text, [over(fill, canvas.base)], results);
+        }
+        const ghost = fallback.declarations.get("--dnet-sys-material-ghost");
+        const card = fallback.declarations.get("--dnet-sys-material-card");
+        if (ghost !== undefined && parseColor(ghost)) {
+            const label = fallback.atRule.startsWith("@supports") ? "no-backdrop" : "reduced";
+            const cardFill = card !== undefined && parseColor(card) ? over(parseColor(card), canvas.base) : canvas.base;
+            checkSelection(theme, `selection (${label})`, selection,
+                [over(parseColor(ghost), cardFill)], [cardFill], results);
         }
     }
 
@@ -404,14 +453,14 @@ for (const file of files) {
     }
     const byLevel = Map.groupBy(results, (result) => result.level);
     for (const [level, entries] of byLevel) {
-        const cells = entries.map(({ token, minimum }) => {
-            const pass = minimum >= threshold;
+        const cells = entries.map(({ token, minimum, threshold: minimumRequired = threshold }) => {
+            const pass = minimum >= minimumRequired;
             if (!pass) failures++;
             return `${token} ${minimum.toFixed(2)}${pass ? "" : " ✗"}`;
         });
-        console.log(`  ${level.padEnd(22)} ${cells.join("  ")}`);
+        console.log(`  ${level.padEnd(24)} ${cells.join("  ")}`);
     }
 }
 
-console.log(`\nContrast gate (WCAG AA ${threshold}:1, worst case): ${failures === 0 ? "pass" : `${failures} failure(s)`}.`);
+console.log(`\nContrast gate (WCAG AA ${threshold}:1 text, ${nonTextThreshold}:1 selection controls, worst case): ${failures === 0 ? "pass" : `${failures} failure(s)`}.`);
 process.exitCode = failures === 0 ? 0 : 1;

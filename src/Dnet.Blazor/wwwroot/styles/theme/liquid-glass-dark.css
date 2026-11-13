@@ -93,6 +93,8 @@
   --dnet-sys-material-accent-highlight: inset 0 1px 0 rgb(255 255 255 / .45), inset 0 -1px 0 rgb(0 0 0 / .15), 0 10px 28px rgb(37 99 235 / .38);
   --dnet-sys-material-ghost-elevation: 0 4px 16px rgb(16 24 48 / .08);
   --dnet-sys-material-focus: 0 0 0 1.5px #2563eb, 0 0 0 5px rgb(37 99 235 / .26);
+  /* Checkbox and radio faces: a tight shadow under the rim. */
+  --dnet-sys-material-lift: 0 1px 2px rgb(0 0 0 / .35), 0 3px 10px rgb(0 0 0 / .30);
 
   /* ------------------------------------------------- component tokens */
   /* Glass has no outlines: outlined buttons are ghost pills and fields are
@@ -107,6 +109,20 @@
   /* The accent keeps white text here, so primary-emphasis is a dark blue; the
      tab indicator needs the lighter accent text colour to stay visible. */
   --dnet-tabs-indicator-color: var(--dnet-sys-primary-content);
+
+  /* Checkbox and radio button: glass faces that stay glass when checked;
+     the mark and the dot take the accent and the border keeps its colour.
+     The border holds 3:1 against the card and the face.
+     primary-emphasis is the dark blue behind white text here, so the marks
+     take the light accent content colour. */
+  --dnet-checkbox-size: 20px;
+  --dnet-checkbox-border-radius: 6px;
+  --dnet-checkbox-background: var(--dnet-sys-transparent);
+  --dnet-checkbox-checkmark-path: var(--dnet-sys-primary-content);
+  --dnet-checkbox-border-color: #959db0;
+  --dnet-radio-button-background: var(--dnet-sys-primary-content);
+  --dnet-radio-button-border-color: #959db0;
+  --dnet-radio-button-checked-border-color: #959db0;
 
   /* AdminLayout: the minified menu flyout floats over the content and defaults
      to the border colour, which is translucent here. Nested in the column it

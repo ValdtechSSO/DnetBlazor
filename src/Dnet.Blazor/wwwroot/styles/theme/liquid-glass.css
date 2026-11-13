@@ -103,6 +103,8 @@
   --dnet-sys-material-accent-highlight: inset 0 1px 0 rgb(255 255 255 / .45), inset 0 -1px 0 rgb(0 0 0 / .15), 0 10px 28px rgb(37 99 235 / .38);
   --dnet-sys-material-ghost-elevation: 0 4px 16px rgb(16 24 48 / .08);
   --dnet-sys-material-focus: 0 0 0 1.5px #2563eb, 0 0 0 5px rgb(37 99 235 / .26);
+  /* Checkbox and radio faces: a tight shadow under the rim. */
+  --dnet-sys-material-lift: 0 1px 2px rgb(16 24 48 / .08), 0 3px 10px rgb(16 24 48 / .10);
 
   /* ------------------------------------------------- component tokens */
   /* Glass has no outlines: outlined buttons are ghost pills and fields are
@@ -114,6 +116,18 @@
   --dnet-form-field-clear-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.8' stroke-linecap='round'><circle cx='12' cy='12' r='11' fill='currentColor' fill-opacity='.14' stroke='none'/><path d='m9 9 6 6m0-6-6 6'/></svg>");
   --dnet-calendar-icon-color: var(--dnet-sys-primary-content);
   --dnet-timepicker-icon-color: var(--dnet-sys-primary-content);
+
+  /* Checkbox and radio button: glass faces that stay glass when checked;
+     the mark and the dot take the accent and the border keeps its colour.
+     The border holds 3:1 against the card and the face. */
+  --dnet-checkbox-size: 20px;
+  --dnet-checkbox-border-radius: 6px;
+  --dnet-checkbox-background: var(--dnet-sys-transparent);
+  --dnet-checkbox-checkmark-path: var(--dnet-sys-primary);
+  --dnet-checkbox-border-color: #6b7285;
+  --dnet-radio-button-background: var(--dnet-sys-primary);
+  --dnet-radio-button-border-color: #6b7285;
+  --dnet-radio-button-checked-border-color: #6b7285;
 
   /* AdminLayout: the minified menu flyout floats over the content and defaults
      to the border colour, which is translucent here. Nested in the column it
