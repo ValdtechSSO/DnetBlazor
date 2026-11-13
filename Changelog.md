@@ -4,11 +4,20 @@
 
 - New material mechanic `--dnet-sys-material-well-shadow`, the inner shadow
   and rim of recessed tracks (slide toggle). Without effect by default.
-- SlideToggle reads the material mechanics: the well shadow on its track,
-  the accent sheen and highlight once checked, and the highlight on its
-  handle. New tokens `--dnet-slide-toggle-track-border-color` and
-  `--dnet-slide-toggle-icon-color`, with today's colours as defaults.
-  Without visual change by default.
+- SlideToggle: new `Variant` parameter. `DnetSlideToggleVariant.Lens` is a
+  tinted track with a clear lens handle, painted by its
+  `--dnet-slide-toggle-lens-*` tokens (track height, handle size, track
+  background and shadow in both states, handle background, shadow and
+  backdrop filter). Each falls back to the standard value, so where no
+  theme sets them it looks like `Standard`.
+- SlideToggle paint tokens `--dnet-slide-toggle-track-border-width`,
+  `-track-shadow-checked`, `-handle-shadow`, `-icon-color`, `-halo-size`
+  (the hover and focus halo around the handle), `-focus-outline` (a keyboard
+  focus outline around the whole control) and `-disabled-opacity`, with
+  today's values as defaults; the track reads the well shadow material. The
+  control is as tall as the taller of track and handle, and the track is
+  centred in it, so a handle larger than the track overhangs it. Without
+  visual change by default.
 - New material mechanic `--dnet-sys-material-lift`, the drop shadow of small
   glass faces (checkbox, radio button). Without effect by default.
 - Checkbox, RadioButton and Chips show a focus ring for keyboard focus in
