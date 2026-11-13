@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+- New material mechanic `--dnet-sys-material-well-shadow`, the inner shadow
+  and rim of recessed tracks (slide toggle). Without effect by default.
+- SlideToggle: new `Variant` parameter. `DnetSlideToggleVariant.Lens` is a
+  tinted track with a clear lens handle, painted by its
+  `--dnet-slide-toggle-lens-*` tokens (track height, handle size, track
+  background and shadow in both states, handle background, shadow and
+  backdrop filter). Each falls back to the standard value, so where no
+  theme sets them it looks like `Standard`.
+- SlideToggle paint tokens `--dnet-slide-toggle-track-border-width`,
+  `-track-shadow-checked`, `-handle-shadow`, `-icon-color`, `-halo-size`
+  (the hover and focus halo around the handle), `-focus-outline` (a keyboard
+  focus outline around the whole control) and `-disabled-opacity`, with
+  today's values as defaults; the track reads the well shadow material. The
+  control is as tall as the taller of track and handle, and the track is
+  centred in it, so a handle larger than the track overhangs it. Without
+  visual change by default.
 - New material mechanic `--dnet-sys-material-lift`, the drop shadow of small
   glass faces (checkbox, radio button). Without effect by default.
 - Checkbox, RadioButton and Chips show a focus ring for keyboard focus in
@@ -70,6 +86,16 @@
 - The Liquid Glass themes render chips as glass like the buttons, keeping
   their own corners: unselected chips are ghost glass, and a selected chip
   takes the accent fill with its sheen and glow.
+- The Liquid Glass themes paint the slide toggle as in their reference
+  design. Standard (option A): a recessed glass well with a faint rim and a
+  white glass bead inside it; checked, the track fills with the accent,
+  lightened on the dark glass, under a sheen and a soft glow. Lens
+  (option C): the glass of a checkbox face when off, translucent accent
+  glass when checked, and a clear 32px lens 4px taller than the track.
+  Neither shows icons or a hover halo; keyboard focus outlines the whole
+  control, and disabled is at 45% opacity. Without `backdrop-filter`, or
+  with reduced transparency or forced colours, the lens turns opaque. The
+  sample's SlideToggle page shows the Lens variant.
 
 ## Version 6.1.0 (November 2026)
 

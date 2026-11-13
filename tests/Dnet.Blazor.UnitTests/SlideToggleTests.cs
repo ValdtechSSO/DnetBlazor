@@ -59,4 +59,24 @@ public sealed class SlideToggleTests : BunitContext
         Assert.Equal("Automatic updates", input.GetAttribute("aria-label"));
         Assert.Contains("--dnet-slide-toggle-track-width: 60px", root.GetAttribute("style"));
     }
+
+    [Fact]
+    public void Lens_variant_marks_the_root_and_standard_adds_no_class()
+    {
+        var value = false;
+        var standard = Render<DnetSlideToggle>(parameters => parameters
+            .Add(component => component.Value, value)
+            .Add(component => component.ValueExpression, () => value));
+        var lens = Render<DnetSlideToggle>(parameters => parameters
+            .Add(component => component.Value, value)
+            .Add(component => component.ValueExpression, () => value)
+            .Add(component => component.Variant, DnetSlideToggleVariant.Lens));
+
+        Assert.DoesNotContain("dnet-slide-toggle-variant-lens", standard.Find(".dnet-slide-toggle").ClassList);
+        Assert.Contains("dnet-slide-toggle-variant-lens", lens.Find(".dnet-slide-toggle").ClassList);
+        Assert.Throws<ArgumentOutOfRangeException>(() => Render<DnetSlideToggle>(parameters => parameters
+            .Add(component => component.Value, value)
+            .Add(component => component.ValueExpression, () => value)
+            .Add(component => component.Variant, (DnetSlideToggleVariant)42)));
+    }
 }

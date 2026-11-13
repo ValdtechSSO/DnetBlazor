@@ -35,6 +35,19 @@ public class DnetSlideToggle : DnetInputBase<bool>
     [Parameter]
     public bool Required { get; set; }
 
+    /// <summary>Gets or sets how the switch paints its track and handle.</summary>
+    [Parameter]
+    public DnetSlideToggleVariant Variant { get; set; } = DnetSlideToggleVariant.Standard;
+
+    /// <inheritdoc />
+    protected override void OnParametersSet()
+    {
+        if (!Enum.IsDefined(Variant))
+            throw new ArgumentOutOfRangeException(nameof(Variant), Variant, "Unknown slide toggle variant.");
+
+        base.OnParametersSet();
+    }
+
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
@@ -118,6 +131,7 @@ public class DnetSlideToggle : DnetInputBase<bool>
         .AddClass("dnet-slide-toggle-checked", CurrentValue == true)
         .AddClass("dnet-slide-toggle-disabled", Disabled)
         .AddClass("dnet-slide-toggle-full-width", FullWidth)
+        .AddClass("dnet-slide-toggle-variant-lens", Variant == DnetSlideToggleVariant.Lens)
         .AddClassFromAttributes(AdditionalAttributes!)
         .Build();
 

@@ -118,6 +118,8 @@
   /* Small glass faces inside another surface (checkbox, radio button) sit on
      a tight shadow of their own. Without effect here. */
   --dnet-sys-material-lift: 0 0 0 0 var(--dnet-sys-transparent);
+  /* Recessed tracks (slide toggle): inner shadow and rim. Without effect here. */
+  --dnet-sys-material-well-shadow: inset 0 0 0 0 var(--dnet-sys-transparent);
 }
 
 /*! Sass shared (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
@@ -8194,18 +8196,44 @@ select.mat-input-element::-ms-value {
 
 .dnet-slide-toggle {
   --_track-width: var(--dnet-slide-toggle-track-width, 52px);
-  --_track-height: var(--dnet-slide-toggle-track-height, 32px);
-  --_handle-size: var(--dnet-slide-toggle-handle-size, 24px);
-  --_track: var(--dnet-slide-toggle-track-background, var(--dnet-sys-border-strong));
-  --_track-checked: var(--dnet-slide-toggle-track-background-checked, var(--dnet-sys-primary-strong));
-  --_handle: var(--dnet-slide-toggle-handle-background, var(--dnet-sys-on-surface-muted));
-  --_handle-checked: var(--dnet-slide-toggle-handle-background-checked, var(--dnet-sys-on-primary));
-  --_handle-icon: var(--dnet-sys-surface);
+  /* Standard values. The Lens variant falls back to them. */
+  --_base-track-height: var(--dnet-slide-toggle-track-height, 32px);
+  --_base-handle-size: var(--dnet-slide-toggle-handle-size, 24px);
+  --_base-track: var(--dnet-slide-toggle-track-background, var(--dnet-sys-border-strong));
+  --_base-track-checked: var(--dnet-slide-toggle-track-background-checked, var(--dnet-sys-primary-strong));
+  /* A recessed well in material themes; without effect by default. */
+  --_base-track-shadow: var(--dnet-sys-material-well-shadow);
+  --_base-track-shadow-checked: var(--dnet-slide-toggle-track-shadow-checked, none);
+  --_base-handle: var(--dnet-slide-toggle-handle-background, var(--dnet-sys-on-surface-muted));
+  --_base-handle-checked: var(--dnet-slide-toggle-handle-background-checked, var(--dnet-sys-on-primary));
+  --_base-handle-shadow: var(--dnet-slide-toggle-handle-shadow, var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-1));
+  --_track-height: var(--_base-track-height);
+  --_handle-size: var(--_base-handle-size);
+  --_track: var(--_base-track);
+  --_track-checked: var(--_base-track-checked);
   --_track-border: var(--dnet-sys-on-surface-subtle);
+  --_track-border-width: var(--dnet-slide-toggle-track-border-width, 2px);
+  --_track-shadow: var(--_base-track-shadow);
+  --_track-shadow-checked: var(--_base-track-shadow-checked);
+  --_handle: var(--_base-handle);
+  --_handle-checked: var(--_base-handle-checked);
+  --_handle-shadow: var(--_base-handle-shadow);
+  --_handle-backdrop: none;
+  --_handle-icon: var(--dnet-slide-toggle-icon-color, var(--dnet-sys-surface));
   --_label: var(--dnet-slide-toggle-label-color, var(--dnet-sys-on-surface));
   --_font-size: var(--dnet-slide-toggle-font-size, var(--dnet-sys-text-md));
   --_gap: var(--dnet-slide-toggle-gap, var(--dnet-sys-space-3));
   --_focus-ring: var(--dnet-slide-toggle-focus-ring, var(--dnet-sys-focus-ring));
+  --_focus-outline: var(--dnet-slide-toggle-focus-outline, none);
+  --_halo: var(--dnet-slide-toggle-halo-size, 8px);
+  --_disabled-opacity: var(--dnet-slide-toggle-disabled-opacity, 0.38);
+
+  /* The control is as tall as the taller of track and handle; the track is
+     centred in it. A handle larger than the track overhangs it: the inline
+     inset turns negative and the travel grows to match. */
+  --_control-height: max(var(--_track-height), var(--_handle-size));
+  --_track-offset: calc((var(--_control-height) - var(--_track-height)) / 2);
+  --_handle-top: calc((var(--_control-height) - var(--_handle-size)) / 2);
   --_handle-inset: calc((var(--_track-height) - var(--_handle-size)) / 2);
   --_handle-travel: calc(var(--_track-width) - var(--_handle-size) - (2 * var(--_handle-inset)));
 
@@ -8213,6 +8241,22 @@ select.mat-input-element::-ms-value {
   display: inline-block;
   font-size: var(--_font-size);
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Lens: a tinted track and a clear lens a little taller than it. Every value
+   falls back to the standard one, so the variant looks the same until a
+   theme paints it. */
+.dnet-slide-toggle-variant-lens {
+  --_track-height: var(--dnet-slide-toggle-lens-track-height, var(--_base-track-height));
+  --_handle-size: var(--dnet-slide-toggle-lens-handle-size, var(--_base-handle-size));
+  --_track: var(--dnet-slide-toggle-lens-track-background, var(--_base-track));
+  --_track-checked: var(--dnet-slide-toggle-lens-track-background-checked, var(--_base-track-checked));
+  --_track-shadow: var(--dnet-slide-toggle-lens-track-shadow, var(--_base-track-shadow));
+  --_track-shadow-checked: var(--dnet-slide-toggle-lens-track-shadow-checked, var(--_base-track-shadow-checked));
+  --_handle: var(--dnet-slide-toggle-lens-handle-background, var(--_base-handle));
+  --_handle-checked: var(--dnet-slide-toggle-lens-handle-background, var(--_base-handle-checked));
+  --_handle-shadow: var(--dnet-slide-toggle-lens-handle-shadow, var(--_base-handle-shadow));
+  --_handle-backdrop: var(--dnet-slide-toggle-lens-handle-backdrop, none);
 }
 
 .dnet-slide-toggle-layout {
@@ -8239,11 +8283,18 @@ select.mat-input-element::-ms-value {
 }
 
 .dnet-slide-toggle-control {
+  border-radius: var(--dnet-sys-radius-pill);
   display: inline-block;
   flex: 0 0 auto;
-  height: var(--_track-height);
+  height: var(--_control-height);
   position: relative;
   width: var(--_track-width);
+}
+
+/* An outline around the whole control for keyboard focus; without effect by
+   default, where the focus halo surrounds the handle. */
+.dnet-slide-toggle-control:has(> .dnet-slide-toggle-input:focus-visible) {
+  box-shadow: var(--_focus-outline);
 }
 
 .dnet-slide-toggle-input {
@@ -8261,19 +8312,24 @@ select.mat-input-element::-ms-value {
 
 .dnet-slide-toggle-track {
   background: var(--_track);
-  border: 2px solid var(--_track-border);
+  border: var(--_track-border-width) solid var(--_track-border);
   border-radius: var(--dnet-sys-radius-pill);
   box-sizing: border-box;
-  inset: 0;
+  box-shadow: var(--_track-shadow);
+  inset: var(--_track-offset) 0;
   position: absolute;
-  transition: background-color var(--dnet-sys-motion-normal) var(--dnet-sys-motion-ease);
+  transition:
+    background-color var(--dnet-sys-motion-normal) var(--dnet-sys-motion-ease),
+    box-shadow var(--dnet-sys-motion-normal) var(--dnet-sys-motion-ease);
 }
 
 .dnet-slide-toggle-handle {
   align-items: center;
+  -webkit-backdrop-filter: var(--_handle-backdrop);
+  backdrop-filter: var(--_handle-backdrop);
   background: var(--_handle);
   border-radius: 50%;
-  box-shadow: var(--dnet-sys-elevation-1);
+  box-shadow: var(--_handle-shadow);
   color: var(--_handle-icon);
   display: flex;
   height: var(--_handle-size);
@@ -8281,7 +8337,7 @@ select.mat-input-element::-ms-value {
   left: var(--_handle-inset);
   pointer-events: none;
   position: absolute;
-  top: var(--_handle-inset);
+  top: var(--_handle-top);
   transition:
     background-color var(--dnet-sys-motion-normal) var(--dnet-sys-motion-ease),
     box-shadow var(--dnet-sys-motion-fast) var(--dnet-sys-motion-ease),
@@ -8300,14 +8356,18 @@ select.mat-input-element::-ms-value {
   display: none;
 }
 
+/* Checked. A theme may give the track a whole background (a sheen over the
+   fill) and its own shadow; it then sets the border width to 0, since the
+   border reads the same value as a colour. */
 .dnet-slide-toggle-checked .dnet-slide-toggle-track {
   background: var(--_track-checked);
   border-color: var(--_track-checked);
+  box-shadow: var(--_track-shadow-checked);
 }
 
 .dnet-slide-toggle-checked .dnet-slide-toggle-handle {
   background: var(--_handle-checked);
-  color: var(--_track-checked);
+  color: var(--dnet-slide-toggle-icon-color, var(--_track-checked));
   transform: translateX(var(--_handle-travel));
 }
 
@@ -8320,17 +8380,17 @@ select.mat-input-element::-ms-value {
 }
 
 .dnet-slide-toggle:not(.dnet-slide-toggle-disabled) .dnet-slide-toggle-layout:hover .dnet-slide-toggle-handle {
-  box-shadow: var(--dnet-sys-elevation-1), 0 0 0 8px var(--dnet-sys-state-hover);
+  box-shadow: var(--_handle-shadow), 0 0 0 var(--_halo) var(--dnet-sys-state-hover);
 }
 
 .dnet-slide-toggle-input:focus-visible ~ .dnet-slide-toggle-handle {
   box-shadow:
-    var(--dnet-sys-elevation-1),
-    0 0 0 8px color-mix(in srgb, var(--_focus-ring) 24%, transparent);
+    var(--_handle-shadow),
+    0 0 0 var(--_halo) color-mix(in srgb, var(--_focus-ring) 24%, transparent);
 }
 
 .dnet-slide-toggle-disabled {
-  opacity: 0.38;
+  opacity: var(--_disabled-opacity);
 }
 
 .dnet-slide-toggle-disabled .dnet-slide-toggle-layout {

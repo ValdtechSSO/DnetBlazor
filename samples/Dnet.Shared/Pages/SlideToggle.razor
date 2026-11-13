@@ -60,6 +60,35 @@
                 <li>@S["SlideToggle.ExplainWhyASettingIsDisabledBesideThe"]</li>
             </ul>
         </DemoCard>
+
+        <DemoCard Id="toggle-lens" Title="@S["SlideToggle.LensVariant"]"
+                  Description="@S["SlideToggle.TheLensVariantTintsTheTrackAndTurns"]">
+            <ChildContent>
+                <div class="demo-stack">
+                    <div>
+                        <div class="demo-option-row">
+                            <DnetSlideToggle @bind-Value="_lensNotifications" Variant="DnetSlideToggleVariant.Lens">@S["SlideToggle.Notifications"]</DnetSlideToggle>
+                        </div>
+                        <p class="demo-info">@S["SlideToggle.ReceiveANotificationWhenSomeoneMentionsYou"]</p>
+                    </div>
+                    <div>
+                        <div class="demo-option-row">
+                            <DnetSlideToggle @bind-Value="_lensAutomaticUpdates" Variant="DnetSlideToggleVariant.Lens" TextPlacedBefore="true">@S["SlideToggle.AutomaticUpdates"]</DnetSlideToggle>
+                        </div>
+                        <p class="demo-info">@S["SlideToggle.KeepYourWorkspaceUpToDateAutomatically"]</p>
+                    </div>
+                    <div>
+                        <div class="demo-option-row">
+                            <DnetSlideToggle @bind-Value="_lensDisabled" Variant="DnetSlideToggleVariant.Lens" Disabled="true">@S["SlideToggle.AccountProtection"]</DnetSlideToggle>
+                        </div>
+                        <p class="demo-info">@S["SlideToggle.ManagedByYourOrganizationAndAlwaysEnabled"]</p>
+                    </div>
+                </div>
+            </ChildContent>
+            <Footer>
+                <span class="demo-value" role="status">@S.Format("Common.Notifications0AutomaticUpdates1", State(_lensNotifications), State(_lensAutomaticUpdates))</span>
+            </Footer>
+        </DemoCard>
     </div>
 </DemoPage>
 
@@ -68,6 +97,9 @@
     private bool _automaticUpdates = true;
     private bool _fullWidth;
     private bool _disabled = true;
+    private bool _lensNotifications;
+    private bool _lensAutomaticUpdates = true;
+    private bool _lensDisabled = true;
 
     private string State(bool value) => S.Text(value ? "on" : "off");
 }

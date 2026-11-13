@@ -31,7 +31,7 @@ Open only the one you need.
 | [RadioButton](components/RadioButton.md) | `<DnetInputRadioButton>`, `<DnetInputRadioGroup>` | 8 | 7 |
 | [Select](components/Select.md) | `<DnetSelect>` | 32 | 19 |
 | [Skeleton](components/Skeleton.md) | `<DnetSkeleton>` | 7 | 6 |
-| [SlideToggle](components/SlideToggle.md) | `<DnetSlideToggle>` | 5 | 11 |
+| [SlideToggle](components/SlideToggle.md) | `<DnetSlideToggle>` | 6 | 27 |
 | [Slider](components/Slider.md) | `<DnetSlider>` | 34 | 9 |
 | [Spinner](components/Spinner.md) | `<DnetSpinner>` | 4 | 2 |
 | [Spoiler](components/Spoiler.md) | `<DnetSpoiler>` | 11 | 5 |

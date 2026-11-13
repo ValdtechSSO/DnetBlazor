@@ -3516,6 +3516,9 @@
   <data name="SlideToggle.KeepYourWorkspaceUpToDateAutomatically" xml:space="preserve">
     <value>Keep your workspace up to date automatically.</value>
   </data>
+  <data name="SlideToggle.LensVariant" xml:space="preserve">
+    <value>Lens variant</value>
+  </data>
   <data name="SlideToggle.ManagedByYourOrganizationAndAlwaysEnabled" xml:space="preserve">
     <value>Managed by your organization and always enabled.</value>
   </data>
@@ -3533,6 +3536,9 @@
   </data>
   <data name="SlideToggle.SlideToggle" xml:space="preserve">
     <value>Slide toggle</value>
+  </data>
+  <data name="SlideToggle.TheLensVariantTintsTheTrackAndTurns" xml:space="preserve">
+    <value>With Variant=&quot;Lens&quot;, the Liquid Glass themes paint the checked track as translucent blue glass and the handle as a clear lens, a little taller than the track. In other themes it looks like the standard switch.</value>
   </data>
   <data name="SlideToggle.TheseSettingsTakeEffectAsSoonAsYou" xml:space="preserve">
     <value>These settings take effect as soon as you change them.</value>
