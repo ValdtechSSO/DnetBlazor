@@ -15,13 +15,20 @@
 .dnet-chip.dnet-standard-chip {
   --_background: var(--dnet-chips-background, var(--dnet-sys-surface-variant));
   --_foreground: var(--dnet-chips-foreground, var(--dnet-sys-on-surface-emphasis));
-  background-color: var(--_background);
+  /* Glass like the buttons: the ghost material's sheen and rim on the face,
+     the accent material once selected. Without effect by default. */
+  --_sheen: var(--dnet-sys-material-sheen);
+  --_shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-ghost-elevation);
+  background: var(--_sheen), var(--_background);
+  box-shadow: var(--_shadow);
   color: var(--_foreground);
 }
 
 .dnet-standard-chip[aria-pressed="true"] {
   --_background: var(--dnet-chips-background-selected, var(--dnet-sys-primary-emphasis));
   --_foreground: var(--dnet-chips-foreground-selected, var(--dnet-sys-on-primary));
+  --_sheen: var(--dnet-sys-material-accent-sheen);
+  --_shadow: var(--dnet-sys-material-accent-highlight);
 }
 
 .dnet-standard-chip:not([aria-pressed="true"]):hover {
