@@ -65,8 +65,8 @@
   a 20px glass face with 6px corners and no border, and Checkbox's tick in
   the accent, without a fill when checked.
 - The Liquid Glass themes outline accent glass (filled buttons, selected
-  chips) with a light tint of the accent instead of a white line: a 1px
-  ring, brighter on top and darker at the bottom.
+  chips) with a 1px border of the accent slightly lighter than the fill,
+  instead of a white line.
 - The Liquid Glass themes render chips as glass like the buttons, keeping
   their own corners: unselected chips are ghost glass, and a selected chip
   takes the accent fill with its sheen and glow.
