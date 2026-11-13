@@ -775,6 +775,11 @@
   /*  padding-left: calc(var(--dnet-grid-cell-horizontal-padding, var(--blg-cell-horizontal-padding, 12px)) - 1px);
   padding-right: calc(var(--dnet-grid-cell-horizontal-padding, var(--blg-cell-horizontal-padding, 12px)) - 1px);*/
 }
+/* A cell the application paints itself (a background in its CellStyleFn
+   style) keeps its own face: the row highlight is not drawn over its colour. */
+.blg-arcadia-theme .blg-cell[style*="background"] {
+  box-shadow: none;
+}
 .blg-arcadia-theme .blg-row-selected {
   background-color: var(--dnet-grid-selected-color, var(--blg-selected-color, color-mix(in srgb, var(--dnet-sys-primary) 8%, var(--dnet-sys-surface))));
 }
