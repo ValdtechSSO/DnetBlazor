@@ -486,8 +486,9 @@
   max-height: calc(100dvh - 32px);
   border-radius: var(--dnet-sys-radius-lg);
   overflow: auto;
-  box-shadow: var(--dnet-sys-elevation-3);
-  background: var(--dnet-sys-surface-raised);
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-3);
+  background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-popup);
+  backdrop-filter: var(--dnet-sys-material-backdrop);
   color: var(--dnet-sys-on-surface-emphasis);
 }
 
