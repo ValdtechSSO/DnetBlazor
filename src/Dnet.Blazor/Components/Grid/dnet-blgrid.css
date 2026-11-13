@@ -615,6 +615,9 @@
   --_padding: var(--dnet-grid-padding, 0px);
   --_row-gap: var(--dnet-grid-row-gap, 0px);
   --_row-radius: var(--dnet-grid-row-radius, 0px);
+  /* The top and bottom lines of a glass rim. The ring itself is the row
+     border: an inset ring on every cell would draw a line between columns. */
+  --_row-highlight: var(--dnet-grid-row-highlight, none);
 
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
@@ -768,6 +771,7 @@
      row height (selection, grouping) shrink with it. */
   margin-block: calc(var(--_row-gap) / 2);
   max-height: calc(100% - var(--_row-gap));
+  box-shadow: var(--_row-highlight);
   /*  padding-left: calc(var(--dnet-grid-cell-horizontal-padding, var(--blg-cell-horizontal-padding, 12px)) - 1px);
   padding-right: calc(var(--dnet-grid-cell-horizontal-padding, var(--blg-cell-horizontal-padding, 12px)) - 1px);*/
 }

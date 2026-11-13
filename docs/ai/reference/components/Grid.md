@@ -184,6 +184,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-grid-row-border` | `none` |
 | `--dnet-grid-row-gap` | `0px` |
 | `--dnet-grid-row-height` | `56px` |
+| `--dnet-grid-row-highlight` | `none` |
 | `--dnet-grid-row-radius` | `0px` |
 | `--dnet-grid-secondary-font-family` | `"Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif` <br><sub>via `--dnet-sys-font`</sub> |
 | `--dnet-grid-secondary-font-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |

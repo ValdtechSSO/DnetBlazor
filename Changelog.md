@@ -21,7 +21,8 @@
   rows, the rounding of their ends and their outline. `--dnet-grid-radius` and
   `--dnet-grid-padding` shape the grid itself, which paints the card material.
   The first and last cell of each row carry `blg-cell-row-start` and
-  `blg-cell-row-end`. Without effect by default.
+  `blg-cell-row-end`. `--dnet-grid-row-highlight` adds the top and bottom
+  lines of a glass rim. Without effect by default.
 - Grid selection checkboxes can take the Checkbox glass face:
   `--dnet-grid-checkbox-size`, `-radius`, `-border-color`, `-background`,
   `-background-checked`, `-mark-color`, `-mark-size` and `-mark-image`, plus
