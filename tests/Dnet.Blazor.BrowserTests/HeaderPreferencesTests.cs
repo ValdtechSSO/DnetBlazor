@@ -80,7 +80,7 @@ public sealed class HeaderPreferencesTests
         await themeControl.ClickAsync();
         var themePanel = page.Locator("#header-theme-panel");
         await Assertions.Expect(themePanel).ToBeVisibleAsync();
-        foreach (var value in new[] { "light", "dark", "compact", "high-contrast", "modern" })
+        foreach (var value in new[] { "light", "dark", "compact", "high-contrast", "modern", "liquid-glass", "liquid-glass-dark" })
         {
             var option = themePanel.Locator($"button[data-preference-value='{value}']");
             await Assertions.Expect(option).ToBeVisibleAsync();

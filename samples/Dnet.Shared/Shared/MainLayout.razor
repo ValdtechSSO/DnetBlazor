@@ -224,6 +224,8 @@
         "compact" => Text("Compacto", "Compact"),
         "high-contrast" => Text("Alto contraste", "High contrast"),
         "modern" => Text("Moderno", "Modern"),
+        "liquid-glass" => Text("Cristal líquido", "Liquid glass"),
+        "liquid-glass-dark" => Text("Cristal líquido oscuro", "Liquid glass dark"),
         _ => theme
     };
 
@@ -285,7 +287,7 @@
         StateHasChanged();
     });
 
-    private static bool IsSupportedTheme(string? theme) => theme is "" or "dark" or "compact" or "high-contrast" or "modern";
+    private static bool IsSupportedTheme(string? theme) => theme is "" or "dark" or "compact" or "high-contrast" or "modern" or "liquid-glass" or "liquid-glass-dark";
 
     [JSInvokable]
     public Task OnThemeChanged(string theme)

@@ -4044,6 +4044,12 @@
   <data name="Theming.Light" xml:space="preserve">
     <value>Claro</value>
   </data>
+  <data name="Theming.LiquidGlass" xml:space="preserve">
+    <value>Cristal líquido</value>
+  </data>
+  <data name="Theming.LiquidGlassDark" xml:space="preserve">
+    <value>Cristal líquido oscuro</value>
+  </data>
   <data name="Theming.LivePreview" xml:space="preserve">
     <value>Vista previa en directo</value>
   </data>

@@ -39,6 +39,8 @@
                         <option value="compact">@S["Theming.Compact"]</option>
                         <option value="high-contrast">@S["Theming.HighContrast"]</option>
                         <option value="modern">@S["Theming.Modern"]</option>
+                        <option value="liquid-glass">@S["Theming.LiquidGlass"]</option>
+                        <option value="liquid-glass-dark">@S["Theming.LiquidGlassDark"]</option>
                     </select>
                     <svg class="theme-select-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="m3 6 5 5 5-5" /></svg>
                     </div>
@@ -161,7 +163,7 @@
     private DotNetObjectReference<Theming>? _reference;
     private int _watchId;
 
-    private string ThemeName => _theme switch { "dark" => "Dark", "compact" => "Compact", "high-contrast" => "High contrast", "modern" => "Modern", _ => "Light" };
+    private string ThemeName => _theme switch { "dark" => "Dark", "compact" => "Compact", "high-contrast" => "High contrast", "modern" => "Modern", "liquid-glass" => "Liquid glass", "liquid-glass-dark" => "Liquid glass dark", _ => "Light" };
     private string ThemeCss => $"{(string.IsNullOrEmpty(_theme) ? ":root" : $"[data-dnet-theme=\"{_theme}\"]")} {{\n  --dnet-sys-primary: {_primaryColor};\n  --dnet-sys-space-unit: {_spaceUnit}px;\n  --dnet-btn-radius: {_radius}px;\n}}";
     private string PrimaryButtonStyle => $"--dnet-btn-background:var(--dnet-sys-primary);--dnet-btn-background-hover:color-mix(in srgb,var(--dnet-sys-primary) 85%,var(--dnet-sys-on-surface));--dnet-btn-foreground:{PrimaryForeground};--dnet-btn-height:40px;";
     private string PrimaryForeground
@@ -260,7 +262,7 @@
 
     private void SavePreview() => _previewStatus = "Preview saved.";
     private void ResetPreview() { _workspaceName = "Design system"; _contactEmail = "design@acme.com"; _previewStatus = string.Empty; }
-    private static bool IsSupportedTheme(string? theme) => theme is "" or "dark" or "compact" or "high-contrast" or "modern";
+    private static bool IsSupportedTheme(string? theme) => theme is "" or "dark" or "compact" or "high-contrast" or "modern" or "liquid-glass" or "liquid-glass-dark";
 
     public async ValueTask DisposeAsync()
     {
