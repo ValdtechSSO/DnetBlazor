@@ -5363,7 +5363,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 .dnet-stepper-horizontal, .dnet-stepper-vertical {
   --_font-size: var(--dnet-step-font-size, var(--dnet-sys-text-md));
 
-  background-color: var(--dnet-sys-surface);
+  background-color: var(--dnet-sys-material-page);
 }
 
 .dnet-horizontal-stepper-header-container {
