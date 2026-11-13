@@ -28,6 +28,9 @@
   the ghost material's sheen, rim and lift. Without effect by default. Keyboard focus shows the
   Checkbox ring in every theme (visual change: before, the global focus
   reset hid it).
+- Grid: selecting all from the header no longer selects disabled rows in the
+  rendered body, and a disabled row's selection and grouping cells never take
+  the selected or clicked colour, like its other cells.
 - Chips read the material mechanics like buttons: the ghost sheen, rim and
   elevation on the face, and the accent sheen and rim once selected. Without
   effect by default.

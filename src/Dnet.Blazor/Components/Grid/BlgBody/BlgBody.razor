@@ -375,15 +375,7 @@
 
     private void ManageSelectionsForSelectAll(RowNode<TItem> rowNode, bool isSelected, TreeRowNode<TItem> tree)
     {
-        rowNode.SelectThisNode(isSelected);
-        if (isSelected)
-        {
-            _selectedRowNodes[rowNode.RowNodeId] = rowNode;
-        }
-        else
-        {
-            _selectedRowNodes.Remove(rowNode.RowNodeId);
-        }
+        ApplySelectAll(rowNode, isSelected);
 
         if (rowNode.IsGroup)
         {
@@ -393,15 +385,7 @@
                 var flat = FlattenTree(found, isSelected);
                 foreach (var item in flat)
                 {
-                    item.SelectThisNode(isSelected);
-                    if (isSelected)
-                    {
-                        _selectedRowNodes[item.RowNodeId] = item;
-                    }
-                    else
-                    {
-                        _selectedRowNodes.Remove(item.RowNodeId);
-                    }
+                    ApplySelectAll(item, isSelected);
                 }
 
                 var parentNode = FindParent(tree, rowNode.RowNodeId);
@@ -420,4 +404,23 @@
             }
         }
     }
+
+    // Disabled rows stay unselected, as in the grid's own select-all walk
+    // behind the header checkbox.
+    private void ApplySelectAll(RowNode<TItem> rowNode, bool isSelected)
+    {
+        var selected = isSelected && !IsDisabledRow(rowNode);
+        rowNode.SelectThisNode(selected);
+        if (selected)
+        {
+            _selectedRowNodes[rowNode.RowNodeId] = rowNode;
+        }
+        else
+        {
+            _selectedRowNodes.Remove(rowNode.RowNodeId);
+        }
+    }
+
+    private bool IsDisabledRow(RowNode<TItem> rowNode) =>
+        rowNode.RowData != null && GridOptions?.DisableRow?.Invoke(rowNode.RowData) == true;
 }

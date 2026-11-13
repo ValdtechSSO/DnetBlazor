@@ -28,8 +28,8 @@
 
     <div class="blg-cell blg-cell-value blg-selection-checkbox-wrapper @RowEdgeClasses(start: true, end: false)
                 @_rowCssClasses @(RowNode.IsHovered() ? "blg-hover-class" : null)
-                @(RowNode.IsClicked() && !RowNode.IsSelected() ? "blg-row-clicked" : null)
-                @(RowNode.IsSelected() ? "blg-row-selected" : null)"
+                @(RowNode.IsClicked() && !RowNode.IsSelected() && !GetDisableRow() ? "blg-row-clicked" : null)
+                @(RowNode.IsSelected() && !GetDisableRow() ? "blg-row-selected" : null)"
          id="@($"Row{RowNode.RowNodeId}Cell0")"
          data-blg-row-id="@RowNode.RowNodeId"
          data-blg-row-index="@RowId"
@@ -51,8 +51,8 @@
 
         <div class="blg-cell blg-cell-value @RowEdgeClasses(start: !hasCheckboxCell, end: false)
                       @_rowCssClasses @(RowNode.IsHovered() ? "blg-hover-class" : null)
-                      @(RowNode.IsClicked() && !RowNode.IsSelected() ? "blg-row-clicked" : null)
-                      @(RowNode.IsSelected() ? "blg-row-selected" : null)"
+                      @(RowNode.IsClicked() && !RowNode.IsSelected() && !GetDisableRow() ? "blg-row-clicked" : null)
+                      @(RowNode.IsSelected() && !GetDisableRow() ? "blg-row-selected" : null)"
              data-blg-row-id="@RowNode.RowNodeId"
              data-blg-row-index="@RowId"
              data-blg-row-span="1"
