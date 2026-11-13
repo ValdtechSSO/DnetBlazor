@@ -47,19 +47,20 @@
 
 .dnet-timepicker-overlay {
   border-radius: var(--dnet-sys-radius-lg);
-  box-shadow: var(--dnet-sys-elevation-3);
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-3);
   overflow: hidden;
 }
 
 .dnet-timepicker-panel {
-  --_panel-background: var(--dnet-timepicker-panel-background, var(--dnet-sys-surface-raised));
+  --_panel-background: var(--dnet-timepicker-panel-background, var(--dnet-sys-material-popup));
   --_option-foreground: var(--dnet-timepicker-foreground, var(--dnet-sys-on-surface));
   --_selected: var(--dnet-timepicker-option-selected-background, var(--dnet-sys-state-selected));
   --_active: var(--dnet-timepicker-option-active-background, var(--dnet-sys-state-hover));
   --_accent: var(--dnet-timepicker-accent-color, var(--dnet-sys-primary-strong));
   --_accent-content: var(--dnet-timepicker-accent-color, var(--dnet-sys-primary-content));
 
-  background: var(--_panel-background);
+  background: var(--dnet-sys-material-sheen), var(--_panel-background);
+  backdrop-filter: var(--dnet-sys-material-backdrop);
   box-sizing: border-box;
   display: flex;
   flex: 1 1 auto;
