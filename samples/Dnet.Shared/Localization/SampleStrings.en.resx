@@ -3402,9 +3402,6 @@
   <data name="RadioButton.YourDelivery" xml:space="preserve">
     <value>Your delivery</value>
   </data>
-  <data name="RowSelectionExample.GridAKABlGrid" xml:space="preserve">
-    <value>Grid (A.K.A BlGrid)</value>
-  </data>
   <data name="Select.AFocusedChoice" xml:space="preserve">
     <value>A focused choice</value>
   </data>
@@ -4586,5 +4583,62 @@
   </data>
   <data name="App.PageNotFound" xml:space="preserve">
     <value>There is no page at this address.</value>
+  </data>
+  <data name="GridPages.ComponentsData" xml:space="preserve">
+    <value>Components / Data</value>
+  </data>
+  <data name="GridPages.ComplexTitle" xml:space="preserve">
+    <value>Data grid</value>
+  </data>
+  <data name="GridPages.ComplexDescription" xml:space="preserve">
+    <value>Columns pinned on both sides, cells that span rows, templates, filters and multiple selection in one grid.</value>
+  </data>
+  <data name="GridPages.FilteringTitle" xml:space="preserve">
+    <value>Column filters</value>
+  </data>
+  <data name="GridPages.FilteringDescription" xml:space="preserve">
+    <value>Each column filters the data from a field in its header.</value>
+  </data>
+  <data name="GridPages.RowSelectionTitle" xml:space="preserve">
+    <value>Row selection</value>
+  </data>
+  <data name="GridPages.RowSelectionDescription" xml:space="preserve">
+    <value>Click a row to select it.</value>
+  </data>
+  <data name="GridPages.MultipleSelectionTitle" xml:space="preserve">
+    <value>Multiple row selection</value>
+  </data>
+  <data name="GridPages.MultipleSelectionDescription" xml:space="preserve">
+    <value>Select several rows at once.</value>
+  </data>
+  <data name="GridPages.AdvancedFilterTitle" xml:space="preserve">
+    <value>Advanced filter</value>
+  </data>
+  <data name="GridPages.AdvancedFilterDescription" xml:space="preserve">
+    <value>Combine conditions in a panel to filter the rows.</value>
+  </data>
+  <data name="GridPages.GroupingTitle" xml:space="preserve">
+    <value>Row grouping</value>
+  </data>
+  <data name="GridPages.GroupingDescription" xml:space="preserve">
+    <value>Group the rows by a column's value and expand each group.</value>
+  </data>
+  <data name="GridPages.CellTemplatesTitle" xml:space="preserve">
+    <value>Cell templates</value>
+  </data>
+  <data name="GridPages.CellTemplatesDescription" xml:space="preserve">
+    <value>A cell can render its own component.</value>
+  </data>
+  <data name="GridPages.SortingTitle" xml:space="preserve">
+    <value>Sorting</value>
+  </data>
+  <data name="GridPages.SortingDescription" xml:space="preserve">
+    <value>Sort the rows from each column header.</value>
+  </data>
+  <data name="GridPages.ServerSideTitle" xml:space="preserve">
+    <value>Server-side operations</value>
+  </data>
+  <data name="GridPages.ServerSideDescription" xml:space="preserve">
+    <value>The server filters, sorts and pages the data.</value>
   </data>
 </root>

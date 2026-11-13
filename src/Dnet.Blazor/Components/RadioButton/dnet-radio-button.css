@@ -4,9 +4,12 @@
   --_size: var(--dnet-radio-button-size, 20px);
   --_border-width: var(--dnet-radio-button-border-width, 1px);
   --_checked-background: var(--dnet-radio-button-background, var(--dnet-sys-primary-strong));
+  --_border-color: var(--dnet-radio-button-border-color, currentColor);
+  --_checked-border-color: var(--dnet-radio-button-checked-border-color, var(--_checked-background));
   --_font-size: var(--dnet-radio-button-font-size, var(--dnet-sys-text-md));
   --_label-gap: 10px;
   --_disabled-fg: color-mix(in srgb, var(--dnet-sys-on-surface-subtle) 70.3%, var(--dnet-sys-surface));
+  --_disabled-border-color: var(--dnet-radio-button-disabled-border-color, var(--_disabled-fg));
 
   display: inline-block;
   -webkit-tap-highlight-color: transparent;
@@ -18,7 +21,7 @@
 }
 
 .dnet-radio-button.dnet-radio-disabled.dnet-radio-checked .dnet-radio-outer-circle, .dnet-radio-button.dnet-radio-disabled .dnet-radio-outer-circle {
-  border-color: var(--_disabled-fg);
+  border-color: var(--_disabled-border-color);
 }
 
 .dnet-radio-label {
@@ -59,7 +62,7 @@
 }
 
 .dnet-radio-button.dnet-accent.dnet-radio-checked .dnet-radio-outer-circle {
-  border-color: var(--_checked-background);
+  border-color: var(--_checked-border-color);
 }
 
 .dnet-radio-outer-circle {
@@ -73,7 +76,19 @@
   width: var(--_size);
   border-width: var(--_border-width);
   border-style: solid;
+  border-color: var(--_border-color);
   border-radius: 50%;
+  /* Ghost material: transparent by default. No backdrop-filter, the circle
+     always sits inside another surface. */
+  background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-lift);
+}
+
+/* The input is visually hidden and comes after the circles: keyboard focus
+   shows as a ring on the outer circle. */
+.dnet-radio-container:has(.dnet-radio-input:focus-visible) .dnet-radio-outer-circle {
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-lift),
+              0 0 0 2px var(--dnet-sys-surface), 0 0 0 4px var(--dnet-sys-focus-ring);
 }
 
 .dnet-radio-button.dnet-accent.dnet-radio-checked .dnet-radio-persistent-ripple, .dnet-radio-button.dnet-accent .dnet-radio-inner-circle, .dnet-radio-button.dnet-accent .dnet-radio-ripple .dnet-ripple-element:not(.dnet-radio-persistent-ripple), .dnet-radio-button.dnet-accent:active .dnet-radio-persistent-ripple {
@@ -84,10 +99,6 @@
   transform: scale(0.5);
   opacity: 1;
   transition: transform ease 280ms, background-color ease 280ms;
-}
-
-.dnet-radio-button.dnet-accent.dnet-radio-checked .dnet-radio-outer-circle {
-  border-color: var(--_checked-background);
 }
 
 .dnet-radio-inner-circle {

@@ -115,6 +115,9 @@
   --dnet-sys-material-accent-highlight: inset 0 0 0 0 var(--dnet-sys-transparent);
   --dnet-sys-material-ghost-elevation: 0 0 0 0 var(--dnet-sys-transparent);
   --dnet-sys-material-focus: 0 0 0 0 var(--dnet-sys-transparent);
+  /* Small glass faces inside another surface (checkbox, radio button) sit on
+     a tight shadow of their own. Without effect here. */
+  --dnet-sys-material-lift: 0 0 0 0 var(--dnet-sys-transparent);
 }
 
 /*! Sass shared (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
@@ -1633,7 +1636,10 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 
 .dnet-checkbox-frame {
   border-color: var(--_border-color);
-  background-color: transparent;
+  /* Ghost material: transparent by default. No backdrop-filter, the box
+     always sits inside another surface. */
+  background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-lift);
   transition: border-color 90ms cubic-bezier(0, 0, 0.2, 0.1);
   border-width: var(--_border-width);
   border-style: solid;
@@ -1657,6 +1663,12 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   border-radius: var(--_radius);
   box-sizing: border-box;
   pointer-events: none;
+}
+
+/* The input is visually hidden: keyboard focus shows as a ring on the frame. */
+.dnet-checkbox-input:focus-visible ~ .dnet-checkbox-frame {
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-lift),
+              0 0 0 2px var(--dnet-sys-surface), 0 0 0 4px var(--dnet-sys-focus-ring);
 }
 
 .dnet-checkbox-disabled:not(.dnet-checkbox-checked) .dnet-checkbox-frame {
@@ -1700,6 +1712,13 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 
 .dnet-checkbox-checkmark-path {
   stroke: var(--_check-color) !important;
+}
+
+/* The mark draws itself when checked. */
+@media (prefers-reduced-motion: no-preference) {
+  .dnet-checkbox-checkmark-path {
+    transition: stroke-dashoffset var(--dnet-sys-motion-normal) var(--dnet-sys-motion-ease);
+  }
 }
 
 .dnet-checkbox-mixedmark {
@@ -1766,13 +1785,25 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 .dnet-chip.dnet-standard-chip {
   --_background: var(--dnet-chips-background, var(--dnet-sys-surface-variant));
   --_foreground: var(--dnet-chips-foreground, var(--dnet-sys-on-surface-emphasis));
-  background-color: var(--_background);
+  /* Glass like the buttons: the ghost material's sheen and rim on the face,
+     the accent material once selected. Without effect by default. */
+  --_sheen: var(--dnet-sys-material-sheen);
+  --_shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-ghost-elevation);
+  background: var(--_sheen), var(--_background);
+  box-shadow: var(--_shadow);
   color: var(--_foreground);
 }
 
 .dnet-standard-chip[aria-pressed="true"] {
   --_background: var(--dnet-chips-background-selected, var(--dnet-sys-primary-emphasis));
   --_foreground: var(--dnet-chips-foreground-selected, var(--dnet-sys-on-primary));
+  --_sheen: var(--dnet-sys-material-accent-sheen);
+  --_shadow: var(--dnet-sys-material-accent-highlight);
+}
+
+/* Keyboard focus: a ring outside the chip, as on buttons, over its own shadow. */
+.dnet-chip.dnet-standard-chip:focus-visible {
+  box-shadow: var(--_shadow), 0 0 0 2px var(--dnet-sys-surface), 0 0 0 4px var(--dnet-sys-focus-ring);
 }
 
 .dnet-standard-chip:not([aria-pressed="true"]):hover {
@@ -1859,6 +1890,14 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   -moz-appearance: none;
   padding: 0;
   background: none;
+}
+
+/* The remove button sits inside the chip: its ring takes the chip's text
+   colour, which always contrasts with the chip, at full opacity. */
+.dnet-chip.dnet-standard-chip .dnet-chip-remove:focus-visible {
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px currentColor;
+  opacity: 1;
 }
 
 .dnet-chips-icon-wrapper {
@@ -2853,6 +2892,9 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   display: flex;
   flex: 1 1 auto;
   min-width: 0;
+  /* Scrolled columns stop at the pinned zones instead of running under
+     them: translucent pinned cells (glass themes) would show them. */
+  overflow-x: clip;
 }
 
 .blg-center-cols-viewport {
@@ -2938,23 +2980,34 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 [type="checkbox"].blg-checkbox-no-label {
+  /* Selection checkboxes. A theme can give them the glass face of the
+     Checkbox component: the material mechanics come from the system layer,
+     and with the defaults below the box stays square, bordered and filled
+     when checked. */
+  --_check-size: var(--dnet-grid-checkbox-size, 18px);
+  --_check-radius: var(--dnet-grid-checkbox-radius, 0px);
+  --_check-border: var(--dnet-grid-checkbox-border-color, var(--dnet-sys-border-strong));
+  --_check-face: var(--dnet-grid-checkbox-background, var(--dnet-sys-surface));
+  --_check-mark: var(--dnet-grid-checkbox-mark-color, var(--dnet-sys-surface));
+  --_check-mark-size: var(--dnet-grid-checkbox-mark-size, 0.625rem);
+  --_check-mark-image: var(--dnet-grid-checkbox-mark-image, url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/></svg>"));
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
-  background: var(--dnet-sys-surface);
-  border: 1px solid var(--dnet-sys-border-strong);
-  border-radius: 0;
-  box-shadow: none;
+  background: var(--dnet-sys-material-sheen), var(--_check-face);
+  border: 1px solid var(--_check-border);
+  border-radius: var(--_check-radius);
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-lift);
   box-sizing: border-box;
   cursor: pointer;
   display: inline-grid;
   flex: 0 0 auto;
-  height: 18px;
+  height: var(--_check-size);
   margin: 0;
   padding: 0;
   place-content: center;
   position: relative;
-  width: 18px;
+  width: var(--_check-size);
 }
 
 [type="checkbox"].blg-checkbox-no-label.negative {
@@ -2962,18 +3015,18 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 [type="checkbox"].blg-checkbox-no-label:checked {
-  background: var(--dnet-sys-primary);
-  border-color: var(--dnet-sys-primary);
+  --_check-face: var(--dnet-grid-checkbox-background-checked, var(--dnet-sys-primary));
+  --_check-border: var(--_check-face);
 }
 
 [type="checkbox"].blg-checkbox-no-label::after {
-  background-color: var(--dnet-sys-surface);
+  background-color: var(--_check-mark);
   content: "";
-  height: 0.625rem;
-  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/></svg>");
+  height: var(--_check-mark-size);
+  -webkit-mask-image: var(--_check-mark-image);
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-size: contain;
-  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/></svg>");
+  mask-image: var(--_check-mark-image);
   mask-repeat: no-repeat;
   mask-size: contain;
   opacity: 0;
@@ -2981,7 +3034,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   transition:
     opacity 90ms ease,
     transform 90ms ease;
-  width: 0.625rem;
+  width: var(--_check-mark-size);
 }
 
 [type="checkbox"].blg-checkbox-no-label:checked::after {
@@ -2992,6 +3045,10 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 [type="checkbox"].blg-checkbox-no-label:focus-visible {
   outline: 2px solid var(--dnet-sys-primary);
   outline-offset: 2px;
+  /* The library's global :focus reset removes the outline: the ring is drawn
+     as a shadow, as on Checkbox. */
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-lift),
+              0 0 0 2px var(--dnet-sys-surface), 0 0 0 4px var(--dnet-sys-focus-ring);
 }
 
 [type="checkbox"].blg-checkbox-no-label:disabled {
@@ -3318,8 +3375,26 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .blg-arcadia-theme {
+  /* The grid is a card. Its rows become cards of their own when a theme sets
+     a gap, a radius and a border for them; with the defaults they stay one
+     continuous table. */
+  --_background: var(--dnet-grid-background-color, var(--blg-background-color, var(--dnet-sys-material-card)));
+  --_radius: var(--dnet-grid-radius, 0px);
+  --_padding: var(--dnet-grid-padding, 0px);
+  --_row-gap: var(--dnet-grid-row-gap, 0px);
+  --_row-radius: var(--dnet-grid-row-radius, 0px);
+  /* The top and bottom lines of a glass rim. The ring itself is the row
+     border: an inset ring on every cell would draw a line between columns. */
+  --_row-highlight: var(--dnet-grid-row-highlight, none);
+
   -webkit-font-smoothing: antialiased;
-  background-color: var(--dnet-grid-background-color, var(--blg-background-color, var(--dnet-sys-surface)));
+  box-sizing: border-box;
+  padding: var(--_padding);
+  border-radius: var(--_radius);
+  background: var(--dnet-sys-material-sheen), var(--_background);
+  box-shadow: var(--dnet-sys-material-highlight);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   color: var(--dnet-grid-foreground-color, var(--blg-foreground-color, var(--dnet-sys-on-surface)));
   font-family: var(--dnet-grid-font-family, var(--blg-font-family, var(--dnet-sys-font)));
   font-weight: var(--dnet-grid-font-weight, var(--blg-font-weight, 400));
@@ -3377,14 +3452,40 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   box-shadow: var(--dnet-sys-elevation-1);
 }
 .blg-arcadia-theme .blg-pinned-left-cols-container .blg-cell:nth-child(n) {
+  --_cell-border-bottom: var(--dnet-grid-cell-pinnedleft-border-bottom, var(--blg-cell-pinnedleft-border-bottom, 1px solid var(--dnet-sys-border)));
   border: none;
+  border-top: var(--dnet-grid-row-border, none);
   border-right: 1px solid var(--dnet-grid-border-color, var(--blg-border-color, var(--dnet-sys-border)));
-  border-bottom: var(--dnet-grid-cell-pinnedleft-border-bottom, var(--blg-cell-pinnedleft-border-bottom, 1px solid var(--dnet-sys-border)));
+  border-bottom: var(--dnet-grid-row-border, var(--_cell-border-bottom));
 }
 .blg-arcadia-theme .blg-pinned-right-cols-container .blg-cell:nth-child(n) {
+  --_cell-border-bottom: var(--dnet-grid-cell-pinnedright-border-bottom, var(--blg-cell-pinnedright-border-bottom, 1px solid var(--dnet-sys-border)));
   border: none;
+  border-top: var(--dnet-grid-row-border, none);
   border-left: 1px solid var(--dnet-grid-border-color, var(--blg-border-color, var(--dnet-sys-border)));
-  border-bottom: var(--dnet-grid-cell-pinnedright-border-bottom, var(--blg-cell-pinnedright-border-bottom, 1px solid var(--dnet-sys-border)));
+  border-bottom: var(--dnet-grid-row-border, var(--_cell-border-bottom));
+}
+/* The first and the last cell of a row close its outline and round its ends.
+   Pinned zones, when present, hold the ends of the row. */
+.blg-arcadia-theme .blg-pinned-left-cols-container .blg-cell.blg-cell-row-start:nth-child(n) {
+  border-left: var(--dnet-grid-row-border, none);
+  border-top-left-radius: var(--_row-radius);
+  border-bottom-left-radius: var(--_row-radius);
+}
+.blg-arcadia-theme .blg-viewport-wrapper:not(:has(> .blg-pinned-left-cols-container)) .blg-center-cols-container .blg-cell-row-start {
+  border-left: var(--dnet-grid-row-border, 1px solid transparent);
+  border-top-left-radius: var(--_row-radius);
+  border-bottom-left-radius: var(--_row-radius);
+}
+.blg-arcadia-theme .blg-pinned-right-cols-container .blg-cell.blg-cell-row-end:nth-child(n) {
+  border-right: var(--dnet-grid-row-border, none);
+  border-top-right-radius: var(--_row-radius);
+  border-bottom-right-radius: var(--_row-radius);
+}
+.blg-arcadia-theme .blg-viewport-wrapper:not(:has(> .blg-pinned-right-cols-container)) .blg-center-cols-container .blg-cell-row-end {
+  border-right: var(--dnet-grid-row-border, 1px solid transparent);
+  border-top-right-radius: var(--_row-radius);
+  border-bottom-right-radius: var(--_row-radius);
 }
 .blg-arcadia-theme .blg-header {
   background-color: var(--dnet-grid-header-background-color, var(--blg-header-background-color, var(--dnet-sys-transparent)));
@@ -3431,14 +3532,26 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   border-top-width: 0;
 }
 .blg-arcadia-theme .blg-cell {
+  --_cell-border-bottom: var(--dnet-grid-cell-border-bottom, var(--blg-cell-border-bottom, 1px solid var(--dnet-sys-border)));
   line-height: calc(var(--dnet-grid-row-height, var(--blg-row-height, 56px)) - 2px);
   padding-left: var(--dnet-grid-cell-horizontal-padding, var(--blg-cell-horizontal-padding, 12px));
   padding-right: var(--dnet-grid-cell-horizontal-padding, var(--blg-cell-horizontal-padding, 12px));
   border: 1px solid transparent;
+  border-top: var(--dnet-grid-row-border, 1px solid transparent);
   background-color: var(--dnet-grid-cell-default-background-color, var(--blg-cell-default-background-color, var(--dnet-sys-surface)));
-  border-bottom: var(--dnet-grid-cell-border-bottom, var(--blg-cell-border-bottom, 1px solid var(--dnet-sys-border)));
+  border-bottom: var(--dnet-grid-row-border, var(--_cell-border-bottom));
+  /* Row cards: the gap is split above and below each row. Cells sized by the
+     row height (selection, grouping) shrink with it. */
+  margin-block: calc(var(--_row-gap) / 2);
+  max-height: calc(100% - var(--_row-gap));
+  box-shadow: var(--_row-highlight);
   /*  padding-left: calc(var(--dnet-grid-cell-horizontal-padding, var(--blg-cell-horizontal-padding, 12px)) - 1px);
   padding-right: calc(var(--dnet-grid-cell-horizontal-padding, var(--blg-cell-horizontal-padding, 12px)) - 1px);*/
+}
+/* A cell the application paints itself (a background in its CellStyleFn
+   style) keeps its own face: the row highlight is not drawn over its colour. */
+.blg-arcadia-theme .blg-cell[style*="background"] {
+  box-shadow: none;
 }
 .blg-arcadia-theme .blg-row-selected {
   background-color: var(--dnet-grid-selected-color, var(--blg-selected-color, color-mix(in srgb, var(--dnet-sys-primary) 8%, var(--dnet-sys-surface))));
@@ -4979,9 +5092,12 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   --_size: var(--dnet-radio-button-size, 20px);
   --_border-width: var(--dnet-radio-button-border-width, 1px);
   --_checked-background: var(--dnet-radio-button-background, var(--dnet-sys-primary-strong));
+  --_border-color: var(--dnet-radio-button-border-color, currentColor);
+  --_checked-border-color: var(--dnet-radio-button-checked-border-color, var(--_checked-background));
   --_font-size: var(--dnet-radio-button-font-size, var(--dnet-sys-text-md));
   --_label-gap: 10px;
   --_disabled-fg: color-mix(in srgb, var(--dnet-sys-on-surface-subtle) 70.3%, var(--dnet-sys-surface));
+  --_disabled-border-color: var(--dnet-radio-button-disabled-border-color, var(--_disabled-fg));
 
   display: inline-block;
   -webkit-tap-highlight-color: transparent;
@@ -4993,7 +5109,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-radio-button.dnet-radio-disabled.dnet-radio-checked .dnet-radio-outer-circle, .dnet-radio-button.dnet-radio-disabled .dnet-radio-outer-circle {
-  border-color: var(--_disabled-fg);
+  border-color: var(--_disabled-border-color);
 }
 
 .dnet-radio-label {
@@ -5033,7 +5149,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-radio-button.dnet-accent.dnet-radio-checked .dnet-radio-outer-circle {
-  border-color: var(--_checked-background);
+  border-color: var(--_checked-border-color);
 }
 
 .dnet-radio-outer-circle {
@@ -5047,7 +5163,19 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   width: var(--_size);
   border-width: var(--_border-width);
   border-style: solid;
+  border-color: var(--_border-color);
   border-radius: 50%;
+  /* Ghost material: transparent by default. No backdrop-filter, the circle
+     always sits inside another surface. */
+  background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-lift);
+}
+
+/* The input is visually hidden and comes after the circles: keyboard focus
+   shows as a ring on the outer circle. */
+.dnet-radio-container:has(.dnet-radio-input:focus-visible) .dnet-radio-outer-circle {
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-lift),
+              0 0 0 2px var(--dnet-sys-surface), 0 0 0 4px var(--dnet-sys-focus-ring);
 }
 
 .dnet-radio-button.dnet-accent.dnet-radio-checked .dnet-radio-persistent-ripple, .dnet-radio-button.dnet-accent .dnet-radio-inner-circle, .dnet-radio-button.dnet-accent .dnet-radio-ripple .dnet-ripple-element:not(.dnet-radio-persistent-ripple), .dnet-radio-button.dnet-accent:active .dnet-radio-persistent-ripple {
@@ -5058,10 +5186,6 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   transform: scale(0.5);
   opacity: 1;
   transition: transform ease 280ms, background-color ease 280ms;
-}
-
-.dnet-radio-button.dnet-accent.dnet-radio-checked .dnet-radio-outer-circle {
-  border-color: var(--_checked-background);
 }
 
 .dnet-radio-inner-circle {

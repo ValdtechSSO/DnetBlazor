@@ -3402,9 +3402,6 @@
   <data name="RadioButton.YourDelivery" xml:space="preserve">
     <value>Tu entrega</value>
   </data>
-  <data name="RowSelectionExample.GridAKABlGrid" xml:space="preserve">
-    <value>Tabla (BlGrid)</value>
-  </data>
   <data name="Select.AFocusedChoice" xml:space="preserve">
     <value>Una elección concreta</value>
   </data>
@@ -4586,5 +4583,62 @@
   </data>
   <data name="App.PageNotFound" xml:space="preserve">
     <value>No hay ninguna página en esta dirección.</value>
+  </data>
+  <data name="GridPages.ComponentsData" xml:space="preserve">
+    <value>Componentes / Datos</value>
+  </data>
+  <data name="GridPages.ComplexTitle" xml:space="preserve">
+    <value>Tabla de datos</value>
+  </data>
+  <data name="GridPages.ComplexDescription" xml:space="preserve">
+    <value>Columnas fijadas a ambos lados, celdas que ocupan varias filas, plantillas, filtros y selección múltiple en una misma tabla.</value>
+  </data>
+  <data name="GridPages.FilteringTitle" xml:space="preserve">
+    <value>Filtros por columna</value>
+  </data>
+  <data name="GridPages.FilteringDescription" xml:space="preserve">
+    <value>Cada columna filtra los datos desde un campo en su cabecera.</value>
+  </data>
+  <data name="GridPages.RowSelectionTitle" xml:space="preserve">
+    <value>Selección de filas</value>
+  </data>
+  <data name="GridPages.RowSelectionDescription" xml:space="preserve">
+    <value>Haz clic en una fila para seleccionarla.</value>
+  </data>
+  <data name="GridPages.MultipleSelectionTitle" xml:space="preserve">
+    <value>Selección múltiple de filas</value>
+  </data>
+  <data name="GridPages.MultipleSelectionDescription" xml:space="preserve">
+    <value>Selecciona varias filas a la vez.</value>
+  </data>
+  <data name="GridPages.AdvancedFilterTitle" xml:space="preserve">
+    <value>Filtro avanzado</value>
+  </data>
+  <data name="GridPages.AdvancedFilterDescription" xml:space="preserve">
+    <value>Combina condiciones en un panel para filtrar las filas.</value>
+  </data>
+  <data name="GridPages.GroupingTitle" xml:space="preserve">
+    <value>Agrupación de filas</value>
+  </data>
+  <data name="GridPages.GroupingDescription" xml:space="preserve">
+    <value>Agrupa las filas por el valor de una columna y despliega cada grupo.</value>
+  </data>
+  <data name="GridPages.CellTemplatesTitle" xml:space="preserve">
+    <value>Plantillas de celda</value>
+  </data>
+  <data name="GridPages.CellTemplatesDescription" xml:space="preserve">
+    <value>Una celda puede mostrar su propio componente.</value>
+  </data>
+  <data name="GridPages.SortingTitle" xml:space="preserve">
+    <value>Ordenación</value>
+  </data>
+  <data name="GridPages.SortingDescription" xml:space="preserve">
+    <value>Ordena las filas desde la cabecera de cada columna.</value>
+  </data>
+  <data name="GridPages.ServerSideTitle" xml:space="preserve">
+    <value>Operaciones en el servidor</value>
+  </data>
+  <data name="GridPages.ServerSideDescription" xml:space="preserve">
+    <value>El servidor filtra, ordena y pagina los datos.</value>
   </data>
 </root>

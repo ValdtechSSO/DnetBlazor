@@ -14,7 +14,7 @@ const checkTokenDocumentation = process.argv.includes("--check-tokens-doc");
 
 const styleExtensions = new Set([".css", ".scss"]);
 const declarationPattern = /^\s*(--[-_a-zA-Z0-9]+)\s*:/gm;
-const variablePattern = /var\(\s*(--[-_a-zA-Z0-9]+)(?:\s*,[^)]*)?\s*\)/g;
+const variablePattern = /var\(\s*(--[-_a-zA-Z0-9]+)\s*(,)?/g;
 const publicTokenPattern = /^--dnet-(?:ref|sys|[a-z0-9-]+)-[a-z0-9-]+$/;
 const privateTokenPattern = /^--_[a-z0-9-]+$/;
 const colorPattern = /#[0-9a-fA-F]{3,8}\b|\brgba?\(|\b(?:white|black)\b(?!-)/i;
@@ -45,7 +45,7 @@ function addViolation(violations, rule, file, token = "") {
 }
 
 function hasFallback(match) {
-    return match[0].includes(",");
+    return match[2] === ",";
 }
 
 function audit() {

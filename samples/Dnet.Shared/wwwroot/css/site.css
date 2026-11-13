@@ -1530,3 +1530,11 @@ body {
 html[data-dnet-theme|="liquid-glass"] {
   background-blend-mode: overlay, normal, normal, normal, normal, normal, normal, normal, normal, normal, normal, normal, normal;
 }
+
+/* Grid samples: inside a full-height DemoPage, the grid takes what is left
+   under the page header. */
+.sample-grid-host {
+  flex: 1 1 0;
+  min-height: 0;
+  width: 100%;
+}

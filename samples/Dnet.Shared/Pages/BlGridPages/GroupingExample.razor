@@ -18,28 +18,18 @@
 
 <DnetLocalizationObserver OnChanged="RefreshSampleLanguage" />
 
-<div class="container-fluid" style="padding-top: 10px;">
-    <div class="row" style="height: calc(100% - 40px)">
-        <div class="col-12" style="height: calc(100% - 0px);">
-            <div class="dnet-panel-header-wrapper dnet-m-t-15">
-                <div class="dnet-panel-header-text">
-                    <div class="dnet-m-l-15">
-                        <span style="font-weight:700; font-size:.875rem;"> @S["RowSelectionExample.GridAKABlGrid"]</span>
-                    </div>
-                </div>
-            </div>
-            <div style="height: calc(100% - 0px); width: 100%; background-color: #FFFFFF">
-                <BlgGrid @ref="_blGridReference"
-                         GridData="@_persons"
-                         GridColumns="@_gridColumns"
-                         GroupGridColumn="@_groupGridColumn"
-                         TItem="Person"
-                         GridOptions="@_gridOptions">
-                </BlgGrid>
-            </div>
-        </div>
+<DemoPage Id="demo-grid-grouping" Fill="true" Title="@S["GridPages.GroupingTitle"]" Category="@S["GridPages.ComponentsData"]"
+          Description="@S["GridPages.GroupingDescription"]">
+    <div class="sample-grid-host">
+        <BlgGrid @ref="_blGridReference"
+                 GridData="@_persons"
+                 GridColumns="@_gridColumns"
+                 GroupGridColumn="@_groupGridColumn"
+                 TItem="Person"
+                 GridOptions="@_gridOptions">
+        </BlgGrid>
     </div>
-</div>
+</DemoPage>
 
 @code {
     private Task RefreshSampleLanguage() => InvokeAsync(() =>

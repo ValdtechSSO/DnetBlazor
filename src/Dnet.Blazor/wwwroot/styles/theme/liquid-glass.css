@@ -103,6 +103,8 @@
   --dnet-sys-material-accent-highlight: inset 0 1px 0 rgb(255 255 255 / .45), inset 0 -1px 0 rgb(0 0 0 / .15), 0 10px 28px rgb(37 99 235 / .38);
   --dnet-sys-material-ghost-elevation: 0 4px 16px rgb(16 24 48 / .08);
   --dnet-sys-material-focus: 0 0 0 1.5px #2563eb, 0 0 0 5px rgb(37 99 235 / .26);
+  /* Checkbox and radio faces: a tight shadow under the rim. */
+  --dnet-sys-material-lift: 0 1px 2px rgb(16 24 48 / .08), 0 3px 10px rgb(16 24 48 / .10);
 
   /* ------------------------------------------------- component tokens */
   /* Glass has no outlines: outlined buttons are ghost pills and fields are
@@ -114,6 +116,56 @@
   --dnet-form-field-clear-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.8' stroke-linecap='round'><circle cx='12' cy='12' r='11' fill='currentColor' fill-opacity='.14' stroke='none'/><path d='m9 9 6 6m0-6-6 6'/></svg>");
   --dnet-calendar-icon-color: var(--dnet-sys-primary-content);
   --dnet-timepicker-icon-color: var(--dnet-sys-primary-content);
+
+  /* Checkbox and radio button: pure glass faces that stay glass when checked;
+     the mark and the dot take the accent. No border: the rim and the lift
+     draw the edge, so an empty box is below 3:1 against the card (author's
+     decision; the gate reports it). */
+  --dnet-checkbox-size: 20px;
+  --dnet-checkbox-border-radius: 6px;
+  --dnet-checkbox-background: var(--dnet-sys-transparent);
+  --dnet-checkbox-checkmark-path: var(--dnet-sys-primary);
+  --dnet-checkbox-border-color: var(--dnet-sys-transparent);
+  --dnet-radio-button-background: var(--dnet-sys-primary);
+  --dnet-radio-button-border-color: var(--dnet-sys-transparent);
+  --dnet-radio-button-checked-border-color: var(--dnet-sys-transparent);
+  --dnet-radio-button-disabled-border-color: var(--dnet-sys-transparent);
+
+  /* Grid: a glass card whose rows are cards of their own, in the control
+     material. The header sits on the glass, without fills or separators. */
+  --dnet-grid-radius: var(--dnet-sys-radius-lg);
+  --dnet-grid-padding: 6px 10px;
+  --dnet-grid-row-gap: 8px;
+  --dnet-grid-row-radius: var(--dnet-sys-radius-sm);
+  /* The rows' outline is the glass rim of buttons and containers: a single
+     1px line, as --dnet-sys-material-highlight draws it. The border stays
+     transparent; the top and bottom lines carry the ring and the highlight
+     together (ring .42 over .95 on top, over .35 at the bottom). */
+  --dnet-grid-row-border: 1px solid var(--dnet-sys-transparent);
+  --dnet-grid-row-highlight: inset 0 1px 0 rgb(255 255 255 / .97), inset 0 -1px 0 rgb(255 255 255 / .62);
+  --dnet-grid-cell-default-background-color: var(--dnet-sys-material-control);
+  --dnet-grid-hover-color: rgb(255 255 255 / .9);
+  --dnet-grid-clicked-color: color-mix(in srgb, var(--dnet-sys-primary) 10%, var(--dnet-sys-material-control));
+  --dnet-grid-selected-color: color-mix(in srgb, var(--dnet-sys-primary) 16%, var(--dnet-sys-material-control));
+  --dnet-grid-headercell-default-background-color: var(--dnet-sys-transparent);
+  --dnet-grid-border-color: var(--dnet-sys-transparent);
+  --dnet-grid-header-foreground-color: var(--dnet-sys-on-surface-muted);
+  /* Grid selection checkboxes: the same glass face as Checkbox. */
+  --dnet-grid-checkbox-size: var(--dnet-checkbox-size);
+  --dnet-grid-checkbox-radius: var(--dnet-checkbox-border-radius);
+  --dnet-grid-checkbox-border-color: var(--dnet-checkbox-border-color);
+  --dnet-grid-checkbox-background: var(--dnet-sys-material-ghost);
+  --dnet-grid-checkbox-background-checked: var(--dnet-sys-material-ghost);
+  --dnet-grid-checkbox-mark-color: var(--dnet-checkbox-checkmark-path);
+  /* Checkbox's tick: the same stroke across the whole box. */
+  --dnet-grid-checkbox-mark-size: var(--dnet-checkbox-size);
+  --dnet-grid-checkbox-mark-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M4.1 12.7 9 17.6 20.3 6.3' fill='none' stroke='black' stroke-width='2.1333'/></svg>");
+
+  /* Chips: glass like the buttons, keeping their own corners. Unselected
+     chips are ghost glass; a selected chip takes the accent fill. */
+  --dnet-chips-background: var(--dnet-sys-material-ghost);
+  --dnet-chips-background-hover: color-mix(in srgb, var(--dnet-sys-primary) 8%, var(--dnet-sys-material-ghost));
+  --dnet-chips-background-selected: var(--dnet-sys-primary);
 
   /* AdminLayout: the minified menu flyout floats over the content and defaults
      to the border colour, which is translucent here. Nested in the column it

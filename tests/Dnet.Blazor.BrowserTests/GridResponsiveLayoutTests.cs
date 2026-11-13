@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Microsoft.Playwright;
 using Xunit;
 
@@ -70,7 +71,9 @@ public sealed class GridResponsiveLayoutTests
             """);
 
         Assert.Equal("none", checkboxAppearance.Appearance);
-        Assert.Equal("none", checkboxAppearance.BoxShadow);
+        // The checkbox reads the material shadows, which paint nothing by
+        // default: whatever the computed list, no shadow may be visible.
+        Assert.True(IsInvisibleShadow(checkboxAppearance.BoxShadow), checkboxAppearance.BoxShadow);
         Assert.InRange(checkboxAppearance.Width, 17.5, 18.5);
         Assert.InRange(checkboxAppearance.Height, 17.5, 18.5);
         Assert.Equal(0, checkboxAppearance.PaddingLeft);
@@ -259,6 +262,10 @@ public sealed class GridResponsiveLayoutTests
 
         public string[] Right { get; init; } = [];
     }
+
+    private static bool IsInvisibleShadow(string boxShadow) =>
+        boxShadow == "none"
+        || Regex.Matches(boxShadow, @"rgba?\([^)]*\)").All(color => color.Value.StartsWith("rgba(") && color.Value.EndsWith(", 0)"));
 
     private sealed class DesktopLayout
     {

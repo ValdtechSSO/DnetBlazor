@@ -214,6 +214,34 @@
     }
 }
 
+/* Full-height pages (data grids): no width cap; the content takes what is
+   left of the page and stops 20px above the footer. */
+.demo-page-fill {
+    display: flex;
+    flex-direction: column;
+    max-width: none;
+    height: 100%;
+    padding-block-end: 20px;
+}
+
+.demo-page-fill .demo-page-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+}
+
+/* The data sits closer to its heading: 10px less than the other pages. */
+.demo-page-fill .demo-page-header {
+    margin-block-end: 18px;
+}
+
+@media (max-width: 600px) {
+    .demo-page-fill .demo-page-header {
+        margin-block-end: 14px;
+    }
+}
+
 /* Liquid Glass (both variants): containers become glass cards with the
    theme's rim, sheen and lift; pills and icon tiles are lighter glass; inset
    panels are a quiet tint; page headings take the theme's larger scale. The

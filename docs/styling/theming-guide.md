@@ -83,6 +83,7 @@ blur, rim highlight and top sheen.
 | `--dnet-sys-material-accent-highlight` | Rim and glow of accent fills | an invisible inset shadow |
 | `--dnet-sys-material-ghost-elevation` | Drop shadow of ghost controls (outlined buttons) | an invisible shadow |
 | `--dnet-sys-material-focus` | Focus ring of `fill` form fields | an invisible shadow |
+| `--dnet-sys-material-lift` | Drop shadow of small glass faces (checkbox, radio button) | an invisible shadow |
 
 Every default is what components painted before the tokens existed, so a theme
 that does not set them looks exactly as it did.

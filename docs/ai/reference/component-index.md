@@ -21,14 +21,14 @@ Open only the one you need.
 | [FloatingDoubleList](components/FloatingDoubleList.md) | `<DnetFloatingDoubleList>` | 32 | 4 |
 | [FloatingPanel](components/FloatingPanel.md) | `<DnetFloatingPanel>` | 3 | — |
 | [Form](components/Form.md) | `<DnetFormField>`, `<DnetInputDate>`, `<DnetInputNumber>`, `<DnetInputText>`, `<DnetInputTextArea>` | 47 | 13 |
-| [Grid](components/Grid.md) | `<BlgAdvancedFilterToggle>`, `<BlgBody>`, `<BlgGrid>`, `<BlgHeader>`, `<BlgRow>` | 73 | 30 |
+| [Grid](components/Grid.md) | `<BlgAdvancedFilterToggle>`, `<BlgBody>`, `<BlgGrid>`, `<BlgHeader>`, `<BlgRow>` | 73 | 44 |
 | [ImageEditor](components/ImageEditor.md) | `<DnetImageEditor>`, `<ImageEditorTooltipText>` | 18 | — |
 | [List](components/List.md) | `<DnetList>` | 16 | 17 |
 | [Overlay](components/Overlay.md) | `<DnetOverlay>` | 1 | — |
 | [Paginator](components/Paginator.md) | `<DnetPaginator>` | 22 | 8 |
 | [PickList](components/PickList.md) | `<PickList>` | 12 | 18 |
 | [PillTabs](components/PillTabs.md) | `<DnetPillTabs>` | 9 | 12 |
-| [RadioButton](components/RadioButton.md) | `<DnetInputRadioButton>`, `<DnetInputRadioGroup>` | 8 | 4 |
+| [RadioButton](components/RadioButton.md) | `<DnetInputRadioButton>`, `<DnetInputRadioGroup>` | 8 | 7 |
 | [Select](components/Select.md) | `<DnetSelect>` | 32 | 19 |
 | [Skeleton](components/Skeleton.md) | `<DnetSkeleton>` | 7 | 6 |
 | [SlideToggle](components/SlideToggle.md) | `<DnetSlideToggle>` | 5 | 11 |

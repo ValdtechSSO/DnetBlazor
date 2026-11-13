@@ -147,13 +147,21 @@ the element's own `style`. Nothing else is needed.
 | Token | Effective default |
 |---|---|
 | `--dnet-form-field-min-height` | `56px` |
-| `--dnet-grid-background-color` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
+| `--dnet-grid-background-color` | `#ffffff` <br><sub>via `--dnet-sys-material-card`</sub> |
 | `--dnet-grid-border-color` | `#ebebeb` <br><sub>via `--dnet-sys-border`</sub> |
 | `--dnet-grid-cell-border-bottom` | `1px solid var(--dnet-sys-border)` |
 | `--dnet-grid-cell-default-background-color` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
 | `--dnet-grid-cell-horizontal-padding` | `12px` |
 | `--dnet-grid-cell-pinnedleft-border-bottom` | `1px solid var(--dnet-sys-border)` |
 | `--dnet-grid-cell-pinnedright-border-bottom` | `1px solid var(--dnet-sys-border)` |
+| `--dnet-grid-checkbox-background` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
+| `--dnet-grid-checkbox-background-checked` | `#5b5ce0` <br><sub>via `--dnet-sys-primary`</sub> |
+| `--dnet-grid-checkbox-border-color` | `#e1e3e1` <br><sub>via `--dnet-sys-border-strong`</sub> |
+| `--dnet-grid-checkbox-mark-color` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
+| `--dnet-grid-checkbox-mark-image` | `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/></svg>")` |
+| `--dnet-grid-checkbox-mark-size` | `0.625rem` |
+| `--dnet-grid-checkbox-radius` | `0px` |
+| `--dnet-grid-checkbox-size` | `18px` |
 | `--dnet-grid-clicked-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 14%, transparent)` <br><sub>via `--dnet-sys-state-pressed`</sub> |
 | `--dnet-grid-disabled-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 38%, transparent)` <br><sub>via `--dnet-sys-state-disabled-fg`</sub> |
 | `--dnet-grid-focus-color` | `currentColor` |
@@ -169,9 +177,15 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-grid-headercell-default-background-color` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
 | `--dnet-grid-hover-color` | `color-mix(in srgb, var(--dnet-sys-primary) 8%, var(--dnet-sys-surface))` |
 | `--dnet-grid-odd-row-background-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 2%, var(--dnet-sys-surface))` |
+| `--dnet-grid-padding` | `0px` |
+| `--dnet-grid-radius` | `0px` |
 | `--dnet-grid-range-selection-background-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 40%, transparent)` |
 | `--dnet-grid-root-wrapper-border` | `1px solid var(--dnet-sys-transparent)` |
+| `--dnet-grid-row-border` | `none` |
+| `--dnet-grid-row-gap` | `0px` |
 | `--dnet-grid-row-height` | `56px` |
+| `--dnet-grid-row-highlight` | `none` |
+| `--dnet-grid-row-radius` | `0px` |
 | `--dnet-grid-secondary-font-family` | `"Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif` <br><sub>via `--dnet-sys-font`</sub> |
 | `--dnet-grid-secondary-font-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
 | `--dnet-grid-secondary-font-weight` | `400` |

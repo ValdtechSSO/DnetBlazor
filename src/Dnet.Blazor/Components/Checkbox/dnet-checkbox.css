@@ -83,7 +83,10 @@
 
 .dnet-checkbox-frame {
   border-color: var(--_border-color);
-  background-color: transparent;
+  /* Ghost material: transparent by default. No backdrop-filter, the box
+     always sits inside another surface. */
+  background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-lift);
   transition: border-color 90ms cubic-bezier(0, 0, 0.2, 0.1);
   border-width: var(--_border-width);
   border-style: solid;
@@ -107,6 +110,12 @@
   border-radius: var(--_radius);
   box-sizing: border-box;
   pointer-events: none;
+}
+
+/* The input is visually hidden: keyboard focus shows as a ring on the frame. */
+.dnet-checkbox-input:focus-visible ~ .dnet-checkbox-frame {
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-lift),
+              0 0 0 2px var(--dnet-sys-surface), 0 0 0 4px var(--dnet-sys-focus-ring);
 }
 
 .dnet-checkbox-disabled:not(.dnet-checkbox-checked) .dnet-checkbox-frame {
@@ -150,6 +159,13 @@
 
 .dnet-checkbox-checkmark-path {
   stroke: var(--_check-color) !important;
+}
+
+/* The mark draws itself when checked. */
+@media (prefers-reduced-motion: no-preference) {
+  .dnet-checkbox-checkmark-path {
+    transition: stroke-dashoffset var(--dnet-sys-motion-normal) var(--dnet-sys-motion-ease);
+  }
 }
 
 .dnet-checkbox-mixedmark {

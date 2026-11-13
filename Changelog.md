@@ -2,6 +2,61 @@
 
 ## Unreleased
 
+- New material mechanic `--dnet-sys-material-lift`, the drop shadow of small
+  glass faces (checkbox, radio button). Without effect by default.
+- Checkbox, RadioButton and Chips show a focus ring for keyboard focus in
+  every theme: a 2px gap in `--dnet-sys-surface` and 2px in
+  `--dnet-sys-focus-ring`. A chip's remove button shows a 2px ring in the
+  chip's text colour. Visual change: before, keyboard focus was not visible.
+  Pointer use looks the same.
+- Checkbox and RadioButton faces paint the ghost material (`ghost`, `sheen`,
+  `highlight`, `lift`). Without effect by default. The checkmark draws itself
+  when the user allows motion.
+- New RadioButton tokens `--dnet-radio-button-border-color`,
+  `--dnet-radio-button-checked-border-color` and
+  `--dnet-radio-button-disabled-border-color`, with the previous colours as
+  defaults.
+- Grid rows can be separate cards: `--dnet-grid-row-gap`,
+  `--dnet-grid-row-radius` and `--dnet-grid-row-border` set the space between
+  rows, the rounding of their ends and their outline. `--dnet-grid-radius` and
+  `--dnet-grid-padding` shape the grid itself, which paints the card material.
+  The first and last cell of each row carry `blg-cell-row-start` and
+  `blg-cell-row-end`. `--dnet-grid-row-highlight` adds the top and bottom
+  lines of a glass rim, except on cells whose `CellStyleFn` paints their
+  background. Without effect by default.
+- Grid selection checkboxes can take the Checkbox glass face:
+  `--dnet-grid-checkbox-size`, `-radius`, `-border-color`, `-background`,
+  `-background-checked`, `-mark-color`, `-mark-size` and `-mark-image`, plus
+  the ghost material's sheen, rim and lift. Without effect by default. Keyboard focus shows the
+  Checkbox ring in every theme (visual change: before, the global focus
+  reset hid it).
+- Grid: horizontally scrolled columns stop at the pinned zones instead of
+  running under them, so translucent pinned cells (Liquid Glass) no longer
+  show the text of the columns beneath.
+- Grid: selecting all, from the header or with `SelectAll()`, leaves out the
+  rows `DisableRow` disables. Before, the header did so only in the tree while
+  the rendered body and `SelectAll()` selected them too. A disabled row's
+  selection and grouping cells never take the selected or clicked colour,
+  like its other cells. Behaviour change for `SelectAll()` callers that also
+  disable rows: those rows are no longer in `GetSelectedNodes()`.
+- Chips read the material mechanics like buttons: the ghost sheen, rim and
+  elevation on the face, and the accent sheen and rim once selected. Without
+  effect by default.
+- The Liquid Glass themes render checkboxes and radio buttons as pure glass
+  faces, without a border, with an accent mark and dot. `npm run check:contrast`
+  gates the mark and the dot at WCAG 1.4.11 (3:1). An empty face stays below
+  3:1 against its card; the gate reports that value without gating it.
+- The Liquid Glass themes show the Grid as a glass card whose rows are cards
+  of their own: control material, an 8px gap, rounded ends and the glass
+  rim of buttons and containers instead of a grey outline. The header sits on the glass without fills or separators, and
+  selected and clicked rows take an accent tint.
+- The Liquid Glass themes draw the Grid's selection checkboxes like Checkbox:
+  a 20px glass face with 6px corners and no border, and Checkbox's tick in
+  the accent, without a fill when checked.
+- The Liquid Glass themes render chips as glass like the buttons, keeping
+  their own corners: unselected chips are ghost glass, and a selected chip
+  takes the accent fill with its sheen and glow.
+
 ## Version 6.1.0 (November 2026)
 
 - New material tokens in the system layer: `--dnet-sys-canvas`,
