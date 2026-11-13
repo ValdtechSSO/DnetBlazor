@@ -14,6 +14,8 @@
  *   ghost         the same as control
  *   card, popup,  also with the sheen peak on top
  *   ghost
+ *   primary       on-primary over the primary fill, plain and under the accent
+ *                 sheen at the height where a button label starts
  *
  * The backdrop-filter `saturate()` of the theme is applied to the canvas before
  * composing. Blur only mixes colours that already lie between the stops, so
@@ -189,6 +191,47 @@ function parseSheenPeak(value, problems) {
     return colors.reduce((peak, color) => (color.a > peak.a ? color : peak));
 }
 
+/**
+ * Colour of a vertical gradient at `position` (0 = top, 1 = bottom). Accent
+ * fills put a label near the middle of the sheen, not at its peak, so the gate
+ * samples where the label's cap height starts in the smallest button (34%).
+ * A gradient that is not top-to-bottom falls back to its peak.
+ */
+function parseGradientAt(value, position, problems, name) {
+    if (value === undefined || value === "none") {
+        return null;
+    }
+    const match = /^linear-gradient\(([\s\S]*)\)$/.exec(value.trim());
+    const parts = match ? splitTopLevel(match[1], ",") : [];
+    const vertical = parts.length > 0 && /^(180deg|to bottom)$/.test(parts[0]);
+    const stops = parts
+        .map((part) => /^(#[\da-f]+|rgba?\([^)]*\)|transparent)\s*(?:([\d.]+)%)?$/i.exec(part))
+        .filter(Boolean)
+        .map((stop) => ({ color: stop[1] === "transparent" ? { r: 0, g: 0, b: 0, a: 0 } : parseColor(stop[1]), at: stop[2] }));
+    if (stops.length < 2 || stops.some((stop) => stop.color === null)) {
+        problems.push(`${name} must be none or a linear-gradient of literals: ${value}`);
+        return null;
+    }
+    if (!vertical) {
+        return stops.map((stop) => stop.color).reduce((peak, color) => (color.a > peak.a ? color : peak));
+    }
+    const positions = stops.map((stop, index) =>
+        stop.at !== undefined ? parseFloat(stop.at) / 100 : index / (stops.length - 1));
+    if (position <= positions[0]) return stops[0].color;
+    for (let index = 1; index < stops.length; index++) {
+        if (position <= positions[index]) {
+            const t = (position - positions[index - 1]) / (positions[index] - positions[index - 1]);
+            const from = stops[index - 1].color;
+            const to = stops[index].color;
+            const mix = (channel) => from[channel] + (to[channel] - from[channel]) * t;
+            // A fully transparent stop keeps its neighbour's colour (premultiplied interpolation).
+            const rgb = (channel) => (to.a === 0 ? from[channel] : from.a === 0 ? to[channel] : mix(channel));
+            return { r: rgb("r"), g: rgb("g"), b: rgb("b"), a: mix("a") };
+        }
+    }
+    return stops.at(-1).color;
+}
+
 function parseSaturation(value) {
     const match = /saturate\(\s*([\d.]+)(%?)\s*\)/.exec(value ?? "");
     if (!match) {
@@ -298,6 +341,8 @@ function checkTheme(file) {
         : parseCanvas(canvasValue, problems);
     const sheen = parseSheenPeak(declarations.get("--dnet-sys-material-sheen"), problems);
     const saturation = parseSaturation(declarations.get("--dnet-sys-material-backdrop"));
+    const accentSheen = parseGradientAt(
+        declarations.get("--dnet-sys-material-accent-sheen"), 0.34, problems, "--dnet-sys-material-accent-sheen");
 
     if (problems.length > 0) {
         return { theme, problems, results };
@@ -313,6 +358,14 @@ function checkTheme(file) {
         token: "on-primary",
         minimum: contrast(text["on-primary"], text.primary),
     });
+    if (accentSheen) {
+        results.push({
+            theme,
+            level: "primary (sheen)",
+            token: "on-primary",
+            minimum: contrast(text["on-primary"], over(accentSheen, text.primary)),
+        });
+    }
 
     // Opaque fallbacks: every block nested in @supports/@media that restates fills.
     for (const fallback of rules.filter((rule) => rule.atRule !== null && rule.selector === main.selector)) {
