@@ -231,6 +231,17 @@
     min-height: 0;
 }
 
+/* The data sits closer to its heading: 10px less than the other pages. */
+.demo-page-fill .demo-page-header {
+    margin-block-end: 18px;
+}
+
+@media (max-width: 600px) {
+    .demo-page-fill .demo-page-header {
+        margin-block-end: 14px;
+    }
+}
+
 /* Liquid Glass (both variants): containers become glass cards with the
    theme's rim, sheen and lift; pills and icon tiles are lighter glass; inset
    panels are a quiet tint; page headings take the theme's larger scale. The
