@@ -24,6 +24,20 @@
 - The left `DesktopLayout` column carries `z-index: 200` so its menu flyouts
   stay above content that creates its own stacking context.
 - The sample registers both themes in the header and the theme studio.
+- Four more material mechanics, without effect by default:
+  `--dnet-sys-material-accent-sheen` and `--dnet-sys-material-accent-highlight`
+  (filled buttons), `--dnet-sys-material-ghost-elevation` (outlined buttons) and
+  `--dnet-sys-material-focus` (focus ring of fill form fields).
+- New public tokens: `--dnet-form-field-clear-icon` (mask image of the clear
+  action), `--dnet-calendar-icon-color` and `--dnet-timepicker-icon-color`.
+- Fill form fields draw a transparent border over their fill instead of a
+  border in the fill colour. Opaque fills render the same; translucent fills
+  no longer show a doubled edge.
+- The Liquid Glass themes follow their reference design more closely: glass
+  fills and rim, accent buttons with their own sheen and glow, outlined buttons
+  as ghost pills, a chip-style clear action, accent field icons, quieter hints
+  and a focus ring on fields. The dark variant keeps the same accent with
+  white text.
 
 ## Version 6.0.20 (November 2026)
 
