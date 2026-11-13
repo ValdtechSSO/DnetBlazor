@@ -3516,6 +3516,9 @@
   <data name="SlideToggle.KeepYourWorkspaceUpToDateAutomatically" xml:space="preserve">
     <value>Mantén actualizado tu espacio de trabajo automáticamente.</value>
   </data>
+  <data name="SlideToggle.LensVariant" xml:space="preserve">
+    <value>Variante lente</value>
+  </data>
   <data name="SlideToggle.ManagedByYourOrganizationAndAlwaysEnabled" xml:space="preserve">
     <value>Tu organización gestiona este ajuste, que permanece activado.</value>
   </data>
@@ -3533,6 +3536,9 @@
   </data>
   <data name="SlideToggle.SlideToggle" xml:space="preserve">
     <value>Interruptor</value>
+  </data>
+  <data name="SlideToggle.TheLensVariantTintsTheTrackAndTurns" xml:space="preserve">
+    <value>Con Variant=&quot;Lens&quot;, los temas Liquid Glass pintan el carril encendido de cristal azul translúcido y el tirador como una lente clara, un poco más alta que el carril. En los demás temas es igual que el interruptor estándar.</value>
   </data>
   <data name="SlideToggle.TheseSettingsTakeEffectAsSoonAsYou" xml:space="preserve">
     <value>Estos ajustes se aplican en cuanto los cambias.</value>

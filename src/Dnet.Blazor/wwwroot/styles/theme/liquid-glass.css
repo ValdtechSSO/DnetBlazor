@@ -108,10 +108,10 @@
   --dnet-sys-material-focus: 0 0 0 1.5px #2563eb, 0 0 0 5px rgb(37 99 235 / .26);
   /* Checkbox and radio faces: a tight shadow under the rim. */
   --dnet-sys-material-lift: 0 1px 2px rgb(16 24 48 / .08), 0 3px 10px rgb(16 24 48 / .10);
-  /* Slide toggle track: a recessed well with an inner shadow, a 1px rim and a
-     light lip below. */
+  /* Slide toggle track: a recessed well with an inner shadow, a faint 1px rim
+     and a light lip below. */
   --dnet-sys-material-well-shadow:
-    inset 0 1px 3px rgb(13 18 32 / .18), inset 0 0 0 1px #6b7285, 0 1px 0 rgb(255 255 255 / .8);
+    inset 0 1px 3px rgb(13 18 32 / .18), inset 0 0 0 1px rgb(13 18 32 / .10), 0 1px 0 rgb(255 255 255 / .8);
 
   /* ------------------------------------------------- component tokens */
   /* Glass has no outlines: outlined buttons are ghost pills and fields are
@@ -174,19 +174,49 @@
   --dnet-chips-background-hover: color-mix(in srgb, var(--dnet-sys-primary) 8%, var(--dnet-sys-material-ghost));
   --dnet-chips-background-selected: var(--dnet-sys-primary);
 
-  /* Slide toggle: a recessed well (option A) and a clear lens a little taller
-     than the track, without icons (option C). Checked, the track takes the
-     accent material of filled buttons. */
-  --dnet-slide-toggle-track-height: 28px;
-  --dnet-slide-toggle-handle-size: 32px;
-  --dnet-slide-toggle-track-border-color: var(--dnet-sys-transparent);
+  /* Slide toggle, standard (option A, "Gota azul"): off, the track is a
+     recessed glass well; on, it fills with the accent. The handle is a white
+     glass bead inside the track, without icons. Keyboard focus outlines the
+     whole control, with no halo on hover or focus. */
+  --dnet-slide-toggle-handle-size: 26px;
+  --dnet-slide-toggle-track-border-width: 0px;
   --dnet-slide-toggle-track-background: linear-gradient(180deg, rgb(13 18 32 / .13), rgb(13 18 32 / .06));
-  --dnet-slide-toggle-track-background-checked: var(--dnet-sys-primary);
-  --dnet-slide-toggle-handle-background:
-    radial-gradient(circle at 50% 115%, rgb(255 255 255 / .6), rgb(255 255 255 / .06) 62%), rgb(255 255 255 / .16);
-  --dnet-slide-toggle-handle-background-checked:
-    radial-gradient(circle at 50% 115%, rgb(255 255 255 / .6), rgb(255 255 255 / .06) 62%), rgb(255 255 255 / .16);
+  --dnet-slide-toggle-track-background-checked:
+    linear-gradient(180deg, rgb(255 255 255 / .24), rgb(255 255 255 / 0) 55%), var(--dnet-sys-primary);
+  --dnet-slide-toggle-track-shadow-checked:
+    inset 0 1px 0 rgb(255 255 255 / .35), inset 0 -1px 2px rgb(0 0 0 / .14),
+    0 2px 10px color-mix(in srgb, var(--dnet-sys-primary) 35%, transparent);
+  --dnet-slide-toggle-handle-background: radial-gradient(circle at 35% 25%, #ffffff 0 32%, #f3f5fa 62%, #e2e7f0 100%);
+  --dnet-slide-toggle-handle-background-checked: radial-gradient(circle at 35% 25%, #ffffff 0 32%, #f3f5fa 62%, #e2e7f0 100%);
+  --dnet-slide-toggle-handle-shadow:
+    inset 0 1px 0 #ffffff, inset 0 -1px 1px rgb(16 24 48 / .06),
+    0 0 0 .5px rgb(16 24 48 / .12), 0 2px 6px rgb(16 24 48 / .22);
   --dnet-slide-toggle-icon-color: var(--dnet-sys-transparent);
+  --dnet-slide-toggle-halo-size: 0px;
+  --dnet-slide-toggle-focus-outline: 0 0 0 2px rgb(255 255 255 / .92), 0 0 0 4px var(--dnet-sys-primary);
+  --dnet-slide-toggle-disabled-opacity: .45;
+  /* Slide toggle, Lens variant (option C, "Cristal tintado y lente"): off, the
+     track is the glass of a checkbox face; on, translucent accent glass. The
+     handle is a clear lens 4px taller than the track. */
+  --dnet-slide-toggle-lens-track-height: 28px;
+  --dnet-slide-toggle-lens-handle-size: 32px;
+  --dnet-slide-toggle-lens-track-background:
+    linear-gradient(180deg, rgb(255 255 255 / .45), rgb(255 255 255 / 0) 45%), rgb(255 255 255 / .62);
+  --dnet-slide-toggle-lens-track-shadow:
+    inset 0 1px 0 rgb(255 255 255 / .9), inset 0 0 0 1px rgb(255 255 255 / .4),
+    0 1px 2px rgb(16 24 48 / .08), 0 3px 10px rgb(16 24 48 / .10);
+  --dnet-slide-toggle-lens-track-background-checked:
+    linear-gradient(180deg, rgb(255 255 255 / .32), rgb(255 255 255 / 0) 55%),
+    color-mix(in srgb, var(--dnet-sys-primary) 62%, transparent);
+  --dnet-slide-toggle-lens-track-shadow-checked:
+    inset 0 1px 0 rgb(255 255 255 / .45), inset 0 0 0 1px color-mix(in srgb, var(--dnet-sys-primary) 45%, transparent),
+    0 2px 12px color-mix(in srgb, var(--dnet-sys-primary) 35%, transparent);
+  --dnet-slide-toggle-lens-handle-background:
+    radial-gradient(circle at 50% 115%, rgb(255 255 255 / .6), rgb(255 255 255 / .06) 62%), rgb(255 255 255 / .16);
+  --dnet-slide-toggle-lens-handle-shadow:
+    inset 0 1.5px 1px rgb(255 255 255 / .95), inset 0 -1px 2px rgb(255 255 255 / .55),
+    inset 0 0 0 1px rgb(255 255 255 / .55), 0 0 0 .5px rgb(16 24 48 / .2), 0 3px 10px rgb(16 24 48 / .22);
+  --dnet-slide-toggle-lens-handle-backdrop: blur(1.5px) brightness(1.1) saturate(1.6);
 
   /* AdminLayout: the minified menu flyout floats over the content and defaults
      to the border colour, which is translucent here. Nested in the column it
@@ -203,9 +233,9 @@
     --dnet-sys-material-popup: #ffffff;
     --dnet-sys-material-control: #eef1f6;
     --dnet-sys-material-ghost: #f5f7fb;
-    /* The translucent lens needs the glass behind it: the handle turns opaque. */
-    --dnet-slide-toggle-handle-background: #ffffff;
-    --dnet-slide-toggle-handle-background-checked: #ffffff;
+    /* The translucent lens needs the glass behind it: it turns opaque. */
+    --dnet-slide-toggle-lens-handle-background: #ffffff;
+    --dnet-slide-toggle-lens-handle-backdrop: none;
   }
 }
 
@@ -217,9 +247,9 @@
     --dnet-sys-material-popup: #ffffff;
     --dnet-sys-material-control: #eef1f6;
     --dnet-sys-material-ghost: #f5f7fb;
-    /* The translucent lens needs the glass behind it: the handle turns opaque. */
-    --dnet-slide-toggle-handle-background: #ffffff;
-    --dnet-slide-toggle-handle-background-checked: #ffffff;
+    /* The translucent lens needs the glass behind it: it turns opaque. */
+    --dnet-slide-toggle-lens-handle-background: #ffffff;
+    --dnet-slide-toggle-lens-handle-backdrop: none;
     --dnet-sys-material-backdrop: none;
     --dnet-sys-material-sheen: none;
     --dnet-sys-scrim-backdrop: none;
