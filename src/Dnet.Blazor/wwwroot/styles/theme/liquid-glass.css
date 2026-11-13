@@ -96,6 +96,11 @@
   --dnet-sys-material-highlight: inset 0 1px 0 rgb(255 255 255 / .9), inset 0 0 0 1px rgb(255 255 255 / .4);
   --dnet-sys-material-sheen: linear-gradient(180deg, rgb(255 255 255 / .45), rgb(255 255 255 / 0) 45%);
   --dnet-sys-scrim-backdrop: blur(6px) saturate(120%);
+
+  /* AdminLayout: the minified menu flyout floats over the content and defaults
+     to the border colour, which is translucent here. Nested in the column it
+     cannot blur (backdrop root), so it takes the popup fill instead. */
+  --dnet-menu-container-bgcolor: var(--dnet-sys-material-popup);
 }
 
 /* No backdrop-filter support: without the blur a translucent fill shows the

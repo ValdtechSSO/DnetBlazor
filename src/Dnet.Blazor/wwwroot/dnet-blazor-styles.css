@@ -179,7 +179,7 @@ html {
   margin: 0;
   padding: 0;
   min-height: 100%;
-  background: var(--dnet-dash-html-background-color, var(--dnet-sys-surface));
+  background: var(--dnet-dash-html-background-color, var(--dnet-sys-canvas));
   position: relative;
   font-size: var(--dnet-dash-font-rem-reference, 16px);
   font-family: var(--dnet-dash-font-family-text, var(--dnet-sys-font));
@@ -192,7 +192,7 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100%;
-  background-color: var(--dnet-dash-body-background-color, var(--dnet-sys-surface));
+  background-color: var(--dnet-dash-body-background-color, var(--dnet-sys-material-page));
   font-size: var(--dnet-sys-text-md);
 }
 
@@ -330,7 +330,7 @@ body {
 
 .dnet-desktop-content {
   grid-area: content;
-  background-color: var(--dnet-sys-surface);
+  background-color: var(--dnet-sys-material-page);
   height: calc(100% - 0px);
 }
 
@@ -345,7 +345,10 @@ body {
 .dnet-footer {
   --_foreground: var(--dnet-sys-on-surface);
   grid-area: footer;
-  background-color: var(--dnet-sys-surface);
+  background-color: var(--dnet-sys-material-chrome);
+  box-shadow: var(--dnet-sys-material-highlight);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   color: var(--_foreground);
   text-align: center;
   border-top: var(--_layout-divider-width) var(--_layout-divider-style) var(--dnet-footer-border-color, var(--dnet-layout-divider-color, var(--dnet-sys-border-strong)));
@@ -377,7 +380,10 @@ body {
 }
 .dnet-header {
   grid-area: header;
-  background-color: var(--dnet-sys-surface);
+  background-color: var(--dnet-sys-material-chrome);
+  box-shadow: var(--dnet-sys-material-highlight);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   text-align: center;
   border-bottom: var(--_layout-divider-width) var(--_layout-divider-style) var(--dnet-header-border-color, var(--dnet-layout-divider-color, var(--dnet-sys-border-strong)));
 }
@@ -680,9 +686,18 @@ body {
     grid-template-areas: "left";
   }
 }
+/* z-index keeps the menu flyouts (z-index 200, absolutely positioned inside
+   the column) above the content once a material gives the column or the
+   content cards a stacking context of their own (backdrop-filter does). As a
+   grid item the column honours z-index without being positioned, so it does
+   not become the containing block of the flyouts. */
 .dnet-left-column {
   grid-area: left;
-  background-color: var(--dnet-sys-surface);
+  z-index: 200;
+  background-color: var(--dnet-sys-material-chrome);
+  box-shadow: var(--dnet-sys-material-highlight);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   border-right: var(--_layout-divider-width) var(--_layout-divider-style) var(--dnet-left-column-border-color, var(--dnet-layout-divider-color, var(--dnet-sys-border-strong)));
 }
 
@@ -703,7 +718,7 @@ body {
   }
 }
 .desktop-minify-menu {
-  --_minifier-background: var(--dnet-dash-minifyme-bg-color, var(--dnet-sys-surface));
+  --_minifier-background: var(--dnet-dash-minifyme-bg-color, var(--dnet-sys-material-chrome));
 
   flex: 0 0 50px;
   background-color: var(--_minifier-background);
@@ -892,8 +907,12 @@ li .positioning-helper.open {
 li .positioning-helper.open a {
   height: 100%;
 }
+/* The inline expanded submenu sits inside the column's glass: a card-level
+   fill with rim and sheen, and no backdrop of its own (nested backdrop-filters
+   only see their ancestor). Card defaults to surface, as before. */
 li .positioning-helper.open .width-child {
-  background: var(--dnet-menu-container-open-bgcolor, var(--dnet-sys-surface));
+  background: var(--dnet-sys-material-sheen), var(--dnet-menu-container-open-bgcolor, var(--dnet-sys-material-card));
+  box-shadow: var(--dnet-sys-material-highlight);
 }
 li .positioning-helper .width-child {
   background: var(--dnet-menu-container-bgcolor, var(--dnet-sys-border));
@@ -1110,7 +1129,10 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 
 .dnet-right-column {
   grid-area: right;
-  background-color: var(--dnet-sys-surface);
+  background-color: var(--dnet-sys-material-chrome);
+  box-shadow: var(--dnet-sys-material-highlight);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   border-left: var(--_layout-divider-width) var(--_layout-divider-style) var(--dnet-right-column-border-color, var(--dnet-layout-divider-color, var(--dnet-sys-border-strong)));
 }
 

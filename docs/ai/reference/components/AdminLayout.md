@@ -152,7 +152,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-dash-aside` | — |
 | `--dnet-dash-aside-width` | `270px` |
 | `--dnet-dash-aside-width-minified` | `60px` |
-| `--dnet-dash-body-background-color` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
+| `--dnet-dash-body-background-color` | `#ffffff` <br><sub>via `--dnet-sys-material-page`</sub> |
 | `--dnet-dash-default-font-color` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
 | `--dnet-dash-floating-menu-left` | `60px` |
 | `--dnet-dash-font-family-` | — |
@@ -162,7 +162,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-dash-footer-height` | `50px` |
 | `--dnet-dash-gray-dark` | `color-mix(in srgb, var(--dnet-ref-neutral-1000) 87%, transparent)` <br><sub>via `--dnet-sys-on-surface-emphasis`</sub> |
 | `--dnet-dash-header-height` | `50px` |
-| `--dnet-dash-html-background-color` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
+| `--dnet-dash-html-background-color` | `#ffffff` <br><sub>via `--dnet-sys-canvas`</sub> |
 | `--dnet-dash-indicator-bgcolor` | `color-mix(in srgb, var(--dnet-sys-primary-strong) 50%, var(--dnet-sys-on-surface))` <br><sub>via `--dnet-sys-primary-content`</sub> |
 | `--dnet-dash-indicator-width` | `3px` |
 | `--dnet-dash-left-column-width` | `270px` |
@@ -172,7 +172,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-dash-menu-left-padding-second-level` | `2em` |
 | `--dnet-dash-menu-left-padding-third-level` | `4em` |
 | `--dnet-dash-menu-text-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
-| `--dnet-dash-minifyme-bg-color` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
+| `--dnet-dash-minifyme-bg-color` | `#ffffff` <br><sub>via `--dnet-sys-material-chrome`</sub> |
 | `--dnet-dash-minifyme-foreground` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
 | `--dnet-dash-navbar-height` | `38px` |
 | `--dnet-dash-positioning-helper-color` | `color-mix(in srgb, var(--dnet-ref-neutral-1000) 87%, transparent)` <br><sub>via `--dnet-sys-on-surface-emphasis`</sub> |
@@ -189,7 +189,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-layout-divider-width` | `0` |
 | `--dnet-left-column-border-color` | `#e1e3e1` <br><sub>via `--dnet-sys-border-strong`</sub> |
 | `--dnet-menu-container-bgcolor` | `#ebebeb` <br><sub>via `--dnet-sys-border`</sub> |
-| `--dnet-menu-container-open-bgcolor` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
+| `--dnet-menu-container-open-bgcolor` | `#ffffff` <br><sub>via `--dnet-sys-material-card`</sub> |
 | `--dnet-right-column-border-color` | `#e1e3e1` <br><sub>via `--dnet-sys-border-strong`</sub> |
 
 <details><summary>Legacy token names still honoured</summary>
