@@ -111,6 +111,12 @@ Replace the background by redefining the canvas; any `background` value works:
 [data-dnet-theme|="liquid-glass"] { --dnet-sys-canvas: url(/img/wallpaper.jpg) center / cover, #e8ecf4; }
 ```
 
+The sample does this in its `site.css`: it layers soft colour blobs, solid
+gradient shapes (small SVG images) and film grain, and sets
+`background-blend-mode` on `html` for the grain. A canvas built from the
+theme's own palette keeps the contrast the gate verifies; other colours are
+yours to check.
+
 Your own containers can use the same materials:
 
 ```css
