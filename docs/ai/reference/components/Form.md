@@ -114,6 +114,7 @@ the element's own `style`. Nothing else is needed.
 | Token | Effective default |
 |---|---|
 | `--dnet-form-field-background` | `color-mix(in srgb, var(--dnet-sys-on-surface) 12%, var(--dnet-sys-surface))` <br><sub>via `--dnet-sys-material-control`</sub> |
+| `--dnet-form-field-clear-icon` | `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='9'/><path d='m8.5 8.5 7 7m0-7-7 7' stroke-linecap='round'/></svg>")` |
 | `--dnet-form-field-font-size` | `1rem` <br><sub>via `--dnet-sys-text-lg`</sub> |
 | `--dnet-form-field-hint-color` | `#666666` <br><sub>via `--dnet-sys-on-surface-muted`</sub> |
 | `--dnet-form-field-hint-font-size` | `0.75rem` <br><sub>via `--dnet-sys-text-sm`</sub> |
