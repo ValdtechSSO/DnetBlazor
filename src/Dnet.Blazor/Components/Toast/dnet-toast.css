@@ -26,7 +26,7 @@
 }
 
 .dnet-toast {
-  --_bg: var(--dnet-toast-bg-info, var(--dnet-toast-bg, var(--dnet-sys-surface-raised)));
+  --_bg: var(--dnet-toast-bg-info, var(--dnet-toast-bg, var(--dnet-sys-material-popup)));
   --_fg: var(--dnet-toast-fg, var(--dnet-sys-on-surface));
   --_fg-muted: var(--dnet-toast-fg-muted, var(--dnet-sys-on-surface-muted));
   --_border: var(--dnet-toast-border, var(--dnet-sys-border));
@@ -42,10 +42,11 @@
   --_duration: 5000ms;
 
   align-items: flex-start;
-  background: var(--_bg);
+  background: var(--dnet-sys-material-sheen), var(--_bg);
+  backdrop-filter: var(--dnet-sys-material-backdrop);
   border: var(--dnet-sys-border-width) solid var(--_border);
   border-radius: var(--_radius);
-  box-shadow: var(--_shadow);
+  box-shadow: var(--dnet-sys-material-highlight), var(--_shadow);
   box-sizing: border-box;
   color: var(--_fg);
   display: flex;
@@ -62,17 +63,17 @@
 
 .dnet-toast[data-severity="success"] {
   --_accent: var(--dnet-toast-accent, var(--dnet-toast-bg-success, var(--dnet-sys-success)));
-  --_bg: var(--dnet-toast-bg-success, var(--dnet-toast-bg, var(--dnet-sys-surface-raised)));
+  --_bg: var(--dnet-toast-bg-success, var(--dnet-toast-bg, var(--dnet-sys-material-popup)));
 }
 
 .dnet-toast[data-severity="warning"] {
   --_accent: var(--dnet-toast-accent, var(--dnet-toast-bg-warning, var(--dnet-sys-warning)));
-  --_bg: var(--dnet-toast-bg-warning, var(--dnet-toast-bg, var(--dnet-sys-surface-raised)));
+  --_bg: var(--dnet-toast-bg-warning, var(--dnet-toast-bg, var(--dnet-sys-material-popup)));
 }
 
 .dnet-toast[data-severity="error"] {
   --_accent: var(--dnet-toast-accent, var(--dnet-toast-bg-danger, var(--dnet-sys-danger)));
-  --_bg: var(--dnet-toast-bg-danger, var(--dnet-toast-bg, var(--dnet-sys-surface-raised)));
+  --_bg: var(--dnet-toast-bg-danger, var(--dnet-toast-bg, var(--dnet-sys-material-popup)));
 }
 
 .dnet-toast[data-compact] {
