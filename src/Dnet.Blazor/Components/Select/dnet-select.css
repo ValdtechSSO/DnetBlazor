@@ -15,7 +15,7 @@
   --_border-color: var(--dnet-list-border-color, var(--dnet-select-list-border-color, var(--dnet-sys-transparent)));
   --_radius: var(--dnet-list-border-radius, var(--dnet-select-list-border-radius, var(--dnet-sys-radius-lg)));
   --_wrapper-padding: var(--dnet-list-wrapper-horizontal-padding, var(--dnet-select-list-wrapper-horizontal-padding, var(--dnet-sys-space-2)));
-  --_background: var(--dnet-list-background-color, var(--dnet-sys-surface-raised));
+  --_background: var(--dnet-list-background-color, var(--dnet-sys-material-popup));
   --_foreground: var(--dnet-list-foreground, var(--dnet-select-list-foreground, var(--dnet-sys-on-surface)));
   --_shadow: var(--dnet-list-box-shadow, var(--dnet-sys-elevation-3));
 
@@ -29,9 +29,10 @@
   padding-top: var(--_wrapper-padding);
   padding-bottom: var(--_wrapper-padding);
   transition: opacity 0.5s ease-in-out;
-  background-color: var(--_background);
+  background: var(--dnet-sys-material-sheen), var(--_background);
   color: var(--_foreground);
-  box-shadow: var(--_shadow);
+  box-shadow: var(--dnet-sys-material-highlight), var(--_shadow);
+  backdrop-filter: var(--dnet-sys-material-backdrop);
   overflow: hidden;
 }
 .dnet-select-list-wrapper .dnet-item-fadeout {

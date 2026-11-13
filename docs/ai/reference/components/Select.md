@@ -53,7 +53,7 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
-| `--dnet-list-background-color` | `#ffffff` <br><sub>via `--dnet-sys-surface-raised`</sub> |
+| `--dnet-list-background-color` | `#ffffff` <br><sub>via `--dnet-sys-material-popup`</sub> |
 | `--dnet-list-border-color` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
 | `--dnet-list-border-radius` | `10px` <br><sub>via `--dnet-sys-radius-lg`</sub> |
 | `--dnet-list-box-shadow` | `0 3px 5px -1px var(--dnet-sys-shadow-color), 0 6px 10px 0 var(--dnet-sys-shadow-color), 0 1px 18px 0 var(--dnet-sys-shadow-color)` <br><sub>via `--dnet-sys-elevation-3`</sub> |
