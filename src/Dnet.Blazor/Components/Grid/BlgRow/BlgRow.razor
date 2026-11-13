@@ -17,11 +17,16 @@
 @typeparam TItem
 
 <DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
-@if (GridOptions.CheckboxSelectionColumn && CheckboxSelectionPinned)
+@{
+    // The selection checkbox, then the grouping cell, open the row in this zone.
+    var hasCheckboxCell = GridOptions.CheckboxSelectionColumn && CheckboxSelectionPinned;
+    var hasGroupingCell = !RowNode.IsGroup && HasGrouping && GridColumns.Any() && Pinned == Pinned.None;
+}
+@if (hasCheckboxCell)
 {
     var checkboxHeight = GridOptions.RowHeight + "px";
 
-    <div class="blg-cell blg-cell-value blg-selection-checkbox-wrapper
+    <div class="blg-cell blg-cell-value blg-selection-checkbox-wrapper @RowEdgeClasses(start: true, end: false)
                 @_rowCssClasses @(RowNode.IsHovered() ? "blg-hover-class" : null)
                 @(RowNode.IsClicked() && !RowNode.IsSelected() ? "blg-row-clicked" : null)
                 @(RowNode.IsSelected() ? "blg-row-selected" : null)"
@@ -39,12 +44,12 @@
 
 @if (!RowNode.IsGroup)
 {
-    @if (HasGrouping && GridColumns.Any() && Pinned == Pinned.None)
+    @if (hasGroupingCell)
     {
         var width = GroupGridColumn.Width + "px";
         var height = GridOptions.RowHeight + "px";
 
-        <div class="blg-cell blg-cell-value
+        <div class="blg-cell blg-cell-value @RowEdgeClasses(start: !hasCheckboxCell, end: false)
                       @_rowCssClasses @(RowNode.IsHovered() ? "blg-hover-class" : null)
                       @(RowNode.IsClicked() && !RowNode.IsSelected() ? "blg-row-clicked" : null)
                       @(RowNode.IsSelected() ? "blg-row-selected" : null)"
@@ -132,7 +137,10 @@
 
         cellId++;
 
-        <div class="blg-cell blg-cell-value
+        var opensRow = i == 0 && !hasCheckboxCell && !hasGroupingCell;
+        var closesRow = i + (long)spanColumnBy + 1 >= gridColumns.Count;
+
+        <div class="blg-cell blg-cell-value @RowEdgeClasses(opensRow, closesRow)
                     @_rowCssClasses @(RowNode.IsHovered() && cell.RowSpanFn == null ? "blg-hover-class" : null)
                     @(RowNode.IsClicked() && cell.RowSpanFn == null && !RowNode.IsSelected() && !GetDisableRow() ? "blg-row-clicked" : null)
                     @(RowNode.IsSelected() && cell.RowSpanFn == null && !GetDisableRow() ? "blg-row-selected" : null)
@@ -189,7 +197,7 @@ else
         var iconClass = RowNode.Expanded ? "blg-icon-tree-open" : "blg-icon-tree-closed";
         var checkboxCounter = GridOptions.CheckboxSelectionColumn && CheckboxSelectionPinned ? 1 : 0;
 
-        <div class="blg-cell blg-cell-value
+        <div class="blg-cell blg-cell-value @RowEdgeClasses(start: !hasCheckboxCell, end: true)
                                 @_rowCssClasses @(RowNode.IsHovered() ? "blg-hover-class" : null)
                                 @(RowNode.IsClicked() && !RowNode.IsSelected() ? "blg-row-clicked" : null)
                                 @(RowNode.IsSelected() ? "blg-row-selected" : null)"
@@ -208,10 +216,14 @@ else
     else
     {
         var paddingLeft = 30 * (RowNode.Level - 1) + "px";
+        var groupCellIndex = 0;
 
         foreach (var cell in GridColumns)
         {
-            <div class="blg-cell blg-cell-value
+            var groupCellClasses = RowEdgeClasses(start: groupCellIndex == 0 && !hasCheckboxCell, end: groupCellIndex == GridColumns.Count - 1);
+            groupCellIndex++;
+
+            <div class="blg-cell blg-cell-value @groupCellClasses
                         @_rowCssClasses @(RowNode.IsHovered() ? "blg-hover-class" : null)
                         @(RowNode.IsClicked() && !RowNode.IsSelected() ? "blg-row-clicked" : null)
                         @(RowNode.IsSelected() ? "blg-row-selected" : null)"
@@ -426,6 +438,17 @@ else
         _rowCssClasses = GetRowCssClasses(RowNode, RowId);
         StateHasChanged();
     }
+
+    // First and last cell of the row inside this zone (pinned left, center or
+    // pinned right). The stylesheet closes the row outline on them.
+    private static string RowEdgeClasses(bool start, bool end) =>
+        (start, end) switch
+        {
+            (true, true) => "blg-cell-row-start blg-cell-row-end",
+            (true, false) => "blg-cell-row-start",
+            (false, true) => "blg-cell-row-end",
+            _ => null
+        };
 
     private string GetRowCssClasses(RowNode<TItem> rowNode, int rowId)
     {

@@ -15,6 +15,12 @@
   `--dnet-radio-button-checked-border-color` and
   `--dnet-radio-button-disabled-border-color`, with the previous colours as
   defaults.
+- Grid rows can be separate cards: `--dnet-grid-row-gap`,
+  `--dnet-grid-row-radius` and `--dnet-grid-row-border` set the space between
+  rows, the rounding of their ends and their outline. `--dnet-grid-radius` and
+  `--dnet-grid-padding` shape the grid itself, which paints the card material.
+  The first and last cell of each row carry `blg-cell-row-start` and
+  `blg-cell-row-end`. Without effect by default.
 - The Liquid Glass themes render checkboxes and radio buttons as pure glass
   faces, without a border, with an accent mark and dot. `npm run check:contrast`
   gates the mark and the dot at WCAG 1.4.11 (3:1). An empty face stays below

@@ -592,8 +592,22 @@
 }
 
 .blg-arcadia-theme {
+  /* The grid is a card. Its rows become cards of their own when a theme sets
+     a gap, a radius and a border for them; with the defaults they stay one
+     continuous table. */
+  --_background: var(--dnet-grid-background-color, var(--blg-background-color, var(--dnet-sys-material-card)));
+  --_radius: var(--dnet-grid-radius, 0px);
+  --_padding: var(--dnet-grid-padding, 0px);
+  --_row-gap: var(--dnet-grid-row-gap, 0px);
+  --_row-radius: var(--dnet-grid-row-radius, 0px);
+
   -webkit-font-smoothing: antialiased;
-  background-color: var(--dnet-grid-background-color, var(--blg-background-color, var(--dnet-sys-surface)));
+  box-sizing: border-box;
+  padding: var(--_padding);
+  border-radius: var(--_radius);
+  background: var(--dnet-sys-material-sheen), var(--_background);
+  box-shadow: var(--dnet-sys-material-highlight);
+  backdrop-filter: var(--dnet-sys-material-backdrop);
   color: var(--dnet-grid-foreground-color, var(--blg-foreground-color, var(--dnet-sys-on-surface)));
   font-family: var(--dnet-grid-font-family, var(--blg-font-family, var(--dnet-sys-font)));
   font-weight: var(--dnet-grid-font-weight, var(--blg-font-weight, 400));
@@ -647,14 +661,40 @@
   box-shadow: var(--dnet-sys-elevation-1);
 }
 .blg-arcadia-theme .blg-pinned-left-cols-container .blg-cell:nth-child(n) {
+  --_cell-border-bottom: var(--dnet-grid-cell-pinnedleft-border-bottom, var(--blg-cell-pinnedleft-border-bottom, 1px solid var(--dnet-sys-border)));
   border: none;
+  border-top: var(--dnet-grid-row-border, none);
   border-right: 1px solid var(--dnet-grid-border-color, var(--blg-border-color, var(--dnet-sys-border)));
-  border-bottom: var(--dnet-grid-cell-pinnedleft-border-bottom, var(--blg-cell-pinnedleft-border-bottom, 1px solid var(--dnet-sys-border)));
+  border-bottom: var(--dnet-grid-row-border, var(--_cell-border-bottom));
 }
 .blg-arcadia-theme .blg-pinned-right-cols-container .blg-cell:nth-child(n) {
+  --_cell-border-bottom: var(--dnet-grid-cell-pinnedright-border-bottom, var(--blg-cell-pinnedright-border-bottom, 1px solid var(--dnet-sys-border)));
   border: none;
+  border-top: var(--dnet-grid-row-border, none);
   border-left: 1px solid var(--dnet-grid-border-color, var(--blg-border-color, var(--dnet-sys-border)));
-  border-bottom: var(--dnet-grid-cell-pinnedright-border-bottom, var(--blg-cell-pinnedright-border-bottom, 1px solid var(--dnet-sys-border)));
+  border-bottom: var(--dnet-grid-row-border, var(--_cell-border-bottom));
+}
+/* The first and the last cell of a row close its outline and round its ends.
+   Pinned zones, when present, hold the ends of the row. */
+.blg-arcadia-theme .blg-pinned-left-cols-container .blg-cell.blg-cell-row-start:nth-child(n) {
+  border-left: var(--dnet-grid-row-border, none);
+  border-top-left-radius: var(--_row-radius);
+  border-bottom-left-radius: var(--_row-radius);
+}
+.blg-arcadia-theme .blg-viewport-wrapper:not(:has(> .blg-pinned-left-cols-container)) .blg-center-cols-container .blg-cell-row-start {
+  border-left: var(--dnet-grid-row-border, 1px solid transparent);
+  border-top-left-radius: var(--_row-radius);
+  border-bottom-left-radius: var(--_row-radius);
+}
+.blg-arcadia-theme .blg-pinned-right-cols-container .blg-cell.blg-cell-row-end:nth-child(n) {
+  border-right: var(--dnet-grid-row-border, none);
+  border-top-right-radius: var(--_row-radius);
+  border-bottom-right-radius: var(--_row-radius);
+}
+.blg-arcadia-theme .blg-viewport-wrapper:not(:has(> .blg-pinned-right-cols-container)) .blg-center-cols-container .blg-cell-row-end {
+  border-right: var(--dnet-grid-row-border, 1px solid transparent);
+  border-top-right-radius: var(--_row-radius);
+  border-bottom-right-radius: var(--_row-radius);
 }
 .blg-arcadia-theme .blg-header {
   background-color: var(--dnet-grid-header-background-color, var(--blg-header-background-color, var(--dnet-sys-transparent)));
@@ -701,12 +741,18 @@
   border-top-width: 0;
 }
 .blg-arcadia-theme .blg-cell {
+  --_cell-border-bottom: var(--dnet-grid-cell-border-bottom, var(--blg-cell-border-bottom, 1px solid var(--dnet-sys-border)));
   line-height: calc(var(--dnet-grid-row-height, var(--blg-row-height, 56px)) - 2px);
   padding-left: var(--dnet-grid-cell-horizontal-padding, var(--blg-cell-horizontal-padding, 12px));
   padding-right: var(--dnet-grid-cell-horizontal-padding, var(--blg-cell-horizontal-padding, 12px));
   border: 1px solid transparent;
+  border-top: var(--dnet-grid-row-border, 1px solid transparent);
   background-color: var(--dnet-grid-cell-default-background-color, var(--blg-cell-default-background-color, var(--dnet-sys-surface)));
-  border-bottom: var(--dnet-grid-cell-border-bottom, var(--blg-cell-border-bottom, 1px solid var(--dnet-sys-border)));
+  border-bottom: var(--dnet-grid-row-border, var(--_cell-border-bottom));
+  /* Row cards: the gap is split above and below each row. Cells sized by the
+     row height (selection, grouping) shrink with it. */
+  margin-block: calc(var(--_row-gap) / 2);
+  max-height: calc(100% - var(--_row-gap));
   /*  padding-left: calc(var(--dnet-grid-cell-horizontal-padding, var(--blg-cell-horizontal-padding, 12px)) - 1px);
   padding-right: calc(var(--dnet-grid-cell-horizontal-padding, var(--blg-cell-horizontal-padding, 12px)) - 1px);*/
 }
