@@ -1,6 +1,6 @@
 /*! Sass FloatingDoubleList (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 .dnet-connected-panel-container-dl {
-  --_panel-background: var(--dnet-sys-surface-raised);
+  --_panel-background: var(--dnet-sys-material-popup);
   --_radius: var(--dnet-dialog-border-radius, var(--dnet-sys-radius-lg));
   --_elevation: var(--dnet-sys-elevation-3);
 
@@ -9,8 +9,9 @@
   flex-direction: column;
   overflow: hidden;
   border: 0;
-  box-shadow: var(--_elevation);
-  background: var(--_panel-background);
+  box-shadow: var(--dnet-sys-material-highlight), var(--_elevation);
+  background: var(--dnet-sys-material-sheen), var(--_panel-background);
+  backdrop-filter: var(--dnet-sys-material-backdrop);
   color: var(--dnet-sys-on-surface-emphasis);
   width: 100%;
   height: 100%;

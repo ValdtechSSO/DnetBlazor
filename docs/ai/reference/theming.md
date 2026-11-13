@@ -127,7 +127,8 @@ The legacy `--dnet-toast-bg-*`, `--dnet-toast-border-radius` and
 
 ## Dark mode
 
-The library ships `dark.css`, `compact.css` and `high-contrast.css` under
+The library ships `dark.css`, `compact.css`, `high-contrast.css`, `modern.css`,
+`liquid-glass.css` and `liquid-glass-dark.css` under
 `_content/Dnet.Blazor/styles/theme/`. Link the one you want after the base
 stylesheet and set `data-dnet-theme` to match.
 
@@ -138,6 +139,27 @@ To follow the OS setting, wrap it:
   :root { /* paste the dark theme's declarations here */ }
 }
 ```
+
+## Materials (glass)
+
+`--dnet-sys-surface*` are opaque colours other parts are cut out against.
+Containers paint `--dnet-sys-material-*` instead: `canvas` (app background),
+`page`, `chrome` (header, columns, footer), `card`, `popup`, `control` (fill
+fields) and `ghost` (outlined buttons), plus `--dnet-sys-material-backdrop`
+(blur), `-highlight` (inset rim) and `-sheen` (image over the fill), and
+`--dnet-sys-scrim-backdrop`. Defaults reproduce the opaque look, so only a
+material theme such as `liquid-glass` changes them. Replace its background with
+`--dnet-sys-canvas`; give your own containers the same look with:
+
+```css
+[data-dnet-theme|="liquid-glass"] .my-card {
+  background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-card);
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-1);
+  backdrop-filter: var(--dnet-sys-material-backdrop);
+}
+```
+
+Keep `body` transparent under these themes so the canvas shows.
 
 ## What tokens cannot do
 

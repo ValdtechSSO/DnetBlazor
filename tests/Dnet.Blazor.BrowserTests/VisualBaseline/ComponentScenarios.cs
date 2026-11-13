@@ -19,6 +19,11 @@ public sealed record ComponentVariant(string Label, string Selector);
 /// Keep goldens deterministic: state interactions only, no timed waits beyond
 /// the harness settle; data-driven pages resolve <c>sample-data/person_500.json</c>
 /// through the fixture route.
+///
+/// <para><see cref="Theme"/> captures the scenario under another theme: the
+/// harness persists it as the sample's <c>dnet.theme</c> preference before
+/// loading the page, and the goldens are named <c>&lt;name&gt;-&lt;theme&gt;-…</c>
+/// so they sit next to the default-theme goldens of the same scenario.</para>
 /// </summary>
 public sealed record ComponentScenario(
     string Name,
@@ -37,8 +42,12 @@ public sealed record ComponentScenario(
     int MaxDiffPixels = 0,
     int ChannelThreshold = 8,
     bool SkipMobile = false,
-    string? ReadyFunction = null)
+    string? ReadyFunction = null,
+    string? Theme = null)
 {
+    /// <summary>Golden file prefix and scenario key: the name, plus the theme when one is set.</summary>
+    public string GoldenName => Theme is null ? Name : $"{Name}-{Theme}";
+
     /// <summary>States captured as a full-page screenshot (open panels live in the overlay portal).</summary>
     public VisualState[] PageCaptureStates { get; } = PageCaptureStates ?? [];
 

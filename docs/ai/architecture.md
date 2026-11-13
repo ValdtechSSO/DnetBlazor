@@ -95,6 +95,17 @@ Activate with `document.documentElement.dataset.dnetTheme = "dark"`.
 they invert automatically and a theme never needs to redeclare them. Lean on that
 when tokenising: deriving beats enumerating.
 
+**`surface` is a colour, `material` is a container.** `--dnet-sys-surface*` stay
+opaque: focus-ring gaps, checkmarks, inverse text and masks are cut out against
+them. Containers read `--dnet-sys-material-*` (canvas, page, chrome, card, popup,
+control, ghost) plus three mechanics (`backdrop`, `highlight`, `sheen`) and
+`--dnet-sys-scrim-backdrop`. Their defaults are what components painted before,
+so a theme that ignores them is unaffected. They are declared on `:root` and
+again on `:where([data-dnet-theme])`, so their `var()`s resolve against the
+nearest theme scope instead of being inherited already resolved from `<html>`.
+`liquid-glass.css` and `liquid-glass-dark.css` are the material themes;
+`npm run check:contrast` gates their contrast.
+
 ## Overlays: themes don't cross the portal on their own
 
 `DnetOverlay` renders dialogs, tooltips, toasts and panels into a global host in

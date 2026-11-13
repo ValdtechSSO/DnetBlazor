@@ -13,7 +13,7 @@
 }
 
 .dnet-expansion-panel:not([class*=dnet-elevation-z]) {
-  box-shadow: var(--dnet-accordion-box-shadow, var(--dnet-sys-elevation-1));
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-accordion-box-shadow, var(--dnet-sys-elevation-1));
 }
 
 .dnet-expansion-panel {
@@ -27,7 +27,8 @@
 }
 
 .dnet-expansion-panel {
-  background: var(--dnet-sys-surface);
+  background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-card);
+  backdrop-filter: var(--dnet-sys-material-backdrop);
   color: var(--dnet-sys-on-surface-emphasis);
 }
 

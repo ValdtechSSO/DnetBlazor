@@ -12,7 +12,7 @@
 		<PackageTags>Blazor-Components-Datalnet</PackageTags>
 		<PackageVersion>$(DnetBlazorVersion)</PackageVersion>
 		<EnablePackageValidation>true</EnablePackageValidation>
-		<PackageValidationBaselineVersion>6.0.20-rc.2</PackageValidationBaselineVersion>
+		<PackageValidationBaselineVersion>6.0.20</PackageValidationBaselineVersion>
 		<ApiCompatEnableRuleCannotChangeParameterName>true</ApiCompatEnableRuleCannotChangeParameterName>
 		<PackageProjectUrl>https://datalnet.com/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ValdtechSSO/DnetBlazor</RepositoryUrl>

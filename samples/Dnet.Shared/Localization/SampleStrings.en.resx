@@ -4044,6 +4044,12 @@
   <data name="Theming.Light" xml:space="preserve">
     <value>Light</value>
   </data>
+  <data name="Theming.LiquidGlass" xml:space="preserve">
+    <value>Liquid glass</value>
+  </data>
+  <data name="Theming.LiquidGlassDark" xml:space="preserve">
+    <value>Liquid glass dark</value>
+  </data>
   <data name="Theming.LivePreview" xml:space="preserve">
     <value>Live preview</value>
   </data>

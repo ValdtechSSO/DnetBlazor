@@ -1,0 +1,119 @@
+/*
+ * liquid-glass-dark.css — Dnet.Blazor theme
+ *
+ * Dark variant of liquid-glass.css, as a theme of its own: its name travels
+ * through OverlayConfig.ThemeScope, so overlays opened inside
+ * <DnetThemeScope Theme="liquid-glass-dark"> come out dark too (a
+ * data-dnet-scheme attribute would not cross the overlay portal).
+ *
+ * Only custom properties. Load it AFTER dnet-blazor-styles.css and activate it with
+ *   document.documentElement.dataset.dnetTheme = "liquid-glass-dark";
+ *
+ * Text tokens, material fills and canvas stops stay as literals:
+ * `npm run check:contrast` reads them to verify WCAG AA.
+ */
+
+[data-dnet-theme="liquid-glass-dark"] {
+
+  /* ---------------------------------------------------------- surfaces */
+  --dnet-sys-surface: #1c2030;
+  --dnet-sys-surface-raised: #232838;
+  --dnet-sys-surface-hover: #2a3042;
+  --dnet-sys-surface-variant: #30364a;
+  --dnet-sys-surface-inverse: #f2f4f9;
+
+  /* -------------------------------------------------------------- text */
+  --dnet-sys-on-surface: #e6eaf2;
+  --dnet-sys-on-surface-emphasis: #f5f7fb;
+  --dnet-sys-on-surface-muted: #c3cad8;
+  --dnet-sys-on-surface-subtle: #aeb6c8;
+
+  /* ------------------------------------------------------------ accent */
+  --dnet-sys-primary: #7aa2ff;
+  --dnet-sys-primary-strong: #5b8cff;
+  --dnet-sys-primary-emphasis: #a9c4ff;
+  --dnet-sys-primary-content: #a9c4ff;
+  --dnet-sys-on-primary: #0a1633;
+  --dnet-sys-danger: #ffa59c;
+
+  /* --------------------------------------------------- borders, states */
+  --dnet-sys-border: rgb(255 255 255 / .10);
+  --dnet-sys-border-strong: rgb(255 255 255 / .18);
+  --dnet-sys-state-selected: rgb(122 162 255 / .18);
+  --dnet-sys-focus-ring: #a9c4ff;
+  /* Restated so they resolve against this theme inside a DnetThemeScope. */
+  --dnet-sys-state-hover: color-mix(in srgb, var(--dnet-sys-on-surface) 8%, transparent);
+  --dnet-sys-state-pressed: color-mix(in srgb, var(--dnet-sys-on-surface) 14%, transparent);
+  --dnet-sys-state-disabled-fg: color-mix(in srgb, var(--dnet-sys-on-surface) 38%, transparent);
+
+  /* ------------------------------------------------------------- shape */
+  --dnet-sys-radius-sm: 10px;
+  --dnet-sys-radius-md: 14px;
+  --dnet-sys-radius-lg: 22px;
+
+  /* --------------------------------------------------------- elevation */
+  --dnet-sys-shadow-color: rgb(0 0 0 / .45);
+  --dnet-sys-scrim: rgb(0 0 0 / .45);
+  --dnet-sys-elevation-1: 0 1px 2px rgb(0 0 0 / .30), 0 4px 12px rgb(0 0 0 / .30);
+  --dnet-sys-elevation-2: 0 1px 2px rgb(0 0 0 / .30), 0 10px 30px rgb(0 0 0 / .38);
+  --dnet-sys-elevation-3: 0 2px 6px rgb(0 0 0 / .34), 0 24px 64px rgb(0 0 0 / .46);
+  --dnet-sys-elevation-4: 0 4px 10px rgb(0 0 0 / .38), 0 32px 80px rgb(0 0 0 / .52);
+  --dnet-sys-elevation-5: 0 6px 14px rgb(0 0 0 / .42), 0 40px 96px rgb(0 0 0 / .60);
+
+  /* ------------------------------------------------ typography, motion */
+  --dnet-sys-font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --dnet-sys-text-xs: 0.6875rem;
+  --dnet-sys-text-sm: 0.8125rem;
+  --dnet-sys-motion-fast: 160ms;
+  --dnet-sys-motion-normal: 240ms;
+  --dnet-sys-motion-ease: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* --------------------------------------------------------- materials */
+  --dnet-sys-canvas:
+    radial-gradient(60% 50% at 8% 0%, #0e3685 0%, transparent 70%),
+    radial-gradient(50% 45% at 96% 4%, #892122 0%, transparent 70%),
+    radial-gradient(45% 40% at 4% 62%, #005749 0%, transparent 70%),
+    radial-gradient(55% 45% at 96% 74%, #4c1b82 0%, transparent 70%),
+    radial-gradient(40% 35% at 50% 100%, #755000 0%, transparent 70%),
+    #080b13;
+  --dnet-sys-material-page: transparent;
+  --dnet-sys-material-chrome: rgb(22 26 40 / .52);
+  --dnet-sys-material-card: rgb(18 22 34 / .62);
+  --dnet-sys-material-popup: rgb(26 30 44 / .90);
+  --dnet-sys-material-control: rgb(255 255 255 / .08);
+  --dnet-sys-material-ghost: rgb(255 255 255 / .06);
+  --dnet-sys-material-backdrop: blur(28px) saturate(170%);
+  --dnet-sys-material-highlight: inset 0 1px 0 rgb(255 255 255 / .18), inset 0 0 0 1px rgb(255 255 255 / .08);
+  --dnet-sys-material-sheen: linear-gradient(180deg, rgb(255 255 255 / .08), rgb(255 255 255 / 0) 40%);
+  --dnet-sys-scrim-backdrop: blur(6px) saturate(120%);
+
+  /* AdminLayout: the minified menu flyout floats over the content and defaults
+     to the border colour, which is translucent here. Nested in the column it
+     cannot blur (backdrop root), so it takes the popup fill instead. */
+  --dnet-menu-container-bgcolor: var(--dnet-sys-material-popup);
+}
+
+/* No backdrop-filter support: materials become opaque. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  [data-dnet-theme="liquid-glass-dark"] {
+    --dnet-sys-material-chrome: #1f2433;
+    --dnet-sys-material-card: #232838;
+    --dnet-sys-material-popup: #262b3c;
+    --dnet-sys-material-control: #2c3244;
+    --dnet-sys-material-ghost: #262b3c;
+  }
+}
+
+/* Reduced transparency or forced colours: opaque materials, no blur, no sheen. */
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+  [data-dnet-theme="liquid-glass-dark"] {
+    --dnet-sys-material-chrome: #1f2433;
+    --dnet-sys-material-card: #232838;
+    --dnet-sys-material-popup: #262b3c;
+    --dnet-sys-material-control: #2c3244;
+    --dnet-sys-material-ghost: #262b3c;
+    --dnet-sys-material-backdrop: none;
+    --dnet-sys-material-sheen: none;
+    --dnet-sys-scrim-backdrop: none;
+  }
+}

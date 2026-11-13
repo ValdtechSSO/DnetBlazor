@@ -1,0 +1,130 @@
+/*
+ * liquid-glass.css — Dnet.Blazor theme
+ *
+ * A material theme: translucent containers that blur and saturate what is
+ * behind them, with a bright rim and a soft top sheen. Only custom properties:
+ * no component rules, no !important.
+ *
+ * Load it AFTER dnet-blazor-styles.css and activate it with
+ *   document.documentElement.dataset.dnetTheme = "liquid-glass";
+ * or scope it with <DnetThemeScope Theme="liquid-glass">, which also carries it
+ * into dialogs, popups and other overlays.
+ *
+ * The dark variant is a theme of its own, liquid-glass-dark.css, so that its
+ * name travels through OverlayConfig.ThemeScope like any other theme.
+ *
+ * Replace the app background by redefining --dnet-sys-canvas (any valid
+ * `background` value). Text tokens, material fills and canvas stops stay as
+ * literals: `npm run check:contrast` reads them to verify WCAG AA.
+ */
+
+[data-dnet-theme="liquid-glass"] {
+
+  /* ---------------------------------------------------------- surfaces */
+  /* Still opaque: surface is the colour other parts are cut out against
+     (focus-ring gaps, checkmarks, inverse text). Containers use materials. */
+  --dnet-sys-surface: #ffffff;
+  --dnet-sys-surface-raised: #ffffff;
+  --dnet-sys-surface-hover: #f1f3f8;
+  --dnet-sys-surface-variant: #e6e9f0;
+  --dnet-sys-surface-inverse: #0d1220;
+
+  /* -------------------------------------------------------------- text */
+  --dnet-sys-on-surface: #262b3b;
+  --dnet-sys-on-surface-emphasis: #0d1220;
+  --dnet-sys-on-surface-muted: #434b60;
+  --dnet-sys-on-surface-subtle: #4b5368;
+
+  /* ------------------------------------------------------------ accent */
+  --dnet-sys-primary: #2563eb;
+  --dnet-sys-primary-strong: #1d4ed8;
+  --dnet-sys-primary-emphasis: #1e40af;
+  --dnet-sys-primary-content: #1e46c8;
+  --dnet-sys-on-primary: #ffffff;
+  --dnet-sys-danger: #a1180f;
+
+  /* --------------------------------------------------- borders, states */
+  --dnet-sys-border: rgb(13 18 32 / .10);
+  --dnet-sys-border-strong: rgb(13 18 32 / .18);
+  --dnet-sys-state-selected: rgb(37 99 235 / .14);
+  --dnet-sys-focus-ring: #2563eb;
+  /* Restated so they resolve against this theme inside a DnetThemeScope. */
+  --dnet-sys-state-hover: color-mix(in srgb, var(--dnet-sys-on-surface) 8%, transparent);
+  --dnet-sys-state-pressed: color-mix(in srgb, var(--dnet-sys-on-surface) 14%, transparent);
+  --dnet-sys-state-disabled-fg: color-mix(in srgb, var(--dnet-sys-on-surface) 38%, transparent);
+
+  /* ------------------------------------------------------------- shape */
+  --dnet-sys-radius-sm: 10px;
+  --dnet-sys-radius-md: 14px;
+  --dnet-sys-radius-lg: 22px;
+
+  /* --------------------------------------------------------- elevation */
+  /* Diffuse: the rim and the blur carry the edge, the shadow only lifts. */
+  --dnet-sys-shadow-color: rgb(22 31 61 / .10);
+  --dnet-sys-scrim: rgb(13 18 32 / .28);
+  --dnet-sys-elevation-1: 0 1px 2px rgb(22 31 61 / .06), 0 4px 12px rgb(22 31 61 / .06);
+  --dnet-sys-elevation-2: 0 1px 2px rgb(22 31 61 / .06), 0 10px 30px rgb(22 31 61 / .10);
+  --dnet-sys-elevation-3: 0 2px 6px rgb(22 31 61 / .08), 0 24px 64px rgb(22 31 61 / .20);
+  --dnet-sys-elevation-4: 0 4px 10px rgb(22 31 61 / .10), 0 32px 80px rgb(22 31 61 / .24);
+  --dnet-sys-elevation-5: 0 6px 14px rgb(22 31 61 / .12), 0 40px 96px rgb(22 31 61 / .28);
+
+  /* ------------------------------------------------ typography, motion */
+  /* No webfonts: the system font on Apple platforms, Inter when the app
+     loads it, the OS font otherwise. */
+  --dnet-sys-font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --dnet-sys-text-xs: 0.6875rem;
+  --dnet-sys-text-sm: 0.8125rem;
+  --dnet-sys-motion-fast: 160ms;
+  --dnet-sys-motion-normal: 240ms;
+  --dnet-sys-motion-ease: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* --------------------------------------------------------- materials */
+  --dnet-sys-canvas:
+    radial-gradient(60% 50% at 8% 0%, #80c3ff 0%, transparent 70%),
+    radial-gradient(50% 45% at 96% 4%, #ffb39e 0%, transparent 70%),
+    radial-gradient(45% 40% at 4% 62%, #8ae7c7 0%, transparent 70%),
+    radial-gradient(55% 45% at 96% 74%, #c3a5f9 0%, transparent 70%),
+    radial-gradient(40% 35% at 50% 100%, #f6e193 0%, transparent 70%),
+    #e8ecf4;
+  --dnet-sys-material-page: transparent;
+  --dnet-sys-material-chrome: rgb(255 255 255 / .42);
+  --dnet-sys-material-card: rgb(255 255 255 / .55);
+  --dnet-sys-material-popup: rgb(250 251 255 / .86);
+  --dnet-sys-material-control: rgb(255 255 255 / .62);
+  --dnet-sys-material-ghost: rgb(255 255 255 / .45);
+  --dnet-sys-material-backdrop: blur(28px) saturate(170%);
+  --dnet-sys-material-highlight: inset 0 1px 0 rgb(255 255 255 / .9), inset 0 0 0 1px rgb(255 255 255 / .4);
+  --dnet-sys-material-sheen: linear-gradient(180deg, rgb(255 255 255 / .45), rgb(255 255 255 / 0) 45%);
+  --dnet-sys-scrim-backdrop: blur(6px) saturate(120%);
+
+  /* AdminLayout: the minified menu flyout floats over the content and defaults
+     to the border colour, which is translucent here. Nested in the column it
+     cannot blur (backdrop root), so it takes the popup fill instead. */
+  --dnet-menu-container-bgcolor: var(--dnet-sys-material-popup);
+}
+
+/* No backdrop-filter support: without the blur a translucent fill shows the
+   canvas sharply, so materials become opaque. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  [data-dnet-theme="liquid-glass"] {
+    --dnet-sys-material-chrome: #f5f7fb;
+    --dnet-sys-material-card: #fafbfd;
+    --dnet-sys-material-popup: #ffffff;
+    --dnet-sys-material-control: #eef1f6;
+    --dnet-sys-material-ghost: #f5f7fb;
+  }
+}
+
+/* Reduced transparency or forced colours: opaque materials, no blur, no sheen. */
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+  [data-dnet-theme="liquid-glass"] {
+    --dnet-sys-material-chrome: #f5f7fb;
+    --dnet-sys-material-card: #fafbfd;
+    --dnet-sys-material-popup: #ffffff;
+    --dnet-sys-material-control: #eef1f6;
+    --dnet-sys-material-ghost: #f5f7fb;
+    --dnet-sys-material-backdrop: none;
+    --dnet-sys-material-sheen: none;
+    --dnet-sys-scrim-backdrop: none;
+  }
+}

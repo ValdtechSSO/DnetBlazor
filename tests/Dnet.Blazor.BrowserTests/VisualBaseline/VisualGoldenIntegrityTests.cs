@@ -36,7 +36,7 @@ public sealed class VisualGoldenIntegrityTests
                     .Select(state => new
                 {
                     State = state,
-                    Path = VisualGoldenComparer.GoldenPath(testProjectRoot, scenario.Name, state.ToString().ToLowerInvariant(), viewport),
+                    Path = VisualGoldenComparer.GoldenPath(testProjectRoot, scenario.GoldenName, state.ToString().ToLowerInvariant(), viewport),
                 })
                     .ToArray();
 
@@ -52,7 +52,7 @@ public sealed class VisualGoldenIntegrityTests
                     .ToArray();
 
                 Assert.True(duplicates.Length == 0,
-                    $"{scenario.Name}/{viewport} has identical goldens for distinct states: {string.Join("; ", duplicates)}.");
+                    $"{scenario.GoldenName}/{viewport} has identical goldens for distinct states: {string.Join("; ", duplicates)}.");
             }
         }
     }

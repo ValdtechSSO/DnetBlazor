@@ -118,7 +118,7 @@ public sealed class VisualBaselineTests
         var name = Environment.GetEnvironmentVariable("DNET_VISUAL_SCENARIO");
         return string.IsNullOrEmpty(name)
             ? ComponentScenarios.All
-            : [ComponentScenarios.All.Single(scenario => scenario.Name == name)];
+            : [ComponentScenarios.All.Single(scenario => scenario.GoldenName == name)];
     }
 
     [Theory]
@@ -245,6 +245,14 @@ public sealed class VisualBaselineTests
     private async Task<IPage> OpenScenarioPageAsync(ComponentScenario scenario, int width, int height)
     {
         var page = await _fixture.NewPageAsync(width, height);
+        if (scenario.Theme is not null)
+        {
+            // Same route the sample uses on load: the persisted preference is
+            // applied to <html> before Blazor starts.
+            await page.AddInitScriptAsync(
+                $"localStorage.setItem('dnet.theme', JSON.stringify({System.Text.Json.JsonSerializer.Serialize(scenario.Theme)}));");
+        }
+
         await page.GotoAsync($"{_fixture.BaseUrl.TrimEnd('/')}{scenario.Route}", new()
         {
             WaitUntil = WaitUntilState.NetworkIdle,
@@ -253,6 +261,11 @@ public sealed class VisualBaselineTests
 
         var root = page.Locator(scenario.RootSelector).First;
         await root.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 60_000 });
+        if (scenario.Theme is not null)
+        {
+            await page.WaitForFunctionAsync(
+                "theme => document.documentElement.dataset.dnetTheme === theme", scenario.Theme, new() { Timeout = 10_000 });
+        }
         if (scenario.ReadyFunction is not null)
         {
             await page.WaitForFunctionAsync(scenario.ReadyFunction, null, new() { Timeout = 30_000 });
@@ -264,7 +277,7 @@ public sealed class VisualBaselineTests
 
     private async Task CompareOrUpdateAsync(ComponentScenario scenario, string state, string viewport, byte[] actual)
     {
-        var goldenPath = VisualGoldenComparer.GoldenPath(_fixture.TestProjectRoot, scenario.Name, state, viewport);
+        var goldenPath = VisualGoldenComparer.GoldenPath(_fixture.TestProjectRoot, scenario.GoldenName, state, viewport);
 
         if (VisualGoldenComparer.ShouldUpdate)
         {
@@ -285,7 +298,7 @@ public sealed class VisualBaselineTests
             File.WriteAllBytes($"{goldenPath}.actual.png", actual);
         }
 
-        Assert.True(result.Passed, $"{scenario.Name}/{state}/{viewport}: {result.Message}");
+        Assert.True(result.Passed, $"{scenario.GoldenName}/{state}/{viewport}: {result.Message}");
     }
 
     private static async Task FocusViaKeyboardAsync(IPage page, string selector)

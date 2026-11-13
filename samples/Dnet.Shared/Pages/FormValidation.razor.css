@@ -505,3 +505,30 @@
         justify-content: flex-end;
     }
 }
+
+/* Liquid Glass (both variants): containers become glass, pills and inset
+   panels lighter glass, and nested regions stop repainting an opaque surface.
+   The theme selector keeps every other theme, and the baselines, untouched. */
+[data-dnet-theme|="liquid-glass"] .validation-card,
+[data-dnet-theme|="liquid-glass"] .validation-actions {
+    border-color: var(--dnet-sys-transparent);
+    background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-card);
+    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-1);
+    -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+    backdrop-filter: var(--dnet-sys-material-backdrop);
+}
+
+[data-dnet-theme|="liquid-glass"] .validation-note-card,
+[data-dnet-theme|="liquid-glass"] .validation-address-card {
+    border-color: var(--dnet-sys-transparent);
+    background: var(--dnet-sys-material-ghost);
+    box-shadow: var(--dnet-sys-material-highlight);
+}
+
+[data-dnet-theme|="liquid-glass"] .validation-status-pill.is-invalid {
+    background: color-mix(in srgb, var(--dnet-sys-danger) 9%, var(--dnet-sys-material-ghost));
+}
+
+[data-dnet-theme|="liquid-glass"] .validation-status-pill.is-saved {
+    background: color-mix(in srgb, var(--dnet-sys-success) 10%, var(--dnet-sys-material-ghost));
+}

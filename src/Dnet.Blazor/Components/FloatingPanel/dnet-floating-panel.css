@@ -1,7 +1,7 @@
 /*! FloatingPanel — migrado a tokens (6.0). Generado una vez; se edita a mano. */
 
 .dnet-floating-panel-container {
-  --_background: var(--dnet-sys-surface-raised);
+  --_background: var(--dnet-sys-material-popup);
   --_radius: var(--dnet-sys-radius-lg);
   --_elevation: var(--dnet-sys-elevation-3);
 
@@ -13,8 +13,9 @@
   overflow: hidden;
   width: 100%;
   height: calc(100dvh - 0px);
-  box-shadow: var(--_elevation);
-  background: var(--_background);
+  box-shadow: var(--dnet-sys-material-highlight), var(--_elevation);
+  background: var(--dnet-sys-material-sheen), var(--_background);
+  backdrop-filter: var(--dnet-sys-material-backdrop);
   color: var(--dnet-sys-on-surface-emphasis);
 }
 

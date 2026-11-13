@@ -9,7 +9,7 @@
 }
 
 .mat-tab-group {
-  --_background: var(--dnet-tabs-background, var(--dnet-sys-surface));
+  --_background: var(--dnet-tabs-background, var(--dnet-sys-material-page));
   --_foreground: var(--dnet-tabs-foreground, var(--dnet-sys-on-surface));
   --_disabled-foreground: var(--dnet-tabs-disabled-foreground, var(--dnet-sys-on-surface-muted));
   --_indicator: var(--dnet-tabs-indicator-color, var(--dnet-sys-primary-emphasis));

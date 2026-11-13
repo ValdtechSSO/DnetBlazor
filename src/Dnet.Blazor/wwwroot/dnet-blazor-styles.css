@@ -81,6 +81,35 @@
   --dnet-sys-motion-ease: cubic-bezier(0.35, 0, 0.25, 1);
 }
 
+/* ------------------------------------------------------------ materiales
+ * Cómo se pinta un contenedor: relleno, desenfoque, brillo de borde y reflejo.
+ * --dnet-sys-surface* sigue siendo un color opaco (lo que se recorta contra el
+ * fondo: anillos de foco, marcas, texto inverso); el material es aparte.
+ *
+ * Los valores por defecto reproducen exactamente lo que se pintaba antes de que
+ * existieran, así que ningún tema que no los defina cambia. Las mecánicas
+ * (backdrop, highlight, sheen, scrim-backdrop) no tienen efecto por defecto.
+ *
+ * El bloque se repite en cada ámbito de tema (:where, especificidad 0) para que
+ * sus var() se resuelvan contra el --dnet-sys-surface* de ese ámbito: si solo se
+ * declararan en :root, un DnetThemeScope o el host de overlays heredaría el
+ * material ya resuelto en <html> con los colores del tema global.
+ */
+:root,
+:where([data-dnet-theme]:not([data-dnet-theme=""])) {
+  --dnet-sys-canvas: var(--dnet-sys-surface);
+  --dnet-sys-material-page: var(--dnet-sys-surface);
+  --dnet-sys-material-chrome: var(--dnet-sys-surface);
+  --dnet-sys-material-card: var(--dnet-sys-surface);
+  --dnet-sys-material-popup: var(--dnet-sys-surface-raised);
+  --dnet-sys-material-control: color-mix(in srgb, var(--dnet-sys-on-surface) 12%, var(--dnet-sys-surface));
+  --dnet-sys-material-ghost: var(--dnet-sys-transparent);
+  --dnet-sys-material-backdrop: none;
+  --dnet-sys-material-highlight: inset 0 0 0 0 var(--dnet-sys-transparent);
+  --dnet-sys-material-sheen: none;
+  --dnet-sys-scrim-backdrop: none;
+}
+
 /*! Sass shared (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 [type=checkbox].dnet-checkbox-no-label:checked:before, [type=checkbox].dnet-checkbox-no-label:not(:checked):before,
 [type=checkbox].dnet-checkbox-no-label:checked:before,
@@ -150,7 +179,7 @@ html {
   margin: 0;
   padding: 0;
   min-height: 100%;
-  background: var(--dnet-dash-html-background-color, var(--dnet-sys-surface));
+  background: var(--dnet-dash-html-background-color, var(--dnet-sys-canvas));
   position: relative;
   font-size: var(--dnet-dash-font-rem-reference, 16px);
   font-family: var(--dnet-dash-font-family-text, var(--dnet-sys-font));
@@ -163,7 +192,7 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100%;
-  background-color: var(--dnet-dash-body-background-color, var(--dnet-sys-surface));
+  background-color: var(--dnet-dash-body-background-color, var(--dnet-sys-material-page));
   font-size: var(--dnet-sys-text-md);
 }
 
@@ -301,7 +330,7 @@ body {
 
 .dnet-desktop-content {
   grid-area: content;
-  background-color: var(--dnet-sys-surface);
+  background-color: var(--dnet-sys-material-page);
   height: calc(100% - 0px);
 }
 
@@ -316,7 +345,10 @@ body {
 .dnet-footer {
   --_foreground: var(--dnet-sys-on-surface);
   grid-area: footer;
-  background-color: var(--dnet-sys-surface);
+  background-color: var(--dnet-sys-material-chrome);
+  box-shadow: var(--dnet-sys-material-highlight);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   color: var(--_foreground);
   text-align: center;
   border-top: var(--_layout-divider-width) var(--_layout-divider-style) var(--dnet-footer-border-color, var(--dnet-layout-divider-color, var(--dnet-sys-border-strong)));
@@ -348,7 +380,10 @@ body {
 }
 .dnet-header {
   grid-area: header;
-  background-color: var(--dnet-sys-surface);
+  background-color: var(--dnet-sys-material-chrome);
+  box-shadow: var(--dnet-sys-material-highlight);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   text-align: center;
   border-bottom: var(--_layout-divider-width) var(--_layout-divider-style) var(--dnet-header-border-color, var(--dnet-layout-divider-color, var(--dnet-sys-border-strong)));
 }
@@ -651,9 +686,18 @@ body {
     grid-template-areas: "left";
   }
 }
+/* z-index keeps the menu flyouts (z-index 200, absolutely positioned inside
+   the column) above the content once a material gives the column or the
+   content cards a stacking context of their own (backdrop-filter does). As a
+   grid item the column honours z-index without being positioned, so it does
+   not become the containing block of the flyouts. */
 .dnet-left-column {
   grid-area: left;
-  background-color: var(--dnet-sys-surface);
+  z-index: 200;
+  background-color: var(--dnet-sys-material-chrome);
+  box-shadow: var(--dnet-sys-material-highlight);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   border-right: var(--_layout-divider-width) var(--_layout-divider-style) var(--dnet-left-column-border-color, var(--dnet-layout-divider-color, var(--dnet-sys-border-strong)));
 }
 
@@ -674,7 +718,7 @@ body {
   }
 }
 .desktop-minify-menu {
-  --_minifier-background: var(--dnet-dash-minifyme-bg-color, var(--dnet-sys-surface));
+  --_minifier-background: var(--dnet-dash-minifyme-bg-color, var(--dnet-sys-material-chrome));
 
   flex: 0 0 50px;
   background-color: var(--_minifier-background);
@@ -863,8 +907,12 @@ li .positioning-helper.open {
 li .positioning-helper.open a {
   height: 100%;
 }
+/* The inline expanded submenu sits inside the column's glass: a card-level
+   fill with rim and sheen, and no backdrop of its own (nested backdrop-filters
+   only see their ancestor). Card defaults to surface, as before. */
 li .positioning-helper.open .width-child {
-  background: var(--dnet-menu-container-open-bgcolor, var(--dnet-sys-surface));
+  background: var(--dnet-sys-material-sheen), var(--dnet-menu-container-open-bgcolor, var(--dnet-sys-material-card));
+  box-shadow: var(--dnet-sys-material-highlight);
 }
 li .positioning-helper .width-child {
   background: var(--dnet-menu-container-bgcolor, var(--dnet-sys-border));
@@ -1081,7 +1129,10 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 
 .dnet-right-column {
   grid-area: right;
-  background-color: var(--dnet-sys-surface);
+  background-color: var(--dnet-sys-material-chrome);
+  box-shadow: var(--dnet-sys-material-highlight);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   border-left: var(--_layout-divider-width) var(--_layout-divider-style) var(--dnet-right-column-border-color, var(--dnet-layout-divider-color, var(--dnet-sys-border-strong)));
 }
 
@@ -1117,7 +1168,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   --_border-color: var(--dnet-list-border-color, var(--dnet-autocomplete-list-border-color, var(--dnet-sys-transparent)));
   --_radius: var(--dnet-list-border-radius, var(--dnet-autocomplete-list-border-radius, var(--dnet-sys-radius-lg)));
   --_wrapper-padding: var(--dnet-list-wrapper-horizontal-padding, var(--dnet-autocomplete-list-wrapper-horizontal-padding, var(--dnet-sys-space-2)));
-  --_background: var(--dnet-list-background-color, var(--dnet-autocomplete-list-background-color, var(--dnet-sys-surface-raised)));
+  --_background: var(--dnet-list-background-color, var(--dnet-autocomplete-list-background-color, var(--dnet-sys-material-popup)));
   --_shadow: var(--dnet-list-box-shadow, var(--dnet-autocomplete-list-box-shadow, var(--dnet-sys-elevation-3)));
 
   display: flex;
@@ -1130,8 +1181,10 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   padding-top: var(--_wrapper-padding);
   padding-bottom: var(--_wrapper-padding);
   transition: opacity 0.5s ease-in-out;
-  background-color: var(--_background);
-  box-shadow: var(--_shadow);
+  background: var(--dnet-sys-material-sheen), var(--_background);
+  box-shadow: var(--dnet-sys-material-highlight), var(--_shadow);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   overflow: hidden;
 }
 .dnet-autocomplete-list-wrapper .dnet-item-fadeout {
@@ -1839,7 +1892,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 /*! ConnectedPanel — migrado a tokens (6.0). Generado una vez; se edita a mano. */
 
 .dnet-connected-panel-container {
-  --_background: var(--dnet-connected-panel-background, var(--dnet-sys-surface-raised));
+  --_background: var(--dnet-connected-panel-background, var(--dnet-sys-material-popup));
   --_padding: var(--dnet-connected-panel-padding, 2px);
   --_radius: var(--dnet-dialog-border-radius, var(--dnet-sys-radius-lg));
   --_elevation: var(--dnet-sys-elevation-3);
@@ -1847,8 +1900,10 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   box-sizing: border-box;
   overflow: hidden;
   border: 0;
-  box-shadow: var(--_elevation);
-  background: var(--_background);
+  box-shadow: var(--dnet-sys-material-highlight), var(--_elevation);
+  background: var(--dnet-sys-material-sheen), var(--_background);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   color: var(--dnet-sys-on-surface);
   width: 100%;
   height: 100%;
@@ -1873,15 +1928,17 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-datepicker-content {
-  --_background: var(--dnet-calendar-background, var(--dnet-sys-surface-raised));
+  --_background: var(--dnet-calendar-background, var(--dnet-sys-material-popup));
 
   box-sizing: border-box;
   width: 100%;
   overflow: hidden;
   border: 0;
   border-radius: var(--_radius);
-  box-shadow: var(--dnet-sys-elevation-3);
-  background: var(--_background);
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-3);
+  background: var(--dnet-sys-material-sheen), var(--_background);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   color: var(--_foreground);
 }
 
@@ -1897,8 +1954,10 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   font-size: var(--dnet-sys-text-sm);
 }
 
+/* The popup content owns the material: the nested calendar no longer repaints
+   the same fill on top of it. */
 .dnet-datepicker-content > .dnet-calendar {
-  --_background: var(--dnet-calendar-background, var(--dnet-sys-surface-raised));
+  --_background: var(--dnet-sys-transparent);
 
   border: 0;
   border-radius: 0;
@@ -2261,7 +2320,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   --_radius: var(--dnet-dialog-border-radius, var(--dnet-sys-radius-lg));
   --_max-height: var(--dnet-dialog-max-height, 100%);
   --_elevation: var(--dnet-dialog-elevation, var(--dnet-sys-elevation-3));
-  --_background: var(--dnet-dialog-background, var(--dnet-sys-surface-raised));
+  --_background: var(--dnet-dialog-background, var(--dnet-sys-material-popup));
   --_foreground: var(--dnet-dialog-foreground, var(--dnet-sys-on-surface-emphasis));
   --_title-font-size: var(--dnet-dialog-title-font-size, var(--dnet-sys-text-xl));
   --_header-margin-bottom: var(--dnet-dialog-header-margin-bottom, 15px);
@@ -2277,8 +2336,10 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   height: 100%;
   min-height: inherit;
   max-height: inherit;
-  box-shadow: var(--_elevation);
-  background: var(--_background);
+  box-shadow: var(--dnet-sys-material-highlight), var(--_elevation);
+  background: var(--dnet-sys-material-sheen), var(--_background);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   color: var(--_foreground);
 }
 
@@ -2379,7 +2440,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-expansion-panel:not([class*=dnet-elevation-z]) {
-  box-shadow: var(--dnet-accordion-box-shadow, var(--dnet-sys-elevation-1));
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-accordion-box-shadow, var(--dnet-sys-elevation-1));
 }
 
 .dnet-expansion-panel {
@@ -2393,7 +2454,9 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-expansion-panel {
-  background: var(--dnet-sys-surface);
+  background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-card);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   color: var(--dnet-sys-on-surface-emphasis);
 }
 
@@ -2516,7 +2579,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 /*! FloatingPanel — migrado a tokens (6.0). Generado una vez; se edita a mano. */
 
 .dnet-floating-panel-container {
-  --_background: var(--dnet-sys-surface-raised);
+  --_background: var(--dnet-sys-material-popup);
   --_radius: var(--dnet-sys-radius-lg);
   --_elevation: var(--dnet-sys-elevation-3);
 
@@ -2528,8 +2591,10 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   overflow: hidden;
   width: 100%;
   height: calc(100dvh - 0px);
-  box-shadow: var(--_elevation);
-  background: var(--_background);
+  box-shadow: var(--dnet-sys-material-highlight), var(--_elevation);
+  background: var(--dnet-sys-material-sheen), var(--_background);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   color: var(--dnet-sys-on-surface-emphasis);
 }
 
@@ -3139,8 +3204,10 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   max-height: calc(100dvh - 32px);
   border-radius: var(--dnet-sys-radius-lg);
   overflow: auto;
-  box-shadow: var(--dnet-sys-elevation-3);
-  background: var(--dnet-sys-surface-raised);
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-3);
+  background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-popup);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   color: var(--dnet-sys-on-surface-emphasis);
 }
 
@@ -4286,6 +4353,8 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 
 .cdk-overlay-dark-backdrop {
   background: var(--dnet-sys-scrim);
+  -webkit-backdrop-filter: var(--dnet-sys-scrim-backdrop);
+          backdrop-filter: var(--dnet-sys-scrim-backdrop);
 }
 
 .cdk-overlay-transparent-backdrop, .cdk-overlay-transparent-backdrop.cdk-overlay-backdrop-showing {
@@ -4729,7 +4798,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-pill-tabs {
-    --_background: var(--dnet-pill-tabs-background, var(--dnet-sys-surface));
+    --_background: var(--dnet-pill-tabs-background, var(--dnet-sys-material-card));
     --_foreground: var(--dnet-pill-tabs-foreground, var(--dnet-sys-on-surface));
     --_selected-background: var(--dnet-pill-tabs-selected-background, var(--dnet-sys-primary-emphasis));
     --_selected-foreground: var(--dnet-pill-tabs-selected-foreground, var(--dnet-sys-on-primary));
@@ -4760,8 +4829,10 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
     max-inline-size: 100%;
     min-inline-size: 0;
     border-radius: var(--_radius);
-    background: var(--_background);
-    box-shadow: var(--_shadow);
+    background: var(--dnet-sys-material-sheen), var(--_background);
+    box-shadow: var(--dnet-sys-material-highlight), var(--_shadow);
+    -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+            backdrop-filter: var(--dnet-sys-material-backdrop);
 }
 
 .dnet-pill-tabs-list {
@@ -4781,7 +4852,8 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
     scrollbar-width: none;
     scroll-padding-inline: calc(var(--dnet-sys-space-5) + var(--_padding));
     border-radius: var(--_radius);
-    background: var(--_background);
+    /* The viewport owns the track's material; the list does not repaint it. */
+    background: var(--dnet-sys-transparent);
     -webkit-mask-image: linear-gradient(to right, transparent, currentColor var(--_fade-left),
         currentColor calc(100% - var(--_fade-right)), transparent);
             mask-image: linear-gradient(to right, transparent, currentColor var(--_fade-left),
@@ -5291,7 +5363,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 .dnet-stepper-horizontal, .dnet-stepper-vertical {
   --_font-size: var(--dnet-step-font-size, var(--dnet-sys-text-md));
 
-  background-color: var(--dnet-sys-surface);
+  background-color: var(--dnet-sys-material-page);
 }
 
 .dnet-horizontal-stepper-header-container {
@@ -5463,7 +5535,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .mat-tab-group {
-  --_background: var(--dnet-tabs-background, var(--dnet-sys-surface));
+  --_background: var(--dnet-tabs-background, var(--dnet-sys-material-page));
   --_foreground: var(--dnet-tabs-foreground, var(--dnet-sys-on-surface));
   --_disabled-foreground: var(--dnet-tabs-disabled-foreground, var(--dnet-sys-on-surface-muted));
   --_indicator: var(--dnet-tabs-indicator-color, var(--dnet-sys-primary-emphasis));
@@ -5760,7 +5832,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-toast {
-  --_bg: var(--dnet-toast-bg-info, var(--dnet-toast-bg, var(--dnet-sys-surface-raised)));
+  --_bg: var(--dnet-toast-bg-info, var(--dnet-toast-bg, var(--dnet-sys-material-popup)));
   --_fg: var(--dnet-toast-fg, var(--dnet-sys-on-surface));
   --_fg-muted: var(--dnet-toast-fg-muted, var(--dnet-sys-on-surface-muted));
   --_border: var(--dnet-toast-border, var(--dnet-sys-border));
@@ -5776,10 +5848,12 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   --_duration: 5000ms;
 
   align-items: flex-start;
-  background: var(--_bg);
+  background: var(--dnet-sys-material-sheen), var(--_bg);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   border: var(--dnet-sys-border-width) solid var(--_border);
   border-radius: var(--_radius);
-  box-shadow: var(--_shadow);
+  box-shadow: var(--dnet-sys-material-highlight), var(--_shadow);
   box-sizing: border-box;
   color: var(--_fg);
   display: flex;
@@ -5796,17 +5870,17 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 
 .dnet-toast[data-severity="success"] {
   --_accent: var(--dnet-toast-accent, var(--dnet-toast-bg-success, var(--dnet-sys-success)));
-  --_bg: var(--dnet-toast-bg-success, var(--dnet-toast-bg, var(--dnet-sys-surface-raised)));
+  --_bg: var(--dnet-toast-bg-success, var(--dnet-toast-bg, var(--dnet-sys-material-popup)));
 }
 
 .dnet-toast[data-severity="warning"] {
   --_accent: var(--dnet-toast-accent, var(--dnet-toast-bg-warning, var(--dnet-sys-warning)));
-  --_bg: var(--dnet-toast-bg-warning, var(--dnet-toast-bg, var(--dnet-sys-surface-raised)));
+  --_bg: var(--dnet-toast-bg-warning, var(--dnet-toast-bg, var(--dnet-sys-material-popup)));
 }
 
 .dnet-toast[data-severity="error"] {
   --_accent: var(--dnet-toast-accent, var(--dnet-toast-bg-danger, var(--dnet-sys-danger)));
-  --_bg: var(--dnet-toast-bg-danger, var(--dnet-toast-bg, var(--dnet-sys-surface-raised)));
+  --_bg: var(--dnet-toast-bg-danger, var(--dnet-toast-bg, var(--dnet-sys-material-popup)));
 }
 
 .dnet-toast[data-compact] {
@@ -6244,22 +6318,25 @@ ul[role=tree] li ul {
 /*! Sass DatePickerWeek (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 .dnet-datepickerweek-content {
   --_week-day-size: var(--dnet-datepickerweekca-day-height, var(--dnet-calendar-day-height, 40px));
-  --_week-background: var(--dnet-calendar-background, var(--dnet-sys-surface-raised));
+  --_week-background: var(--dnet-calendar-background, var(--dnet-sys-material-popup));
 
   box-sizing: border-box;
   width: 100%;
   overflow: hidden;
   border-radius: var(--dnet-sys-radius-lg);
-  box-shadow: var(--dnet-sys-elevation-3);
-  background: var(--_week-background);
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-3);
+  background: var(--dnet-sys-material-sheen), var(--_week-background);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   color: var(--dnet-sys-on-surface-emphasis);
 }
 
+/* The popup content owns the material: the nested calendar does not repaint it. */
 .dnet-datepickerweek-content > .dnet-datepickerweek-calendar {
   height: auto;
   border: 0;
   border-radius: 0;
-  background: var(--_week-background);
+  background: var(--dnet-sys-transparent);
 }
 
 .dnet-datepickerweek-input-container {
@@ -7032,7 +7109,7 @@ button[disabled].dnet-datepickerweekca-raw-next-button::after {
 
 /*! Sass FloatingDoubleList (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 .dnet-connected-panel-container-dl {
-  --_panel-background: var(--dnet-sys-surface-raised);
+  --_panel-background: var(--dnet-sys-material-popup);
   --_radius: var(--dnet-dialog-border-radius, var(--dnet-sys-radius-lg));
   --_elevation: var(--dnet-sys-elevation-3);
 
@@ -7041,8 +7118,10 @@ button[disabled].dnet-datepickerweekca-raw-next-button::after {
   flex-direction: column;
   overflow: hidden;
   border: 0;
-  box-shadow: var(--_elevation);
-  background: var(--_panel-background);
+  box-shadow: var(--dnet-sys-material-highlight), var(--_elevation);
+  background: var(--dnet-sys-material-sheen), var(--_panel-background);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   color: var(--dnet-sys-on-surface-emphasis);
   width: 100%;
   height: 100%;
@@ -7349,7 +7428,8 @@ select.mat-input-element::-ms-value {
 }
 
 .dnet-form-field-plain-wrapper {
-  --_field-background: var(--dnet-form-field-background, color-mix(in srgb, var(--dnet-sys-on-surface) 12%, var(--dnet-sys-surface)));
+  --_field-background: var(--dnet-form-field-background, var(--dnet-sys-material-control));
+  --_field-highlight: var(--dnet-sys-material-highlight);
   --_field-disabled-background: color-mix(in srgb, var(--_field-background) 65%, var(--dnet-sys-surface));
   --_field-border-color: var(--_field-background);
   --_field-disabled-border-color: var(--_field-disabled-background);
@@ -7443,8 +7523,9 @@ select.mat-input-element::-ms-value {
   -webkit-padding-end: calc(var(--_field-edge-end) - 1px);
           padding-inline-end: calc(var(--_field-edge-end) - 1px);
   border: 1px solid var(--_field-border-color);
-  border-radius: 5px;
+  border-radius: var(--dnet-form-field-radius, var(--dnet-sys-radius-md));
   background-color: var(--_field-background);
+  box-shadow: var(--_field-highlight);
 }
 .dnet-form-field-plain-control-container.dnet-control-disable {
   background-color: var(--_field-disabled-background);
@@ -7455,6 +7536,7 @@ select.mat-input-element::-ms-value {
 .dnet-form-field-appearance-standard,
 .dnet-form-field-appearance-legacy {
   --_field-background: var(--dnet-form-field-background, var(--dnet-sys-transparent));
+  --_field-highlight: inset 0 0 0 0 var(--dnet-sys-transparent);
   --_field-disabled-background: var(--dnet-sys-state-hover);
   --_field-border-color: var(--dnet-sys-border);
   --_field-disabled-border-color: var(--dnet-sys-border);
@@ -7674,7 +7756,7 @@ select.mat-input-element::-ms-value {
   --_border-color: var(--dnet-list-border-color, var(--dnet-select-list-border-color, var(--dnet-sys-transparent)));
   --_radius: var(--dnet-list-border-radius, var(--dnet-select-list-border-radius, var(--dnet-sys-radius-lg)));
   --_wrapper-padding: var(--dnet-list-wrapper-horizontal-padding, var(--dnet-select-list-wrapper-horizontal-padding, var(--dnet-sys-space-2)));
-  --_background: var(--dnet-list-background-color, var(--dnet-sys-surface-raised));
+  --_background: var(--dnet-list-background-color, var(--dnet-sys-material-popup));
   --_foreground: var(--dnet-list-foreground, var(--dnet-select-list-foreground, var(--dnet-sys-on-surface)));
   --_shadow: var(--dnet-list-box-shadow, var(--dnet-sys-elevation-3));
 
@@ -7688,9 +7770,11 @@ select.mat-input-element::-ms-value {
   padding-top: var(--_wrapper-padding);
   padding-bottom: var(--_wrapper-padding);
   transition: opacity 0.5s ease-in-out;
-  background-color: var(--_background);
+  background: var(--dnet-sys-material-sheen), var(--_background);
   color: var(--_foreground);
-  box-shadow: var(--_shadow);
+  box-shadow: var(--dnet-sys-material-highlight), var(--_shadow);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   overflow: hidden;
 }
 .dnet-select-list-wrapper .dnet-item-fadeout {
@@ -8470,19 +8554,21 @@ select.mat-input-element::-ms-value {
 
 .dnet-timepicker-overlay {
   border-radius: var(--dnet-sys-radius-lg);
-  box-shadow: var(--dnet-sys-elevation-3);
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-3);
   overflow: hidden;
 }
 
 .dnet-timepicker-panel {
-  --_panel-background: var(--dnet-timepicker-panel-background, var(--dnet-sys-surface-raised));
+  --_panel-background: var(--dnet-timepicker-panel-background, var(--dnet-sys-material-popup));
   --_option-foreground: var(--dnet-timepicker-foreground, var(--dnet-sys-on-surface));
   --_selected: var(--dnet-timepicker-option-selected-background, var(--dnet-sys-state-selected));
   --_active: var(--dnet-timepicker-option-active-background, var(--dnet-sys-state-hover));
   --_accent: var(--dnet-timepicker-accent-color, var(--dnet-sys-primary-strong));
   --_accent-content: var(--dnet-timepicker-accent-color, var(--dnet-sys-primary-content));
 
-  background: var(--_panel-background);
+  background: var(--dnet-sys-material-sheen), var(--_panel-background);
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   box-sizing: border-box;
   display: flex;
   flex: 1 1 auto;
@@ -8957,14 +9043,18 @@ select.mat-input-element::-ms-value {
   --_foreground: var(--dnet-btn-foreground, var(--dnet-sys-on-primary));
   --_border: var(--dnet-btn-border-color, var(--dnet-sys-transparent));
   border: 1px solid var(--_border);
+  /* Rim only: a sheen would lower white-on-primary text contrast. */
+  box-shadow: var(--dnet-sys-material-highlight);
 }
 
 .dnet-button-variant-outlined {
-  --_background: var(--dnet-btn-background, var(--dnet-button-background-color, var(--dnet-sys-transparent)));
+  --_background: var(--dnet-btn-background, var(--dnet-button-background-color, var(--dnet-sys-material-ghost)));
   --_foreground: var(--dnet-btn-foreground, var(--dnet-sys-primary-content));
   --_hover: var(--dnet-btn-background-hover, var(--dnet-button-hover-color, color-mix(in srgb, var(--_foreground) 10%, var(--_background))));
   --_border: var(--dnet-btn-border-color, var(--_foreground));
   border: 1px solid var(--_border);
+  background: var(--dnet-sys-material-sheen), var(--_background);
+  box-shadow: var(--dnet-sys-material-highlight);
 }
 
 .dnet-button:is(.dnet-button-variant-filled, .dnet-button-variant-outlined):focus-visible {

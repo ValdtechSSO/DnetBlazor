@@ -8,7 +8,8 @@
     color-scheme: light;
 }
 
-[data-dnet-theme="dark"] .demo-page {
+[data-dnet-theme="dark"] .demo-page,
+[data-dnet-theme="liquid-glass-dark"] .demo-page {
     color-scheme: dark;
 }
 
@@ -211,4 +212,18 @@
     .demo-page ::deep .demo-preview {
         padding: 16px;
     }
+}
+
+/* Liquid Glass (both variants): pills and inset previews are lighter glass
+   inside the card. Other themes keep their opaque surfaces. */
+[data-dnet-theme|="liquid-glass"] .demo-page-badge {
+    border-color: var(--dnet-sys-transparent);
+    background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
+    box-shadow: var(--dnet-sys-material-highlight);
+}
+
+[data-dnet-theme|="liquid-glass"] .demo-page ::deep .demo-preview {
+    border-color: var(--dnet-sys-transparent);
+    background: var(--dnet-sys-material-ghost);
+    box-shadow: var(--dnet-sys-material-highlight);
 }

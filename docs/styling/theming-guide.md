@@ -46,11 +46,12 @@ overlay-specific properties with `OverlayConfig.PanelStyle`.
 
 ## Popup surfaces
 
-Opened panels share the TimePicker defaults: `--dnet-sys-surface-raised`,
-`--dnet-sys-radius-lg` and `--dnet-sys-elevation-3`. This applies to Select,
-Autocomplete, date and week pickers, connected and floating panels, floating
-double lists, dialogs and Grid advanced filters. List options use rounded rows
-with an inset and the theme's hover and selected state colors.
+Opened panels share the TimePicker defaults: `--dnet-sys-material-popup` (which
+defaults to `--dnet-sys-surface-raised`), `--dnet-sys-radius-lg` and
+`--dnet-sys-elevation-3`. This applies to Select, Autocomplete, date and week
+pickers, connected and floating panels, floating double lists, dialogs, toasts
+and Grid advanced filters. List options use rounded rows with an inset and the
+theme's hover and selected state colors.
 
 Existing component overrides still take precedence, including
 `--dnet-list-background-color`, `--dnet-list-border-radius`,
@@ -58,6 +59,84 @@ Existing component overrides still take precedence, including
 properties. When opening a panel in a scoped theme, use `DnetThemeScope` or its
 configuration's `ThemeScope`; use `PanelStyle` for instance-specific tokens.
 
+## Materials and Liquid Glass
+
+`--dnet-sys-surface*` are colours: what focus-ring gaps, checkmarks, inverse
+text and masks are cut out against. They stay opaque in every theme.
+`--dnet-sys-material-*` describe how a container is painted: fill, backdrop
+blur, rim highlight and top sheen.
+
+| Token | Paints | Default |
+| --- | --- | --- |
+| `--dnet-sys-canvas` | The app background (`html` in `DesktopLayout`) | `surface` |
+| `--dnet-sys-material-page` | Full-bleed regions: body, content, Tabs, Stepper | `surface` |
+| `--dnet-sys-material-chrome` | Header, side columns and footer | `surface` |
+| `--dnet-sys-material-card` | In-flow containers: ExpansionPanel, PillTabs track | `surface` |
+| `--dnet-sys-material-popup` | Popup surfaces (see above) | `surface-raised` |
+| `--dnet-sys-material-control` | Form fields with the `fill` appearance | the previous field fill |
+| `--dnet-sys-material-ghost` | Outlined buttons | `transparent` |
+| `--dnet-sys-material-backdrop` | `backdrop-filter` of chrome, card and popup | `none` |
+| `--dnet-sys-material-highlight` | Inset rim shadows | an invisible inset shadow |
+| `--dnet-sys-material-sheen` | Image layer over the fill | `none` |
+| `--dnet-sys-scrim-backdrop` | `backdrop-filter` of the modal backdrop | `none` |
+
+Every default is what components painted before the tokens existed, so a theme
+that does not set them looks exactly as it did.
+
+The library ships a material theme in two files, loaded like any other theme:
+
+```html
+<link href="_content/Dnet.Blazor/styles/theme/liquid-glass.css" rel="stylesheet" />
+<link href="_content/Dnet.Blazor/styles/theme/liquid-glass-dark.css" rel="stylesheet" />
+```
+
+Activate it with `data-dnet-theme="liquid-glass"` or `"liquid-glass-dark"`. The
+dark variant is a separate theme rather than a `data-dnet-scheme`, so its name
+crosses the overlay portal through `DnetThemeScope` and `ThemeScope`.
+
+Replace the background by redefining the canvas; any `background` value works:
+
+```css
+[data-dnet-theme|="liquid-glass"] { --dnet-sys-canvas: url(/img/wallpaper.jpg) center / cover, #e8ecf4; }
+```
+
+Your own containers can use the same materials:
+
+```css
+[data-dnet-theme|="liquid-glass"] .my-card {
+    background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-card);
+    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-1);
+    backdrop-filter: var(--dnet-sys-material-backdrop);
+}
+```
+
+The `/theming` sample's `DemoCard`, `DemoPage` and page stylesheets follow this
+pattern. The sample also keeps its `body` transparent under these themes so the
+canvas shows; an application that paints its own `body` must do the same.
+
+**Opaque fallbacks.** Materials become opaque, without blur or sheen, when the
+user asks for reduced transparency (`prefers-reduced-transparency: reduce`), in
+forced-colors mode, and in browsers without `backdrop-filter`.
+
+**Contrast.** `npm run check:contrast` composes each fill over the worst-case
+backgrounds (every canvas stop and the base, black and white for popups, the
+card under controls, the sheen peak on top) and requires WCAG AA. It reads the
+theme's literals, so text tokens, fills and canvas stops stay `#hex` or `rgb()`.
+
+**Limitations.**
+
+- Only the outermost container blurs. A `backdrop-filter` nested in another only
+  sees its ancestor's content, so controls, ghosts and the expanded menu
+  submenu rely on their fill alone.
+- A component whose shadow token is set to `none` (for example
+  `--dnet-list-box-shadow: none`) loses the rim too: `box-shadow: <rim>, none` is
+  invalid and falls back to `none`.
+- While a filled or outlined button shows `:focus-visible`, the focus ring
+  replaces its rim.
+- Content does not scroll under a translucent header: `DesktopLayout` regions are
+  adjacent grid areas.
+- The Grid, Tooltip, Chips, Badge, Slider, SlideToggle, ImageEditor and inline
+  calendars stay opaque on purpose.
 
 ## Theme studio sample
 

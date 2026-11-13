@@ -189,7 +189,8 @@ select.mat-input-element::-ms-value {
 }
 
 .dnet-form-field-plain-wrapper {
-  --_field-background: var(--dnet-form-field-background, color-mix(in srgb, var(--dnet-sys-on-surface) 12%, var(--dnet-sys-surface)));
+  --_field-background: var(--dnet-form-field-background, var(--dnet-sys-material-control));
+  --_field-highlight: var(--dnet-sys-material-highlight);
   --_field-disabled-background: color-mix(in srgb, var(--_field-background) 65%, var(--dnet-sys-surface));
   --_field-border-color: var(--_field-background);
   --_field-disabled-border-color: var(--_field-disabled-background);
@@ -280,8 +281,9 @@ select.mat-input-element::-ms-value {
   padding-inline-start: calc(var(--_field-edge-start) - 1px);
   padding-inline-end: calc(var(--_field-edge-end) - 1px);
   border: 1px solid var(--_field-border-color);
-  border-radius: 5px;
+  border-radius: var(--dnet-form-field-radius, var(--dnet-sys-radius-md));
   background-color: var(--_field-background);
+  box-shadow: var(--_field-highlight);
 }
 .dnet-form-field-plain-control-container.dnet-control-disable {
   background-color: var(--_field-disabled-background);
@@ -292,6 +294,7 @@ select.mat-input-element::-ms-value {
 .dnet-form-field-appearance-standard,
 .dnet-form-field-appearance-legacy {
   --_field-background: var(--dnet-form-field-background, var(--dnet-sys-transparent));
+  --_field-highlight: inset 0 0 0 0 var(--dnet-sys-transparent);
   --_field-disabled-background: var(--dnet-sys-state-hover);
   --_field-border-color: var(--dnet-sys-border);
   --_field-disabled-border-color: var(--dnet-sys-border);

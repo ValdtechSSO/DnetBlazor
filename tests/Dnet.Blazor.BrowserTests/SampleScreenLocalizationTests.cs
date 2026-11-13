@@ -55,6 +55,9 @@ public sealed class SampleScreenLocalizationTests
             }
             if (route == "Autocomplete")
                 await Assertions.Expect(page.Locator(".autocomplete-count")).ToContainTextAsync(personCount);
+            // The studio renders code defaults until it has read the document's theme and values.
+            if (route == "Theming")
+                await Assertions.Expect(page.Locator("#theme-studio[data-settings-ready=true]")).ToBeVisibleAsync();
             var spanish = await content.InnerTextAsync();
             Assert.False(string.IsNullOrWhiteSpace(spanish), route);
             var menu = await page.Locator(".dnet-left-column").InnerTextAsync();

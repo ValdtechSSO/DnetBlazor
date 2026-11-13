@@ -171,7 +171,7 @@ public sealed class ThemingPlaygroundTests
         await page.AddInitScriptAsync($"if (localStorage.getItem('dnet.theme') === null) localStorage.setItem('dnet.theme', JSON.stringify({theme}));");
         await BrowserLanguage.UseEnglishAsync(page);
         await BrowserReady.OpenAsync(page, $"{BaseUrl}/theming");
-        await Assertions.Expect(page.Locator("#theme-studio")).ToBeVisibleAsync();
+        await Assertions.Expect(page.Locator("#theme-studio[data-settings-ready=true]")).ToBeVisibleAsync();
         await Assertions.Expect(page.Locator("#theme-select")).ToHaveValueAsync(initialTheme);
         await Assertions.Expect(page.Locator("#theme-css-output")).ToContainTextAsync("--dnet-sys-primary:");
     }

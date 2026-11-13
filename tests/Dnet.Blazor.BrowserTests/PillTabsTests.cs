@@ -138,7 +138,9 @@ public sealed class PillTabsTests
         await Assertions.Expect(selected).ToHaveCSSAsync("background-color", "rgb(150, 50, 20)");
 
         await page.EvaluateAsync("() => document.documentElement.dataset.dnetTheme = 'dark'");
-        await Assertions.Expect(root.Locator(".dnet-pill-tabs-list")).ToHaveCSSAsync("background-color", "rgb(30, 31, 34)");
+        // The viewport owns the track's surface; the list inside it does not repaint it.
+        await Assertions.Expect(root.Locator(".dnet-pill-tabs-viewport")).ToHaveCSSAsync("background-color", "rgb(30, 31, 34)");
+        await Assertions.Expect(root.Locator(".dnet-pill-tabs-list")).ToHaveCSSAsync("background-color", "rgba(0, 0, 0, 0)");
         var overflow = page.Locator("#pill-tabs-rtl .dnet-pill-tabs-list");
         Assert.True(await overflow.EvaluateAsync<bool>("element => element.scrollWidth > element.clientWidth"));
         Assert.True(await overflow.EvaluateAsync<bool>("element => element.getBoundingClientRect().right <= innerWidth"));

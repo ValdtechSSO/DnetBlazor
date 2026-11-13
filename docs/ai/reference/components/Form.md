@@ -113,7 +113,7 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
-| `--dnet-form-field-background` | `color-mix(in srgb, var(--dnet-sys-on-surface) 12%, var(--dnet-sys-surface))` |
+| `--dnet-form-field-background` | `color-mix(in srgb, var(--dnet-sys-on-surface) 12%, var(--dnet-sys-surface))` <br><sub>via `--dnet-sys-material-control`</sub> |
 | `--dnet-form-field-font-size` | `1rem` <br><sub>via `--dnet-sys-text-lg`</sub> |
 | `--dnet-form-field-hint-color` | `#666666` <br><sub>via `--dnet-sys-on-surface-muted`</sub> |
 | `--dnet-form-field-hint-font-size` | `0.75rem` <br><sub>via `--dnet-sys-text-sm`</sub> |
@@ -124,6 +124,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-form-field-padding-inline` | `16px` |
 | `--dnet-form-field-plain-label-color` | `#666666` <br><sub>via `--dnet-sys-on-surface-muted`</sub> |
 | `--dnet-form-field-plain-label-font-size` | `1rem` <br><sub>via `--dnet-sys-text-lg`</sub> |
+| `--dnet-form-field-radius` | `5px` <br><sub>via `--dnet-sys-radius-md`</sub> |
 
 ```css
 :root { --dnet-form-field-background: /* your value */; }
