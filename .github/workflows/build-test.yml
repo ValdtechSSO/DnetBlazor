@@ -33,6 +33,7 @@ jobs:
         run: |
           npm ci --ignore-scripts
           npm run lint:css
+          npm run check:contrast
           npm run buildDnetBlazor
       - name: Check agent reference is up to date
         run: |

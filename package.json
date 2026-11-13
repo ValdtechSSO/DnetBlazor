@@ -5,6 +5,7 @@
     "buildApp": "webpack --config webpack.app.css.js --progress --profile --bail --mode production --env appname=site",
     "buildDnetBlazor": "webpack --config webpack.app.css.js --progress --profile --bail --mode production --env appname=dnetBlazor",
     "lint:css": "node tools/css-tokens/audit.mjs --ci --check-tokens-doc",
+    "check:contrast": "node tools/css-tokens/contrast.mjs",
     "generate:css-tokens": "node tools/css-tokens/audit.mjs --write-tokens-doc"
   },
   "private": true,
