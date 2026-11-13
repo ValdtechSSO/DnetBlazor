@@ -131,6 +131,21 @@
   --dnet-radio-button-checked-border-color: var(--dnet-sys-transparent);
   --dnet-radio-button-disabled-border-color: var(--dnet-sys-transparent);
 
+  /* Grid: a glass card whose rows are cards of their own, in the control
+     material. The header sits on the glass, without fills or separators. */
+  --dnet-grid-radius: var(--dnet-sys-radius-lg);
+  --dnet-grid-padding: 6px 10px;
+  --dnet-grid-row-gap: 8px;
+  --dnet-grid-row-radius: var(--dnet-sys-radius-sm);
+  --dnet-grid-row-border: 1px solid var(--dnet-sys-border);
+  --dnet-grid-cell-default-background-color: var(--dnet-sys-material-control);
+  --dnet-grid-hover-color: rgb(255 255 255 / .9);
+  --dnet-grid-clicked-color: color-mix(in srgb, var(--dnet-sys-primary) 10%, var(--dnet-sys-material-control));
+  --dnet-grid-selected-color: color-mix(in srgb, var(--dnet-sys-primary) 16%, var(--dnet-sys-material-control));
+  --dnet-grid-headercell-default-background-color: var(--dnet-sys-transparent);
+  --dnet-grid-border-color: var(--dnet-sys-transparent);
+  --dnet-grid-header-foreground-color: var(--dnet-sys-on-surface-muted);
+
   /* AdminLayout: the minified menu flyout floats over the content and defaults
      to the border colour, which is translucent here. Nested in the column it
      cannot blur (backdrop root), so it takes the popup fill instead. */

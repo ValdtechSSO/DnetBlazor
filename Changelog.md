@@ -25,6 +25,10 @@
   faces, without a border, with an accent mark and dot. `npm run check:contrast`
   gates the mark and the dot at WCAG 1.4.11 (3:1). An empty face stays below
   3:1 against its card; the gate reports that value without gating it.
+- The Liquid Glass themes show the Grid as a glass card whose rows are cards
+  of their own: control material, an 8px gap, rounded ends and a hairline
+  outline. The header sits on the glass without fills or separators, and
+  selected and clicked rows take an accent tint.
 
 ## Version 6.1.0 (November 2026)
 
