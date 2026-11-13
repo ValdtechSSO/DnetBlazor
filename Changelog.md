@@ -39,6 +39,9 @@
   of their own: control material, an 8px gap, rounded ends and a hairline
   outline. The header sits on the glass without fills or separators, and
   selected and clicked rows take an accent tint.
+- The Liquid Glass themes draw the Grid's selection checkboxes like Checkbox:
+  a 20px glass face with 6px corners and no border, and Checkbox's tick in
+  the accent, without a fill when checked.
 - The Liquid Glass themes render chips as glass like the buttons, keeping
   their own corners: unselected chips are ghost glass, and a selected chip
   takes the accent fill with its sheen and glow.

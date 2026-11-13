@@ -140,6 +140,16 @@
   --dnet-grid-headercell-default-background-color: var(--dnet-sys-transparent);
   --dnet-grid-border-color: var(--dnet-sys-transparent);
   --dnet-grid-header-foreground-color: var(--dnet-sys-on-surface-muted);
+  /* Grid selection checkboxes: the same glass face as Checkbox. */
+  --dnet-grid-checkbox-size: var(--dnet-checkbox-size);
+  --dnet-grid-checkbox-radius: var(--dnet-checkbox-border-radius);
+  --dnet-grid-checkbox-border-color: var(--dnet-checkbox-border-color);
+  --dnet-grid-checkbox-background: var(--dnet-sys-material-ghost);
+  --dnet-grid-checkbox-background-checked: var(--dnet-sys-material-ghost);
+  --dnet-grid-checkbox-mark-color: var(--dnet-checkbox-checkmark-path);
+  /* Checkbox's tick: the same stroke across the whole box. */
+  --dnet-grid-checkbox-mark-size: var(--dnet-checkbox-size);
+  --dnet-grid-checkbox-mark-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M4.1 12.7 9 17.6 20.3 6.3' fill='none' stroke='black' stroke-width='2.1333'/></svg>");
 
   /* Chips: glass like the buttons, keeping their own corners. Unselected
      chips are ghost glass; a selected chip takes the accent fill. */
