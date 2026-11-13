@@ -9444,8 +9444,10 @@ select.mat-input-element::-ms-value {
   outline: none;
 }
 
-/* Rail segment from this step's icon to the next visible step's. */
-.dnet-dstep-header:has(> .dnet-dstepper-horizontal-line)::before {
+/* Rail segment from this step's icon to the next visible step's. Steps
+   outside the window are absolutely positioned: a rail there would widen
+   the page. */
+.dnet-dstep-header.visible:has(> .dnet-dstepper-horizontal-line)::before {
   background: var(--_rail);
   border-radius: var(--dnet-sys-radius-pill);
   box-shadow: var(--_rail-shadow);
