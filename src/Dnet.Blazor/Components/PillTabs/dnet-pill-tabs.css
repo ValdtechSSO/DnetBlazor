@@ -1,5 +1,5 @@
 .dnet-pill-tabs {
-    --_background: var(--dnet-pill-tabs-background, var(--dnet-sys-surface));
+    --_background: var(--dnet-pill-tabs-background, var(--dnet-sys-material-card));
     --_foreground: var(--dnet-pill-tabs-foreground, var(--dnet-sys-on-surface));
     --_selected-background: var(--dnet-pill-tabs-selected-background, var(--dnet-sys-primary-emphasis));
     --_selected-foreground: var(--dnet-pill-tabs-selected-foreground, var(--dnet-sys-on-primary));
@@ -28,8 +28,9 @@
     max-inline-size: 100%;
     min-inline-size: 0;
     border-radius: var(--_radius);
-    background: var(--_background);
-    box-shadow: var(--_shadow);
+    background: var(--dnet-sys-material-sheen), var(--_background);
+    box-shadow: var(--dnet-sys-material-highlight), var(--_shadow);
+    backdrop-filter: var(--dnet-sys-material-backdrop);
 }
 
 .dnet-pill-tabs-list {
@@ -48,7 +49,8 @@
     scrollbar-width: none;
     scroll-padding-inline: calc(var(--dnet-sys-space-5) + var(--_padding));
     border-radius: var(--_radius);
-    background: var(--_background);
+    /* The viewport owns the track's material; the list does not repaint it. */
+    background: var(--dnet-sys-transparent);
     mask-image: linear-gradient(to right, transparent, currentColor var(--_fade-left),
         currentColor calc(100% - var(--_fade-right)), transparent);
 }

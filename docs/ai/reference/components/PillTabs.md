@@ -28,7 +28,7 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
-| `--dnet-pill-tabs-background` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
+| `--dnet-pill-tabs-background` | `#ffffff` <br><sub>via `--dnet-sys-material-card`</sub> |
 | `--dnet-pill-tabs-badge-background` | `#f2f2f2` <br><sub>via `--dnet-sys-surface-hover`</sub> |
 | `--dnet-pill-tabs-badge-selected-background` | `color-mix(in srgb, currentColor 22%, transparent)` |
 | `--dnet-pill-tabs-font-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
