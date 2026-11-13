@@ -87,9 +87,13 @@ public partial class BlgGrid<TItem>
         await OnSelectionChanged.InvokeAsync(rowNodes);
     }
 
+    /// <summary>
+    /// Selects every row except the ones <see cref="GridOptions{TItem}.DisableRow"/>
+    /// disables, as the header checkbox does.
+    /// </summary>
     public async Task SelectAll()
     {
-        _treeRn = SelectTreeRowNode(_treeRn, true);
+        AuxChangeSelectAllNodes(_treeRn, true);
         CaptureSelectionKeys();
         await Update();
     }
