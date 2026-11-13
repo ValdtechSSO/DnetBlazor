@@ -108,6 +108,13 @@
   --dnet-sys-material-highlight: inset 0 0 0 0 var(--dnet-sys-transparent);
   --dnet-sys-material-sheen: none;
   --dnet-sys-scrim-backdrop: none;
+  /* Accent fills (filled buttons) carry their own, softer sheen and rim, so
+     white-on-primary text keeps its contrast; ghost controls may float on a
+     small shadow; fill fields may show a focus ring. All without effect here. */
+  --dnet-sys-material-accent-sheen: none;
+  --dnet-sys-material-accent-highlight: inset 0 0 0 0 var(--dnet-sys-transparent);
+  --dnet-sys-material-ghost-elevation: 0 0 0 0 var(--dnet-sys-transparent);
+  --dnet-sys-material-focus: 0 0 0 0 var(--dnet-sys-transparent);
 }
 
 /*! Sass shared (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
