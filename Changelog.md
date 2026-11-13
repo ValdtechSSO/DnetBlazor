@@ -14,9 +14,10 @@
 - New RadioButton tokens `--dnet-radio-button-border-color` and
   `--dnet-radio-button-checked-border-color`, with the previous colours as
   defaults.
-- The Liquid Glass themes render checkboxes and radio buttons as glass faces
-  with an accent mark and dot and a 3:1 border. `npm run check:contrast` gates
-  them at WCAG 1.4.11 (3:1).
+- The Liquid Glass themes render checkboxes and radio buttons as pure glass
+  faces, without a border, with an accent mark and dot. `npm run check:contrast`
+  gates the mark and the dot at WCAG 1.4.11 (3:1). An empty face stays below
+  3:1 against its card; the gate reports that value without gating it.
 
 ## Version 6.1.0 (November 2026)
 

@@ -117,17 +117,18 @@
   --dnet-calendar-icon-color: var(--dnet-sys-primary-content);
   --dnet-timepicker-icon-color: var(--dnet-sys-primary-content);
 
-  /* Checkbox and radio button: glass faces that stay glass when checked;
-     the mark and the dot take the accent and the border keeps its colour.
-     The border holds 3:1 against the card and the face. */
+  /* Checkbox and radio button: pure glass faces that stay glass when checked;
+     the mark and the dot take the accent. No border: the rim and the lift
+     draw the edge, so an empty box is below 3:1 against the card (author's
+     decision; the gate reports it). */
   --dnet-checkbox-size: 20px;
   --dnet-checkbox-border-radius: 6px;
   --dnet-checkbox-background: var(--dnet-sys-transparent);
   --dnet-checkbox-checkmark-path: var(--dnet-sys-primary);
-  --dnet-checkbox-border-color: #6b7285;
+  --dnet-checkbox-border-color: var(--dnet-sys-transparent);
   --dnet-radio-button-background: var(--dnet-sys-primary);
-  --dnet-radio-button-border-color: #6b7285;
-  --dnet-radio-button-checked-border-color: #6b7285;
+  --dnet-radio-button-border-color: var(--dnet-sys-transparent);
+  --dnet-radio-button-checked-border-color: var(--dnet-sys-transparent);
 
   /* AdminLayout: the minified menu flyout floats over the content and defaults
      to the border colour, which is translucent here. Nested in the column it

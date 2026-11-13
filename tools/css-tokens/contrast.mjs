@@ -18,7 +18,10 @@
  *                 sheen at the height where a button label starts
  *   selection     checkbox mark and radio dot over the ghost face, and their
  *                 borders over the card and over the face, at WCAG 1.4.11
- *                 (3:1 for non-text), also over each opaque fallback face
+ *                 (3:1 for non-text), also over each opaque fallback face.
+ *                 A transparent border (pure glass) is not gated: the gate
+ *                 prints "none" and the contrast of the empty face against
+ *                 the card, marked as not gated.
  *
  * The backdrop-filter `saturate()` of the theme is applied to the canvas before
  * composing. Blur only mixes colours that already lie between the stops, so
@@ -55,6 +58,9 @@ const levels = ["chrome", "card", "popup", "control", "ghost"];
 // borders between the card and the face.
 const selectionMarks = ["checkbox-checkmark-path", "radio-button-background"];
 const selectionBorders = ["checkbox-border-color", "radio-button-border-color", "radio-button-checked-border-color"];
+// A border declared transparent: the face is pure glass, without a 3:1 boundary.
+const noBorder = Symbol("no border");
+const transparentValue = /^(?:transparent|var\(\s*--dnet-sys-transparent\s*\))$/;
 
 // ------------------------------------------------------------------ parsing
 
@@ -329,8 +335,18 @@ function checkSelection(theme, level, selection, face, card, results) {
         results.push({ theme, level, token, minimum, threshold: nonTextThreshold });
     }
     for (const token of selectionBorders) {
+        if (selection[token] === noBorder) {
+            results.push({ theme, level, token, note: "none" });
+            continue;
+        }
         const minimum = Math.min(...[...card, ...face].map((background) => contrast(selection[token], background)));
         results.push({ theme, level, token, minimum, threshold: nonTextThreshold });
+    }
+    // Without a border only the face itself sets an empty control apart from
+    // the card. face[i] is composed over card[i].
+    if (selectionBorders.some((token) => selection[token] === noBorder)) {
+        const minimum = Math.min(...face.map((background, index) => contrast(background, card[index])));
+        results.push({ theme, level, token: "empty-face", minimum, threshold: null });
     }
 }
 
@@ -381,8 +397,12 @@ function checkTheme(file) {
     const saturation = parseSaturation(declarations.get("--dnet-sys-material-backdrop"));
     const accentSheen = parseGradientAt(
         declarations.get("--dnet-sys-material-accent-sheen"), 0.34, problems, "--dnet-sys-material-accent-sheen");
-    const selection = Object.fromEntries(
-        [...selectionMarks, ...selectionBorders].map((token) => [token, readComponentColor(declarations, token, problems)]));
+    const selection = Object.fromEntries([...selectionMarks, ...selectionBorders].map((token) => [
+        token,
+        selectionBorders.includes(token) && transparentValue.test(declarations.get(`--dnet-${token}`) ?? "")
+            ? noBorder
+            : readComponentColor(declarations, token, problems),
+    ]));
 
     if (problems.length > 0) {
         return { theme, problems, results };
@@ -453,7 +473,13 @@ for (const file of files) {
     }
     const byLevel = Map.groupBy(results, (result) => result.level);
     for (const [level, entries] of byLevel) {
-        const cells = entries.map(({ token, minimum, threshold: minimumRequired = threshold }) => {
+        const cells = entries.map(({ token, minimum, note, threshold: minimumRequired = threshold }) => {
+            if (note !== undefined) {
+                return `${token} ${note}`;
+            }
+            if (minimumRequired === null) {
+                return `${token} ${minimum.toFixed(2)} (not gated)`;
+            }
             const pass = minimum >= minimumRequired;
             if (!pass) failures++;
             return `${token} ${minimum.toFixed(2)}${pass ? "" : " ✗"}`;

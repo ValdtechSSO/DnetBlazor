@@ -110,19 +110,20 @@
      tab indicator needs the lighter accent text colour to stay visible. */
   --dnet-tabs-indicator-color: var(--dnet-sys-primary-content);
 
-  /* Checkbox and radio button: glass faces that stay glass when checked;
-     the mark and the dot take the accent and the border keeps its colour.
-     The border holds 3:1 against the card and the face.
+  /* Checkbox and radio button: pure glass faces that stay glass when checked;
+     the mark and the dot take the accent. No border: the rim and the lift
+     draw the edge, so an empty box is below 3:1 against the card (author's
+     decision; the gate reports it).
      primary-emphasis is the dark blue behind white text here, so the marks
      take the light accent content colour. */
   --dnet-checkbox-size: 20px;
   --dnet-checkbox-border-radius: 6px;
   --dnet-checkbox-background: var(--dnet-sys-transparent);
   --dnet-checkbox-checkmark-path: var(--dnet-sys-primary-content);
-  --dnet-checkbox-border-color: #959db0;
+  --dnet-checkbox-border-color: var(--dnet-sys-transparent);
   --dnet-radio-button-background: var(--dnet-sys-primary-content);
-  --dnet-radio-button-border-color: #959db0;
-  --dnet-radio-button-checked-border-color: #959db0;
+  --dnet-radio-button-border-color: var(--dnet-sys-transparent);
+  --dnet-radio-button-checked-border-color: var(--dnet-sys-transparent);
 
   /* AdminLayout: the minified menu flyout floats over the content and defaults
      to the border colour, which is translucent here. Nested in the column it
