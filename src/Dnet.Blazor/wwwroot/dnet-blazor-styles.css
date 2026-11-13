@@ -9050,8 +9050,12 @@ select.mat-input-element::-ms-value {
   --_foreground: var(--dnet-btn-foreground, var(--dnet-sys-on-primary));
   --_border: var(--dnet-btn-border-color, var(--dnet-sys-transparent));
   border: 1px solid var(--_border);
-  /* Rim only: a sheen would lower white-on-primary text contrast. */
-  box-shadow: var(--dnet-sys-material-highlight);
+  /* Accent material: its own sheen and rim. The general sheen is tuned for
+     glass and would lower white-on-primary text contrast. The sheen covers
+     the border box so its tile does not wrap under a transparent border. */
+  background: var(--dnet-sys-material-accent-sheen), var(--_background);
+  background-origin: border-box;
+  box-shadow: var(--dnet-sys-material-accent-highlight);
 }
 
 .dnet-button-variant-outlined {
@@ -9061,7 +9065,8 @@ select.mat-input-element::-ms-value {
   --_border: var(--dnet-btn-border-color, var(--_foreground));
   border: 1px solid var(--_border);
   background: var(--dnet-sys-material-sheen), var(--_background);
-  box-shadow: var(--dnet-sys-material-highlight);
+  background-origin: border-box;
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-ghost-elevation);
 }
 
 .dnet-button:is(.dnet-button-variant-filled, .dnet-button-variant-outlined):focus-visible {
