@@ -38,6 +38,9 @@
   no longer switches it to the native overlay scrollbar that macOS hides
   until the columns already move. Browsers without `::-webkit-scrollbar`
   get a thin scrollbar in the grid's colours.
+- New Grid token `--dnet-grid-grid-foreground-color-hover` for the scrollbar
+  thumb on hover; the grid now owns that hover, so a page-wide scrollbar style
+  no longer repaints it. Defaults to the usual darker grey.
 - Grid: horizontally scrolled columns stop at the pinned zones instead of
   running under them, so translucent pinned cells (Liquid Glass) no longer
   show the text of the columns beneath.
