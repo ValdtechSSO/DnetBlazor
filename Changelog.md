@@ -77,6 +77,12 @@
 - The Liquid Glass themes render chips as glass like the buttons, keeping
   their own corners: unselected chips are ghost glass, and a selected chip
   takes the accent fill with its sheen and glow.
+- The Liquid Glass themes render the slide toggle as a recessed glass well,
+  a 28px track with an inner shadow, a 1px rim and a light lip below, and a
+  clear 32px lens without icons. Checked, the track takes the accent material
+  of filled buttons; in `liquid-glass-dark` it is `primary-strong`, which
+  reaches 3:1 against the card. Without `backdrop-filter`, or with reduced
+  transparency or forced colours, the lens turns opaque.
 
 ## Version 6.1.0 (November 2026)
 

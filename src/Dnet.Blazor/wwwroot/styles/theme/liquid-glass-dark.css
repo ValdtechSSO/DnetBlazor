@@ -98,6 +98,10 @@
   --dnet-sys-material-focus: 0 0 0 1.5px #2563eb, 0 0 0 5px rgb(37 99 235 / .26);
   /* Checkbox and radio faces: a tight shadow under the rim. */
   --dnet-sys-material-lift: 0 1px 2px rgb(0 0 0 / .35), 0 3px 10px rgb(0 0 0 / .30);
+  /* Slide toggle track: a recessed well with an inner shadow, a 1px rim and a
+     light lip below. */
+  --dnet-sys-material-well-shadow:
+    inset 0 1px 3px rgb(0 0 0 / .6), inset 0 0 0 1px #959db0, 0 1px 0 rgb(255 255 255 / .06);
 
   /* ------------------------------------------------- component tokens */
   /* Glass has no outlines: outlined buttons are ghost pills and fields are
@@ -165,6 +169,22 @@
   --dnet-chips-background-hover: color-mix(in srgb, var(--dnet-sys-primary) 8%, var(--dnet-sys-material-ghost));
   --dnet-chips-background-selected: var(--dnet-sys-primary);
 
+  /* Slide toggle: a recessed well (option A) and a clear lens a little taller
+     than the track, without icons (option C). Checked, the track takes the
+     accent material of filled buttons.
+     The checked track is primary-strong (#5b8cff, 3.2:1 against the card):
+     primary (#2563eb) only reaches 1.96:1 on the dark glass. */
+  --dnet-slide-toggle-track-height: 28px;
+  --dnet-slide-toggle-handle-size: 32px;
+  --dnet-slide-toggle-track-border-color: var(--dnet-sys-transparent);
+  --dnet-slide-toggle-track-background: linear-gradient(180deg, rgb(0 0 0 / .45), rgb(0 0 0 / .28));
+  --dnet-slide-toggle-track-background-checked: var(--dnet-sys-primary-strong);
+  --dnet-slide-toggle-handle-background:
+    radial-gradient(circle at 50% 115%, rgb(255 255 255 / .35), rgb(255 255 255 / .04) 62%), rgb(255 255 255 / .10);
+  --dnet-slide-toggle-handle-background-checked:
+    radial-gradient(circle at 50% 115%, rgb(255 255 255 / .35), rgb(255 255 255 / .04) 62%), rgb(255 255 255 / .10);
+  --dnet-slide-toggle-icon-color: var(--dnet-sys-transparent);
+
   /* AdminLayout: the minified menu flyout floats over the content and defaults
      to the border colour, which is translucent here. Nested in the column it
      cannot blur (backdrop root), so it takes the popup fill instead. */
@@ -179,6 +199,9 @@
     --dnet-sys-material-popup: #262b3c;
     --dnet-sys-material-control: #2c3244;
     --dnet-sys-material-ghost: #262b3c;
+    /* The translucent lens needs the glass behind it: the handle turns opaque. */
+    --dnet-slide-toggle-handle-background: #e6eaf2;
+    --dnet-slide-toggle-handle-background-checked: #e6eaf2;
   }
 }
 
@@ -190,6 +213,9 @@
     --dnet-sys-material-popup: #262b3c;
     --dnet-sys-material-control: #2c3244;
     --dnet-sys-material-ghost: #262b3c;
+    /* The translucent lens needs the glass behind it: the handle turns opaque. */
+    --dnet-slide-toggle-handle-background: #e6eaf2;
+    --dnet-slide-toggle-handle-background-checked: #e6eaf2;
     --dnet-sys-material-backdrop: none;
     --dnet-sys-material-sheen: none;
     --dnet-sys-scrim-backdrop: none;

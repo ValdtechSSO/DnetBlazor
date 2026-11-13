@@ -108,6 +108,10 @@
   --dnet-sys-material-focus: 0 0 0 1.5px #2563eb, 0 0 0 5px rgb(37 99 235 / .26);
   /* Checkbox and radio faces: a tight shadow under the rim. */
   --dnet-sys-material-lift: 0 1px 2px rgb(16 24 48 / .08), 0 3px 10px rgb(16 24 48 / .10);
+  /* Slide toggle track: a recessed well with an inner shadow, a 1px rim and a
+     light lip below. */
+  --dnet-sys-material-well-shadow:
+    inset 0 1px 3px rgb(13 18 32 / .18), inset 0 0 0 1px #6b7285, 0 1px 0 rgb(255 255 255 / .8);
 
   /* ------------------------------------------------- component tokens */
   /* Glass has no outlines: outlined buttons are ghost pills and fields are
@@ -170,6 +174,20 @@
   --dnet-chips-background-hover: color-mix(in srgb, var(--dnet-sys-primary) 8%, var(--dnet-sys-material-ghost));
   --dnet-chips-background-selected: var(--dnet-sys-primary);
 
+  /* Slide toggle: a recessed well (option A) and a clear lens a little taller
+     than the track, without icons (option C). Checked, the track takes the
+     accent material of filled buttons. */
+  --dnet-slide-toggle-track-height: 28px;
+  --dnet-slide-toggle-handle-size: 32px;
+  --dnet-slide-toggle-track-border-color: var(--dnet-sys-transparent);
+  --dnet-slide-toggle-track-background: linear-gradient(180deg, rgb(13 18 32 / .13), rgb(13 18 32 / .06));
+  --dnet-slide-toggle-track-background-checked: var(--dnet-sys-primary);
+  --dnet-slide-toggle-handle-background:
+    radial-gradient(circle at 50% 115%, rgb(255 255 255 / .6), rgb(255 255 255 / .06) 62%), rgb(255 255 255 / .16);
+  --dnet-slide-toggle-handle-background-checked:
+    radial-gradient(circle at 50% 115%, rgb(255 255 255 / .6), rgb(255 255 255 / .06) 62%), rgb(255 255 255 / .16);
+  --dnet-slide-toggle-icon-color: var(--dnet-sys-transparent);
+
   /* AdminLayout: the minified menu flyout floats over the content and defaults
      to the border colour, which is translucent here. Nested in the column it
      cannot blur (backdrop root), so it takes the popup fill instead. */
@@ -185,6 +203,9 @@
     --dnet-sys-material-popup: #ffffff;
     --dnet-sys-material-control: #eef1f6;
     --dnet-sys-material-ghost: #f5f7fb;
+    /* The translucent lens needs the glass behind it: the handle turns opaque. */
+    --dnet-slide-toggle-handle-background: #ffffff;
+    --dnet-slide-toggle-handle-background-checked: #ffffff;
   }
 }
 
@@ -196,6 +217,9 @@
     --dnet-sys-material-popup: #ffffff;
     --dnet-sys-material-control: #eef1f6;
     --dnet-sys-material-ghost: #f5f7fb;
+    /* The translucent lens needs the glass behind it: the handle turns opaque. */
+    --dnet-slide-toggle-handle-background: #ffffff;
+    --dnet-slide-toggle-handle-background-checked: #ffffff;
     --dnet-sys-material-backdrop: none;
     --dnet-sys-material-sheen: none;
     --dnet-sys-scrim-backdrop: none;
