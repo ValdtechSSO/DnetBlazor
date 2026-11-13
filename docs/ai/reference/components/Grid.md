@@ -171,6 +171,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-grid-foreground-color` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
 | `--dnet-grid-grid-background-color` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
 | `--dnet-grid-grid-foreground-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 41%, var(--dnet-sys-surface))` |
+| `--dnet-grid-grid-foreground-color-hover` | `color-mix(in srgb, var(--dnet-sys-on-surface) 52%, var(--dnet-sys-surface))` |
 | `--dnet-grid-grid-scroll-width` | `6px` |
 | `--dnet-grid-header-background-color` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
 | `--dnet-grid-header-foreground-color` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |

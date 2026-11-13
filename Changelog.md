@@ -38,6 +38,9 @@
   no longer switches it to the native overlay scrollbar that macOS hides
   until the columns already move. Browsers without `::-webkit-scrollbar`
   get a thin scrollbar in the grid's colours.
+- New Grid token `--dnet-grid-grid-foreground-color-hover` for the scrollbar
+  thumb on hover; the grid now owns that hover, so a page-wide scrollbar style
+  no longer repaints it. Defaults to the usual darker grey.
 - Grid: horizontally scrolled columns stop at the pinned zones instead of
   running under them, so translucent pinned cells (Liquid Glass) no longer
   show the text of the columns beneath.
@@ -58,6 +61,8 @@
   of their own: control material, an 8px gap, rounded ends and the glass
   rim of buttons and containers instead of a grey outline. The header sits on the glass without fills or separators, and
   selected and clicked rows take an accent tint.
+- The Liquid Glass themes give the Grid's scrollbar a translucent accent
+  thumb, stronger on hover.
 - The Liquid Glass themes draw the Grid's selection checkboxes like Checkbox:
   a 20px glass face with 6px corners and no border, and Checkbox's tick in
   the accent, without a fill when checked.

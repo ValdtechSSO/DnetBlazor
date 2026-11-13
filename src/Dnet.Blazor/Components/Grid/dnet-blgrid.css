@@ -809,6 +809,11 @@
   background: var(--dnet-grid-grid-foreground-color, var(--blg-grid-foreground-color, color-mix(in srgb, var(--dnet-sys-on-surface) 41%, var(--dnet-sys-surface))));
   cursor: pointer;
 }
+/* The grid owns its scrollbar's hover too, so a page-wide scrollbar style
+   does not repaint it. The default is the usual darker grey. */
+.blg-arcadia-theme ::-webkit-scrollbar-thumb:hover {
+  background: var(--dnet-grid-grid-foreground-color-hover, color-mix(in srgb, var(--dnet-sys-on-surface) 52%, var(--dnet-sys-surface)));
+}
 .blg-arcadia-theme ::-webkit-scrollbar-track {
   background: var(--dnet-grid-grid-background-color, var(--blg-grid-background-color, var(--dnet-sys-transparent)));
 }
