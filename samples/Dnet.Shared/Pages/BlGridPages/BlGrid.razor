@@ -19,7 +19,7 @@
 <DnetLocalizationObserver OnChanged="RefreshSampleLanguage" />
 
 <div class="container-fluid" style="padding-top: 10px;">
-    <div style="height: calc(100% - 40px)">
+    <div class="sample-grid-page">
         <div class="dnet-panel-header-wrapper dnet-m-t-15">
             <div class="dnet-panel-header-text">
                 <div class="dnet-m-l-15">
@@ -27,7 +27,7 @@
                 </div>
             </div>
         </div>
-        <div style="height: calc(100% - 0px); width: 100%">
+        <div class="sample-grid-host">
             <BlgGrid @ref="_blGridReference" GridData="@_persons"
                      GridColumns="@_gridColumns"
                      GroupGridColumn="_groupGridColumn"
