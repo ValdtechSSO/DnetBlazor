@@ -124,6 +124,7 @@
   --dnet-radio-button-background: var(--dnet-sys-primary-content);
   --dnet-radio-button-border-color: var(--dnet-sys-transparent);
   --dnet-radio-button-checked-border-color: var(--dnet-sys-transparent);
+  --dnet-radio-button-disabled-border-color: var(--dnet-sys-transparent);
 
   /* AdminLayout: the minified menu flyout floats over the content and defaults
      to the border colour, which is translucent here. Nested in the column it
