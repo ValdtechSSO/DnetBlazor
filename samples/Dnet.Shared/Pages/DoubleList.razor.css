@@ -209,11 +209,12 @@
     }
 }
 
-/* Liquid Glass (both variants): containers become glass, pills and inset
-   panels lighter glass, and nested regions stop repainting an opaque surface.
-   The theme selector keeps every other theme, and the baselines, untouched. */
+/* Liquid Glass (both variants): containers become glass cards with the
+   theme's rim, sheen and lift; pills and icon tiles are lighter glass; inset
+   panels are a quiet tint; page headings take the theme's larger scale. The
+   theme selector keeps every other theme, and the visual baselines, untouched. */
 [data-dnet-theme|="liquid-glass"] .doublelist-view-switch {
     border-color: var(--dnet-sys-transparent);
     background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
-    box-shadow: var(--dnet-sys-material-highlight);
+    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-ghost-elevation);
 }

@@ -79,6 +79,10 @@ blur, rim highlight and top sheen.
 | `--dnet-sys-material-highlight` | Inset rim shadows | an invisible inset shadow |
 | `--dnet-sys-material-sheen` | Image layer over the fill | `none` |
 | `--dnet-sys-scrim-backdrop` | `backdrop-filter` of the modal backdrop | `none` |
+| `--dnet-sys-material-accent-sheen` | Image layer over accent fills (filled buttons) | `none` |
+| `--dnet-sys-material-accent-highlight` | Rim and glow of accent fills | an invisible inset shadow |
+| `--dnet-sys-material-ghost-elevation` | Drop shadow of ghost controls (outlined buttons) | an invisible shadow |
+| `--dnet-sys-material-focus` | Focus ring of `fill` form fields | an invisible shadow |
 
 Every default is what components painted before the tokens existed, so a theme
 that does not set them looks exactly as it did.
@@ -93,6 +97,13 @@ The library ships a material theme in two files, loaded like any other theme:
 Activate it with `data-dnet-theme="liquid-glass"` or `"liquid-glass-dark"`. The
 dark variant is a separate theme rather than a `data-dnet-scheme`, so its name
 crosses the overlay portal through `DnetThemeScope` and `ThemeScope`.
+
+Glass has no outlines, so the themes also set a few component tokens:
+`--dnet-btn-border-color` (transparent: outlined buttons become ghost pills),
+`--dnet-form-field-radius`, `--dnet-form-field-hint-color`,
+`--dnet-form-field-clear-icon` (a soft chip instead of the outlined circle),
+`--dnet-calendar-icon-color` and `--dnet-timepicker-icon-color` (accent), and
+`--dnet-menu-container-bgcolor`. Override any of them after the theme.
 
 Replace the background by redefining the canvas; any `background` value works:
 
@@ -133,6 +144,9 @@ theme's literals, so text tokens, fills and canvas stops stay `#hex` or `rgb()`.
   invalid and falls back to `none`.
 - While a filled or outlined button shows `:focus-visible`, the focus ring
   replaces its rim.
+- The accent glow in `--dnet-sys-material-accent-highlight` uses the theme's
+  primary colour. A button with its own `--dnet-btn-background` keeps that glow
+  unless the same element also overrides the highlight token.
 - Content does not scroll under a translucent header: `DesktopLayout` regions are
   adjacent grid areas.
 - The Grid, Tooltip, Chips, Badge, Slider, SlideToggle, ImageEditor and inline

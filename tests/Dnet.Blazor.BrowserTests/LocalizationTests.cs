@@ -107,7 +107,7 @@ public sealed class LocalizationTests
         await CheckLayoutAsync(page);
         await CaptureAsync(page, theme, width, "proof-en");
 
-        await page.ReloadAsync();
+        await BrowserReady.ReloadAsync(page);
         await ExpectLanguageAsync(page, "en");
         await Assertions.Expect(page.Locator("#localization-picklist input[role=searchbox]")).ToHaveAttributeAsync("aria-label", "Search");
         await Assertions.Expect(page.Locator("#localization-custom-picklist").GetByRole(AriaRole.Button,
@@ -126,9 +126,9 @@ public sealed class LocalizationTests
         var (second, secondErrors) = await OpenAsync(browser, "", 1440);
         await ChangeLanguageAsync(first, "en");
         await ExpectLanguageAsync(second, "es");
-        await second.ReloadAsync();
+        await BrowserReady.ReloadAsync(second);
         await ExpectLanguageAsync(second, "es");
-        await first.ReloadAsync();
+        await BrowserReady.ReloadAsync(first);
         await ExpectLanguageAsync(first, "en");
         Assert.True(firstErrors.Count == 0, string.Join(Environment.NewLine, firstErrors));
         Assert.True(secondErrors.Count == 0, string.Join(Environment.NewLine, secondErrors));

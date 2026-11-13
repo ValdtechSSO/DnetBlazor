@@ -91,7 +91,7 @@ public sealed class HeaderPreferencesTests
         await page.Keyboard.PressAsync("Escape");
         await Assertions.Expect(themePanel).ToHaveCountAsync(0);
 
-        await page.ReloadAsync();
+        await BrowserReady.ReloadAsync(page);
         await Assertions.Expect(page.Locator("#demo-localization")).ToBeVisibleAsync();
         await Assertions.Expect(language).ToContainTextAsync("EN");
         await Assertions.Expect(themeControl).ToHaveAttributeAsync("title", $"Theme: {expectedName}");

@@ -30,21 +30,21 @@
   --dnet-sys-surface-inverse: #0d1220;
 
   /* -------------------------------------------------------------- text */
-  --dnet-sys-on-surface: #262b3b;
+  --dnet-sys-on-surface: #0d1220;
   --dnet-sys-on-surface-emphasis: #0d1220;
-  --dnet-sys-on-surface-muted: #434b60;
-  --dnet-sys-on-surface-subtle: #4b5368;
+  --dnet-sys-on-surface-muted: #394055;
+  --dnet-sys-on-surface-subtle: #4f576d;
 
   /* ------------------------------------------------------------ accent */
   --dnet-sys-primary: #2563eb;
   --dnet-sys-primary-strong: #1d4ed8;
   --dnet-sys-primary-emphasis: #1e40af;
-  --dnet-sys-primary-content: #1e46c8;
+  --dnet-sys-primary-content: #1947ae;
   --dnet-sys-on-primary: #ffffff;
-  --dnet-sys-danger: #a1180f;
+  --dnet-sys-danger: #a3150c;
 
   /* --------------------------------------------------- borders, states */
-  --dnet-sys-border: rgb(13 18 32 / .10);
+  --dnet-sys-border: rgb(13 18 32 / .09);
   --dnet-sys-border-strong: rgb(13 18 32 / .18);
   --dnet-sys-state-selected: rgb(37 99 235 / .14);
   --dnet-sys-focus-ring: #2563eb;
@@ -56,15 +56,15 @@
   /* ------------------------------------------------------------- shape */
   --dnet-sys-radius-sm: 10px;
   --dnet-sys-radius-md: 14px;
-  --dnet-sys-radius-lg: 22px;
+  --dnet-sys-radius-lg: 20px;
 
   /* --------------------------------------------------------- elevation */
   /* Diffuse: the rim and the blur carry the edge, the shadow only lifts. */
   --dnet-sys-shadow-color: rgb(22 31 61 / .10);
   --dnet-sys-scrim: rgb(13 18 32 / .28);
   --dnet-sys-elevation-1: 0 1px 2px rgb(22 31 61 / .06), 0 4px 12px rgb(22 31 61 / .06);
-  --dnet-sys-elevation-2: 0 1px 2px rgb(22 31 61 / .06), 0 10px 30px rgb(22 31 61 / .10);
-  --dnet-sys-elevation-3: 0 2px 6px rgb(22 31 61 / .08), 0 24px 64px rgb(22 31 61 / .20);
+  --dnet-sys-elevation-2: 0 1px 2px rgb(22 31 61 / .06), 0 14px 44px rgb(22 31 61 / .10);
+  --dnet-sys-elevation-3: 0 2px 6px rgb(22 31 61 / .10), 0 24px 64px rgb(22 31 61 / .22);
   --dnet-sys-elevation-4: 0 4px 10px rgb(22 31 61 / .10), 0 32px 80px rgb(22 31 61 / .24);
   --dnet-sys-elevation-5: 0 6px 14px rgb(22 31 61 / .12), 0 40px 96px rgb(22 31 61 / .28);
 
@@ -87,15 +87,33 @@
     radial-gradient(40% 35% at 50% 100%, #f6e193 0%, transparent 70%),
     #e8ecf4;
   --dnet-sys-material-page: transparent;
-  --dnet-sys-material-chrome: rgb(255 255 255 / .42);
-  --dnet-sys-material-card: rgb(255 255 255 / .55);
+  --dnet-sys-material-chrome: rgb(255 255 255 / .36);
+  --dnet-sys-material-card: rgb(255 255 255 / .50);
   --dnet-sys-material-popup: rgb(250 251 255 / .86);
   --dnet-sys-material-control: rgb(255 255 255 / .62);
-  --dnet-sys-material-ghost: rgb(255 255 255 / .45);
+  --dnet-sys-material-ghost: rgb(255 255 255 / .62);
   --dnet-sys-material-backdrop: blur(28px) saturate(170%);
-  --dnet-sys-material-highlight: inset 0 1px 0 rgb(255 255 255 / .9), inset 0 0 0 1px rgb(255 255 255 / .4);
-  --dnet-sys-material-sheen: linear-gradient(180deg, rgb(255 255 255 / .45), rgb(255 255 255 / 0) 45%);
+  --dnet-sys-material-highlight: inset 0 1px 0 rgb(255 255 255 / .95), inset 0 -1px 0 rgb(255 255 255 / .35), inset 0 0 0 1px rgb(255 255 255 / .42);
+  --dnet-sys-material-sheen: linear-gradient(180deg, rgb(255 255 255 / .5), rgb(255 255 255 / 0) 44%);
   --dnet-sys-scrim-backdrop: blur(6px) saturate(120%);
+
+  /* Accent fills (filled buttons): a softer sheen, a top light and a bottom
+     shade, and a glow in the accent colour. White text keeps AA at the label. */
+  --dnet-sys-material-accent-sheen: linear-gradient(180deg, rgb(255 255 255 / .2), rgb(255 255 255 / 0) 55%);
+  --dnet-sys-material-accent-highlight: inset 0 1px 0 rgb(255 255 255 / .45), inset 0 -1px 0 rgb(0 0 0 / .15), 0 10px 28px rgb(37 99 235 / .38);
+  --dnet-sys-material-ghost-elevation: 0 4px 16px rgb(16 24 48 / .08);
+  --dnet-sys-material-focus: 0 0 0 1.5px #2563eb, 0 0 0 5px rgb(37 99 235 / .26);
+
+  /* ------------------------------------------------- component tokens */
+  /* Glass has no outlines: outlined buttons are ghost pills and fields are
+     defined by their rim. Hints are quieter, field icons take the accent, and
+     the clear action is a soft chip. */
+  --dnet-btn-border-color: var(--dnet-sys-transparent);
+  --dnet-form-field-radius: 16px;
+  --dnet-form-field-hint-color: var(--dnet-sys-on-surface-subtle);
+  --dnet-form-field-clear-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.8' stroke-linecap='round'><circle cx='12' cy='12' r='11' fill='currentColor' fill-opacity='.14' stroke='none'/><path d='m9 9 6 6m0-6-6 6'/></svg>");
+  --dnet-calendar-icon-color: var(--dnet-sys-primary-content);
+  --dnet-timepicker-icon-color: var(--dnet-sys-primary-content);
 
   /* AdminLayout: the minified menu flyout floats over the content and defaults
      to the border colour, which is translucent here. Nested in the column it

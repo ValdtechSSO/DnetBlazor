@@ -12,7 +12,7 @@ Open only the one you need.
 | [Checkbox](components/Checkbox.md) | `<DnetInputCheckbox>` | 3 | 7 |
 | [Chips](components/Chips.md) | `<DnetChip>`, `<DnetChipList>` | 18 | 11 |
 | [ConnectedPanel](components/ConnectedPanel.md) | `<DnetConnectedFloatingPanel>` | 3 | 3 |
-| [DatePicker](components/DatePicker.md) | `<DnetCalendar>`, `<DnetDatePicker>`, `<DnetDateRangePicker>` | 111 | 8 |
+| [DatePicker](components/DatePicker.md) | `<DnetCalendar>`, `<DnetDatePicker>`, `<DnetDateRangePicker>` | 111 | 9 |
 | [DatePickerWeek](components/DatePickerWeek.md) | `<DnetDatePickerWeek>` | 13 | 7 |
 | [DatePickerWeekRaw](components/DatePickerWeekRaw.md) | `<DnetDatePickerWeekRaw>` | 3 | 5 |
 | [Dialog](components/Dialog.md) | `<DnetDialog>` | 5 | 12 |
@@ -20,7 +20,7 @@ Open only the one you need.
 | [ExpansionPanel](components/ExpansionPanel.md) | `<DnetExpansionPanelItem>` | 10 | 3 |
 | [FloatingDoubleList](components/FloatingDoubleList.md) | `<DnetFloatingDoubleList>` | 32 | 4 |
 | [FloatingPanel](components/FloatingPanel.md) | `<DnetFloatingPanel>` | 3 | — |
-| [Form](components/Form.md) | `<DnetFormField>`, `<DnetInputDate>`, `<DnetInputNumber>`, `<DnetInputText>`, `<DnetInputTextArea>` | 47 | 12 |
+| [Form](components/Form.md) | `<DnetFormField>`, `<DnetInputDate>`, `<DnetInputNumber>`, `<DnetInputText>`, `<DnetInputTextArea>` | 47 | 13 |
 | [Grid](components/Grid.md) | `<BlgAdvancedFilterToggle>`, `<BlgBody>`, `<BlgGrid>`, `<BlgHeader>`, `<BlgRow>` | 73 | 30 |
 | [ImageEditor](components/ImageEditor.md) | `<DnetImageEditor>`, `<ImageEditorTooltipText>` | 18 | — |
 | [List](components/List.md) | `<DnetList>` | 16 | 17 |
@@ -38,7 +38,7 @@ Open only the one you need.
 | [Stepper](components/Stepper.md) | `<DnetStep>`, `<DnetStepper>` | 13 | 1 |
 | [Tabs](components/Tabs.md) | `<DnetTab>`, `<DnetTabBody>`, `<DnetTabGroup>` | 12 | 5 |
 | [Theme](components/Theme.md) | `<DnetThemeScope>` | 3 | — |
-| [TimePicker](components/TimePicker.md) | `<DnetTimePicker>` | 19 | 5 |
+| [TimePicker](components/TimePicker.md) | `<DnetTimePicker>` | 19 | 6 |
 | [Timeline](components/Timeline.md) | `<DnetTimeline>`, `<DnetTimelineItem>` | 13 | 12 |
 | [Toast](components/Toast.md) | `<DnetToast>`, `<DnetToastStack>` | 22 | 15 |
 | [Tooltip](components/Tooltip.md) | `<DnetTooltipPanel>` | 10 | 9 |

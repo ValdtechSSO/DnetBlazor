@@ -214,16 +214,36 @@
     }
 }
 
-/* Liquid Glass (both variants): pills and inset previews are lighter glass
-   inside the card. Other themes keep their opaque surfaces. */
+/* Liquid Glass (both variants): containers become glass cards with the
+   theme's rim, sheen and lift; pills and icon tiles are lighter glass; inset
+   panels are a quiet tint; page headings take the theme's larger scale. The
+   theme selector keeps every other theme, and the visual baselines, untouched. */
+[data-dnet-theme|="liquid-glass"] .demo-eyebrow {
+    color: var(--dnet-sys-primary-content);
+    font-weight: 650;
+}
+
+[data-dnet-theme|="liquid-glass"] .demo-page-title {
+    font-size: clamp(2rem, 3.4vw, 2.875rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+}
+
+[data-dnet-theme|="liquid-glass"] .demo-page-description {
+    font-size: 1.0625rem;
+    line-height: 1.55;
+}
+
 [data-dnet-theme|="liquid-glass"] .demo-page-badge {
     border-color: var(--dnet-sys-transparent);
     background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
-    box-shadow: var(--dnet-sys-material-highlight);
+    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-ghost-elevation);
+    -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+    backdrop-filter: var(--dnet-sys-material-backdrop);
 }
 
 [data-dnet-theme|="liquid-glass"] .demo-page ::deep .demo-preview {
-    border-color: var(--dnet-sys-transparent);
-    background: var(--dnet-sys-material-ghost);
-    box-shadow: var(--dnet-sys-material-highlight);
+    border-color: var(--dnet-sys-border);
+    background: color-mix(in srgb, var(--dnet-sys-on-surface) 4%, var(--dnet-sys-transparent));
 }

@@ -98,7 +98,8 @@ public sealed class ThemingPlaygroundTests
         await Assertions.Expect(page.Locator("html")).ToHaveAttributeAsync("data-dnet-theme", "");
         Assert.Equal("", await StoredThemeAsync(page));
 
-        await page.ReloadAsync();
+        await BrowserReady.ReloadAsync(page);
+        await Assertions.Expect(page.Locator("#theme-studio[data-settings-ready=true]")).ToBeVisibleAsync();
         await Assertions.Expect(page.Locator("#theme-select")).ToHaveValueAsync("");
         await Assertions.Expect(page.Locator("html")).ToHaveAttributeAsync("data-dnet-theme", "");
         await Assertions.Expect(page.Locator("#theme-css-output")).ToContainTextAsync(":root {");

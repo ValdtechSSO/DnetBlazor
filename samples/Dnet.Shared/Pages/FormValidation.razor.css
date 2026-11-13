@@ -506,29 +506,63 @@
     }
 }
 
-/* Liquid Glass (both variants): containers become glass, pills and inset
-   panels lighter glass, and nested regions stop repainting an opaque surface.
-   The theme selector keeps every other theme, and the baselines, untouched. */
-[data-dnet-theme|="liquid-glass"] .validation-card,
+/* Liquid Glass (both variants): containers become glass cards with the
+   theme's rim, sheen and lift; pills and icon tiles are lighter glass; inset
+   panels are a quiet tint; page headings take the theme's larger scale. The
+   theme selector keeps every other theme, and the visual baselines, untouched. */
+[data-dnet-theme|="liquid-glass"] .validation-eyebrow {
+    color: var(--dnet-sys-primary-content);
+    font-weight: 650;
+}
+
+[data-dnet-theme|="liquid-glass"] .validation-title {
+    font-size: clamp(2rem, 3.4vw, 2.875rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+}
+
+[data-dnet-theme|="liquid-glass"] .validation-description {
+    font-size: 1.0625rem;
+    line-height: 1.55;
+}
+
+[data-dnet-theme|="liquid-glass"] .validation-card {
+    border-color: var(--dnet-sys-transparent);
+    border-radius: 28px;
+    background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-card);
+    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-2);
+    -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+    backdrop-filter: var(--dnet-sys-material-backdrop);
+}
+
 [data-dnet-theme|="liquid-glass"] .validation-actions {
     border-color: var(--dnet-sys-transparent);
+    border-radius: var(--dnet-sys-radius-lg);
     background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-card);
-    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-1);
+    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-2);
     -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
     backdrop-filter: var(--dnet-sys-material-backdrop);
 }
 
 [data-dnet-theme|="liquid-glass"] .validation-note-card,
 [data-dnet-theme|="liquid-glass"] .validation-address-card {
+    border-color: var(--dnet-sys-border);
+    background: color-mix(in srgb, var(--dnet-sys-on-surface) 4%, var(--dnet-sys-transparent));
+}
+
+[data-dnet-theme|="liquid-glass"] .validation-heading-icon {
     border-color: var(--dnet-sys-transparent);
-    background: var(--dnet-sys-material-ghost);
-    box-shadow: var(--dnet-sys-material-highlight);
+    background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
+    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-ghost-elevation);
+    color: var(--dnet-sys-primary-content);
 }
 
 [data-dnet-theme|="liquid-glass"] .validation-status-pill.is-invalid {
     background: color-mix(in srgb, var(--dnet-sys-danger) 9%, var(--dnet-sys-material-ghost));
 }
 
+[data-dnet-theme|="liquid-glass"] .validation-status-pill.is-valid,
 [data-dnet-theme|="liquid-glass"] .validation-status-pill.is-saved {
     background: color-mix(in srgb, var(--dnet-sys-success) 10%, var(--dnet-sys-material-ghost));
 }

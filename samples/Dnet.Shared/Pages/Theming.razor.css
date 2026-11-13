@@ -708,29 +708,38 @@
 }
 .theme-range::-moz-range-track { background: transparent; }
 
-/* Liquid Glass (both variants): containers become glass, pills and inset
-   panels lighter glass, and nested regions stop repainting an opaque surface.
-   The theme selector keeps every other theme, and the baselines, untouched. */
-[data-dnet-theme|="liquid-glass"] .theme-code-card {
-    border-color: var(--dnet-sys-transparent);
-    background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-card);
-    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-1);
-    -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
-    backdrop-filter: var(--dnet-sys-material-backdrop);
+/* Liquid Glass (both variants): containers become glass cards with the
+   theme's rim, sheen and lift; pills and icon tiles are lighter glass; inset
+   panels are a quiet tint; page headings take the theme's larger scale. The
+   theme selector keeps every other theme, and the visual baselines, untouched. */
+[data-dnet-theme|="liquid-glass"] .theme-title {
+    font-size: clamp(2rem, 3.4vw, 2.875rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
 }
 
+[data-dnet-theme|="liquid-glass"] .theme-description {
+    font-size: 1.0625rem;
+    line-height: 1.55;
+}
+
+[data-dnet-theme|="liquid-glass"] .theme-card,
+[data-dnet-theme|="liquid-glass"] .theme-code-card,
 [data-dnet-theme|="liquid-glass"] .theme-preview-surface {
     border-color: var(--dnet-sys-transparent);
+    border-radius: 28px;
     background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-card);
-    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-1);
+    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-2);
     -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
     backdrop-filter: var(--dnet-sys-material-backdrop);
 }
 
 [data-dnet-theme|="liquid-glass"] .theme-scope-example {
     border-color: var(--dnet-sys-transparent);
+    border-radius: var(--dnet-sys-radius-lg);
     background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-card);
-    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-1);
+    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-2);
     -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
     backdrop-filter: var(--dnet-sys-material-backdrop);
 }

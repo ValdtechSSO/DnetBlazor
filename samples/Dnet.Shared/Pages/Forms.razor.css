@@ -10,7 +10,8 @@
 }
 
 /* Native date and select popups follow the app theme instead of the OS theme. */
-[data-dnet-theme="dark"] .forms-page {
+[data-dnet-theme="dark"] .forms-page,
+[data-dnet-theme="liquid-glass-dark"] .forms-page {
     color-scheme: dark;
 }
 
@@ -340,25 +341,118 @@
     }
 }
 
-/* Liquid Glass (both variants): containers become glass, pills and inset
-   panels lighter glass, and nested regions stop repainting an opaque surface.
-   The theme selector keeps every other theme, and the baselines, untouched. */
+/* Liquid Glass (both variants): containers become glass cards with the
+   theme's rim, sheen and lift; pills and icon tiles are lighter glass; inset
+   panels are a quiet tint; page headings take the theme's larger scale. The
+   theme selector keeps every other theme, and the visual baselines, untouched. */
 [data-dnet-theme|="liquid-glass"] .forms-page {
     --_forms-select-background: var(--dnet-sys-material-control);
 }
 
-[data-dnet-theme|="liquid-glass"] .forms-appearance {
+[data-dnet-theme|="liquid-glass"] .forms-eyebrow {
+    color: var(--dnet-sys-primary-content);
+    font-weight: 650;
+}
+
+[data-dnet-theme|="liquid-glass"] .forms-title {
+    font-size: clamp(2rem, 3.4vw, 2.875rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+}
+
+[data-dnet-theme|="liquid-glass"] .forms-description {
+    font-size: 1.0625rem;
+    line-height: 1.55;
+}
+
+[data-dnet-theme|="liquid-glass"] .forms-validation-link {
+    box-sizing: border-box;
+    min-height: 44px;
+    padding: 0 18px;
     border-color: var(--dnet-sys-transparent);
+    background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
+    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-ghost-elevation);
+    -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+    backdrop-filter: var(--dnet-sys-material-backdrop);
+    color: var(--dnet-sys-primary-content);
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+[data-dnet-theme|="liquid-glass"] .forms-validation-link:hover {
+    background: var(--dnet-sys-material-sheen), color-mix(in srgb, var(--dnet-sys-primary-content) 10%, var(--dnet-sys-material-ghost));
+    color: var(--dnet-sys-primary-content);
+}
+
+[data-dnet-theme|="liquid-glass"] .forms-appearance,
+[data-dnet-theme|="liquid-glass"] .forms-card {
+    border-color: var(--dnet-sys-transparent);
+    border-radius: 28px;
     background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-card);
-    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-1);
+    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-2);
     -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
     backdrop-filter: var(--dnet-sys-material-backdrop);
 }
 
-[data-dnet-theme|="liquid-glass"] .forms-card {
+[data-dnet-theme|="liquid-glass"] .forms-appearance-icon,
+[data-dnet-theme|="liquid-glass"] .forms-card-icon {
     border-color: var(--dnet-sys-transparent);
+    background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
+    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-ghost-elevation);
+    color: var(--dnet-sys-primary-content);
+    border-radius: 14px;
+}
+
+[data-dnet-theme|="liquid-glass"] .forms-card-kicker {
+    color: var(--dnet-sys-on-surface-subtle);
+}
+
+[data-dnet-theme|="liquid-glass"] .forms-appearance-control select {
+    border-color: var(--dnet-sys-transparent);
+    border-radius: 16px;
+    box-shadow: var(--dnet-sys-material-highlight);
+}
+
+[data-dnet-theme|="liquid-glass"] .forms-resource {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-block-start: 24px;
+    padding: 28px 28px 28px 32px;
+    border: 0;
+    border-radius: 28px;
     background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-card);
-    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-1);
+    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-2);
     -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
     backdrop-filter: var(--dnet-sys-material-backdrop);
+}
+
+[data-dnet-theme|="liquid-glass"] .forms-resource h2 {
+    font-size: 1.375rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+}
+
+[data-dnet-theme|="liquid-glass"] .forms-resource .forms-validation-link {
+    min-height: 50px;
+    margin: 0;
+    padding: 0 24px;
+    border-radius: var(--dnet-sys-radius-pill);
+    background: var(--dnet-sys-material-accent-sheen), var(--dnet-sys-primary);
+    background-origin: border-box;
+    box-shadow: var(--dnet-sys-material-accent-highlight);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    color: var(--dnet-sys-on-primary);
+    font-size: 0.9375rem;
+    text-decoration: none;
+}
+
+[data-dnet-theme|="liquid-glass"] .forms-resource .forms-validation-link:hover {
+    background: var(--dnet-sys-material-accent-sheen), var(--dnet-sys-primary-emphasis);
+    background-origin: border-box;
+    color: var(--dnet-sys-on-primary);
 }

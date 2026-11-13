@@ -23,21 +23,21 @@
   --dnet-sys-surface-inverse: #f2f4f9;
 
   /* -------------------------------------------------------------- text */
-  --dnet-sys-on-surface: #e6eaf2;
-  --dnet-sys-on-surface-emphasis: #f5f7fb;
-  --dnet-sys-on-surface-muted: #c3cad8;
-  --dnet-sys-on-surface-subtle: #aeb6c8;
+  --dnet-sys-on-surface: #f2f4f9;
+  --dnet-sys-on-surface-emphasis: #f2f4f9;
+  --dnet-sys-on-surface-muted: #c5cbd8;
+  --dnet-sys-on-surface-subtle: #adb5c7;
 
   /* ------------------------------------------------------------ accent */
-  --dnet-sys-primary: #7aa2ff;
+  --dnet-sys-primary: #2563eb;
   --dnet-sys-primary-strong: #5b8cff;
-  --dnet-sys-primary-emphasis: #a9c4ff;
-  --dnet-sys-primary-content: #a9c4ff;
-  --dnet-sys-on-primary: #0a1633;
-  --dnet-sys-danger: #ffa59c;
+  --dnet-sys-primary-emphasis: #1d4ed8;
+  --dnet-sys-primary-content: #a2c0fc;
+  --dnet-sys-on-primary: #ffffff;
+  --dnet-sys-danger: #ff9a90;
 
   /* --------------------------------------------------- borders, states */
-  --dnet-sys-border: rgb(255 255 255 / .10);
+  --dnet-sys-border: rgb(255 255 255 / .09);
   --dnet-sys-border-strong: rgb(255 255 255 / .18);
   --dnet-sys-state-selected: rgb(122 162 255 / .18);
   --dnet-sys-focus-ring: #a9c4ff;
@@ -49,16 +49,16 @@
   /* ------------------------------------------------------------- shape */
   --dnet-sys-radius-sm: 10px;
   --dnet-sys-radius-md: 14px;
-  --dnet-sys-radius-lg: 22px;
+  --dnet-sys-radius-lg: 20px;
 
   /* --------------------------------------------------------- elevation */
   --dnet-sys-shadow-color: rgb(0 0 0 / .45);
   --dnet-sys-scrim: rgb(0 0 0 / .45);
   --dnet-sys-elevation-1: 0 1px 2px rgb(0 0 0 / .30), 0 4px 12px rgb(0 0 0 / .30);
-  --dnet-sys-elevation-2: 0 1px 2px rgb(0 0 0 / .30), 0 10px 30px rgb(0 0 0 / .38);
-  --dnet-sys-elevation-3: 0 2px 6px rgb(0 0 0 / .34), 0 24px 64px rgb(0 0 0 / .46);
-  --dnet-sys-elevation-4: 0 4px 10px rgb(0 0 0 / .38), 0 32px 80px rgb(0 0 0 / .52);
-  --dnet-sys-elevation-5: 0 6px 14px rgb(0 0 0 / .42), 0 40px 96px rgb(0 0 0 / .60);
+  --dnet-sys-elevation-2: 0 1px 2px rgb(0 0 0 / .30), 0 18px 50px rgb(0 0 0 / .38);
+  --dnet-sys-elevation-3: 0 2px 8px rgb(0 0 0 / .40), 0 28px 72px rgb(0 0 0 / .60);
+  --dnet-sys-elevation-4: 0 4px 10px rgb(0 0 0 / .42), 0 32px 80px rgb(0 0 0 / .62);
+  --dnet-sys-elevation-5: 0 6px 14px rgb(0 0 0 / .45), 0 40px 96px rgb(0 0 0 / .65);
 
   /* ------------------------------------------------ typography, motion */
   --dnet-sys-font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -77,15 +77,36 @@
     radial-gradient(40% 35% at 50% 100%, #755000 0%, transparent 70%),
     #080b13;
   --dnet-sys-material-page: transparent;
-  --dnet-sys-material-chrome: rgb(22 26 40 / .52);
-  --dnet-sys-material-card: rgb(18 22 34 / .62);
+  --dnet-sys-material-chrome: rgb(22 26 40 / .40);
+  --dnet-sys-material-card: rgb(18 22 34 / .60);
   --dnet-sys-material-popup: rgb(26 30 44 / .90);
   --dnet-sys-material-control: rgb(255 255 255 / .08);
   --dnet-sys-material-ghost: rgb(255 255 255 / .06);
   --dnet-sys-material-backdrop: blur(28px) saturate(170%);
-  --dnet-sys-material-highlight: inset 0 1px 0 rgb(255 255 255 / .18), inset 0 0 0 1px rgb(255 255 255 / .08);
-  --dnet-sys-material-sheen: linear-gradient(180deg, rgb(255 255 255 / .08), rgb(255 255 255 / 0) 40%);
+  --dnet-sys-material-highlight: inset 0 1px 0 rgb(255 255 255 / .20), inset 0 -1px 0 rgb(255 255 255 / .04), inset 0 0 0 1px rgb(255 255 255 / .08);
+  --dnet-sys-material-sheen: linear-gradient(180deg, rgb(255 255 255 / .09), rgb(255 255 255 / 0) 40%);
   --dnet-sys-scrim-backdrop: blur(6px) saturate(120%);
+
+  /* Accent fills (filled buttons): a softer sheen, a top light and a bottom
+     shade, and a glow in the accent colour. White text keeps AA at the label. */
+  --dnet-sys-material-accent-sheen: linear-gradient(180deg, rgb(255 255 255 / .2), rgb(255 255 255 / 0) 55%);
+  --dnet-sys-material-accent-highlight: inset 0 1px 0 rgb(255 255 255 / .45), inset 0 -1px 0 rgb(0 0 0 / .15), 0 10px 28px rgb(37 99 235 / .38);
+  --dnet-sys-material-ghost-elevation: 0 4px 16px rgb(16 24 48 / .08);
+  --dnet-sys-material-focus: 0 0 0 1.5px #2563eb, 0 0 0 5px rgb(37 99 235 / .26);
+
+  /* ------------------------------------------------- component tokens */
+  /* Glass has no outlines: outlined buttons are ghost pills and fields are
+     defined by their rim. Hints are quieter, field icons take the accent, and
+     the clear action is a soft chip. */
+  --dnet-btn-border-color: var(--dnet-sys-transparent);
+  --dnet-form-field-radius: 16px;
+  --dnet-form-field-hint-color: var(--dnet-sys-on-surface-subtle);
+  --dnet-form-field-clear-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.8' stroke-linecap='round'><circle cx='12' cy='12' r='11' fill='currentColor' fill-opacity='.2' stroke='none'/><path d='m9 9 6 6m0-6-6 6'/></svg>");
+  --dnet-calendar-icon-color: var(--dnet-sys-primary-content);
+  --dnet-timepicker-icon-color: var(--dnet-sys-primary-content);
+  /* The accent keeps white text here, so primary-emphasis is a dark blue; the
+     tab indicator needs the lighter accent text colour to stay visible. */
+  --dnet-tabs-indicator-color: var(--dnet-sys-primary-content);
 
   /* AdminLayout: the minified menu flyout floats over the content and defaults
      to the border colour, which is translucent here. Nested in the column it

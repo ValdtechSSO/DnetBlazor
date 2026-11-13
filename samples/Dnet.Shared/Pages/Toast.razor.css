@@ -15,3 +15,13 @@
 .toast-tone.is-danger { background: var(--dnet-sys-danger); }
 .toast-status { margin: 0; overflow-wrap: anywhere; }
 @media (max-width: 420px) { .toast-stack-preview > div { flex-wrap: wrap; } .toast-stack-preview small { flex-basis: 100%; padding-inline-start: 18px; } }
+
+/* Liquid Glass (both variants): containers become glass cards with the
+   theme's rim, sheen and lift; pills and icon tiles are lighter glass; inset
+   panels are a quiet tint; page headings take the theme's larger scale. The
+   theme selector keeps every other theme, and the visual baselines, untouched. */
+[data-dnet-theme|="liquid-glass"] .toast-stack-preview > div {
+    border-color: var(--dnet-sys-transparent);
+    background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
+    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-ghost-elevation);
+}
