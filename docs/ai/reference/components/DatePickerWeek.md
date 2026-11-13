@@ -30,7 +30,7 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
-| `--dnet-calendar-background` | `#ffffff` <br><sub>via `--dnet-sys-surface-raised`</sub> |
+| `--dnet-calendar-background` | `#ffffff` <br><sub>via `--dnet-sys-material-popup`</sub> |
 | `--dnet-datepickerweek-input-container-border` | `1px solid var(--dnet-sys-border)` |
 | `--dnet-datepickerweek-input-height` | `28px` |
 | `--dnet-datepickerweekca-day-disabled-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 60.5%, transparent)` |
