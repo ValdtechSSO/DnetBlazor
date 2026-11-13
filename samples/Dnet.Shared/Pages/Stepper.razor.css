@@ -19,3 +19,10 @@
     padding: 20px 24px 24px;
     background: var(--dnet-sys-surface);
 }
+
+/* Liquid Glass (both variants): containers become glass, pills and inset
+   panels lighter glass, and nested regions stop repainting an opaque surface.
+   The theme selector keeps every other theme, and the baselines, untouched. */
+[data-dnet-theme|="liquid-glass"] .stepper-linear-actions {
+    background: var(--dnet-sys-transparent);
+}

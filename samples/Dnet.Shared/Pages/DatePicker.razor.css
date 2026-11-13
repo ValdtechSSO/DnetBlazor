@@ -45,3 +45,12 @@
     outline: 2px solid var(--dnet-sys-primary);
     outline-offset: 3px;
 }
+
+/* Liquid Glass (both variants): containers become glass, pills and inset
+   panels lighter glass, and nested regions stop repainting an opaque surface.
+   The theme selector keeps every other theme, and the baselines, untouched. */
+[data-dnet-theme|="liquid-glass"] .date-format-option:not([aria-pressed="true"]):not(:hover) {
+    border-color: var(--dnet-sys-transparent);
+    background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
+    box-shadow: var(--dnet-sys-material-highlight);
+}

@@ -315,3 +315,32 @@
         padding: 20px;
     }
 }
+
+/* Liquid Glass (both variants): containers become glass, pills and inset
+   panels lighter glass, and nested regions stop repainting an opaque surface.
+   The theme selector keeps every other theme, and the baselines, untouched. */
+[data-dnet-theme|="liquid-glass"] .button-size-card {
+    border-color: var(--dnet-sys-transparent);
+    background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-card);
+    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-1);
+    -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+    backdrop-filter: var(--dnet-sys-material-backdrop);
+}
+
+[data-dnet-theme|="liquid-glass"] .button-size-description {
+    border-color: var(--dnet-sys-transparent);
+    background: var(--dnet-sys-material-ghost);
+    box-shadow: var(--dnet-sys-material-highlight);
+}
+
+[data-dnet-theme|="liquid-glass"] .button-code-card {
+    border-color: var(--dnet-sys-transparent);
+    background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-card);
+    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-1);
+    -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+    backdrop-filter: var(--dnet-sys-material-backdrop);
+}
+
+[data-dnet-theme|="liquid-glass"] .button-code-card pre {
+    background: color-mix(in srgb, var(--dnet-sys-on-surface) 4%, var(--dnet-sys-transparent));
+}
