@@ -4,6 +4,11 @@
 
 - New material mechanic `--dnet-sys-material-well-shadow`, the inner shadow
   and rim of recessed tracks (slide toggle). Without effect by default.
+- SlideToggle reads the material mechanics: the well shadow on its track,
+  the accent sheen and highlight once checked, and the highlight on its
+  handle. New tokens `--dnet-slide-toggle-track-border-color` and
+  `--dnet-slide-toggle-icon-color`, with today's colours as defaults.
+  Without visual change by default.
 - New material mechanic `--dnet-sys-material-lift`, the drop shadow of small
   glass faces (checkbox, radio button). Without effect by default.
 - Checkbox, RadioButton and Chips show a focus ring for keyboard focus in

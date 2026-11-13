@@ -118,6 +118,8 @@
   /* Small glass faces inside another surface (checkbox, radio button) sit on
      a tight shadow of their own. Without effect here. */
   --dnet-sys-material-lift: 0 0 0 0 var(--dnet-sys-transparent);
+  /* Recessed tracks (slide toggle): inner shadow and rim. Without effect here. */
+  --dnet-sys-material-well-shadow: inset 0 0 0 0 var(--dnet-sys-transparent);
 }
 
 /*! Sass shared (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
@@ -8200,8 +8202,8 @@ select.mat-input-element::-ms-value {
   --_track-checked: var(--dnet-slide-toggle-track-background-checked, var(--dnet-sys-primary-strong));
   --_handle: var(--dnet-slide-toggle-handle-background, var(--dnet-sys-on-surface-muted));
   --_handle-checked: var(--dnet-slide-toggle-handle-background-checked, var(--dnet-sys-on-primary));
-  --_handle-icon: var(--dnet-sys-surface);
-  --_track-border: var(--dnet-sys-on-surface-subtle);
+  --_handle-icon: var(--dnet-slide-toggle-icon-color, var(--dnet-sys-surface));
+  --_track-border: var(--dnet-slide-toggle-track-border-color, var(--dnet-sys-on-surface-subtle));
   --_label: var(--dnet-slide-toggle-label-color, var(--dnet-sys-on-surface));
   --_font-size: var(--dnet-slide-toggle-font-size, var(--dnet-sys-text-md));
   --_gap: var(--dnet-slide-toggle-gap, var(--dnet-sys-space-3));
@@ -8264,16 +8266,20 @@ select.mat-input-element::-ms-value {
   border: 2px solid var(--_track-border);
   border-radius: var(--dnet-sys-radius-pill);
   box-sizing: border-box;
+  /* A recessed well in material themes; without effect by default. */
+  box-shadow: var(--dnet-sys-material-well-shadow);
   inset: 0;
   position: absolute;
-  transition: background-color var(--dnet-sys-motion-normal) var(--dnet-sys-motion-ease);
+  transition:
+    background-color var(--dnet-sys-motion-normal) var(--dnet-sys-motion-ease),
+    box-shadow var(--dnet-sys-motion-normal) var(--dnet-sys-motion-ease);
 }
 
 .dnet-slide-toggle-handle {
   align-items: center;
   background: var(--_handle);
   border-radius: 50%;
-  box-shadow: var(--dnet-sys-elevation-1);
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-1);
   color: var(--_handle-icon);
   display: flex;
   height: var(--_handle-size);
@@ -8300,14 +8306,16 @@ select.mat-input-element::-ms-value {
   display: none;
 }
 
+/* Checked: the accent material of filled buttons. */
 .dnet-slide-toggle-checked .dnet-slide-toggle-track {
-  background: var(--_track-checked);
+  background: var(--dnet-sys-material-accent-sheen), var(--_track-checked);
   border-color: var(--_track-checked);
+  box-shadow: var(--dnet-sys-material-accent-highlight);
 }
 
 .dnet-slide-toggle-checked .dnet-slide-toggle-handle {
   background: var(--_handle-checked);
-  color: var(--_track-checked);
+  color: var(--dnet-slide-toggle-icon-color, var(--_track-checked));
   transform: translateX(var(--_handle-travel));
 }
 
@@ -8320,11 +8328,12 @@ select.mat-input-element::-ms-value {
 }
 
 .dnet-slide-toggle:not(.dnet-slide-toggle-disabled) .dnet-slide-toggle-layout:hover .dnet-slide-toggle-handle {
-  box-shadow: var(--dnet-sys-elevation-1), 0 0 0 8px var(--dnet-sys-state-hover);
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-1), 0 0 0 8px var(--dnet-sys-state-hover);
 }
 
 .dnet-slide-toggle-input:focus-visible ~ .dnet-slide-toggle-handle {
   box-shadow:
+    var(--dnet-sys-material-highlight),
     var(--dnet-sys-elevation-1),
     0 0 0 8px color-mix(in srgb, var(--_focus-ring) 24%, transparent);
 }
