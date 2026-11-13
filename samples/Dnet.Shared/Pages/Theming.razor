@@ -7,7 +7,8 @@
 
 <DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
 
-<section id="theme-studio" class="theme-studio" aria-labelledby="theme-studio-title">
+@* The studio first renders code defaults; data-settings-ready marks when it shows the document's real theme and values. *@
+<section id="theme-studio" class="theme-studio" aria-labelledby="theme-studio-title" data-settings-ready="@(_settingsRead ? "true" : null)">
     <header class="theme-studio-header">
         <div>
             <p class="theme-eyebrow">@S["Theming.DesignSystem"]</p>
@@ -162,6 +163,7 @@
     private IJSObjectReference? _module;
     private DotNetObjectReference<Theming>? _reference;
     private int _watchId;
+    private bool _settingsRead;
 
     private string ThemeName => _theme switch { "dark" => "Dark", "compact" => "Compact", "high-contrast" => "High contrast", "modern" => "Modern", "liquid-glass" => "Liquid glass", "liquid-glass-dark" => "Liquid glass dark", _ => "Light" };
     private string ThemeCss => $"{(string.IsNullOrEmpty(_theme) ? ":root" : $"[data-dnet-theme=\"{_theme}\"]")} {{\n  --dnet-sys-primary: {_primaryColor};\n  --dnet-sys-space-unit: {_spaceUnit}px;\n  --dnet-btn-radius: {_radius}px;\n}}";
@@ -195,6 +197,7 @@
         _primaryColor = settings.PrimaryColor;
         _spaceUnit = settings.SpaceUnit;
         _radius = settings.Radius;
+        _settingsRead = true;
     }
 
     [JSInvokable]
