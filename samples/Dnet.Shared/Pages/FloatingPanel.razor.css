@@ -11,3 +11,18 @@
 .floating-placement-panel i { display: block; height: 6px; border-radius: var(--dnet-sys-radius-pill); background: var(--dnet-sys-state-selected); }
 .floating-placement-panel i:first-child { width: 65%; background: color-mix(in srgb, var(--dnet-sys-primary-strong) 40%, var(--dnet-sys-surface-raised)); }
 #floating-panel-result { display: grid; gap: 6px; }
+
+/* Liquid Glass (both variants): containers become glass cards with the
+   theme's rim, sheen and lift; pills and icon tiles are lighter glass; inset
+   panels are a quiet tint; page headings take the theme's larger scale. The
+   theme selector keeps every other theme, and the visual baselines, untouched. */
+[data-dnet-theme|="liquid-glass"] .floating-placement-canvas {
+    border-color: var(--dnet-sys-border);
+    background: color-mix(in srgb, var(--dnet-sys-on-surface) 4%, var(--dnet-sys-transparent));
+}
+
+[data-dnet-theme|="liquid-glass"] .floating-placement-panel {
+    border-color: var(--dnet-sys-transparent);
+    background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
+    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-ghost-elevation);
+}

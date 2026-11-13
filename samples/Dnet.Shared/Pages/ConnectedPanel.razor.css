@@ -14,3 +14,13 @@
 .connected-contact div > span, .connected-contact small { color: var(--dnet-sys-on-surface-muted); font-size: var(--dnet-sys-text-sm); line-height: 1.5; }
 #connected-panel-result { display: grid; gap: 6px; }
 @media (max-width: 420px) { .connected-contact { flex-wrap: wrap; } .connected-contact small { flex-basis: 100%; padding-inline-start: 48px; } }
+
+/* Liquid Glass (both variants): containers become glass cards with the
+   theme's rim, sheen and lift; pills and icon tiles are lighter glass; inset
+   panels are a quiet tint; page headings take the theme's larger scale. The
+   theme selector keeps every other theme, and the visual baselines, untouched. */
+[data-dnet-theme|="liquid-glass"] .connected-filter-button {
+    border-color: var(--dnet-sys-transparent);
+    background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
+    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-ghost-elevation);
+}
