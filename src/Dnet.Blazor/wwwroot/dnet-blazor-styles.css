@@ -4351,6 +4351,8 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 
 .cdk-overlay-dark-backdrop {
   background: var(--dnet-sys-scrim);
+  -webkit-backdrop-filter: var(--dnet-sys-scrim-backdrop);
+          backdrop-filter: var(--dnet-sys-scrim-backdrop);
 }
 
 .cdk-overlay-transparent-backdrop, .cdk-overlay-transparent-backdrop.cdk-overlay-backdrop-showing {
