@@ -1439,3 +1439,9 @@ body {
     background-color: transparent;
     border: 1px solid rgba(0,0,0,.06);
 }*/
+
+/* Liquid Glass (both variants): the body stays transparent so the theme's
+   canvas (--dnet-sys-canvas, painted on html) shows behind the glass. */
+[data-dnet-theme|="liquid-glass"] {
+  --body-background-color: transparent;
+}

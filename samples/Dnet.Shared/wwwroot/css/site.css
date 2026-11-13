@@ -1477,3 +1477,9 @@ body {
   color: var(--dnet-sys-on-surface-muted);
   font-size: .75rem;
 }
+
+/* Liquid Glass (both variants): the body stays transparent so the theme's
+   canvas (--dnet-sys-canvas, painted on html) shows behind the glass. */
+[data-dnet-theme|="liquid-glass"] {
+  --body-background-color: transparent;
+}

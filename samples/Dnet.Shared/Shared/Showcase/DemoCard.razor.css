@@ -88,3 +88,13 @@
         padding: 16px 20px;
     }
 }
+
+/* Liquid Glass (both variants): the card becomes a glass container. The
+   selector keeps every other theme, and the visual baselines, untouched. */
+[data-dnet-theme|="liquid-glass"] .demo-card {
+    border-color: var(--dnet-sys-transparent);
+    background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-card);
+    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-1);
+    -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+    backdrop-filter: var(--dnet-sys-material-backdrop);
+}
