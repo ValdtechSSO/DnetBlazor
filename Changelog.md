@@ -4,6 +4,19 @@
 
 - New material mechanic `--dnet-sys-material-lift`, the drop shadow of small
   glass faces (checkbox, radio button). Without effect by default.
+- Checkbox and RadioButton show a focus ring for keyboard focus in every
+  theme: a 2px gap in `--dnet-sys-surface` and 2px in `--dnet-sys-focus-ring`.
+  Visual change: before, keyboard focus was not visible. Pointer use looks the
+  same.
+- Checkbox and RadioButton faces paint the ghost material (`ghost`, `sheen`,
+  `highlight`, `lift`). Without effect by default. The checkmark draws itself
+  when the user allows motion.
+- New RadioButton tokens `--dnet-radio-button-border-color` and
+  `--dnet-radio-button-checked-border-color`, with the previous colours as
+  defaults.
+- The Liquid Glass themes render checkboxes and radio buttons as glass faces
+  with an accent mark and dot and a 3:1 border. `npm run check:contrast` gates
+  them at WCAG 1.4.11 (3:1).
 
 ## Version 6.1.0 (November 2026)
 
