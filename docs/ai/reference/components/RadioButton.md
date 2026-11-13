@@ -42,6 +42,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-radio-button-border-color` | `currentColor` |
 | `--dnet-radio-button-border-width` | `1px` |
 | `--dnet-radio-button-checked-border-color` | `var(--_checked-background)` |
+| `--dnet-radio-button-disabled-border-color` | `var(--_disabled-fg)` |
 | `--dnet-radio-button-font-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
 | `--dnet-radio-button-size` | `20px` |
 

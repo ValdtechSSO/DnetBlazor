@@ -11,8 +11,9 @@
 - Checkbox and RadioButton faces paint the ghost material (`ghost`, `sheen`,
   `highlight`, `lift`). Without effect by default. The checkmark draws itself
   when the user allows motion.
-- New RadioButton tokens `--dnet-radio-button-border-color` and
-  `--dnet-radio-button-checked-border-color`, with the previous colours as
+- New RadioButton tokens `--dnet-radio-button-border-color`,
+  `--dnet-radio-button-checked-border-color` and
+  `--dnet-radio-button-disabled-border-color`, with the previous colours as
   defaults.
 - The Liquid Glass themes render checkboxes and radio buttons as pure glass
   faces, without a border, with an accent mark and dot. `npm run check:contrast`
