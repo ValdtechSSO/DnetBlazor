@@ -76,6 +76,13 @@
   border-radius: 50%;
 }
 
+/* The input is visually hidden and comes after the circles: keyboard focus
+   shows as a ring on the outer circle. */
+.dnet-radio-container:has(.dnet-radio-input:focus-visible) .dnet-radio-outer-circle {
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-lift),
+              0 0 0 2px var(--dnet-sys-surface), 0 0 0 4px var(--dnet-sys-focus-ring);
+}
+
 .dnet-radio-button.dnet-accent.dnet-radio-checked .dnet-radio-persistent-ripple, .dnet-radio-button.dnet-accent .dnet-radio-inner-circle, .dnet-radio-button.dnet-accent .dnet-radio-ripple .dnet-ripple-element:not(.dnet-radio-persistent-ripple), .dnet-radio-button.dnet-accent:active .dnet-radio-persistent-ripple {
   background-color: var(--_checked-background);
 }
