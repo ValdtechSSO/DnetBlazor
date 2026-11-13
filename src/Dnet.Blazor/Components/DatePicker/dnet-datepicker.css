@@ -360,7 +360,7 @@
 }
 
 .dnet-datepicker-icon {
-  --_icon-color: var(--dnet-sys-on-surface);
+  --_icon-color: var(--dnet-calendar-icon-color, var(--dnet-sys-on-surface));
   display: block;
   width: 1em;
   height: 1em;

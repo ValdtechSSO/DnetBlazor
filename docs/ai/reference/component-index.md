@@ -12,7 +12,7 @@ Open only the one you need.
 | [Checkbox](components/Checkbox.md) | `<DnetInputCheckbox>` | 3 | 7 |
 | [Chips](components/Chips.md) | `<DnetChip>`, `<DnetChipList>` | 18 | 11 |
 | [ConnectedPanel](components/ConnectedPanel.md) | `<DnetConnectedFloatingPanel>` | 3 | 3 |
-| [DatePicker](components/DatePicker.md) | `<DnetCalendar>`, `<DnetDatePicker>`, `<DnetDateRangePicker>` | 111 | 8 |
+| [DatePicker](components/DatePicker.md) | `<DnetCalendar>`, `<DnetDatePicker>`, `<DnetDateRangePicker>` | 111 | 9 |
 | [DatePickerWeek](components/DatePickerWeek.md) | `<DnetDatePickerWeek>` | 13 | 7 |
 | [DatePickerWeekRaw](components/DatePickerWeekRaw.md) | `<DnetDatePickerWeekRaw>` | 3 | 5 |
 | [Dialog](components/Dialog.md) | `<DnetDialog>` | 5 | 12 |
