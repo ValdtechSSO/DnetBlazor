@@ -137,11 +137,12 @@
   --dnet-grid-padding: 6px 10px;
   --dnet-grid-row-gap: 8px;
   --dnet-grid-row-radius: var(--dnet-sys-radius-sm);
-  /* The rows' outline is the glass rim of buttons and containers (the
-     values of --dnet-sys-material-highlight): the ring as the border, the
-     top and bottom lines as the highlight. */
-  --dnet-grid-row-border: 1px solid rgb(255 255 255 / .42);
-  --dnet-grid-row-highlight: inset 0 1px 0 rgb(255 255 255 / .95), inset 0 -1px 0 rgb(255 255 255 / .35);
+  /* The rows' outline is the glass rim of buttons and containers: a single
+     1px line, as --dnet-sys-material-highlight draws it. The border stays
+     transparent; the top and bottom lines carry the ring and the highlight
+     together (ring .42 over .95 on top, over .35 at the bottom). */
+  --dnet-grid-row-border: 1px solid var(--dnet-sys-transparent);
+  --dnet-grid-row-highlight: inset 0 1px 0 rgb(255 255 255 / .97), inset 0 -1px 0 rgb(255 255 255 / .62);
   --dnet-grid-cell-default-background-color: var(--dnet-sys-material-control);
   --dnet-grid-hover-color: rgb(255 255 255 / .9);
   --dnet-grid-clicked-color: color-mix(in srgb, var(--dnet-sys-primary) 10%, var(--dnet-sys-material-control));
