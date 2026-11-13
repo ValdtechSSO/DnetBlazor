@@ -1662,6 +1662,12 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   pointer-events: none;
 }
 
+/* The input is visually hidden: keyboard focus shows as a ring on the frame. */
+.dnet-checkbox-input:focus-visible ~ .dnet-checkbox-frame {
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-lift),
+              0 0 0 2px var(--dnet-sys-surface), 0 0 0 4px var(--dnet-sys-focus-ring);
+}
+
 .dnet-checkbox-disabled:not(.dnet-checkbox-checked) .dnet-checkbox-frame {
   border-color: var(--_border-color);
 }
