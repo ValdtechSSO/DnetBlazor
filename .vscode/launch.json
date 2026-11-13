@@ -5,14 +5,17 @@
       "name": "Dnet - ClientSide",
       "type": "blazorwasm",
       "request": "launch",
-      "preLaunchTask": "build-dnet-samples",
       "cwd": "${workspaceFolder}/samples/Dnet.ClientSide",
       "projectPath": "${workspaceFolder}/samples/Dnet.ClientSide/Dnet.App.ClientSide.csproj",
       "url": "http://127.0.0.1:5101",
       "launchBrowser": false,
       "browser": "chrome",
       "webRoot": "${workspaceFolder}/samples/Dnet.ClientSide/wwwroot",
+      // The C# extension replaces a blazorwasm launch with its own ".NET
+      // Application Server" configuration and drops a top-level preLaunchTask.
+      // Only dotNetConfig is copied into it, so the build task goes here.
       "dotNetConfig": {
+        "preLaunchTask": "build-dnet-samples",
         "args": [
           "run",
           "--no-build",
