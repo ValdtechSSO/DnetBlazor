@@ -25,6 +25,11 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-dialog-background` | `#ffffff` <br><sub>via `--dnet-sys-material-popup`</sub> |
 | `--dnet-dialog-border-radius` | `10px` <br><sub>via `--dnet-sys-radius-lg`</sub> |
 | `--dnet-dialog-button-margin` | `calc(var(--dnet-sys-space-unit) * 2)` <br><sub>via `--dnet-sys-space-2`</sub> |
+| `--dnet-dialog-close-background` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
+| `--dnet-dialog-close-background-hover` | `var(--_close-background)` |
+| `--dnet-dialog-close-padding` | `0px` |
+| `--dnet-dialog-close-radius` | `0px` |
+| `--dnet-dialog-close-shadow` | `none` |
 | `--dnet-dialog-elevation` | `0 3px 5px -1px var(--dnet-sys-shadow-color), 0 6px 10px 0 var(--dnet-sys-shadow-color), 0 1px 18px 0 var(--dnet-sys-shadow-color)` <br><sub>via `--dnet-sys-elevation-3`</sub> |
 | `--dnet-dialog-foreground` | `color-mix(in srgb, var(--dnet-ref-neutral-1000) 87%, transparent)` <br><sub>via `--dnet-sys-on-surface-emphasis`</sub> |
 | `--dnet-dialog-header-margin-bottom` | `15px` |
