@@ -215,11 +215,15 @@
     {
         _userEditContext = new EditContext(FilterData);
 
-        _userEditContext.OnFieldChanged += (data, eventArgs) =>
-        {
-            _formInvalid = !_userEditContext.Validate();
-            StateHasChanged();
-        };
+        // Validate() is obsolete in .NET 11 and throws when a validator works
+        // asynchronously, so the form is checked with ValidateAsync.
+        _userEditContext.OnFieldChanged += (_, _) => _ = InvokeAsync(UpdateFormValidityAsync);
+    }
+
+    private async Task UpdateFormValidityAsync()
+    {
+        _formInvalid = !await _userEditContext.ValidateAsync();
+        StateHasChanged();
     }
 
     void CloseOverlay()
