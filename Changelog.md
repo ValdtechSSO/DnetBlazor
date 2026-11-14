@@ -364,6 +364,8 @@
 - The Liquid Glass themes space the grid like a dialog: its header text,
   rows and paginator buttons sit 24px from the card's edges, 16px from the
   sides on phones so the paginator keeps its line.
+- The Liquid Glass dark theme draws the spinner of a field that is being
+  checked in its light accent, which reads on dark glass.
 - The Liquid Glass themes render the tooltip in the menus' popup glass:
   frosted white with the sheen, the rim of light and the panels' soft
   shadow, and dark text, its arrow in the same fill. In glass dark it is
