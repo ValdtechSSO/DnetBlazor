@@ -54,6 +54,14 @@ the element's own `style`. Nothing else is needed.
 | Token | Effective default |
 |---|---|
 | `--dnet-dialog-border-radius` | `10px` <br><sub>via `--dnet-sys-radius-lg`</sub> |
+| `--dnet-floating-double-list-close-background` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
+| `--dnet-floating-double-list-close-background-hover` | `var(--_close-background)` |
+| `--dnet-floating-double-list-close-padding` | `0px` |
+| `--dnet-floating-double-list-close-radius` | `0px` |
+| `--dnet-floating-double-list-close-shadow` | `none` |
+| `--dnet-floating-double-list-header-padding` | `10px 5px 10px 10px` |
+| `--dnet-floating-double-list-lists-padding` | `5px` |
+| `--dnet-floating-double-list-panel-background` | `#ffffff` <br><sub>via `--dnet-sys-material-popup`</sub> |
 | `--dnet-list-background-color` | `transparent` |
 | `--dnet-list-border-color` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
 | `--dnet-list-box-shadow` | `none` |

@@ -1,6 +1,6 @@
 /*! Sass FloatingDoubleList (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 .dnet-connected-panel-container-dl {
-  --_panel-background: var(--dnet-sys-material-popup);
+  --_panel-background: var(--dnet-floating-double-list-panel-background, var(--dnet-sys-material-popup));
   --_radius: var(--dnet-dialog-border-radius, var(--dnet-sys-radius-lg));
   --_elevation: var(--dnet-sys-elevation-3);
 
@@ -70,14 +70,46 @@
   min-width: 0;
 }
 
+/* The row over the lists, with the close button at its end. */
+.dnet-split-content-header-dl {
+  --_header-padding: var(--dnet-floating-double-list-header-padding, 10px 5px 10px 10px);
+
+  display: flex;
+  justify-content: space-between;
+  padding: var(--_header-padding);
+}
+
+/* The close button: a bare icon by default, which a theme can paint as a
+   round button. The negative margin cancels the padding, so the row keeps
+   its height and the icon its place. */
+.dnet-split-content-header-dl > .dnet-dialog-icon-wrapper {
+  --_close-padding: var(--dnet-floating-double-list-close-padding, 0px);
+  --_close-radius: var(--dnet-floating-double-list-close-radius, 0px);
+  --_close-background: var(--dnet-floating-double-list-close-background, var(--dnet-sys-transparent));
+  --_close-background-hover: var(--dnet-floating-double-list-close-background-hover, var(--_close-background));
+  --_close-shadow: var(--dnet-floating-double-list-close-shadow, none);
+
+  margin: calc(-1 * var(--_close-padding));
+  padding: var(--_close-padding);
+  border-radius: var(--_close-radius);
+  background: var(--_close-background);
+  box-shadow: var(--_close-shadow);
+}
+
+.dnet-split-content-header-dl > .dnet-dialog-icon-wrapper:hover {
+  background: var(--_close-background-hover);
+}
+
 .dnet-split-content-container-dl {
+  --_lists-padding: var(--dnet-floating-double-list-lists-padding, 5px);
+
   box-sizing: border-box;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 8px minmax(0, 1fr);
   width: 100%;
   height: calc(100% - 50px);
-  padding-left: 5px;
-  padding-right: 5px;
+  padding-left: var(--_lists-padding);
+  padding-right: var(--_lists-padding);
 }
 
 .dnet-split-content-btn-wrapper-dl {
