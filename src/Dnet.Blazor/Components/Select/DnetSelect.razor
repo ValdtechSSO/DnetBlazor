@@ -478,6 +478,21 @@
         return items.FirstOrDefault(item => item.Equals(value));
     }
 
+    // The panel opens scrolled to the selection: the selected option, or the
+    // first selected one when several can be chosen. Without one it opens at the top.
+    private int SelectedRowIndex()
+    {
+        // A cleared value keeps the last item in _selectedItem, so the value decides.
+        var hasValue = CurrentValue is not null && !string.IsNullOrEmpty(CurrentValueAsString);
+        var index = MultiSelect
+            ? _rowNodes.FindIndex(node => node.Selected)
+            : !hasValue || _selectedItem is null
+                ? -1
+                : _rowNodes.FindIndex(node => EqualityComparer<TItem>.Default.Equals(node.RowData, _selectedItem));
+
+        return Math.Max(0, index);
+    }
+
     private void BuildRowNodes()
     {
         _rowNodes = new();
@@ -727,6 +742,8 @@
                 ThemeScope = _themeScope
             };
 
+        var initialItemIndex = SelectedRowIndex();
+
         var menuContent = new RenderFragment(x =>
         {
             x.OpenComponent(0, typeof(DnetSelectPanel<TItem>));
@@ -748,6 +765,7 @@
             x.AddAttribute(16, "SelectedRowNodes", _selectedRowNodes);
             x.AddAttribute(17, "Label", ResponsiveLabel);
             x.AddAttribute(18, "SupportTextValueConverter", SupportTextValueConverter);
+            x.AddAttribute(19, "InitialItemIndex", initialItemIndex);
             x.CloseComponent();
         });
 

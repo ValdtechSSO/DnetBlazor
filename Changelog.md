@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Select: the panel opens scrolled to the selection, the selected option or
+  with `MultiSelect` the first selected one, instead of always at the top,
+  so in a long list it is in view. It waits until the overlay has sized the
+  list and then uses the framework's `Virtualize.ScrollToItemAsync`.
+  `DnetSelectPanel` takes the new `InitialItemIndex` parameter. Without a
+  selection, or with the first option selected, it opens at the top as
+  before.
 - Tooltip: takes the material's blur, `--dnet-sys-material-backdrop`, so a
   glass theme frosts what lies behind it. Without visual change by default.
 - PickList: the paginator's arrows take the paginator's own style, as in

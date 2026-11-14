@@ -20,6 +20,8 @@
 
 @inject IOverlayService OverlayService
 
+@implements IDisposable
+
 <DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
 <div class="dnet-select-list-wrapper">
     <div class="dnet-select-list-header">
@@ -34,10 +36,10 @@
             </span>
         </div>
     </div>
-    <div class="dnet-select-list-items">
+    <div class="dnet-select-list-items" @ref="_listElement">
         @if (ItemPrefixContent != null || ItemSufixContent != null || ChildContent != null)
         {
-            <Virtualize Items="@Items" TItem="RowNode<TItem>" Context="item" ItemSize="@ItemHeight">
+            <Virtualize @ref="_virtualize" Items="@Items" TItem="RowNode<TItem>" Context="item" ItemSize="@ItemHeight">
                 <ItemContent>
                     @if (item is not null)
                     {
@@ -90,7 +92,7 @@
         }
         else
         {
-            <Virtualize Items="@Items" TItem="RowNode<TItem>" Context="item" ItemSize="@ItemHeight">
+            <Virtualize @ref="_virtualize" Items="@Items" TItem="RowNode<TItem>" Context="item" ItemSize="@ItemHeight">
                 <div class="dnet-select-list-item" @onclick="@(() => SelectItem(item))" @onclick:preventDefault="true"
                      style="margin-bottom: 2px; height:@(ItemHeight)px">
                     @if (MultiSelect)
@@ -190,6 +192,13 @@
     [Parameter]
     public int ItemHeight { get; set; } = 40;
 
+    /// <summary>
+    /// Gets or sets the index of the item the list opens scrolled to, so the selection is in
+    /// view. Zero, the default, opens at the top.
+    /// </summary>
+    [Parameter]
+    public int InitialItemIndex { get; set; }
+
     /// <summary>Gets or sets the container height used by this component.</summary>
     [Parameter]
     public int ContainerHeight { get; set; } = 200;
@@ -215,10 +224,54 @@
     private string _styles { get; set; } = string.Empty;
 
 
+    private ElementReference _listElement;
+    private Virtualize<RowNode<TItem>>? _virtualize;
+    private DotNetObjectReference<DnetSelectPanel<TItem>>? _selfReference;
+
     protected override void OnInitialized()
     {
         _styles = GetStyles();
     }
+
+    // The overlay renders the list before it gets its size, so the scroll to the
+    // selection waits until the list can scroll.
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || InitialItemIndex <= 0)
+        {
+            return;
+        }
+
+        _selfReference = DotNetObjectReference.Create(this);
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("dnetinterop.whenScrollable", _listElement, _selfReference, nameof(ScrollToSelectionAsync));
+        }
+        catch (JSDisconnectedException)
+        {
+        }
+    }
+
+    /// <summary>Scrolls the list to the item at <see cref="InitialItemIndex"/>.</summary>
+    [JSInvokable]
+    public async Task ScrollToSelectionAsync()
+    {
+        if (_virtualize is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await _virtualize.ScrollToItemAsync(InitialItemIndex);
+        }
+        catch (Exception exception) when (exception is InvalidOperationException or OperationCanceledException or JSDisconnectedException)
+        {
+            // The panel closed, or the list was not interactive yet: it stays at the top.
+        }
+    }
+
+    public void Dispose() => _selfReference?.Dispose();
 
     private string GetStyles()
     {
