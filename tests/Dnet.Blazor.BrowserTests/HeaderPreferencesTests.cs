@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Microsoft.Playwright;
 using Xunit;
 
@@ -98,6 +99,59 @@ public sealed class HeaderPreferencesTests
         await Assertions.Expect(page.Locator("html")).ToHaveAttributeAsync("data-dnet-theme", expectedTheme);
         await Assertions.Expect(page.Locator("html")).ToHaveAttributeAsync("lang", "en-US");
         await CheckHeaderBoundsAsync(page);
+        Assert.True(errors.Count == 0, string.Join(Environment.NewLine, errors));
+    }
+
+    [Fact]
+    public async Task Theme_and_language_travel_in_the_url_so_a_link_can_be_shared()
+    {
+        if (!string.Equals(Environment.GetEnvironmentVariable("DNET_BLAZOR_BROWSER_TESTS"),
+                "true", StringComparison.OrdinalIgnoreCase)) return;
+        using var playwright = await Playwright.CreateAsync();
+        await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
+        var page = await browser.NewPageAsync(new()
+        {
+            IgnoreHTTPSErrors = true, Locale = "es-ES",
+            ViewportSize = new() { Width = 1440, Height = 1000 }
+        });
+        var errors = new List<string>();
+        page.PageError += (_, error) => errors.Add(error);
+        // The person opening the link has other saved preferences.
+        await page.AddInitScriptAsync("if (localStorage.getItem('dnet.theme') === null) {"
+            + " localStorage.setItem('dnet.theme', JSON.stringify('dark'));"
+            + " localStorage.setItem('dnet.language', JSON.stringify('es-ES')); }");
+        await page.RouteAsync("https://fonts.googleapis.com/**", request => request.AbortAsync());
+        var baseUrl = (Environment.GetEnvironmentVariable("DNET_BLAZOR_BASE_URL") ?? "http://127.0.0.1:5101").TrimEnd('/');
+        var html = page.Locator("html");
+
+        // The link wins over them and the app opens as it was shared.
+        await BrowserReady.OpenAsync(page, baseUrl + "/Buttons?theme=liquid-glass&lang=en");
+        await Assertions.Expect(html).ToHaveAttributeAsync("data-dnet-theme", "liquid-glass");
+        await Assertions.Expect(html).ToHaveAttributeAsync("lang", "en-US");
+        await Assertions.Expect(BrowserHeaderPreferences.Control(page, "language")).ToContainTextAsync("EN");
+        await Assertions.Expect(page).ToHaveURLAsync(new Regex("/Buttons\\?theme=liquid-glass&lang=en$"));
+
+        // Links inside the app keep them, without adding history entries.
+        var historyLength = await page.EvaluateAsync<int>("history.length");
+        await page.Locator(".dnet-left-column a[href='/Tabs']").First.ClickAsync();
+        await Assertions.Expect(page).ToHaveURLAsync(new Regex("/Tabs\\?theme=liquid-glass&lang=en$"));
+        Assert.Equal(historyLength + 1, await page.EvaluateAsync<int>("history.length"));
+
+        // Changes made in the header are written into the address.
+        await BrowserHeaderPreferences.SelectAsync(page, "theme", "light");
+        await Assertions.Expect(page).ToHaveURLAsync(new Regex("/Tabs\\?theme=light&lang=en$"));
+        await BrowserHeaderPreferences.SelectAsync(page, "language", "es");
+        await Assertions.Expect(page).ToHaveURLAsync(new Regex("/Tabs\\?theme=light&lang=es$"));
+        Assert.Equal(historyLength + 1, await page.EvaluateAsync<int>("history.length"));
+
+        // Going back shows the current preferences in the earlier address.
+        await page.GoBackAsync();
+        await Assertions.Expect(page).ToHaveURLAsync(new Regex("/Buttons\\?theme=light&lang=es$"));
+        await Assertions.Expect(html).ToHaveAttributeAsync("data-dnet-theme", "");
+
+        // An address without them gets them.
+        await BrowserReady.OpenAsync(page, baseUrl + "/Chips");
+        await Assertions.Expect(page).ToHaveURLAsync(new Regex("/Chips\\?theme=light&lang=es$"));
         Assert.True(errors.Count == 0, string.Join(Environment.NewLine, errors));
     }
 

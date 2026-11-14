@@ -5,6 +5,18 @@ export function setLanguage(culture) {
     document.documentElement.lang = culture;
 }
 
+// Writes the theme and language into the address so it can be shared. It
+// replaces the current history entry, keeping Blazor's own state, so it adds
+// no entry and does not navigate.
+export function syncPreferencesUrl(theme, language) {
+    const url = new URL(location.href);
+    url.searchParams.set("theme", theme);
+    url.searchParams.set("lang", language);
+    if (url.href !== location.href) {
+        history.replaceState(history.state, "", url);
+    }
+}
+
 function toHexColor(value) {
     const color = value.trim();
     const shortHex = /^#([\da-f]{3})(?:[\da-f])?$/i.exec(color);

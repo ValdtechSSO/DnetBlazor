@@ -102,7 +102,7 @@ public sealed class SpoilerShowcaseTests
         await Assertions.Expect(themeLink).ToHaveAttributeAsync("href", "/theming");
         await themeLink.FocusAsync();
         await themeLink.PressAsync("Enter");
-        await page.WaitForURLAsync(new Regex("/theming/?$", RegexOptions.IgnoreCase));
+        await page.WaitForURLAsync(new Regex("/theming/?(\\?[^#]*)?$", RegexOptions.IgnoreCase));
         await page.GoBackAsync();
         await Assertions.Expect(page.Locator("#demo-spoiler")).ToBeVisibleAsync();
         await Assertions.Expect(page.Locator("#spoiler-note-value")).ToHaveTextAsync("Nota: Sin anotaciones");

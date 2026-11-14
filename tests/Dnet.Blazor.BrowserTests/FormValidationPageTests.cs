@@ -57,7 +57,9 @@ public sealed class FormValidationPageTests
 
         // Error links must stay on this route and focus the field they describe.
         await page.Locator("#validation-summary a[href$='#validation-address-0-postal']").ClickAsync();
-        await Assertions.Expect(page).ToHaveURLAsync($"{BaseUrl}/FormValidation#validation-address-0-postal");
+        // The layout keeps the theme and language in the query.
+        await Assertions.Expect(page).ToHaveURLAsync(new Regex(
+            $"^{Regex.Escape(BaseUrl)}/FormValidation(\\?[^#]*)?#validation-address-0-postal$"));
         await Assertions.Expect(postal0).ToBeFocusedAsync();
         await Assertions.Expect(firstName).ToHaveValueAsync("John");
         await Assertions.Expect(errors).ToHaveCountAsync(2);

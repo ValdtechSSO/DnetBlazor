@@ -22,6 +22,25 @@
     <link href="Dnet.App.ClientSide.styles.css" rel="stylesheet" />
     <script>
         (() => {
+            // A shared link carries ?theme= and ?lang=; they win over the
+            // saved preferences and become them, so the app opens as it was
+            // shared and the layout keeps the URL in step from then on.
+            try {
+                const params = new URLSearchParams(location.search);
+                const urlTheme = params.get("theme");
+                const theme = urlTheme === "light" ? "" : urlTheme;
+                if (["", "dark", "compact", "high-contrast", "modern", "liquid-glass", "liquid-glass-dark"].includes(theme)) {
+                    localStorage.setItem("dnet.theme", JSON.stringify(theme));
+                }
+                const language = { es: "es-ES", "es-es": "es-ES", en: "en-US", "en-us": "en-US" }[(params.get("lang") ?? "").toLowerCase()];
+                if (language) {
+                    localStorage.setItem("dnet.language", JSON.stringify(language));
+                }
+            } catch {
+                // A link that cannot be read or saved opens with the saved preferences.
+            }
+        })();
+        (() => {
             try {
                 const persistedTheme = JSON.parse(localStorage.getItem("dnet.theme") ?? "null");
                 const theme = ["", "dark", "compact", "high-contrast", "modern", "liquid-glass", "liquid-glass-dark"].includes(persistedTheme)
