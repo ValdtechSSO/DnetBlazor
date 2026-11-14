@@ -303,6 +303,54 @@
   --dnet-toast-action-border-color: var(--dnet-sys-transparent);
   --dnet-toast-progress-inset: calc(var(--dnet-sys-radius-lg) - var(--dnet-sys-border-width) + 5px);
 
+  /* AdminLayout menu (from the reference design): rows inset from the
+     column, each led by a glass tile with the item's short text, or its icon.
+     Hovering a row lights it; the current page is an accent-tinted glass row
+     with a filled accent tile. An open group hangs its rows on a hairline
+     rail, and its chevron points down, and up while open. Keyboard focus
+     draws an accent ring 2px out from the row. */
+  --dnet-dash-navbar-height: 44px;
+  --dnet-dash-menu-text-size: 14px;
+  --dnet-dash-navigation-color: var(--dnet-sys-on-surface-muted);
+  --dnet-dash-link-color: var(--dnet-sys-on-surface-muted);
+  --dnet-dash-indicator-width: 0px;
+  --dnet-dash-menu-left-padding-firts-level: 10px;
+  --dnet-dash-menu-left-padding-second-level: 0px;
+  --dnet-dash-menu-inset: 12px;
+  --dnet-dash-menu-item-gap: 2px;
+  --dnet-dash-menu-item-radius: 14px;
+  --dnet-dash-menu-item-weight: 500;
+  --dnet-dash-menu-item-weight-active: 600;
+  --dnet-dash-menu-item-background-hover: rgb(255 255 255 / .38);
+  --dnet-dash-menu-item-background-active: var(--dnet-sys-material-sheen), color-mix(in srgb, var(--dnet-sys-primary) 16%, transparent);
+  --dnet-dash-menu-item-shadow-active: var(--dnet-sys-material-highlight);
+  --dnet-dash-menu-text-color-hover: currentColor;
+  --dnet-dash-menu-text-color-active: color-mix(in oklab, var(--dnet-sys-primary) 80%, #000000);
+  --dnet-dash-menu-text-gap: 12px;
+  --dnet-dash-menu-img-offset: 0px;
+  --dnet-dash-menu-tile-display: grid;
+  --dnet-dash-menu-tile-size: 30px;
+  --dnet-dash-menu-tile-radius: 10px;
+  --dnet-dash-menu-tile-background: var(--dnet-sys-material-control);
+  --dnet-dash-menu-tile-shadow: var(--dnet-sys-material-highlight);
+  --dnet-dash-menu-tile-background-active: var(--dnet-sys-primary);
+  --dnet-dash-menu-tile-color-active: var(--dnet-sys-on-primary);
+  --dnet-dash-menu-tile-shadow-active: inset 0 1px 0 rgb(255 255 255 / .4);
+  --dnet-dash-menu-chevron-rotate: 90deg;
+  --dnet-dash-menu-chevron-rotate-open: 180deg;
+  --dnet-dash-menu-chevron-size: 16px;
+  --dnet-dash-menu-chevron-offset: 0px;
+  --dnet-dash-menu-item-padding-end: 10px;
+  --dnet-dash-menu-focus-ring: 2px solid var(--dnet-sys-primary);
+  --dnet-dash-menu-focus-offset: 4px;
+  --dnet-dash-submenu-width: auto;
+  --dnet-dash-submenu-indent: 24px;
+  --dnet-dash-submenu-rail: 1px solid var(--dnet-sys-border);
+  --dnet-dash-submenu-padding: 10px;
+  --dnet-dash-submenu-background: none;
+  --dnet-dash-submenu-shadow: none;
+  --dnet-dash-submenu-text-size: 13.5px;
+
   /* AdminLayout: the minified menu flyout floats over the content and defaults
      to the border colour, which is translucent here. Nested in the column it
      cannot blur (backdrop root), so it takes the popup fill instead. */

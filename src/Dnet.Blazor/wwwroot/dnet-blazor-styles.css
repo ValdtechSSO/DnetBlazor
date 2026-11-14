@@ -839,8 +839,11 @@ body {
     display: flex;
   }
   .responsive-menu .dnet-aside .dnet-menu-text {
-    -webkit-padding-start: 10px;
-            padding-inline-start: 10px;
+    --_text-gap: var(--dnet-dash-menu-text-gap, 10px);
+
+    -webkit-padding-start: var(--_text-gap);
+
+            padding-inline-start: var(--_text-gap);
   }
 }
 /*.dnet-desktop-navigation-menu {
@@ -898,7 +901,20 @@ li .child-menu-text {
   height: var(--dnet-dash-navbar-height, 38px);
 }
 li .dnet-tree-cmp-link {
+  --_item-gap: var(--dnet-dash-menu-item-gap, 0px);
+
   height: var(--dnet-dash-navbar-height, 38px);
+  -webkit-margin-after: var(--_item-gap);
+          margin-block-end: var(--_item-gap);
+}
+/* Expanded menu: the rows can sit inset from the column's edges, and the
+   list leaves room above and below for a row's focus ring. */
+.dnet-grid-container:not(.minified) .dnet-aside nav > ul {
+  --_menu-inset: var(--dnet-dash-menu-inset, 0px);
+  --_menu-focus-room: var(--dnet-dash-menu-focus-offset, 0px);
+
+  padding-inline: var(--_menu-inset);
+  padding-block: var(--_menu-focus-room);
 }
 
 li {
@@ -923,23 +939,54 @@ li .positioning-helper.open a {
    fill with rim and sheen, and no backdrop of its own (nested backdrop-filters
    only see their ancestor). Card defaults to surface, as before. */
 li .positioning-helper.open .width-child {
-  background: var(--dnet-sys-material-sheen), var(--dnet-menu-container-open-bgcolor, var(--dnet-sys-material-card));
-  box-shadow: var(--dnet-sys-material-highlight);
+  --_base-submenu-width: calc(var(--dnet-dash-aside-width, var(--dnet-dash-asideWidth, 270px)) - 21px);
+  --_base-submenu-background: var(--dnet-sys-material-sheen), var(--dnet-menu-container-open-bgcolor, var(--dnet-sys-material-card));
+  --_submenu-width: var(--dnet-dash-submenu-width, var(--_base-submenu-width));
+  --_submenu-background: var(--dnet-dash-submenu-background, var(--_base-submenu-background));
+  --_submenu-shadow: var(--dnet-dash-submenu-shadow, var(--dnet-sys-material-highlight));
+  /* Indent, rail and inner space put the open group on a line of its own. */
+  --_submenu-indent: var(--dnet-dash-submenu-indent, 0px);
+  --_submenu-rail: var(--dnet-dash-submenu-rail, none);
+  --_submenu-padding: var(--dnet-dash-submenu-padding, 0px);
+
+  width: var(--_submenu-width);
+  -webkit-margin-start: var(--_submenu-indent);
+          margin-inline-start: var(--_submenu-indent);
+  -webkit-border-start: var(--_submenu-rail);
+          border-inline-start: var(--_submenu-rail);
+  -webkit-padding-start: var(--_submenu-padding);
+          padding-inline-start: var(--_submenu-padding);
+  background: var(--_submenu-background);
+  box-shadow: var(--_submenu-shadow);
 }
 li .positioning-helper .width-child {
   background: var(--dnet-menu-container-bgcolor, var(--dnet-sys-border));
 }
 
 nav ul li a {
-  padding: 0 0.925em 0 0;
+  --_base-text-color: var(--dnet-dash-navigation-color, var(--dnet-sys-on-surface-emphasis));
+  --_base-text-hover: var(--dnet-dash-indicator-bgcolor, var(--dnet-sys-primary-content));
+  /* Row shape and weight, and its fill on hover and on the current page. */
+  --_item-radius: var(--dnet-dash-menu-item-radius, 0px);
+  --_item-weight: var(--dnet-dash-menu-item-weight, 300);
+  --_item-weight-active: var(--dnet-dash-menu-item-weight-active, 700);
+  --_item-background-hover: var(--dnet-dash-menu-item-background-hover, var(--dnet-sys-transparent));
+  --_item-background-active: var(--dnet-dash-menu-item-background-active, var(--dnet-sys-transparent));
+  --_item-shadow-active: var(--dnet-dash-menu-item-shadow-active, none);
+  --_text-hover: var(--dnet-dash-menu-text-color-hover, var(--_base-text-hover));
+  --_text-active: var(--dnet-dash-menu-text-color-active, var(--_base-text-color));
+  --_item-padding-end: var(--dnet-dash-menu-item-padding-end, 0.925em);
+
+  padding: 0 var(--_item-padding-end) 0 0;
   display: flex;
   flex-direction: row;
   align-items: center !important;
   justify-content: flex-start;
   width: 100%;
   height: var(--dnet-dash-navbar-height, 38px);
-  color: var(--dnet-dash-navigation-color, var(--dnet-sys-on-surface-emphasis));
-  font-weight: 300;
+  border-radius: var(--_item-radius);
+  color: var(--_base-text-color);
+  font-weight: var(--_item-weight);
   text-decoration: none;
   font-size: var(--dnet-dash-menu-text-size, var(--dnet-sys-text-md));
   text-overflow: ellipsis;
@@ -955,12 +1002,35 @@ nav ul li a:not([href]):not([tabindex]):hover {
 nav ul li a:hover {
   text-decoration: none;
   cursor: pointer;
+  background: var(--_item-background-hover);
+}
+/* Keyboard focus: the global focus reset removes outlines, so a theme can
+   draw a ring around the row instead. The offset is the distance from the
+   row to the ring's outer edge; nothing is drawn by default. */
+nav ul li a:focus-visible {
+  --_focus-ring: var(--dnet-dash-menu-focus-ring, none);
+  --_focus-offset: var(--dnet-dash-menu-focus-offset, 0px);
+
+  position: relative;
+}
+nav ul li a:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--_focus-offset));
+  border: var(--_focus-ring);
+  border-radius: calc(var(--_item-radius) + var(--_focus-offset));
+  pointer-events: none;
 }
 nav ul li a:hover .collapse-sign, nav ul li a:hover .menu-item-parent {
   color: var(--dnet-dash-link-color, var(--dnet-sys-on-surface-emphasis));
 }
+/* The current page's label comes before hover so hovering it still shows the
+   hover colour. */
+nav ul li a.active .dnet-menu-text {
+  color: var(--_text-active);
+}
 nav ul li a:hover .dnet-menu-text {
-  color: var(--dnet-dash-indicator-bgcolor, var(--dnet-sys-primary-content));
+  color: var(--_text-hover);
 }
 nav ul li a:hover .dnet-tree-cmp-link-indicator {
   height: var(--dnet-dash-navbar-height, 38px);
@@ -971,8 +1041,25 @@ nav ul li a .collapse-sign, nav ul li a .menu-item-parent {
   color: var(--dnet-dash-navigation-color, var(--dnet-sys-on-surface-emphasis));
 }
 nav ul li a .collapse-sign {
+  /* The group chevron points right when closed and down when open; a theme
+     can turn each one. */
+  --_chevron-rotate: var(--dnet-dash-menu-chevron-rotate, none);
+  --_chevron-rotate-open: var(--dnet-dash-menu-chevron-rotate-open, none);
+  --_chevron-size: var(--dnet-dash-menu-chevron-size, 1em);
+  --_chevron-offset: var(--dnet-dash-menu-chevron-offset, 0.3em);
+
   margin-left: auto;
-  padding-top: 0.3em;
+  padding-top: var(--_chevron-offset);
+}
+nav ul li a .collapse-sign svg {
+  width: var(--_chevron-size);
+  height: var(--_chevron-size);
+}
+nav ul li a .collapse-sign .bi-chevron-right {
+  rotate: var(--_chevron-rotate);
+}
+nav ul li a .collapse-sign .bi-chevron-down {
+  rotate: var(--_chevron-rotate-open);
 }
 nav ul li a .dnet-menu-text {
   color: var(--dnet-dash-navigation-color, var(--dnet-sys-on-surface-emphasis));
@@ -980,23 +1067,50 @@ nav ul li a .dnet-menu-text {
   text-align: left;
 }
 .dnet-grid-container:not(.minified) .dnet-aside .dnet-menu-text {
-  -webkit-padding-start: 10px;
-          padding-inline-start: 10px;
+  --_text-gap: var(--dnet-dash-menu-text-gap, 10px);
+
+  -webkit-padding-start: var(--_text-gap);
+
+          padding-inline-start: var(--_text-gap);
 }
 /* Align the start of icon-and-label groups with text-only links. */
 .dnet-grid-container:is(:not(.minified), .responsive-menu) .dnet-aside nav > ul > li > .dnet-tree-cmp-link > a > .dnet-menu-img:has(+ .dnet-menu-text) {
-  -webkit-padding-start: 10px;
-          padding-inline-start: 10px;
+  --_img-offset: var(--dnet-dash-menu-img-offset, 10px);
+
+  -webkit-padding-start: var(--_img-offset);
+
+          padding-inline-start: var(--_img-offset);
 }
 .dnet-grid-container:is(:not(.minified), .responsive-menu) .dnet-aside nav > ul > li > .dnet-tree-cmp-link > a > .dnet-menu-img:has(+ .dnet-menu-text) > span:only-child {
   margin: 0;
 }
 .dnet-grid-container:is(:not(.minified), .responsive-menu) .dnet-aside nav > ul > li > .dnet-tree-cmp-link > a > .dnet-menu-img + .dnet-menu-text {
-  -webkit-padding-start: 8px;
-          padding-inline-start: 8px;
+  --_img-text-gap: var(--dnet-dash-menu-text-gap, 8px);
+
+  -webkit-padding-start: var(--_img-text-gap);
+
+          padding-inline-start: var(--_img-text-gap);
 }
 nav ul li a.active {
-  font-weight: 700;
+  font-weight: var(--_item-weight-active);
+}
+/* Only the menu's own rows: the minified flyout's header link matches by
+   prefix and would always look current. */
+nav ul li > .dnet-tree-cmp-link > a.active {
+  background: var(--_item-background-active);
+  box-shadow: var(--_item-shadow-active);
+  color: var(--_text-active);
+}
+/* The submenu's labels and rows: a size of their own and slightly tighter
+   corners than the rows above them. */
+nav ul li li a {
+  border-radius: max(0px, calc(var(--_item-radius) - 2px));
+}
+nav ul li li a .dnet-menu-text {
+  --_base-text-size: var(--dnet-dash-menu-text-size, var(--dnet-sys-text-md));
+  --_submenu-text-size: var(--dnet-dash-submenu-text-size, var(--_base-text-size));
+
+  font-size: var(--_submenu-text-size);
 }
 nav ul li a.active .dnet-tree-cmp-link-indicator {
   height: var(--dnet-dash-navbar-height, 38px);
@@ -1022,16 +1136,64 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   margin: 0 var(--dnet-dash-menu-left-padding-third-level, 4em) 0 0;
 }
 
+/* Tiles: the icon box, and in the expanded menu the item's short text, can
+   be painted as a tile before the label. The short-text tile is hidden
+   unless a theme shows it. */
+.dnet-menu-img,
+.dnet-menu-tile {
+  --_tile-radius: var(--dnet-dash-menu-tile-radius, 0px);
+  --_tile-background: var(--dnet-dash-menu-tile-background, var(--dnet-sys-transparent));
+  --_tile-shadow: var(--dnet-dash-menu-tile-shadow, none);
+  --_tile-background-active: var(--dnet-dash-menu-tile-background-active, var(--_tile-background));
+  --_tile-color-active: var(--dnet-dash-menu-tile-color-active, inherit);
+  --_tile-shadow-active: var(--dnet-dash-menu-tile-shadow-active, var(--_tile-shadow));
+}
+
 .dnet-menu-img {
+  --_base-img-height: var(--dnet-dash-navbar-height, 38px);
+  --_img-width: var(--dnet-dash-menu-tile-size, auto);
+  --_img-height: var(--dnet-dash-menu-tile-size, var(--_base-img-height));
+
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: transparent;
+  background: var(--_tile-background);
   border-color: var(--dnet-sys-surface);
-  height: var(--dnet-dash-navbar-height, 38px);
-  width: auto;
+  border-radius: var(--_tile-radius);
+  box-shadow: var(--_tile-shadow);
+  height: var(--_img-height);
+  width: var(--_img-width);
   margin: 0 0px 0 0;
   flex-shrink: 0;
+}
+
+.dnet-menu-tile {
+  --_tile-display: var(--dnet-dash-menu-tile-display, none);
+  --_tile-size: var(--dnet-dash-menu-tile-size, 30px);
+
+  display: var(--_tile-display);
+  flex: none;
+  place-items: center;
+  inline-size: var(--_tile-size);
+  block-size: var(--_tile-size);
+  border-radius: var(--_tile-radius);
+  background: var(--_tile-background);
+  box-shadow: var(--_tile-shadow);
+  /* The row's text colour: a group row is a link without href, whose own
+     colour the browser's reset can take over. */
+  color: var(--_base-text-color);
+  font-size: calc(var(--_tile-size) * 0.35);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+nav ul li a.active .dnet-menu-img,
+nav ul li a.active .dnet-menu-tile {
+  background: var(--_tile-background-active);
+  box-shadow: var(--_tile-shadow-active);
+  color: var(--_tile-color-active);
 }
 
 .no-image .dnet-menu-img {

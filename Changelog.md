@@ -9,6 +9,23 @@
   (the toast's text colour by default), and `--dnet-toast-progress-inset`
   moves the progress bar in from both sides. Without visual change by
   default.
+- AdminLayout: the expanded menu shows each item's `MinifiedText` as a tile
+  before its label (`.dnet-menu-tile`, hidden by default), and new tokens
+  shape the menu. Rows: `--dnet-dash-menu-inset`, `-item-gap`,
+  `-item-radius`, `-item-padding-end`, `-item-weight`,
+  `-item-weight-active`, `-item-background-hover`,
+  `-item-background-active`, `-item-shadow-active`, `-text-color-hover`,
+  `-text-color-active` and `-text-gap`. Tiles, which also paint the icon
+  box: `--dnet-dash-menu-tile-display`, `-tile-size`, `-tile-radius`,
+  `-tile-background`, `-tile-shadow`, `-tile-background-active`,
+  `-tile-color-active`, `-tile-shadow-active` and `-img-offset`. Group
+  chevron: `--dnet-dash-menu-chevron-size`, `-chevron-offset`,
+  `-chevron-rotate` and `-chevron-rotate-open`. Keyboard focus:
+  `--dnet-dash-menu-focus-ring` and `-focus-offset`, drawn as a ring
+  because the global focus reset removes outlines. Open group:
+  `--dnet-dash-submenu-width`, `-indent`, `-rail`, `-padding`,
+  `-background`, `-shadow` and `-text-size`. Without visual change by
+  default.
 - DynamicStepper reads the same `--dnet-step-*` tokens as Stepper. Without
   visual change by default.
 - Stepper: new `--dnet-step-*` tokens paint the icons (`-icon-background`,
@@ -128,6 +145,13 @@
   so the page shows through it blurred. Its actions are the theme's
   outlined buttons (ghost glass pills with the accent label), and the
   progress bar stops 5px short of where the corners start to curve.
+- The Liquid Glass themes draw the inside of the AdminLayout menu as in
+  their reference design: rows inset from the column, 44px tall, each led
+  by a glass tile with the item's short text or its icon. Hovering a row
+  lights it; the current page is an accent-tinted glass row with a filled
+  accent tile and a bolder label. An open group hangs its rows on a hairline
+  rail, its chevron points down and turns up while open, and keyboard focus
+  draws an accent ring around the row.
 - The Liquid Glass themes draw the timeline as glass cards (option A of the
   reference design): completed and current events are glass cards, the
   current one tinted with the accent, a ring and a glow, and pending ones
