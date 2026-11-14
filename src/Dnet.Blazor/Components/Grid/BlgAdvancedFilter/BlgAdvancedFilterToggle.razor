@@ -121,7 +121,12 @@
         {
             HasBackdrop = true,
             HasTransparentBackdrop = true,
+            // Lets a theme dim the page behind the panel on desktop too.
+            BackdropClass = "blg-adv-filter-backdrop",
             PositionStrategy = PositionStrategy.FlexibleConnectedTo,
+            // Narrow screens show every panel as a global one; this one is
+            // centred there like the others instead of sitting in the corner.
+            GlobalPositionStrategy = new GlobalPositionStrategyBuilder().CenterHorizontally("").CenterVertically(""),
             FlexibleConnectedPositionStrategyBuilder = flexibleConnectedPositionStrategyBuilder,
             ThemeScope = _themeScope
         };

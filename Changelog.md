@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Grid: the column filter panel is centred on tablet and phone widths
+  instead of sitting in the top-left corner, visible in every theme there.
+  New `--dnet-grid-filter-scrim` and `--dnet-grid-filter-scrim-backdrop`
+  let a theme dim and blur the page behind the panel on desktop, where its
+  backdrop is transparent. Without visual change on desktop by default.
 - Overlay: on tablet and phone widths, an overlay without a component type
   of its own that brings a global position strategy is placed by it.
   Before, it fell to the top-left corner of the screen.
