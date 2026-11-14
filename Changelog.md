@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Paginator: new tokens let a theme restyle it and lay it out on one line.
+  `--dnet-paginator-button-hover-background` tints the arrows under the
+  pointer, which also take the material's ghost glass; the page field gets
+  `--dnet-paginator-input-background`, `-input-border-color`,
+  `-input-radius`, `-input-width` and `-input-height` and the material's well
+  shadow. `--dnet-paginator-rows`, `-columns` and `-width` set the layout,
+  and `--dnet-paginator-range-area`, `-range-justify` and
+  `-range-font-size` place the range; on a phone it goes back under the
+  controls. Without visual change by default.
 - TimePicker: new `Mode` parameter. `DnetTimePickerMode.Dial` chooses the
   time on a clock face in a centred modal dialog, with Cancel and OK: first
   the hour, then the minutes. It is 24-hour by default, with 1 to 12 on the
