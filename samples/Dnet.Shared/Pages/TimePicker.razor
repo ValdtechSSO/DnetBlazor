@@ -10,6 +10,39 @@
           Description="@S["TimePicker.TypeATimeOrChooseFromAnAccessible"]"
           Badge="@S["TimePicker.TimeOnlyValues"]">
     <div class="demo-grid">
+        <DemoCard Id="time-picker-dial" Title="@S["TimePicker.PickOnAClock"]" Description="@S["TimePicker.ChooseTheHourThenTheMinutes"]">
+            <ChildContent>
+                <DnetFormField Label="@S["TimePicker.ClockTime"]" UseClearButton="true">
+                    <ChildContent>
+                        <DnetTimePicker @bind-Value="_clockTime" aria-label="@S["TimePicker.ClockTime"]" Mode="DnetTimePickerMode.Dial" />
+                    </ChildContent>
+                    <SufixContent>
+                        <button class="dnet-timepicker-icon-wrapper" aria-label="@S["TimePicker.OpenTimePicker"]" type="button">
+                            <span class="dnet-timepicker-icon" aria-hidden="true"></span>
+                        </button>
+                    </SufixContent>
+                </DnetFormField>
+            </ChildContent>
+            <Footer><span class="demo-value" role="status">@S.Format("TimePicker.Chosen0", FormatTime(_clockTime))</span></Footer>
+        </DemoCard>
+
+        <DemoCard Id="time-picker-dial-12" Title="@S["TimePicker.AClockWithAmAndPm"]" Description="@S["TimePicker.WithA12HourFormatTheClock"]">
+            <ChildContent>
+                <DnetFormField Label="@S["TimePicker.ClockTime12Hour"]" UseClearButton="true">
+                    <ChildContent>
+                        <DnetTimePicker @bind-Value="_clockTime12" aria-label="@S["TimePicker.ClockTime12Hour"]" Mode="DnetTimePickerMode.Dial"
+                                        Format="hh:mm tt" Formats="@_twelveHourFormats" />
+                    </ChildContent>
+                    <SufixContent>
+                        <button class="dnet-timepicker-icon-wrapper" aria-label="@S["TimePicker.OpenTimePicker"]" type="button">
+                            <span class="dnet-timepicker-icon" aria-hidden="true"></span>
+                        </button>
+                    </SufixContent>
+                </DnetFormField>
+            </ChildContent>
+            <Footer><span class="demo-value" role="status">@S.Format("TimePicker.Chosen0", FormatTime(_clockTime12, "hh:mm tt"))</span></Footer>
+        </DemoCard>
+
         <DemoCard Id="time-picker-basic" Title="@S["TimePicker.ScheduleAMeeting"]"
                   Description="@S["TimePicker.ChooseAnyTimeUsingTheDefault24Hour"]">
             <ChildContent>
@@ -78,39 +111,6 @@
                 </DnetFormField>
             </ChildContent>
             <Footer><span class="demo-value" role="status">@S.Format("Common.Lunch0", FormatTime(_lunchTime, "h:mm tt"))</span></Footer>
-        </DemoCard>
-
-        <DemoCard Id="time-picker-dial" Title="@S["TimePicker.PickOnAClock"]" Description="@S["TimePicker.ChooseTheHourThenTheMinutes"]">
-            <ChildContent>
-                <DnetFormField Label="@S["TimePicker.ClockTime"]" UseClearButton="true">
-                    <ChildContent>
-                        <DnetTimePicker @bind-Value="_clockTime" aria-label="@S["TimePicker.ClockTime"]" Mode="DnetTimePickerMode.Dial" />
-                    </ChildContent>
-                    <SufixContent>
-                        <button class="dnet-timepicker-icon-wrapper" aria-label="@S["TimePicker.OpenTimePicker"]" type="button">
-                            <span class="dnet-timepicker-icon" aria-hidden="true"></span>
-                        </button>
-                    </SufixContent>
-                </DnetFormField>
-            </ChildContent>
-            <Footer><span class="demo-value" role="status">@S.Format("TimePicker.Chosen0", FormatTime(_clockTime))</span></Footer>
-        </DemoCard>
-
-        <DemoCard Id="time-picker-dial-12" Title="@S["TimePicker.AClockWithAmAndPm"]" Description="@S["TimePicker.WithA12HourFormatTheClock"]">
-            <ChildContent>
-                <DnetFormField Label="@S["TimePicker.ClockTime12Hour"]" UseClearButton="true">
-                    <ChildContent>
-                        <DnetTimePicker @bind-Value="_clockTime12" aria-label="@S["TimePicker.ClockTime12Hour"]" Mode="DnetTimePickerMode.Dial"
-                                        Format="hh:mm tt" Formats="@_twelveHourFormats" />
-                    </ChildContent>
-                    <SufixContent>
-                        <button class="dnet-timepicker-icon-wrapper" aria-label="@S["TimePicker.OpenTimePicker"]" type="button">
-                            <span class="dnet-timepicker-icon" aria-hidden="true"></span>
-                        </button>
-                    </SufixContent>
-                </DnetFormField>
-            </ChildContent>
-            <Footer><span class="demo-value" role="status">@S.Format("TimePicker.Chosen0", FormatTime(_clockTime12, "hh:mm tt"))</span></Footer>
         </DemoCard>
 
         <DemoCard Title="@S["TimePicker.AFixedReservation"]" Description="@S["TimePicker.ADisabledFieldCanShowAnExistingTime"]">
