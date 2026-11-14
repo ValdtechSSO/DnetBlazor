@@ -53,7 +53,7 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
-| `--dnet-list-background-color` | `#ffffff` <br><sub>via `--dnet-sys-material-popup`</sub> |
+| `--dnet-list-background-color` | `var(--_base-background)` |
 | `--dnet-list-border-color` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
 | `--dnet-list-border-radius` | `10px` <br><sub>via `--dnet-sys-radius-lg`</sub> |
 | `--dnet-list-box-shadow` | `0 3px 5px -1px var(--dnet-sys-shadow-color), 0 6px 10px 0 var(--dnet-sys-shadow-color), 0 1px 18px 0 var(--dnet-sys-shadow-color)` <br><sub>via `--dnet-sys-elevation-3`</sub> |
@@ -72,6 +72,17 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-list-supporting-text-font-size` | `0.75rem` <br><sub>via `--dnet-sys-text-sm`</sub> |
 | `--dnet-list-wrapper-horizontal-padding` | `calc(var(--dnet-sys-space-unit) * 2)` <br><sub>via `--dnet-sys-space-2`</sub> |
 | `--dnet-select-foreground` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
+| `--dnet-select-panel-background` | `#ffffff` <br><sub>via `--dnet-sys-material-popup`</sub> |
+| `--dnet-select-panel-close-background` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
+| `--dnet-select-panel-close-background-hover` | `var(--_close-background)` |
+| `--dnet-select-panel-close-padding` | `0px` |
+| `--dnet-select-panel-close-radius` | `0px` |
+| `--dnet-select-panel-close-shadow` | `none` |
+| `--dnet-select-panel-header-gap` | `0px` |
+| `--dnet-select-panel-header-height` | `var(--_header-footer-height)` |
+| `--dnet-select-panel-header-padding` | `var(--_padding-vertical) var(--dnet-sys-space-3)` |
+| `--dnet-select-panel-list-padding` | `var(--_padding-horizontal)` |
+| `--dnet-select-panel-padding-bottom` | `var(--_wrapper-padding)` |
 
 <details><summary>Legacy token names still honoured</summary>
 

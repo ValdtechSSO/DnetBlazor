@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Select: new `--dnet-select-panel-*` tokens lay out the dropdown apart
+  from the `--dnet-list-*` family that inline lists share: `-background`,
+  `-header-padding`, `-header-height`, `-header-gap` (space under the
+  title), `-list-padding`, `-padding-bottom`, and the close button's
+  `-close-padding`, `-close-radius`, `-close-background`,
+  `-close-background-hover` and `-close-shadow`, which paint it as a round
+  button with the header's height unchanged. Without visual change by
+  default.
 - ImageEditor: new `--dnet-image-editor-footer-border-width` and
   `--dnet-image-editor-footer-padding-top` set the line over the footer's
   buttons and the space under it, and `--dnet-image-editor-zoom-padding`
@@ -154,6 +162,10 @@
   current step is a larger accent drop with a glow;
   completed steps show an accent tick instead of their number; upcoming
   labels are muted and the current one is bolder.
+- The Liquid Glass themes render the Select dropdown as glass like dialogs
+  and space it like them: 24px around, the options' text in line with the
+  title and 16px under it, and the theme's round close button 18px from the
+  corner.
 - The Liquid Glass themes render dialogs as liquid glass like the cards,
   spaced as Material 3's basic dialog: 24px padding on every side and 16px
   between title and body, with the bottom 24px inside the scrolling content
