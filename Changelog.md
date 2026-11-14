@@ -309,10 +309,15 @@
 - The Liquid Glass themes space the grid like a dialog: its header text,
   rows and paginator buttons sit 24px from the card's edges, 16px from the
   sides on phones so the paginator keeps its line.
+- The Liquid Glass themes lay the list's paginator out on one line on
+  desktop, the range at the left and the arrows at the right, and leave the
+  range out on phones. The footer is only as tall as the paginator, so the
+  arrows sit 24px above the bottom of the card, as the header sits below
+  its top.
 - The Liquid Glass themes render the paginator with the theme's round glass
   buttons for the arrows, 6px apart, the page in a rounded glass well, and
-  the range on the same line at the far left of the footer; in narrow
-  footers and on phones the range stays under the controls.
+  the range on the same line at the far left of the footer; in the pick
+  list's narrow footer and on phones the range stays under the controls.
 - The Liquid Glass themes dim and blur the page behind the grid's column
   filter on desktop too, as on narrower screens, so the panel reads as
   glass at every width.

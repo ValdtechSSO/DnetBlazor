@@ -416,6 +416,11 @@
   --dnet-list-panel-shadow: var(--dnet-sys-material-highlight);
   --dnet-list-panel-padding: 23px;
   --dnet-list-panel-gap: 16px;
+  /* Its paginator lies on one line like the grid's, with nothing under it
+     but the panel's padding; on a phone only the controls stay. */
+  --dnet-list-paginator-display: grid;
+  --dnet-list-paginator-range-compact-display: none;
+  --dnet-list-footer-height: 0px;
 
   /* Expansion panel: separate glass cards, 8px apart and rounded on every
      corner, with taller rows, a bolder title over a 12px description and a
@@ -498,12 +503,14 @@
      the same line, at the far left of the footer. */
   --dnet-icon-button-size: 32px;
   --dnet-paginator-controls-gap: 6px;
+  --dnet-paginator-padding: 0px;
   --dnet-paginator-button-hover-background: color-mix(in srgb, var(--dnet-sys-primary-content) 10%, var(--dnet-sys-material-ghost));
   --dnet-paginator-input-background: var(--dnet-sys-material-control);
   --dnet-paginator-input-border-color: var(--dnet-sys-transparent);
   --dnet-paginator-input-radius: var(--dnet-sys-radius-pill);
   --dnet-paginator-input-width: 44px;
   --dnet-paginator-input-height: 32px;
+  --dnet-paginator-input-margin: 0 5px;
   --dnet-paginator-rows: auto;
   --dnet-paginator-columns: 1fr auto auto;
   --dnet-paginator-width: 100%;
