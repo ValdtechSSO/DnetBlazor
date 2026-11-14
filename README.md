@@ -3,7 +3,7 @@
 Blazor component library for .NET 11, compatible with Blazor WebAssembly and
 interactive server-side applications.
 
-**Current version:** 6.0.20. See the [changelog](Changelog.md) for release
+**Current version:** 6.1.0. See the [changelog](Changelog.md) for release
 details.
 
 ## Building from source
@@ -78,7 +78,7 @@ shape. Compare the variants in `/Buttons`.
 Install the package:
 
 ```bash
-dotnet add package Dnet.Blazor --version 6.0.20
+dotnet add package Dnet.Blazor --version 6.1.0
 ```
 
 Register the services in `Program.cs`:
@@ -120,11 +120,11 @@ Each release ships a machine-readable reference: every component's parameters,
 every styling token, plus setup and theming guides. Plain markdown, so it works
 with Claude, Codex, Cursor, Gemini CLI or anything else that reads project docs.
 
-**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/download/v6.0.20/dnet-blazor-agent-reference-6.0.20.zip)**
+**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/download/v6.1.0/dnet-blazor-agent-reference-6.1.0.zip)**
 — attached to every release.
 
 ```bash
-unzip dnet-blazor-agent-reference-6.0.20.zip -d docs/
+unzip dnet-blazor-agent-reference-6.1.0.zip -d docs/
 ```
 
 Then point your agent at it. The archive's `AGENTS-snippet.md` has text you can
@@ -138,6 +138,25 @@ npx degit ValdtechSSO/DnetBlazor/docs/ai/reference docs/dnet-blazor
 
 The reference is a snapshot of the version it ships with — grab the matching one
 when you upgrade the package.
+
+## What's new in 6.1.0
+
+- New `liquid-glass` and `liquid-glass-dark` themes, built on new material
+  tokens in the system layer. Existing themes do not change.
+- Glass styling and dialog-like spacing for ExpansionPanel, Tabs, PillTabs,
+  Paginator, Grid and its column filter, List, PickList, Tooltip and the
+  date and time pickers.
+- TimePicker has a clock dial mode (`Mode="DnetTimePickerMode.Dial"`),
+  24-hour by default and with an AM/PM switch for 12-hour formats.
+- Select opens scrolled to the selected option.
+- Forms support .NET 11 asynchronous validation: fields show its errors when
+  they arrive, a "Checking…" state while it runs and a message when it
+  cannot finish. Messages and accessible names use the model's `[Display]`
+  names.
+- Visible in every theme: tab labels are centred in their row, and the
+  PickList paginator arrows match the other paginators.
+- `Dnet.Blazor.Components.Virtualize` is obsolete; use the framework's
+  `Virtualize`.
 
 ## What's new in 6.0.20
 

@@ -1,6 +1,6 @@
 # Changelog for Blazor Library
 
-## Unreleased
+## Version 6.1.0 (November 2026)
 
 - Forms: messages and accessible names use the name the model gives a field
   with `[Display(Name = ...)]` or `[DisplayName(...)]`, as the framework's
@@ -471,8 +471,6 @@
   control, and disabled is at 45% opacity. Without `backdrop-filter`, or
   with reduced transparency or forced colours, the lens turns opaque. The
   sample's SlideToggle page shows the Lens variant.
-
-## Version 6.1.0 (November 2026)
 
 - New material tokens in the system layer: `--dnet-sys-canvas`,
   `--dnet-sys-material-{page,chrome,card,popup,control,ghost}`, the mechanics
