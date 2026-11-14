@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Forms: a field shows when an asynchronous validator is checking it. While
+  the check runs, a small spinner in the accent colour sits beside the
+  field's actions, the hint says "Comprobando…" ("Checking…") and the input
+  carries `aria-busy`. When the check itself fails (it throws), the hint says
+  in amber, with a warning icon, that it could not be checked, and the field
+  is not marked as wrong. Both messages are announced (`role="status"`) and
+  follow the language. The inputs report the state through `DnetInputBase`
+  and `IFormEventService.RaiseValidationState` with the new
+  `FieldValidationState`; `--dnet-form-field-pending-color` and
+  `--dnet-form-field-faulted-color` set the colours. New strings:
+  `Form.ValidationChecking` and `Form.ValidationFaulted`. Fields without an
+  asynchronous validator do not change.
 - Forms: a field shows the error that an asynchronous validator reports
   after the change. Validators registered with .NET 11's
   `EditContext.RegisterAsyncFieldValidator` deliver their messages through

@@ -8454,6 +8454,58 @@ select.mat-input-element::-ms-value {
   color: var(--dnet-sys-danger);
 }
 
+/* An asynchronous validator is checking the field: a small spinner beside the
+   field's actions, in the accent colour, while the hint says so. */
+.dnet-form-field-pending-indicator {
+  --_pending-color: var(--dnet-form-field-pending-color, var(--dnet-sys-primary));
+  --_pending-track: color-mix(in srgb, var(--_pending-color) 22%, var(--dnet-sys-transparent));
+
+  flex: none;
+  box-sizing: border-box;
+  inline-size: 18px;
+  block-size: 18px;
+  border: 2px solid var(--_pending-track);
+  border-block-start-color: var(--_pending-color);
+  border-radius: var(--dnet-sys-radius-pill);
+  animation: dnet-form-field-pending 0.8s linear infinite;
+}
+
+@keyframes dnet-form-field-pending {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* The check could not finish: the hint says so in amber, with a warning icon.
+   The field is not marked as wrong. It outranks the hint colour it sits in. */
+.dnet-hint.dnet-form-field-validation-faulted {
+  --_faulted-color: var(--dnet-form-field-faulted-color, color-mix(in oklab, var(--dnet-sys-warning) 40%, var(--dnet-sys-on-surface-emphasis)));
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--_faulted-color);
+}
+
+.dnet-form-field-faulted-icon {
+  --_faulted-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linejoin='round'><path d='M12 3 2 21h20L12 3Z'/><path d='M12 10v5M12 18h.01' stroke-linecap='round'/></svg>");
+
+  flex: none;
+  inline-size: 14px;
+  block-size: 14px;
+  background-color: currentColor;
+  -webkit-mask: var(--_faulted-icon) center / contain no-repeat;
+  mask: var(--_faulted-icon) center / contain no-repeat;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dnet-form-field-pending-indicator {
+    animation: none;
+    border-color: var(--_pending-color);
+    opacity: 0.6;
+  }
+}
+
 .dnet-form-field-hint-wrapper {
   display: flex;
 }

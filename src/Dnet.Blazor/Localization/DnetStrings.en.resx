@@ -123,6 +123,12 @@
   <data name="Form.TimeParsingError" xml:space="preserve">
     <value>The {0} field must be a time.</value>
   </data>
+  <data name="Form.ValidationChecking" xml:space="preserve">
+    <value>Checking…</value>
+  </data>
+  <data name="Form.ValidationFaulted" xml:space="preserve">
+    <value>This could not be checked. Try again.</value>
+  </data>
   <data name="Grid.ChangeSort" xml:space="preserve">
     <value>Change sort for {0}</value>
   </data>

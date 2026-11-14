@@ -18,6 +18,8 @@ public class FormEventService : IFormEventService
 
     public event Action<Tuple<int, int>>? OnCharCount;
 
+    public event Action<FieldValidationState>? OnValidationState;
+
     public void RaiseError(bool hasError)
     {
         OnError?.Invoke(hasError);
@@ -53,6 +55,11 @@ public class FormEventService : IFormEventService
     public void RaiseDisabledEvent(bool isDisabled)
     {
         OnDisabled?.Invoke(isDisabled);
+    }
+
+    public void RaiseValidationState(FieldValidationState state)
+    {
+        OnValidationState?.Invoke(state);
     }
 
     public void RaiseCharCountEvent(Tuple<int, int> countData)
