@@ -40,3 +40,16 @@
 | Parameter | Type | Default | Description |
 |---|---|---|---|
 | `ResourceKey` | `string` | `string.Empty` | Gets or sets the resource key used by this component. |
+
+## Styling tokens
+
+Set any of these above the component in the DOM — `:root`, a container, or
+the element's own `style`. Nothing else is needed.
+
+| Token | Effective default |
+|---|---|
+| `--dnet-image-editor-footer-padding-bottom` | `0px` |
+
+```css
+:root { --dnet-image-editor-footer-padding-bottom: /* your value */; }
+```
