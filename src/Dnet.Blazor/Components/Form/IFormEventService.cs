@@ -19,7 +19,8 @@ public interface IFormEventService
     public event Action<Tuple<int, int>>? OnCharCount;
 
     /// <summary>Raised when an asynchronous validator starts or stops checking the field, or could not check it.</summary>
-    public event Action<FieldValidationState>? OnValidationState;
+    /// <remarks>Added in 6.1 with a default that never raises it, so implementations written before keep compiling.</remarks>
+    public event Action<FieldValidationState>? OnValidationState { add { } remove { } }
 
     void RaiseError(bool hasError);
 
@@ -38,5 +39,6 @@ public interface IFormEventService
     void RaiseCharCountEvent(Tuple<int, int> countData);
 
     /// <summary>Reports the state of the field's asynchronous validation to the form field.</summary>
-    void RaiseValidationState(FieldValidationState state);
+    /// <remarks>Added in 6.1 with a default that does nothing, so implementations written before keep compiling.</remarks>
+    void RaiseValidationState(FieldValidationState state) { }
 }
