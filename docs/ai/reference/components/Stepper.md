@@ -45,7 +45,22 @@ the element's own `style`. Nothing else is needed.
 | Token | Effective default |
 |---|---|
 | `--dnet-step-font-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
+| `--dnet-step-icon-background` | `#757575` <br><sub>via `--dnet-sys-on-surface-subtle`</sub> |
+| `--dnet-step-icon-background-current` | `color-mix(in srgb, var(--dnet-sys-primary) 80%, var(--dnet-ref-neutral-1000))` <br><sub>via `--dnet-sys-primary-emphasis`</sub> |
+| `--dnet-step-icon-background-done` | `none` |
+| `--dnet-step-icon-color` | `#ffffff` <br><sub>via `--dnet-sys-on-primary`</sub> |
+| `--dnet-step-icon-font-size` | `inherit` |
+| `--dnet-step-icon-font-weight` | `inherit` |
+| `--dnet-step-icon-margin` | `0 8px 0 0` |
+| `--dnet-step-icon-scale-current` | `none` |
+| `--dnet-step-icon-shadow` | `none` |
+| `--dnet-step-icon-shadow-current` | `none` |
+| `--dnet-step-label-color-upcoming` | `color-mix(in srgb, var(--dnet-ref-neutral-1000) 87%, transparent)` <br><sub>via `--dnet-sys-on-surface-emphasis`</sub> |
+| `--dnet-step-label-min-width` | `50px` |
+| `--dnet-step-label-weight` | `inherit` |
+| `--dnet-step-label-weight-current` | `var(--_label-weight)` |
+| `--dnet-step-line-gap` | `0px` |
 
 ```css
-:root { --dnet-step-font-size: /* your value */; }
+:root { --dnet-step-icon-background: /* your value */; }
 ```

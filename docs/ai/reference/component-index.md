@@ -16,7 +16,7 @@ Open only the one you need.
 | [DatePickerWeek](components/DatePickerWeek.md) | `<DnetDatePickerWeek>` | 13 | 7 |
 | [DatePickerWeekRaw](components/DatePickerWeekRaw.md) | `<DnetDatePickerWeekRaw>` | 3 | 5 |
 | [Dialog](components/Dialog.md) | `<DnetDialog>` | 5 | 12 |
-| [DynamicStepper](components/DynamicStepper.md) | `<DnetDynamicStep>`, `<DnetDynamicStepper>` | 13 | 1 |
+| [DynamicStepper](components/DynamicStepper.md) | `<DnetDynamicStep>`, `<DnetDynamicStepper>` | 13 | 16 |
 | [ExpansionPanel](components/ExpansionPanel.md) | `<DnetExpansionPanelItem>` | 10 | 3 |
 | [FloatingDoubleList](components/FloatingDoubleList.md) | `<DnetFloatingDoubleList>` | 32 | 4 |
 | [FloatingPanel](components/FloatingPanel.md) | `<DnetFloatingPanel>` | 3 | — |
@@ -35,7 +35,7 @@ Open only the one you need.
 | [Slider](components/Slider.md) | `<DnetSlider>` | 34 | 9 |
 | [Spinner](components/Spinner.md) | `<DnetSpinner>` | 4 | 2 |
 | [Spoiler](components/Spoiler.md) | `<DnetSpoiler>` | 11 | 5 |
-| [Stepper](components/Stepper.md) | `<DnetStep>`, `<DnetStepper>` | 13 | 1 |
+| [Stepper](components/Stepper.md) | `<DnetStep>`, `<DnetStepper>` | 13 | 16 |
 | [Tabs](components/Tabs.md) | `<DnetTab>`, `<DnetTabBody>`, `<DnetTabGroup>` | 12 | 5 |
 | [Theme](components/Theme.md) | `<DnetThemeScope>` | 3 | — |
 | [TimePicker](components/TimePicker.md) | `<DnetTimePicker>` | 19 | 6 |

@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- DynamicStepper reads the same `--dnet-step-*` tokens as Stepper. Without
+  visual change by default.
+- Stepper: new `--dnet-step-*` tokens paint the icons (`-icon-background`,
+  `-icon-color`, `-icon-shadow`, `-icon-font-size`, `-icon-font-weight`,
+  `-icon-background-done` painted over completed steps,
+  `-icon-background-current`, `-icon-shadow-current`, `-icon-scale-current`)
+  and the labels (`-label-weight`, `-label-weight-current`,
+  `-label-color-upcoming`), and space a horizontal stepper: the icons
+  (`-icon-margin`), the labels' minimum width (`-label-min-width`) and the
+  extra space between a label and the line after it (`-line-gap`).
+  Completed steps are the ones before the current one. Without visual
+  change by default.
 - New material mechanic `--dnet-sys-material-well-shadow`, the inner shadow
   and rim of recessed tracks (slide toggle). Without effect by default.
 - SlideToggle: new `Variant` parameter. `DnetSlideToggleVariant.Lens` is a
@@ -86,6 +98,13 @@
 - The Liquid Glass themes render chips as glass like the buttons, keeping
   their own corners: unselected chips are ghost glass, and a selected chip
   takes the accent fill with its sheen and glow.
+- The Liquid Glass themes paint the steps of Stepper and DynamicStepper as
+  glass beads (from option C of the reference design), keeping their own
+  layout: the label beside the bead and thin lines between steps that stop
+  short of the beads, with the same space at both ends of every line. The
+  current step is a larger accent drop with a glow;
+  completed steps show an accent tick instead of their number; upcoming
+  labels are muted and the current one is bolder.
 - The Liquid Glass themes paint the slide toggle as in their reference
   design. Standard (option A): a recessed glass well with a faint rim and a
   white glass bead inside it; checked, the track fills with the accent,

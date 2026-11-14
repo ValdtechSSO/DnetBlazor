@@ -212,6 +212,39 @@
     inset 0 0 0 1px rgb(255 255 255 / .35), 0 0 0 .5px rgb(0 0 0 / .5), 0 3px 10px rgb(0 0 0 / .5);
   --dnet-slide-toggle-lens-handle-backdrop: blur(1.5px) brightness(1.1) saturate(1.6);
 
+  /* Steppers: glass beads (option C of the reference design) on the
+     stepper's own layout, label beside the bead and the thin lines between
+     steps, as in the vertical stepper. The current step is a larger accent
+     drop; completed steps show the accent tick instead of their number. The
+     margin leaves room for the drop's halo inside the DynamicStepper's
+     clipping row and keeps it off the label. */
+  --dnet-step-font-size: 13px;
+  --dnet-step-icon-margin: 7px 12px 7px 7px;
+  /* Labels take their own width, and each line keeps the bead's leading
+     7px on both ends: the same space after every label and before every
+     bead, whatever the label's length. */
+  --dnet-step-label-min-width: 0px;
+  --dnet-step-line-gap: 7px;
+  --dnet-step-icon-font-size: 13px;
+  --dnet-step-icon-font-weight: 700;
+  --dnet-step-icon-background: radial-gradient(circle at 35% 25%, #ffffff 0 32%, #eef1f7 62%, #d6dce8 100%);
+  --dnet-step-icon-color: #4b5368;
+  --dnet-step-icon-shadow: inset 0 1px 0 #ffffff, 0 0 0 .5px rgb(0 0 0 / .4), 0 2px 6px rgb(0 0 0 / .5);
+  --dnet-step-icon-background-done:
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M3.5 8.4l2.9 2.9 6-6.5' fill='none' stroke='%232563eb' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/></svg>") center / 12px 12px no-repeat,
+    radial-gradient(circle at 35% 25%, #ffffff 0 32%, #eef1f7 62%, #d6dce8 100%);
+  --dnet-step-icon-background-current:
+    radial-gradient(120% 80% at 30% 10%, rgb(255 255 255 / .5), transparent 52%),
+    linear-gradient(180deg, color-mix(in oklab, var(--dnet-sys-primary) 74%, #ffffff), var(--dnet-sys-primary) 55%,
+      color-mix(in oklab, var(--dnet-sys-primary) 84%, #000000));
+  --dnet-step-icon-shadow-current:
+    inset 0 1px 0 rgb(255 255 255 / .5), 0 4px 14px color-mix(in srgb, var(--dnet-sys-primary) 40%, transparent),
+    0 0 0 4px color-mix(in srgb, var(--dnet-sys-primary) 16%, transparent);
+  --dnet-step-icon-scale-current: 1.2;
+  --dnet-step-label-weight: 500;
+  --dnet-step-label-weight-current: 650;
+  --dnet-step-label-color-upcoming: var(--dnet-sys-on-surface-muted);
+
   /* AdminLayout: the minified menu flyout floats over the content and defaults
      to the border colour, which is translucent here. Nested in the column it
      cannot blur (backdrop root), so it takes the popup fill instead. */

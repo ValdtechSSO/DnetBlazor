@@ -2,6 +2,24 @@
 
 .dnet-horizontal-dstepper-header-container {
   --_font-size: var(--dnet-step-font-size, var(--dnet-sys-text-md));
+  /* Shares the Stepper's tokens. Space around the icons: */
+  --_icon-margin: var(--dnet-step-icon-margin, 0 8px 0 0);
+  /* Icon faces: upcoming, completed (painted over the number) and current. */
+  --_icon-background: var(--dnet-step-icon-background, var(--dnet-sys-on-surface-subtle));
+  --_icon-color: var(--dnet-step-icon-color, var(--dnet-sys-on-primary));
+  --_icon-shadow: var(--dnet-step-icon-shadow, none);
+  --_icon-font-size: var(--dnet-step-icon-font-size, inherit);
+  --_icon-font-weight: var(--dnet-step-icon-font-weight, inherit);
+  --_icon-done: var(--dnet-step-icon-background-done, none);
+  --_icon-current: var(--dnet-step-icon-background-current, var(--dnet-sys-primary-emphasis));
+  --_icon-shadow-current: var(--dnet-step-icon-shadow-current, none);
+  --_icon-scale-current: var(--dnet-step-icon-scale-current, none);
+  --_label-weight: var(--dnet-step-label-weight, inherit);
+  --_label-weight-current: var(--dnet-step-label-weight-current, var(--_label-weight));
+  --_label-upcoming: var(--dnet-step-label-color-upcoming, inherit);
+  --_label-min-width: var(--dnet-step-label-min-width, 50px);
+  /* Extra space between a label and the line after it. */
+  --_line-gap: var(--dnet-step-line-gap, 0px);
 
   display: grid;
   gap: 0.3rem;
@@ -42,12 +60,15 @@
 }
 
 .dnet-dstep-header .dnet-dstep-icon {
-  background-color: var(--dnet-sys-on-surface-subtle);
-  color: var(--dnet-sys-on-primary);
+  background: var(--_icon-background);
+  box-shadow: var(--_icon-shadow);
+  color: var(--_icon-color);
+  font-size: var(--_icon-font-size);
+  font-weight: var(--_icon-font-weight);
 }
 
 .dnet-horizontal-dstepper-header .dnet-dstep-icon {
-  margin-right: 8px;
+  margin: var(--_icon-margin);
   flex: none;
 }
 
@@ -57,8 +78,19 @@
 }
 
 .dnet-dstep-header.dnet-dstep-selected .dnet-dstep-icon {
-  background-color: var(--dnet-sys-primary-emphasis);
+  background: var(--_icon-current);
+  box-shadow: var(--_icon-shadow-current);
   color: var(--dnet-sys-on-primary);
+  scale: var(--_icon-scale-current);
+}
+
+/* Completed steps, the ones before the current: a face over the number. */
+.dnet-dstep-header:has(~ .dnet-dstep-selected) .dnet-dstep-icon::after {
+  background: var(--_icon-done);
+  border-radius: inherit;
+  content: "";
+  inset: 0;
+  position: absolute;
 }
 
 .dnet-dstep-icon {
@@ -78,10 +110,20 @@
 
 .dnet-dstep-label {
   display: inline-block;
-  min-width: 50px;
+  min-width: var(--_label-min-width);
   vertical-align: middle;
   font-size: var(--_font-size);
+  font-weight: var(--_label-weight);
   margin-right: 0.3rem;
+}
+
+.dnet-dstep-header.dnet-dstep-selected .dnet-dstep-label {
+  font-weight: var(--_label-weight-current);
+}
+
+/* Steps after the current one. */
+.dnet-dstep-header.dnet-dstep-selected ~ .dnet-dstep-header .dnet-dstep-label {
+  color: var(--_label-upcoming);
 }
 
 .dnet-dstepper-horizontal-line {
@@ -90,6 +132,7 @@
   border-top-width: 1px;
   border-top-style: solid;
   flex: auto;
+  margin-inline-start: var(--_line-gap);
   height: 0;
   min-width: 32px;
 }
