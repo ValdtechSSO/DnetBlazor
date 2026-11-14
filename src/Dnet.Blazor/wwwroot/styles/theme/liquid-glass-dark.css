@@ -245,6 +245,46 @@
   --dnet-step-label-weight-current: 650;
   --dnet-step-label-color-upcoming: var(--dnet-sys-on-surface-muted);
 
+  /* Timeline (option A, "Tarjetas de cristal"): each event is a glass card;
+     the current one takes an accent tint, ring and glow, and pending ones
+     are a dashed outline. The markers are glass dots that the line runs
+     under, centred on the card's title: completed ones are beads with the
+     accent tick, the current one an accent drop with a white core. */
+  --dnet-timeline-gap: 18px;
+  --dnet-timeline-content-gap: 19px;
+  --dnet-timeline-title-font-size: 15px;
+  --dnet-timeline-font-size: 13.5px;
+  --dnet-timeline-muted-foreground: #aeb6c8;
+  --dnet-timeline-line-color: rgb(255 255 255 / .20);
+  --dnet-timeline-line-inset: -11px;
+  --dnet-timeline-line-completed: linear-gradient(180deg, var(--dnet-sys-primary-content), color-mix(in srgb, var(--dnet-sys-primary-content) 75%, transparent));
+  --dnet-timeline-bullet-size: 22px;
+  --dnet-timeline-bullet-offset: 11px;
+  --dnet-timeline-bullet-border-width: 0px;
+  --dnet-timeline-bullet-background: var(--dnet-sys-material-sheen), rgb(255 255 255 / .08);
+  --dnet-timeline-bullet-shadow: var(--dnet-sys-material-highlight), inset 0 0 0 1.5px rgb(255 255 255 / .20), var(--dnet-sys-material-lift);
+  --dnet-timeline-accent-foreground: var(--dnet-sys-transparent);
+  --dnet-timeline-bullet-background-completed:
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M3.5 8.4l2.9 2.9 6-6.5' fill='none' stroke='%23a2c0fc' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/></svg>") center / 12px 12px no-repeat,
+    radial-gradient(circle at 35% 25%, #ffffff 0 32%, #eef1f7 62%, #d6dce8 100%);
+  --dnet-timeline-bullet-shadow-completed: inset 0 1px 0 #ffffff, 0 0 0 .5px rgb(0 0 0 / .4), 0 2px 6px rgb(0 0 0 / .5);
+  --dnet-timeline-bullet-background-current:
+    radial-gradient(120% 80% at 30% 10%, rgb(255 255 255 / .5), transparent 52%),
+    linear-gradient(180deg, color-mix(in oklab, var(--dnet-sys-primary) 74%, #ffffff), var(--dnet-sys-primary) 55%,
+      color-mix(in oklab, var(--dnet-sys-primary) 84%, #000000));
+  --dnet-timeline-bullet-shadow-current:
+    inset 0 1px 0 rgb(255 255 255 / .5), 0 4px 12px color-mix(in srgb, var(--dnet-sys-primary) 40%, transparent),
+    0 0 0 4px color-mix(in srgb, var(--dnet-sys-primary) 16%, transparent);
+  --dnet-timeline-current-foreground: #ffffff;
+  --dnet-timeline-content-padding: 11px 14px 12px;
+  --dnet-timeline-content-radius: 16px;
+  --dnet-timeline-content-border-width: 1px;
+  --dnet-timeline-content-background: rgb(255 255 255 / .08);
+  --dnet-timeline-content-background-current: color-mix(in srgb, var(--dnet-sys-primary) 11%, rgb(255 255 255 / .08));
+  --dnet-timeline-content-shadow-current:
+    inset 0 0 0 1.5px color-mix(in srgb, var(--dnet-sys-primary) 45%, transparent),
+    0 6px 20px color-mix(in srgb, var(--dnet-sys-primary) 18%, transparent);
+
   /* AdminLayout: the minified menu flyout floats over the content and defaults
      to the border colour, which is translucent here. Nested in the column it
      cannot blur (backdrop root), so it takes the popup fill instead. */

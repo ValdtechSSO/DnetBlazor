@@ -8936,6 +8936,24 @@ select.mat-input-element::-ms-value {
     --_muted-foreground: var(--dnet-timeline-muted-foreground, var(--dnet-sys-on-surface-muted));
     --_title-font-size: var(--dnet-timeline-title-font-size, var(--dnet-sys-text-lg));
     --_font-size: var(--dnet-timeline-font-size, var(--dnet-sys-text-md));
+    /* Glass markers and event cards. Without effect by default. */
+    --_bullet-offset: var(--dnet-timeline-bullet-offset, 0px);
+    --_bullet-border-width: var(--dnet-timeline-bullet-border-width, var(--_line-width));
+    --_bullet-shadow: var(--dnet-timeline-bullet-shadow, none);
+    --_bullet-completed: var(--dnet-timeline-bullet-background-completed, var(--_accent-color));
+    --_bullet-shadow-completed: var(--dnet-timeline-bullet-shadow-completed, none);
+    --_bullet-current: var(--dnet-timeline-bullet-background-current, var(--_bullet-background));
+    --_bullet-shadow-current: var(--dnet-timeline-bullet-shadow-current, none);
+    --_current-foreground: var(--dnet-timeline-current-foreground, var(--_active-foreground));
+    /* Space between the line and the markers; negative values run it under them. */
+    --_line-inset: var(--dnet-timeline-line-inset, var(--dnet-sys-space-1));
+    --_line-completed: var(--dnet-timeline-line-completed, var(--_accent-color));
+    --_content-padding: var(--dnet-timeline-content-padding, 0);
+    --_content-radius: var(--dnet-timeline-content-radius, 0);
+    --_content-border-width: var(--dnet-timeline-content-border-width, 0px);
+    --_content-background: var(--dnet-timeline-content-background, var(--dnet-sys-transparent));
+    --_content-background-current: var(--dnet-timeline-content-background-current, var(--_content-background));
+    --_content-shadow-current: var(--dnet-timeline-content-shadow-current, 0 0 0 0 var(--dnet-sys-transparent));
 
     inline-size: 100%;
     max-inline-size: 100%;
@@ -8967,14 +8985,14 @@ select.mat-input-element::-ms-value {
     content: "";
     position: absolute;
     inset-inline-start: calc((var(--_bullet-size) - var(--_line-width)) / 2);
-    inset-block-start: calc(var(--_bullet-size) + var(--dnet-sys-space-1));
-    inset-block-end: var(--dnet-sys-space-1);
+    inset-block-start: calc(var(--_bullet-offset) + var(--_bullet-size) + var(--_line-inset));
+    inset-block-end: calc(var(--_line-inset) - var(--_bullet-offset));
     inline-size: var(--_line-width);
     background: var(--_line-color);
 }
 
 .dnet-timeline > .dnet-timeline-item-completed:not(:last-child)::before {
-    background: var(--_accent-color);
+    background: var(--_line-completed);
 }
 
 .dnet-timeline > .dnet-timeline-item:last-child {
@@ -8992,9 +9010,12 @@ select.mat-input-element::-ms-value {
     align-self: start;
     inline-size: var(--_bullet-size);
     block-size: var(--_bullet-size);
-    border: var(--_line-width) solid var(--_line-color);
+    -webkit-margin-before: var(--_bullet-offset);
+            margin-block-start: var(--_bullet-offset);
+    border: var(--_bullet-border-width) solid var(--_line-color);
     border-radius: var(--dnet-sys-radius-pill);
     background: var(--_bullet-background);
+    box-shadow: var(--_bullet-shadow);
     color: var(--_muted-foreground);
     font-size: calc(var(--_bullet-size) * 0.5);
     font-weight: 700;
@@ -9015,6 +9036,11 @@ select.mat-input-element::-ms-value {
     flex-direction: column;
     gap: var(--dnet-sys-space-1);
     min-inline-size: 0;
+    padding: var(--_content-padding);
+    border: var(--_content-border-width) solid var(--dnet-sys-transparent);
+    border-radius: var(--_content-radius);
+    background: var(--dnet-sys-material-sheen), var(--_content-background);
+    box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-lift);
     overflow-wrap: anywhere;
 }
 
@@ -9070,13 +9096,29 @@ select.mat-input-element::-ms-value {
 /* Status and alignment variants follow base rules so they win in the cascade. */
 .dnet-timeline-item-completed > .dnet-timeline-bullet {
     border-color: var(--_accent-color);
-    background: var(--_accent-color);
+    background: var(--_bullet-completed);
+    box-shadow: var(--_bullet-shadow-completed);
     color: var(--_accent-foreground);
 }
 
 .dnet-timeline-item-current > .dnet-timeline-bullet {
     border-color: var(--_accent-color);
-    color: var(--_active-foreground);
+    background: var(--_bullet-current);
+    box-shadow: var(--_bullet-shadow-current);
+    color: var(--_current-foreground);
+}
+
+/* Event cards: the current one stands out, pending ones are an outline. */
+.dnet-timeline-item-current > .dnet-timeline-content {
+    background: var(--dnet-sys-material-sheen), var(--_content-background-current);
+    box-shadow: var(--dnet-sys-material-highlight), var(--_content-shadow-current);
+}
+
+.dnet-timeline-item-pending > .dnet-timeline-content {
+    border-color: var(--_line-color);
+    border-style: dashed;
+    background: var(--dnet-sys-transparent);
+    box-shadow: none;
 }
 
 .dnet-timeline-item-completed:not(.dnet-timeline-item-custom-bullet) > .dnet-timeline-bullet::after {

@@ -43,12 +43,28 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-timeline-accent-color` | `color-mix(in srgb, var(--dnet-sys-primary) 80%, var(--dnet-ref-neutral-1000))` <br><sub>via `--dnet-sys-primary-emphasis`</sub> |
 | `--dnet-timeline-accent-foreground` | `#ffffff` <br><sub>via `--dnet-sys-on-primary`</sub> |
 | `--dnet-timeline-bullet-background` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
+| `--dnet-timeline-bullet-background-completed` | `var(--_accent-color)` |
+| `--dnet-timeline-bullet-background-current` | `var(--_bullet-background)` |
+| `--dnet-timeline-bullet-border-width` | `var(--_line-width)` |
+| `--dnet-timeline-bullet-offset` | `0px` |
+| `--dnet-timeline-bullet-shadow` | `none` |
+| `--dnet-timeline-bullet-shadow-completed` | `none` |
+| `--dnet-timeline-bullet-shadow-current` | `none` |
 | `--dnet-timeline-bullet-size` | `calc(var(--dnet-sys-space-unit) * 6)` |
+| `--dnet-timeline-content-background` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
+| `--dnet-timeline-content-background-current` | `var(--_content-background)` |
+| `--dnet-timeline-content-border-width` | `0px` |
 | `--dnet-timeline-content-gap` | `calc(var(--dnet-sys-space-unit) * 4)` <br><sub>via `--dnet-sys-space-4`</sub> |
+| `--dnet-timeline-content-padding` | `0` |
+| `--dnet-timeline-content-radius` | `0` |
+| `--dnet-timeline-content-shadow-current` | `0 0 0 0 var(--dnet-sys-transparent)` |
+| `--dnet-timeline-current-foreground` | `var(--_active-foreground)` |
 | `--dnet-timeline-font-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
 | `--dnet-timeline-foreground` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
 | `--dnet-timeline-gap` | `calc(var(--dnet-sys-space-unit) * 7)` |
 | `--dnet-timeline-line-color` | `#e1e3e1` <br><sub>via `--dnet-sys-border-strong`</sub> |
+| `--dnet-timeline-line-completed` | `var(--_accent-color)` |
+| `--dnet-timeline-line-inset` | `calc(var(--dnet-sys-space-unit) * 1)` <br><sub>via `--dnet-sys-space-1`</sub> |
 | `--dnet-timeline-line-width` | `2px` |
 | `--dnet-timeline-muted-foreground` | `#666666` <br><sub>via `--dnet-sys-on-surface-muted`</sub> |
 | `--dnet-timeline-title-font-size` | `1rem` <br><sub>via `--dnet-sys-text-lg`</sub> |

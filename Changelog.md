@@ -14,6 +14,18 @@
   extra space between a label and the line after it (`-line-gap`).
   Completed steps are the ones before the current one. Without visual
   change by default.
+- Timeline: new tokens turn each event into a card and the markers into
+  glass. Cards: `--dnet-timeline-content-padding`, `-content-radius`,
+  `-content-border-width`, `-content-background`,
+  `-content-background-current` and `-content-shadow-current`, over the
+  material sheen, highlight and lift; pending events are an outline in the
+  line colour. Markers: `--dnet-timeline-bullet-offset` (lines them up with
+  the card's title), `-bullet-border-width`, `-bullet-shadow`,
+  `-bullet-background-completed`, `-bullet-shadow-completed`,
+  `-bullet-background-current`, `-bullet-shadow-current` and
+  `-current-foreground`. Line: `--dnet-timeline-line-inset` (its gap to the
+  markers; negative values run it under them) and `-line-completed`.
+  Without visual change by default.
 - New material mechanic `--dnet-sys-material-well-shadow`, the inner shadow
   and rim of recessed tracks (slide toggle). Without effect by default.
 - SlideToggle: new `Variant` parameter. `DnetSlideToggleVariant.Lens` is a
@@ -105,6 +117,13 @@
   current step is a larger accent drop with a glow;
   completed steps show an accent tick instead of their number; upcoming
   labels are muted and the current one is bolder.
+- The Liquid Glass themes draw the timeline as glass cards (option A of the
+  reference design): completed and current events are glass cards, the
+  current one tinted with the accent, a ring and a glow, and pending ones
+  a dashed outline. The markers are glass dots on a line that runs under
+  them and fills with the accent after completed events: a bead with the
+  accent tick when completed, an accent drop with a white core when
+  current.
 - The Liquid Glass themes paint the slide toggle as in their reference
   design. Standard (option A): a recessed glass well with a faint rim and a
   white glass bead inside it; checked, the track fills with the accent,
