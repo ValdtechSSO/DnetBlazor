@@ -1296,6 +1296,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   padding: var(--_padding-vertical) var(--_padding-horizontal);
   border-radius: var(--_hover-radius);
   overflow: hidden;
+  cursor: pointer;
   transition: background-color 0.3s, border-radius 0.3s;
 }
 

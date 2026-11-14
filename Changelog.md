@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Autocomplete: the options show the pointer cursor, like other clickable
+  items.
 - DynamicStepper reads the same `--dnet-step-*` tokens as Stepper. Without
   visual change by default.
 - Stepper: new `--dnet-step-*` tokens paint the icons (`-icon-background`,
