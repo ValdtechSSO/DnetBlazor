@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- TimePicker: new `--dnet-timepicker-panel-header-background` sets the fill
+  of the touch panel's header, the panel's own fill by default. Without
+  visual change by default.
 - DatePicker: new `--dnet-datepicker-panel-background` sets the popup's fill
   apart from calendars shown in the page. Without visual change by default.
 - Autocomplete: new `--dnet-autocomplete-panel-*` tokens lay out the

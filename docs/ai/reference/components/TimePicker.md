@@ -46,6 +46,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-timepicker-option-active-background` | `color-mix(in srgb, var(--dnet-sys-on-surface) 8%, transparent)` <br><sub>via `--dnet-sys-state-hover`</sub> |
 | `--dnet-timepicker-option-selected-background` | `color-mix(in srgb, var(--dnet-sys-primary) 12%, transparent)` <br><sub>via `--dnet-sys-state-selected`</sub> |
 | `--dnet-timepicker-panel-background` | `#ffffff` <br><sub>via `--dnet-sys-material-popup`</sub> |
+| `--dnet-timepicker-panel-header-background` | `var(--_panel-background)` |
 
 ```css
 :root { --dnet-timepicker-accent-color: /* your value */; }

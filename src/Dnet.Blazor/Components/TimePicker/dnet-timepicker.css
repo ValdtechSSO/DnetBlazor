@@ -90,9 +90,13 @@
   padding: 0 var(--dnet-sys-space-3) var(--dnet-sys-space-3);
 }
 
+/* The touch header repaints the panel's fill; a translucent theme can clear
+   it so the two layers do not add up. */
 .dnet-timepicker-panel-header {
+  --_header-background: var(--dnet-timepicker-panel-header-background, var(--_panel-background));
+
   align-items: center;
-  background: var(--_panel-background);
+  background: var(--_header-background);
   color: var(--_option-foreground);
   display: flex;
   font-size: var(--dnet-sys-text-md);
