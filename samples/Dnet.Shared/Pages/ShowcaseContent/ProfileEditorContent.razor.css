@@ -9,3 +9,16 @@
 .profile-editor-field ::deep .dnet-form-field-plain-wrapper { margin-block-end: 0; }
 .profile-editor ::deep .validation-message { color: var(--dnet-sys-danger); font-size: var(--dnet-sys-text-sm); line-height: 1.5; }
 .profile-editor-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; margin-block-start: 24px; padding-block-start: 20px; border-block-start: 1px solid var(--dnet-sys-border); }
+
+/* A floating panel takes the viewport's height: the actions sit at its bottom
+   and the space above them grows with the panel, never below 24px. */
+.profile-editor-floating { display: flex; flex-direction: column; }
+.profile-editor-floating ::deep .profile-editor-form { display: flex; flex: 1 0 auto; flex-direction: column; }
+.profile-editor-floating .profile-editor-fields { margin-block-end: 24px; }
+.profile-editor-floating .profile-editor-actions { margin-block-start: auto; }
+
+/* Liquid Glass (both variants): spaced as Material 3 dialogs. No line over the
+   actions, 24px between the form and them and 8px between buttons; inside a
+   dialog, the dialog's own 24px frame the content. */
+[data-dnet-theme|="liquid-glass"] .profile-editor:not(.profile-editor-floating) { padding-block: 0; }
+[data-dnet-theme|="liquid-glass"] .profile-editor-actions { gap: 8px; padding-block-start: 0; border-block-start: 0; }

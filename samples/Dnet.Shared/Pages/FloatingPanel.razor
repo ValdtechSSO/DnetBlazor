@@ -53,14 +53,21 @@
     {
         if (_reference?.IsAttached == true) return;
         var position = _settings.Position switch { "Left" => FloatingPanelPostion.TopLeft, "Top" => FloatingPanelPostion.TopCenter, "Bottom" => FloatingPanelPostion.BottomCenter, _ => FloatingPanelPostion.TopRight };
+        // A side panel takes the full height: without Height the service uses
+        // 100vh flush with the top, max-height caps it to the viewport less
+        // 32px and the margin puts 16px above it, so 16px stay below too. Top
+        // and bottom panels keep a fixed height.
+        var isSidePanel = position is FloatingPanelPostion.TopLeft or FloatingPanelPostion.TopRight;
+        int? height = isSidePanel ? null : 560;
+        var panelStyle = "max-width:calc(100vw - 32px);max-height:calc(100dvh - 32px);" + (isSidePanel ? "margin-top:16px;" : string.Empty);
         _reference = FloatingPanelService.Show(typeof(ProfileEditorContent), new Dictionary<string, object> { ["Floating"] = true }, new FloatingPanelConfig
         {
-            Postion = position, Width = 440, Height = 560, FloatingPanelClass = "showcase-profile-floating-panel",
+            Postion = position, Width = 440, Height = height, FloatingPanelClass = "showcase-profile-floating-panel",
             OffsetTop = 16, OffsetBottom = 16, OffsetLeft = 16, OffsetRight = 16,
             HasBackdrop = true, HasTransparentBackdrop = false,
             Role = "dialog", AriaLabelledBy = "showcase-profile-heading", TrapFocus = true,
             InitialFocusSelector = "#showcase-profile-name",
-            PanelStyle = "max-width:calc(100vw - 32px);max-height:calc(100dvh - 32px);"
+            PanelStyle = panelStyle
         });
         _reference.Close += PanelClosed;
     }
