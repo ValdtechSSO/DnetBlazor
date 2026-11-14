@@ -153,10 +153,12 @@
   completed steps show an accent tick instead of their number; upcoming
   labels are muted and the current one is bolder.
 - The Liquid Glass themes render dialogs as liquid glass like the cards,
-  with a little more room above the title, and their close button is the
+  spaced as Material 3's basic dialog: 24px padding on every side and 16px
+  between title and body, with the bottom 24px inside the scrolling content
+  so buttons at the end keep their rim and glow. Their close button is the
   theme's round icon button (ghost glass with the rim and a soft lift, 36px
-  like the image editor's tools). The image editor leaves 24px under its
-  footer so the buttons' rim and glow are no longer cut.
+  like the image editor's tools). The image editor drops the line over its
+  buttons and leaves 24px between its content and them.
 - The Liquid Glass themes render the toast as liquid glass like the cards,
   so the page shows through it blurred. Its actions are the theme's
   outlined buttons (ghost glass pills with the accent label), and the
