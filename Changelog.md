@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- PickList: its paginator places the range by the list's
+  `--dnet-list-paginator-range-basis`, `-range-order` and
+  `-range-compact-display`, and new `--dnet-picklist-footer-overflow` lets
+  a theme stop the footer clipping the shadow and focus halo of its
+  buttons. The paginator now takes the footer's whole width, with nothing
+  visible changing. Without visual change by default.
 - List: new `--dnet-list-footer-height` sets the footer's height apart from
   the header's. `--dnet-list-paginator-range-basis` and
   `--dnet-list-paginator-range-order` let a theme bring the range from its

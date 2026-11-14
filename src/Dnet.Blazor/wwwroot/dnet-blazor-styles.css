@@ -5301,18 +5301,23 @@ nav ul li a.active .dnet-menu-tile {
   overflow: hidden;
 }
 
+/* The footer clips what overflows it; a theme whose paginator buttons cast
+   a shadow or a focus halo can let them show past its edges. */
 .dnet-pick-list-footer {
+  --_footer-overflow: var(--dnet-picklist-footer-overflow, hidden);
+
   align-items: center;
   box-sizing: border-box;
   display: flex;
   flex: none;
   justify-content: flex-end;
   min-height: var(--dnet-picklist-footer-height, var(--pick-list-footer-height, var(--dnet-list-header-footer-height, var(--dnet-sys-control-height))));
-  overflow: hidden;
+  overflow: var(--_footer-overflow);
   padding: 0;
 }
 
 .dnet-pick-list-footer .dnet-paginator {
+  flex: 1 1 auto;
   max-width: 100%;
   min-width: 0;
 }
@@ -5328,12 +5333,25 @@ nav ul li a.active .dnet-menu-tile {
   white-space: nowrap;
 }
 
-/* The range takes its own line under the controls here, so it stays at
-   the end even where a theme sets the paginator on one line. */
+/* The range is placed as in the list's footer, by the list's tokens: under
+   the controls by default, or at the start of their line where a theme
+   brings it there, wrapping where the footer is too narrow. */
 .dnet-pick-list-footer .dnet-paginator-range-label.zone4 {
-  flex-basis: 100%;
-  justify-content: flex-end;
+  --_range-basis: var(--dnet-list-paginator-range-basis, 100%);
+  --_range-order: var(--dnet-list-paginator-range-order, 0);
+
+  flex: 1 1 var(--_range-basis);
+  order: var(--_range-order);
   padding-inline: 0;
+}
+
+/* On a phone a theme can drop the range and keep only the controls. */
+@media (max-width: 599px) {
+  .dnet-pick-list-footer .dnet-paginator-range-label.zone4 {
+    --_compact-range-display: var(--dnet-list-paginator-range-compact-display, flex);
+
+    display: var(--_compact-range-display);
+  }
 }
 
 .dnet-pick-list-status {
