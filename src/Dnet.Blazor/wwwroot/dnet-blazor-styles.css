@@ -5125,7 +5125,6 @@ nav ul li a.active .dnet-menu-tile {
   --_foreground: var(--dnet-picklist-foreground, var(--pick-list-foreground, var(--dnet-sys-on-surface)));
   --_item-background: var(--dnet-picklist-item-background, var(--pick-list-item-background, var(--dnet-sys-transparent)));
   --_selected: var(--dnet-picklist-item-selected, var(--pick-list-item-selected, var(--dnet-sys-transparent)));
-  --_primary: var(--dnet-picklist-primary, var(--pick-list-primary, var(--dnet-sys-primary)));
   --_scrollbar: var(--dnet-picklist-scrollbar, var(--pick-list-scrollbar, var(--dnet-sys-border-strong)));
   /* The space inside the box and between its sections, and its shadow. */
   --_content-padding: var(--dnet-picklist-padding, 20px);
@@ -5197,29 +5196,6 @@ nav ul li a.active .dnet-menu-tile {
   flex: none;
   flex-wrap: wrap;
   gap: 10px;
-}
-
-.dnet-pick-list button:not(.dnet-button) {
-  background: var(--dnet-sys-transparent);
-  border: 0;
-  border-radius: var(--dnet-picklist-item-radius, var(--dnet-list-hover-border-radius, var(--dnet-sys-radius-lg)));
-  color: var(--_muted);
-  cursor: pointer;
-  font: inherit;
-  font-size: 0.75rem;
-  min-height: 32px;
-  padding: 4px 8px;
-  transition: background-color var(--dnet-sys-motion-fast) var(--dnet-sys-motion-ease), color var(--dnet-sys-motion-fast) var(--dnet-sys-motion-ease);
-}
-
-.dnet-pick-list button:not(.dnet-button):hover:not(:disabled) {
-  background: var(--_hover);
-  color: var(--_foreground);
-}
-
-.dnet-pick-list button:not(.dnet-button):disabled {
-  cursor: not-allowed;
-  opacity: 0.42;
 }
 
 .dnet-pick-list-items {
@@ -5360,11 +5336,6 @@ nav ul li a.active .dnet-menu-tile {
   margin: 2rem 0;
   padding: 0 1rem;
   text-align: center;
-}
-
-.dnet-pick-list button:not(.dnet-button):focus-visible {
-  outline: 2px solid var(--_primary);
-  outline-offset: 2px;
 }
 
 @media (max-width: 30rem) {

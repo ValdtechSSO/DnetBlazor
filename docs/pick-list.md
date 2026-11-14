@@ -142,7 +142,7 @@ The main CI workflow starts the sample and runs this gate automatically.
 
 PickList reads these optional public custom properties from any ancestor:
 `--dnet-picklist-background`, `--dnet-picklist-foreground`,
-`--dnet-picklist-primary`, `--dnet-picklist-border`,
+`--dnet-picklist-border`,
 `--dnet-picklist-item-background`, `--dnet-picklist-item-selected`,
 `--dnet-picklist-item-hover`, `--dnet-picklist-muted`,
 `--dnet-picklist-radius`, `--dnet-picklist-item-height`,

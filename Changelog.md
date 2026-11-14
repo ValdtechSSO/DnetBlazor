@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- PickList: the paginator's arrows take the paginator's own style, as in
+  List and Grid. A PickList rule left over from its earlier plain buttons
+  made them transparent, with muted icons, 25×32 and rounded like the rows.
+  Visible in every theme: the arrows are 25px circles in the text colour and
+  the footer is 7px shorter, so the `pick-list-*` goldens change and the
+  Linux ones need regenerating on CI. In the Liquid Glass themes they are
+  the same white glass buttons as the other paginators', and fade like a
+  disabled white button. `--dnet-picklist-primary`, which only coloured the
+  arrows' focus outline, is removed: they take the theme's focus ring.
 - PickList: its paginator places the range by the list's
   `--dnet-list-paginator-range-basis`, `-range-order` and
   `-range-compact-display`, and new `--dnet-picklist-footer-overflow` lets
