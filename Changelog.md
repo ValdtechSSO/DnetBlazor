@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Forms: a field shows the error that an asynchronous validator reports
+  after the change. Validators registered with .NET 11's
+  `EditContext.RegisterAsyncFieldValidator` deliver their messages through
+  `OnValidationStateChanged`, and the fields only looked at errors when the
+  value changed, so the form field stayed without its error until the next
+  edit. The text, text area, number and date inputs, Select, Autocomplete,
+  FloatingDoubleList, DatePicker, DateRangePicker and TimePicker now update
+  it when the validation state changes. `DnetInputBase` has a new protected
+  `OnFieldValidationStateChanged` hook for inputs that show their errors.
 - Virtualize: `Dnet.Blazor.Components.Virtualize.Virtualize<TItem>` and its
   `ItemsProviderDelegate`, `ItemsProviderRequest`, `ItemsProviderResult` and
   `PlaceholderContext` are obsolete. They are a 2021 copy of the framework's

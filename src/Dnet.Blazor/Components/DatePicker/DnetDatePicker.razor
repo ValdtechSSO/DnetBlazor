@@ -431,6 +431,10 @@
         if (OnError.HasDelegate) await OnError.InvokeAsync(message);
     }
 
+    // The form's validation state also changes when an asynchronous validator reports
+    // after the change, so the field shows that error too.
+    protected override void OnFieldValidationStateChanged() => UpdateErrorState();
+
     private void HandleFieldChanged(object? sender, FieldChangedEventArgs args)
     {
         if (args.FieldIdentifier.Equals(FieldIdentifier)) UpdateErrorState();
