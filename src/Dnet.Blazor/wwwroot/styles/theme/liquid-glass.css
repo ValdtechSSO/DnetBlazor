@@ -460,6 +460,21 @@
     color var(--dnet-sys-motion-fast) ease, box-shadow var(--dnet-sys-motion-fast) ease;
   --dnet-accordion-body-padding: 0 24px 24px;
 
+  /* Tabs: a glass panel like the cards, with the rim, 24px around its
+     content and 16px between the tab row and the view. The labels stay
+     subtle and the active one reads in the accent at full strength over its
+     line; a ghost glass lens shows under the pointer, and the focus halo
+     with keyboard focus. The arrows are round ghost glass buttons. */
+  --dnet-tabs-background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-card);
+  --dnet-tabs-shadow: var(--dnet-sys-material-highlight);
+  --dnet-tabs-radius: var(--dnet-sys-radius-lg);
+  --dnet-tabs-padding: 24px;
+  --dnet-tabs-gap: 16px;
+  --dnet-tabs-active-foreground: var(--dnet-sys-primary-content);
+  --dnet-tabs-active-opacity: 1;
+  --dnet-tabs-label-hover-background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
+  --dnet-tabs-pagination-size: 32px;
+
   /* AdminLayout menu (from the reference design): rows inset from the
      column, each led by a glass tile with the item's short text, or its icon.
      Hovering a row lights it; the current page is an accent-tinted glass row

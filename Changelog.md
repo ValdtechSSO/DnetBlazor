@@ -248,6 +248,11 @@
   picker's panel: the options' text 24px from the edges with 24px above
   and below the list, and in the touch panel the title 24px in with 16px
   under it and the button 24px from the corner at the normal size.
+- The Liquid Glass themes render Tabs as a glass panel like the cards,
+  with the rim, 24px around its content and 16px between the tab row and
+  the view. The active label reads in the accent at full strength over its
+  line, a raised glass lens shows under the pointer and the focus halo with
+  keyboard focus, and the arrows are round glass buttons.
 - The Liquid Glass themes render the ExpansionPanel as separate glass
   cards 8px apart and rounded on every corner, with 64px rows, a bolder
   title over a 12px description and a sheen under the pointer. The chevron
