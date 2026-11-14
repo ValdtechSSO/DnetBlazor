@@ -245,13 +245,13 @@ public sealed class VisualBaselineTests
     private async Task<IPage> OpenScenarioPageAsync(ComponentScenario scenario, int width, int height)
     {
         var page = await _fixture.NewPageAsync(width, height);
-        if (scenario.Theme is not null)
-        {
-            // Same route the sample uses on load: the persisted preference is
-            // applied to <html> before Blazor starts.
-            await page.AddInitScriptAsync(
-                $"localStorage.setItem('dnet.theme', JSON.stringify({System.Text.Json.JsonSerializer.Serialize(scenario.Theme)}));");
-        }
+        // Same route the sample uses on load: the persisted preference is
+        // applied to <html> before Blazor starts. A scenario without a theme of
+        // its own is captured in dark, the sample's default when its goldens
+        // were made; the sample now opens in Liquid glass.
+        var theme = scenario.Theme ?? "dark";
+        await page.AddInitScriptAsync(
+            $"localStorage.setItem('dnet.theme', JSON.stringify({System.Text.Json.JsonSerializer.Serialize(theme)}));");
 
         await page.GotoAsync($"{_fixture.BaseUrl.TrimEnd('/')}{scenario.Route}", new()
         {
@@ -261,11 +261,8 @@ public sealed class VisualBaselineTests
 
         var root = page.Locator(scenario.RootSelector).First;
         await root.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 60_000 });
-        if (scenario.Theme is not null)
-        {
-            await page.WaitForFunctionAsync(
-                "theme => document.documentElement.dataset.dnetTheme === theme", scenario.Theme, new() { Timeout = 10_000 });
-        }
+        await page.WaitForFunctionAsync(
+            "theme => document.documentElement.dataset.dnetTheme === theme", theme, new() { Timeout = 10_000 });
         if (scenario.ReadyFunction is not null)
         {
             await page.WaitForFunctionAsync(scenario.ReadyFunction, null, new() { Timeout = 30_000 });

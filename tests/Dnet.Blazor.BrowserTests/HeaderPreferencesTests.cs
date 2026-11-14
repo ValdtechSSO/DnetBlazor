@@ -103,6 +103,34 @@ public sealed class HeaderPreferencesTests
     }
 
     [Fact]
+    public async Task A_first_visit_opens_in_liquid_glass_and_the_address_says_so()
+    {
+        if (!string.Equals(Environment.GetEnvironmentVariable("DNET_BLAZOR_BROWSER_TESTS"),
+                "true", StringComparison.OrdinalIgnoreCase)) return;
+        using var playwright = await Playwright.CreateAsync();
+        await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
+        var page = await browser.NewPageAsync(new()
+        {
+            IgnoreHTTPSErrors = true, Locale = "es-ES",
+            ViewportSize = new() { Width = 1440, Height = 1000 }
+        });
+        var errors = new List<string>();
+        page.PageError += (_, error) => errors.Add(error);
+        await page.RouteAsync("https://fonts.googleapis.com/**", request => request.AbortAsync());
+        var baseUrl = (Environment.GetEnvironmentVariable("DNET_BLAZOR_BASE_URL") ?? "http://127.0.0.1:5101").TrimEnd('/');
+
+        // Nothing saved and no theme in the link: BrowserReady would pin dark, so
+        // the page is opened without it.
+        await page.GotoAsync(baseUrl + "/Buttons");
+        await page.Locator("main.dnet-desktop-content").WaitForAsync(new() { Timeout = 30_000 });
+
+        await Assertions.Expect(page.Locator("html")).ToHaveAttributeAsync("data-dnet-theme", "liquid-glass");
+        await Assertions.Expect(BrowserHeaderPreferences.Control(page, "theme")).ToHaveAttributeAsync("title", "Tema: Cristal líquido");
+        await Assertions.Expect(page).ToHaveURLAsync(new Regex("/Buttons\\?theme=liquid-glass&lang=es$"));
+        Assert.Empty(errors);
+    }
+
+    [Fact]
     public async Task Theme_and_language_travel_in_the_url_so_a_link_can_be_shared()
     {
         if (!string.Equals(Environment.GetEnvironmentVariable("DNET_BLAZOR_BROWSER_TESTS"),
