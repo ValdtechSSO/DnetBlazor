@@ -2,14 +2,17 @@
 
 ## Unreleased
 
-- ImageEditor: new `--dnet-image-editor-footer-padding-bottom` leaves room
-  under the footer's buttons, which the dialog's scrolling content would
-  otherwise cut at its bottom edge. Without visual change by default.
+- ImageEditor: new `--dnet-image-editor-footer-border-width` and
+  `--dnet-image-editor-footer-padding-top` set the line over the footer's
+  buttons and the space under it. Without visual change by default.
 - Dialog: new `--dnet-dialog-close-padding`, `-close-radius`,
   `-close-background`, `-close-background-hover` and `-close-shadow` paint
   the close button as a round button. A negative margin cancels the
-  padding, so the header keeps its height. Without visual change by
-  default.
+  padding, so the header keeps its height. New `--dnet-dialog-padding-bottom`
+  sets the bottom padding apart from the top, and
+  `--dnet-dialog-content-padding-bottom` adds space at the end of the
+  scrolling content, where a button's glow is not cut. Without visual change
+  by default.
 - Autocomplete: the options show the pointer cursor, like other clickable
   items.
 - Toast: new `--dnet-toast-action-foreground` and
@@ -150,10 +153,12 @@
   completed steps show an accent tick instead of their number; upcoming
   labels are muted and the current one is bolder.
 - The Liquid Glass themes render dialogs as liquid glass like the cards,
-  with a little more room above the title, and their close button is the
+  spaced as Material 3's basic dialog: 24px padding on every side and 16px
+  between title and body, with the bottom 24px inside the scrolling content
+  so buttons at the end keep their rim and glow. Their close button is the
   theme's round icon button (ghost glass with the rim and a soft lift, 36px
-  like the image editor's tools). The image editor leaves 24px under its
-  footer so the buttons' rim and glow are no longer cut.
+  like the image editor's tools). The image editor drops the line over its
+  buttons and leaves 24px between its content and them.
 - The Liquid Glass themes render the toast as liquid glass like the cards,
   so the page shows through it blurred. Its actions are the theme's
   outlined buttons (ghost glass pills with the accent label), and the
