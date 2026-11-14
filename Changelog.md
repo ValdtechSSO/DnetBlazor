@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- TimePicker: new `--dnet-timepicker-panel-options-padding`,
+  `--dnet-timepicker-panel-touch-options-padding`,
+  `--dnet-timepicker-panel-header-padding` and
+  `--dnet-timepicker-panel-actions-padding` space the panel, and
+  `--dnet-timepicker-button-height`, `--dnet-timepicker-button-padding` and
+  `--dnet-timepicker-button-icon-gap` size the touch panel's button; unset,
+  it keeps its small size and whatever `--dnet-btn-*` values it inherits.
+  The touch header no longer shrinks when the list is long. Without visual
+  change by default.
 - DatePicker: new `--dnet-datepicker-panel-padding`,
   `--dnet-datepicker-panel-footer-padding` and
   `--dnet-datepicker-panel-footer-gap` space the popup, and
@@ -190,7 +199,10 @@
   time picker's touch header no longer adds a second layer. The date
   picker's popup is spaced like a dialog (its controls and buttons 24px
   from the edges, 24px between the days and the buttons, 8px between
-  buttons) and its buttons take the theme's normal size.
+  buttons) and its buttons take the theme's normal size. So is the time
+  picker's panel: the options' text 24px from the edges with 24px above
+  and below the list, and in the touch panel the title 24px in with 16px
+  under it and the button 24px from the corner at the normal size.
 - The Liquid Glass themes render the Select dropdown as glass like dialogs
   and space it like them: 24px around, the options' text in line with the
   title and 16px under it, and the theme's round close button 18px from the

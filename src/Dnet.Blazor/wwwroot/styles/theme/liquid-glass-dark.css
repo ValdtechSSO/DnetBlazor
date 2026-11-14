@@ -367,6 +367,17 @@
   --dnet-datepicker-button-icon-gap: 8px;
   --dnet-timepicker-panel-background: var(--dnet-sys-material-card);
   --dnet-timepicker-panel-header-background: var(--dnet-sys-transparent);
+  /* Its panel is spaced like a dialog: the options' text 24px from the edges
+     (rows inset 12px) with 24px above and below the list, and in the touch
+     panel the title 24px in with 16px under it, 24px between the list and
+     the button, the button 24px from the corner at the theme's normal size. */
+  --dnet-timepicker-panel-options-padding: 24px 12px;
+  --dnet-timepicker-panel-touch-options-padding: 0 12px;
+  --dnet-timepicker-panel-header-padding: 24px 24px 16px;
+  --dnet-timepicker-panel-actions-padding: 24px;
+  --dnet-timepicker-button-height: 40px;
+  --dnet-timepicker-button-padding: 0 16px;
+  --dnet-timepicker-button-icon-gap: 8px;
   --dnet-connected-panel-background: var(--dnet-sys-material-card);
 
   /* AdminLayout menu (from the reference design): rows inset from the

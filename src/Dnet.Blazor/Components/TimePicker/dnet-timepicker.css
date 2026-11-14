@@ -75,26 +75,34 @@
   max-height: min(70dvh, 520px);
 }
 
+/* The list's inner space, in the dropdown and in the touch panel. */
 .dnet-timepicker-options {
+  --_options-padding: var(--dnet-timepicker-panel-options-padding, var(--dnet-sys-space-2));
+
   box-sizing: border-box;
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
-  padding: var(--dnet-sys-space-2);
+  padding: var(--_options-padding);
   scrollbar-color: var(--dnet-sys-border-strong) transparent;
   width: 100%;
 }
 
 .dnet-timepicker-panel-touch .dnet-timepicker-options {
+  --_options-padding: var(--dnet-timepicker-panel-touch-options-padding, 0 var(--dnet-sys-space-3) var(--dnet-sys-space-3));
+
   overscroll-behavior: contain;
-  padding: 0 var(--dnet-sys-space-3) var(--dnet-sys-space-3);
+  padding: var(--_options-padding);
 }
 
 /* The touch header repaints the panel's fill; a translucent theme can clear
    it so the two layers do not add up. */
 .dnet-timepicker-panel-header {
   --_header-background: var(--dnet-timepicker-panel-header-background, var(--_panel-background));
+  --_header-padding: var(--dnet-timepicker-panel-header-padding, var(--dnet-sys-space-3) var(--dnet-sys-space-3) var(--dnet-sys-space-2));
 
+  /* Like the actions, the header keeps its height; the list scrolls instead. */
+  flex: 0 0 auto;
   align-items: center;
   background: var(--_header-background);
   color: var(--_option-foreground);
@@ -102,16 +110,18 @@
   font-size: var(--dnet-sys-text-md);
   font-weight: 600;
   min-height: 48px;
-  padding: var(--dnet-sys-space-3) var(--dnet-sys-space-3) var(--dnet-sys-space-2);
+  padding: var(--_header-padding);
 }
 
 .dnet-timepicker-actions {
+  --_actions-padding: var(--dnet-timepicker-panel-actions-padding, var(--dnet-sys-space-2) var(--dnet-sys-space-3) var(--dnet-sys-space-3));
+
   align-items: center;
   display: flex;
   flex: 0 0 auto;
   justify-content: flex-end;
   min-height: 48px;
-  padding: var(--dnet-sys-space-2) var(--dnet-sys-space-3) var(--dnet-sys-space-3);
+  padding: var(--_actions-padding);
 }
 
 .dnet-timepicker-option {

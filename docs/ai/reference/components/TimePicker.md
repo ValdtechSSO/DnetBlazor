@@ -45,8 +45,12 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-timepicker-icon-color` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
 | `--dnet-timepicker-option-active-background` | `color-mix(in srgb, var(--dnet-sys-on-surface) 8%, transparent)` <br><sub>via `--dnet-sys-state-hover`</sub> |
 | `--dnet-timepicker-option-selected-background` | `color-mix(in srgb, var(--dnet-sys-primary) 12%, transparent)` <br><sub>via `--dnet-sys-state-selected`</sub> |
+| `--dnet-timepicker-panel-actions-padding` | `var(--dnet-sys-space-2) var(--dnet-sys-space-3) var(--dnet-sys-space-3)` |
 | `--dnet-timepicker-panel-background` | `#ffffff` <br><sub>via `--dnet-sys-material-popup`</sub> |
 | `--dnet-timepicker-panel-header-background` | `var(--_panel-background)` |
+| `--dnet-timepicker-panel-header-padding` | `var(--dnet-sys-space-3) var(--dnet-sys-space-3) var(--dnet-sys-space-2)` |
+| `--dnet-timepicker-panel-options-padding` | `calc(var(--dnet-sys-space-unit) * 2)` <br><sub>via `--dnet-sys-space-2`</sub> |
+| `--dnet-timepicker-panel-touch-options-padding` | `0 var(--dnet-sys-space-3) var(--dnet-sys-space-3)` |
 
 ```css
 :root { --dnet-timepicker-accent-color: /* your value */; }

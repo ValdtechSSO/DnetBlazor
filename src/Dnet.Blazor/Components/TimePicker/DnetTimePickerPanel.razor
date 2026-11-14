@@ -49,12 +49,21 @@
         <div class="dnet-timepicker-actions">
             <DnetButton Size="DnetButtonSize.Small" Variant="DnetButtonVariant.Outlined"
                         class="dnet-timepicker-action"
+                        style="@ButtonSizeStyle"
                         OnClick="Cancel">@EffectiveCancelLabel</DnetButton>
         </div>
     }
 </div>
 
 @code {
+    // A theme can give the touch panel's button another size through these
+    // tokens; when unset each falls back to what the button inherits, so the
+    // small size and any app-wide --dnet-btn-* values stay as they were.
+    private const string ButtonSizeStyle =
+        "--dnet-btn-height:var(--dnet-timepicker-button-height, inherit);" +
+        "--dnet-btn-padding:var(--dnet-timepicker-button-padding, inherit);" +
+        "--dnet-btn-icon-gap:var(--dnet-timepicker-button-icon-gap, inherit);";
+
     private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
     private string? _optionsAriaLabel;
     private string? _cancelLabel;
