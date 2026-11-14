@@ -70,6 +70,13 @@
 
                         OverlayConfig.GlobalPositionStrategy = globalPositionStrategy;
                          break;
+
+                     // An overlay without a component type of its own (the grid's
+                     // column filter) keeps the global strategy it brings, so it
+                     // is placed by it instead of falling to the corner.
+                     case null when OverlayConfig.GlobalPositionStrategy.GetJustifyContent() is not null:
+                         OverlayConfig.PositionStrategy = PositionStrategy.Global;
+                         break;
                  }
             }
 

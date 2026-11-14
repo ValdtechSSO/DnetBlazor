@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Overlay: on tablet and phone widths, an overlay without a component type
+  of its own that brings a global position strategy is placed by it.
+  Before, it fell to the top-left corner of the screen.
 - Grid: new `--dnet-grid-filter-background`, `--dnet-grid-filter-padding`
   and `--dnet-grid-filter-gap` lay out the column filter panel, and
   `--dnet-grid-filter-button-height` and `--dnet-grid-filter-button-padding`
