@@ -538,6 +538,13 @@
   --dnet-paginator-range-justify: flex-start;
   --dnet-paginator-range-font-size: 0.75rem;
 
+  /* Tooltip: the menus' popup glass, frosted, with the sheen, the rim of
+     light and the panels' soft shadow, and the text in the page's ink. The
+     arrow takes the same fill. */
+  --dnet-tooltip-background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-popup);
+  --dnet-tooltip-foreground: var(--dnet-sys-on-surface);
+  --dnet-tooltip-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-2);
+
   /* AdminLayout menu (from the reference design): rows inset from the
      column, each led by a glass tile with the item's short text, or its icon.
      Hovering a row lights it; the current page is an accent-tinted glass row
