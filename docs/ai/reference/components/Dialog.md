@@ -30,12 +30,14 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-dialog-close-padding` | `0px` |
 | `--dnet-dialog-close-radius` | `0px` |
 | `--dnet-dialog-close-shadow` | `none` |
+| `--dnet-dialog-content-padding-bottom` | `0px` |
 | `--dnet-dialog-elevation` | `0 3px 5px -1px var(--dnet-sys-shadow-color), 0 6px 10px 0 var(--dnet-sys-shadow-color), 0 1px 18px 0 var(--dnet-sys-shadow-color)` <br><sub>via `--dnet-sys-elevation-3`</sub> |
 | `--dnet-dialog-foreground` | `color-mix(in srgb, var(--dnet-ref-neutral-1000) 87%, transparent)` <br><sub>via `--dnet-sys-on-surface-emphasis`</sub> |
 | `--dnet-dialog-header-margin-bottom` | `15px` |
 | `--dnet-dialog-height-compensation` | `4px` <br><sub>via `--dnet-sys-space-unit`</sub> |
 | `--dnet-dialog-icon-color` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
 | `--dnet-dialog-max-height` | `100%` |
+| `--dnet-dialog-padding-bottom` | `var(--_padding-block)` |
 | `--dnet-dialog-padding-left-right` | `24px` |
 | `--dnet-dialog-padding-top-bottom` | `10px` |
 | `--dnet-dialog-title-font-size` | `1.25rem` <br><sub>via `--dnet-sys-text-xl`</sub> |

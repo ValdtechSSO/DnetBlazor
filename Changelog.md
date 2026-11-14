@@ -8,8 +8,11 @@
 - Dialog: new `--dnet-dialog-close-padding`, `-close-radius`,
   `-close-background`, `-close-background-hover` and `-close-shadow` paint
   the close button as a round button. A negative margin cancels the
-  padding, so the header keeps its height. Without visual change by
-  default.
+  padding, so the header keeps its height. New `--dnet-dialog-padding-bottom`
+  sets the bottom padding apart from the top, and
+  `--dnet-dialog-content-padding-bottom` adds space at the end of the
+  scrolling content, where a button's glow is not cut. Without visual change
+  by default.
 - Autocomplete: the options show the pointer cursor, like other clickable
   items.
 - Toast: new `--dnet-toast-action-foreground` and
