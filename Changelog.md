@@ -1,5 +1,14 @@
 # Changelog for Blazor Library
 
+## Unreleased
+
+- Grid: the header's sort, filter and group actions take a pill radius and
+  the material's ghost glass, with its sheen, rim of light and focus halo.
+  `--dnet-grid-header-button-padding`, `--dnet-grid-header-actions-gap` and
+  `--dnet-grid-header-button-hover-background` set their padding, the space
+  between them and their fill under the pointer. Without visual change by
+  default.
+
 ## Version 6.1.1 (November 2026)
 
 - Publishes the 6.1.0 changes to NuGet. 6.1.0 was released on GitHub only:

@@ -104,7 +104,7 @@
                     <span class="blg-header-cell-text" style="@cellTextStyle">@header.HeaderName</span>
                 </div>
             }
-            <div style="display: flex; align-items: center;">
+            <div class="blg-header-cell-actions" style="display: flex; align-items: center;">
                 @if (header.Sortable)
                 {
                     <button type="button" class="blg-header-icon-button" @onclick="() => Sort(header)" aria-label="@(Localizer.Format("Grid.ChangeSort", header.HeaderName))">
