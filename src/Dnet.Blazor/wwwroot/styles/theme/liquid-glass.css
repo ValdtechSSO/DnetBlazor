@@ -412,6 +412,16 @@
   --dnet-picklist-padding: 23px;
   --dnet-picklist-gap: 16px;
 
+  /* List: a standalone list is a glass panel like the PickList, with the rim
+     instead of a border, 24px around its content (23px inside its transparent
+     1px border) and 16px between its sections. Lists inside the floating
+     double list keep their own spacing. */
+  --dnet-list-panel-background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-card);
+  --dnet-list-panel-border: var(--dnet-sys-transparent);
+  --dnet-list-panel-shadow: var(--dnet-sys-material-highlight);
+  --dnet-list-panel-padding: 23px;
+  --dnet-list-panel-gap: 16px;
+
   /* AdminLayout menu (from the reference design): rows inset from the
      column, each led by a glass tile with the item's short text, or its icon.
      Hovering a row lights it; the current page is an accent-tinted glass row
