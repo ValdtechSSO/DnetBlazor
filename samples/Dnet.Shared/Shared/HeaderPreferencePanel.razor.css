@@ -71,3 +71,27 @@
     padding-block-start: 16px;
     border-block-start: 1px solid var(--dnet-sys-border);
 }
+
+/* Liquid Glass (both variants): spaced like the theme's dialogs. 24px from the
+   panel's edges (its own 2px included), 24px under the description and above
+   the button, no line over the button, and the button at the theme's normal
+   size. */
+[data-dnet-theme|="liquid-glass"] .header-preference-panel {
+    padding: 22px;
+}
+
+[data-dnet-theme|="liquid-glass"] .header-preference-heading {
+    margin-block-end: 24px;
+}
+
+[data-dnet-theme|="liquid-glass"] .header-preference-footer {
+    margin-block-start: 24px;
+    padding-block-start: 0;
+    border-block-start: 0;
+}
+
+[data-dnet-theme|="liquid-glass"] .header-preference-footer ::deep .dnet-button {
+    --dnet-btn-height: 40px;
+    --dnet-btn-padding: 0 16px;
+    --dnet-btn-icon-gap: 8px;
+}
