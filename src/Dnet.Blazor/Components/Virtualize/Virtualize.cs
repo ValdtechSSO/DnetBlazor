@@ -18,6 +18,7 @@ namespace Dnet.Blazor.Components.Virtualize
     /// Provides functionality for rendering a virtualized list of items.
     /// </summary>
     /// <typeparam name="TItem">The <c>context</c> type for the items being rendered.</typeparam>
+    [Obsolete("Use Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize<TItem> instead. This copy of the framework component is not used by the library and will be removed in the next major version.")]
     public sealed class Virtualize<TItem> : ComponentBase, IVirtualizeJsCallbacks, IAsyncDisposable
     {
         private VirtualizeJsInterop? _jsInterop;

@@ -8,6 +8,7 @@ namespace Dnet.Blazor.Components.Virtualize
     /// <summary>
     /// Represents a request to an <see cref="ItemsProviderDelegate{TItem}"/>.
     /// </summary>
+    [Obsolete("Use Microsoft.AspNetCore.Components.Web.Virtualization.ItemsProviderRequest instead. This copy of the framework component is not used by the library and will be removed in the next major version.")]
     public readonly struct ItemsProviderRequest
     {
         /// <summary>

@@ -9,6 +9,7 @@ namespace Dnet.Blazor.Components.Virtualize
     /// Represents the result of a <see cref="ItemsProviderDelegate{TItem}"/>.
     /// </summary>
     /// <typeparam name="TItem">The type of the context for each item in the list.</typeparam>
+    [Obsolete("Use Microsoft.AspNetCore.Components.Web.Virtualization.ItemsProviderResult<TItem> instead. This copy of the framework component is not used by the library and will be removed in the next major version.")]
     public readonly struct ItemsProviderResult<TItem>
     {
         /// <summary>

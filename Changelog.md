@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Virtualize: `Dnet.Blazor.Components.Virtualize.Virtualize<TItem>` and its
+  `ItemsProviderDelegate`, `ItemsProviderRequest`, `ItemsProviderResult` and
+  `PlaceholderContext` are obsolete. They are a 2021 copy of the framework's
+  component that the library does not use, and it still calls the
+  framework's internal script with the signature of that time. Use
+  `Microsoft.AspNetCore.Components.Web.Virtualization`, as List, Select,
+  Autocomplete, Chips and FloatingDoubleList do. They will be removed in the
+  next major version. The Grid's own virtualization is not affected.
 - Select: the panel opens scrolled to the selection, the selected option or
   with `MultiSelect` the first selected one, instead of always at the top,
   so in a long list it is in view. It waits until the overlay has sized the
