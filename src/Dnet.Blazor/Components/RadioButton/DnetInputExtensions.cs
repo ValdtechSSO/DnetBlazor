@@ -39,7 +39,7 @@ namespace Dnet.Blazor.Components.RadioButton
                 }
 
                 result = default;
-                validationErrorMessage = $"The {input.DisplayName ?? input.FieldIdentifier.FieldName} field is not valid.";
+                validationErrorMessage = $"The {input.GetFieldDisplayName(System.Globalization.CultureInfo.CurrentUICulture)} field is not valid.";
                 return false;
             }
             catch (InvalidOperationException ex)

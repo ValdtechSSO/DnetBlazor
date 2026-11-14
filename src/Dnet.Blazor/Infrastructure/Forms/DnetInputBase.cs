@@ -66,6 +66,20 @@ namespace Dnet.Blazor.Infrastructure.Forms
         [Parameter] public string? DisplayName { get; set; }
 
         /// <summary>
+        /// Returns the name the model gives the bound member with <c>[Display(Name = ...)]</c> or
+        /// <c>[DisplayName(...)]</c>, read in <paramref name="culture"/>; <see langword="null"/> when it has none.
+        /// </summary>
+        protected string? GetModelDisplayName(System.Globalization.CultureInfo culture) =>
+            DnetDisplayNames.For(ValueExpression, culture);
+
+        /// <summary>
+        /// Returns the name used for this field in messages: <see cref="DisplayName"/>, else the model's
+        /// display name, else the property name.
+        /// </summary>
+        protected internal string GetFieldDisplayName(System.Globalization.CultureInfo culture) =>
+            DisplayName ?? GetModelDisplayName(culture) ?? FieldIdentifier.FieldName;
+
+        /// <summary>
         /// Gets the associated <see cref="Forms.EditContext"/>.
         /// This property is uninitialized if the input does not have a parent <see cref="EditForm"/>.
         /// </summary>
