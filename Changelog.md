@@ -26,6 +26,8 @@
   by default. The maximized grid is `position: fixed`, so an ancestor with a
   `transform`, `filter`, `backdrop-filter` or `contain` confines it to that
   ancestor.
+- The Liquid Glass themes fit the grid's maximize button in the corner
+  their header row already leaves free, with no band above the header.
 
 ## Version 6.1.1 (November 2026)
 
