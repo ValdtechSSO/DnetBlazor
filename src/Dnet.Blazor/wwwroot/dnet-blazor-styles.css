@@ -5399,14 +5399,20 @@ nav ul li a.active .dnet-menu-tile {
     line-height: 1;
 }
 
+/* Under the pointer a tab takes the material's rim, and once selected the
+   accent's ring and glow, like a filled button; with keyboard focus it adds
+   the material's focus halo, since the global :focus reset hides the
+   outline. All of them paint nothing unless the theme sets them. */
 .dnet-pill-tabs-tab:hover:not(:disabled):not([aria-selected="true"]):not([aria-pressed="true"]) {
     background: var(--_hover-background);
+    box-shadow: var(--dnet-sys-material-highlight);
 }
 
 .dnet-pill-tabs-tab[aria-selected="true"],
 .dnet-pill-tabs-tab[aria-pressed="true"] {
     background: var(--_selected-background);
     color: var(--_selected-foreground);
+    box-shadow: var(--dnet-sys-material-accent-highlight);
 }
 
 .dnet-pill-tabs-tab[aria-selected="true"] .dnet-pill-tabs-count,
@@ -5418,6 +5424,15 @@ nav ul li a.active .dnet-menu-tile {
 .dnet-pill-tabs-panel:focus-visible {
     outline: 2px solid var(--dnet-sys-focus-ring);
     outline-offset: 2px;
+}
+
+.dnet-pill-tabs-tab:focus-visible {
+    box-shadow: var(--dnet-sys-material-focus);
+}
+
+.dnet-pill-tabs-tab[aria-selected="true"]:focus-visible,
+.dnet-pill-tabs-tab[aria-pressed="true"]:focus-visible {
+    box-shadow: var(--dnet-sys-material-accent-highlight), var(--dnet-sys-material-focus);
 }
 
 .dnet-pill-tabs-tab:disabled {

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- PillTabs: a tab under the pointer takes the material's rim, the selected
+  tab the accent's ring and glow like a filled button, and a tab with
+  keyboard focus the material's focus halo, since the global `:focus` reset
+  hides its outline. Themes that leave those materials unset see no change.
 - Tabs: the labels sit in the middle of their row, level with the scroll
   arrows. An inline `display:block` on each tab overrode the stylesheet's
   centring and kept them at the top of the row. Visible in every theme: the
