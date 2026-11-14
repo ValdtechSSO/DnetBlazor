@@ -213,6 +213,9 @@
   picker's panel: the options' text 24px from the edges with 24px above
   and below the list, and in the touch panel the title 24px in with 16px
   under it and the button 24px from the corner at the normal size.
+- The Liquid Glass themes render the PickList as a glass panel like the
+  cards, with the rim instead of a border, 24px around its content and 16px
+  between its sections.
 - The Liquid Glass themes render the FloatingDoubleList panel as glass and
   space it like a dialog: the round close button 18px from the corner and
   the lists' content 24px from the panel's edges and from the close button.
