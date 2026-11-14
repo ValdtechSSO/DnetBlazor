@@ -139,9 +139,13 @@
   --dnet-radio-button-disabled-border-color: var(--dnet-sys-transparent);
 
   /* Grid: a glass card whose rows are cards of their own, in the control
-     material. The header sits on the glass, without fills or separators. */
+     material, spaced like a dialog: the header text, the rows and the
+     paginator's buttons sit 24px from the edges. The header row's own height
+     already puts its text 22px down and the paginator's band leaves 9px
+     under the buttons, inside a 1px border. The header sits on the glass,
+     without fills or separators. */
   --dnet-grid-radius: var(--dnet-sys-radius-lg);
-  --dnet-grid-padding: 6px 10px;
+  --dnet-grid-padding: 1px 23px 14px;
   --dnet-grid-row-gap: 8px;
   --dnet-grid-row-radius: var(--dnet-sys-radius-sm);
   /* The rows' outline is the glass rim of buttons and containers: a single
@@ -568,6 +572,15 @@
      to the border colour, which is translucent here. Nested in the column it
      cannot blur (backdrop root), so it takes the popup fill instead. */
   --dnet-menu-container-bgcolor: var(--dnet-sys-material-popup);
+}
+
+/* Phones: compact screens keep 16px margins, so the grid's content sits
+   16px from its sides (15px inside its 1px border) and the paginator fits
+   on its line. */
+@media (max-width: 599px) {
+  [data-dnet-theme="liquid-glass"] {
+    --dnet-grid-padding: 1px 15px 14px;
+  }
 }
 
 /* No backdrop-filter support: without the blur a translucent fill shows the
