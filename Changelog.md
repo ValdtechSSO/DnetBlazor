@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- DatePicker: new `--dnet-datepicker-panel-padding`,
+  `--dnet-datepicker-panel-footer-padding` and
+  `--dnet-datepicker-panel-footer-gap` space the popup, and
+  `--dnet-datepicker-button-height`, `--dnet-datepicker-button-padding` and
+  `--dnet-datepicker-button-icon-gap` size its buttons (Reset, Cancel,
+  Apply); unset, the buttons keep their small size and whatever
+  `--dnet-btn-*` values they inherit. Without visual change by default.
 - Button: new `--dnet-btn-icon-gap` sets the space between an icon and the
   label (4px small, 8px medium and large by default). Without visual change
   by default.
