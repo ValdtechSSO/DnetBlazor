@@ -5001,9 +5001,12 @@ nav ul li a.active .dnet-menu-tile {
   display: flex;
 }
 
+/* The counter keeps its line; when the actions do not fit beside it they move
+   under it instead of squeezing it into a column. */
 .dnet-pick-list-toolbar {
   box-sizing: border-box;
   flex: none;
+  flex-wrap: wrap;
   gap: 12px;
   justify-content: space-between;
   min-height: var(--dnet-picklist-header-height, var(--pick-list-header-height, var(--dnet-list-header-footer-height, var(--dnet-sys-control-height))));
@@ -5013,7 +5016,11 @@ nav ul li a.active .dnet-menu-tile {
 .dnet-pick-list-counter {
   font-size: 0.8125rem;
   font-weight: 500;
+  max-width: 100%;
   min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .dnet-pick-list-actions {
