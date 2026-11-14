@@ -9374,6 +9374,9 @@ select.mat-input-element::-ms-value {
   --_label-weight: var(--dnet-step-label-weight, inherit);
   --_label-weight-current: var(--dnet-step-label-weight-current, var(--_label-weight));
   --_label-upcoming: var(--dnet-step-label-color-upcoming, inherit);
+  --_label-min-width: var(--dnet-step-label-min-width, 50px);
+  /* Extra space between a label and the line after it. */
+  --_line-gap: var(--dnet-step-line-gap, 0px);
 
   display: grid;
   gap: 0.3rem;
@@ -9464,7 +9467,7 @@ select.mat-input-element::-ms-value {
 
 .dnet-dstep-label {
   display: inline-block;
-  min-width: 50px;
+  min-width: var(--_label-min-width);
   vertical-align: middle;
   font-size: var(--_font-size);
   font-weight: var(--_label-weight);
@@ -9486,6 +9489,8 @@ select.mat-input-element::-ms-value {
   border-top-width: 1px;
   border-top-style: solid;
   flex: auto;
+  -webkit-margin-start: var(--_line-gap);
+          margin-inline-start: var(--_line-gap);
   height: 0;
   min-width: 32px;
 }
