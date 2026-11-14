@@ -220,6 +220,11 @@
      clipping row and keeps it off the label. */
   --dnet-step-font-size: 13px;
   --dnet-step-icon-margin: 7px 12px 7px 7px;
+  /* Labels take their own width, and each line keeps the bead's leading
+     7px on both ends: the same space after every label and before every
+     bead, whatever the label's length. */
+  --dnet-step-label-min-width: 0px;
+  --dnet-step-line-gap: 7px;
   --dnet-step-icon-font-size: 13px;
   --dnet-step-icon-font-weight: 700;
   --dnet-step-icon-background: radial-gradient(circle at 35% 25%, #ffffff 0 32%, #eef1f7 62%, #d6dce8 100%);

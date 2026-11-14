@@ -101,7 +101,8 @@
 - The Liquid Glass themes paint the steps of Stepper and DynamicStepper as
   glass beads (from option C of the reference design), keeping their own
   layout: the label beside the bead and thin lines between steps that stop
-  short of the beads. The current step is a larger accent drop with a glow;
+  short of the beads, with the same space at both ends of every line. The
+  current step is a larger accent drop with a glow;
   completed steps show an accent tick instead of their number; upcoming
   labels are muted and the current one is bolder.
 - The Liquid Glass themes paint the slide toggle as in their reference
