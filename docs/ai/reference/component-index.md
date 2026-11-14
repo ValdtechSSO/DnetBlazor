@@ -29,7 +29,7 @@ Open only the one you need.
 | [PickList](components/PickList.md) | `<PickList>` | 12 | 18 |
 | [PillTabs](components/PillTabs.md) | `<DnetPillTabs>` | 9 | 12 |
 | [RadioButton](components/RadioButton.md) | `<DnetInputRadioButton>`, `<DnetInputRadioGroup>` | 8 | 7 |
-| [Select](components/Select.md) | `<DnetSelect>` | 32 | 19 |
+| [Select](components/Select.md) | `<DnetSelect>` | 32 | 30 |
 | [Skeleton](components/Skeleton.md) | `<DnetSkeleton>` | 7 | 6 |
 | [SlideToggle](components/SlideToggle.md) | `<DnetSlideToggle>` | 6 | 27 |
 | [Slider](components/Slider.md) | `<DnetSlider>` | 34 | 9 |

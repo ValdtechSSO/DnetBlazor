@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Select: new `--dnet-select-panel-*` tokens lay out the dropdown apart
+  from the `--dnet-list-*` family that inline lists share: `-background`,
+  `-header-padding`, `-header-height`, `-header-gap` (space under the
+  title), `-list-padding`, `-padding-bottom`, and the close button's
+  `-close-padding`, `-close-radius`, `-close-background`,
+  `-close-background-hover` and `-close-shadow`, which paint it as a round
+  button with the header's height unchanged. Without visual change by
+  default.
 - ImageEditor: new `--dnet-image-editor-footer-border-width` and
   `--dnet-image-editor-footer-padding-top` set the line over the footer's
   buttons and the space under it, and `--dnet-image-editor-zoom-padding`
