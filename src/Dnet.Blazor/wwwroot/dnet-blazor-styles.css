@@ -3905,14 +3905,19 @@ nav ul li a.active .dnet-menu-tile {
   display: block;
 }
 
+/* The zoom group's inset around its round buttons and its corners; an even
+   inset with pill corners keeps the outline concentric with the buttons. */
 .dnet-image-editor-zoom {
+  --_zoom-padding: var(--dnet-image-editor-zoom-padding, 0 var(--dnet-sys-space-1));
+  --_zoom-radius: var(--dnet-image-editor-zoom-radius, var(--dnet-sys-radius-md));
+
   display: flex;
   align-items: center;
   align-self: center;
   gap: var(--dnet-sys-space-2);
   border: 1px solid var(--dnet-sys-border);
-  border-radius: var(--dnet-sys-radius-md);
-  padding: 0 var(--dnet-sys-space-1);
+  border-radius: var(--_zoom-radius);
+  padding: var(--_zoom-padding);
 }
 
 .dnet-image-editor-zoom-value {

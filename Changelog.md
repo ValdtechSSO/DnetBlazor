@@ -4,7 +4,9 @@
 
 - ImageEditor: new `--dnet-image-editor-footer-border-width` and
   `--dnet-image-editor-footer-padding-top` set the line over the footer's
-  buttons and the space under it. Without visual change by default.
+  buttons and the space under it, and `--dnet-image-editor-zoom-padding`
+  and `--dnet-image-editor-zoom-radius` the zoom group's inset and corners.
+  Without visual change by default.
 - Dialog: new `--dnet-dialog-close-padding`, `-close-radius`,
   `-close-background`, `-close-background-hover` and `-close-shadow` paint
   the close button as a round button. A negative margin cancels the
