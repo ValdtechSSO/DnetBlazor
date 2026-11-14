@@ -1,11 +1,13 @@
 /*! Paginator — migrado a tokens (6.0). Generado una vez; se edita a mano. */
 
 .dnet-paginator {
+  --_root-padding: var(--dnet-paginator-padding, 3px 0);
+
   display: flex;
   justify-content: flex-end;
   box-sizing: border-box;
   height: 100%;
-  padding: 3px 0 3px 0;
+  padding: var(--_root-padding);
 }
 
 /* A theme can lay the paginator out on one line across the whole footer:
@@ -169,6 +171,7 @@
   --_input-radius: var(--dnet-paginator-input-radius, 0px);
   --_input-width: var(--dnet-paginator-input-width, 40px);
   --_input-height: var(--dnet-paginator-input-height, 20px);
+  --_input-margin: var(--dnet-paginator-input-margin, 0 5px 2px 5px);
 
   width: var(--_input-width);
   border-radius: var(--_input-radius);
@@ -181,7 +184,7 @@
   border-bottom: 1px solid var(--_input-border-bottom) !important;
   height: var(--_input-height);
   outline: none;
-  margin: 0 5px 2px 5px;
+  margin: var(--_input-margin);
   text-align: center;
   font-size: 0.75rem;
 }

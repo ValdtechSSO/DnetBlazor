@@ -38,6 +38,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-list-border-radius` | `10px` <br><sub>via `--dnet-sys-radius-lg`</sub> |
 | `--dnet-list-box-shadow` | `var(--_base-shadow)` |
 | `--dnet-list-check-width` | `24px` |
+| `--dnet-list-footer-height` | `var(--_base-header-footer-height)` |
 | `--dnet-list-header-footer-height` | `50px` |
 | `--dnet-list-headline-font-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
 | `--dnet-list-headline-text-color` | `inherit` |
@@ -46,6 +47,8 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-list-item-height` | `50px` <br><sub>via `--dnet-sys-control-height`</sub> |
 | `--dnet-list-padding-horizontal` | `0px` |
 | `--dnet-list-padding-vertical` | `0px` |
+| `--dnet-list-paginator-display` | `flex` |
+| `--dnet-list-paginator-range-compact-display` | `flex` |
 | `--dnet-list-panel-background` | `transparent` |
 | `--dnet-list-panel-border` | `#ebebeb` <br><sub>via `--dnet-sys-border`</sub> |
 | `--dnet-list-panel-gap` | `20px` |
