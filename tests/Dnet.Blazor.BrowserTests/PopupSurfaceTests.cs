@@ -31,8 +31,10 @@ public sealed class PopupSurfaceTests
             Status = 200, ContentType = "application/json", Body = persons
         }));
 
-        await NavigateAsync(page, baseUrl, "/TimePicker", "button[aria-label='Open time picker']", theme);
-        await page.Locator("button[aria-label='Open time picker']").First.ClickAsync();
+        // The list popup is the reference; the page opens with the dial demos.
+        const string timePickerTrigger = "#time-picker-basic button[aria-label='Open time picker']";
+        await NavigateAsync(page, baseUrl, "/TimePicker", timePickerTrigger, theme);
+        await page.Locator(timePickerTrigger).ClickAsync();
         var referencePanel = page.Locator(".dnet-timepicker-panel");
         var referenceFrame = page.Locator(".dnet-timepicker-overlay");
         await Assertions.Expect(referencePanel).ToBeVisibleAsync();
