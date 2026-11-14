@@ -47,7 +47,8 @@
 .dnet-list-form,
 .dnet-list-header,
 .dnet-list-footer {
-  --_header-footer-height: var(--dnet-list-header-footer-height, 50px);
+  --_base-header-footer-height: var(--dnet-list-header-footer-height, 50px);
+  --_header-footer-height: var(--_base-header-footer-height);
   --_padding-vertical: var(--dnet-list-padding-vertical, 0px);
   --_padding-horizontal: var(--dnet-list-padding-horizontal, 0px);
 
@@ -204,19 +205,29 @@
   opacity: 0.5;
 }
 
+/* The footer can take its own height: a theme can let it be just the
+   paginator's, so the space under it matches the panel's. */
 .dnet-list-footer {
+  --_header-footer-height: var(--dnet-list-footer-height, var(--_base-header-footer-height));
+
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
 
 .dnet-list-footer .dnet-paginator {
+  flex: 1 1 auto;
   max-width: 100%;
   min-width: 0;
 }
 
+/* By default the paginator wraps, the range on its own line under the
+   controls. A theme can keep the paginator's own grid instead, laid out on
+   one line by its tokens. */
 .dnet-list-footer .dnet-paginator-container {
-  display: flex;
+  --_paginator-display: var(--dnet-list-paginator-display, flex);
+
+  display: var(--_paginator-display);
   flex-wrap: wrap;
   justify-content: flex-end;
   row-gap: 8px;
@@ -226,12 +237,18 @@
   white-space: nowrap;
 }
 
-/* The range takes its own line under the controls here, so it stays at
-   the end even where a theme sets the paginator on one line. */
 .dnet-list-footer .dnet-paginator-range-label.zone4 {
   flex-basis: 100%;
-  justify-content: flex-end;
   padding-inline: 0;
+}
+
+/* On a phone a theme can drop the range and keep only the controls. */
+@media (max-width: 599px) {
+  .dnet-list-footer .dnet-paginator-range-label.zone4 {
+    --_compact-range-display: var(--dnet-list-paginator-range-compact-display, flex);
+
+    display: var(--_compact-range-display);
+  }
 }
 
 .dnet-list-count {
