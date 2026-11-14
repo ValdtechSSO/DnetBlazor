@@ -8,6 +8,9 @@
   `--dnet-grid-header-button-hover-background` set their padding, the space
   between them and their fill under the pointer. Without visual change by
   default.
+- The Liquid Glass themes render the grid header's sort, filter and group
+  actions as the paginator's round glass buttons: 28px, 6px apart, tinted
+  in the accent under the pointer, with the focus halo.
 
 ## Version 6.1.1 (November 2026)
 
