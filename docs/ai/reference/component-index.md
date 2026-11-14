@@ -23,7 +23,7 @@ Open only the one you need.
 | [Form](components/Form.md) | `<DnetFormField>`, `<DnetInputDate>`, `<DnetInputNumber>`, `<DnetInputText>`, `<DnetInputTextArea>` | 47 | 13 |
 | [Grid](components/Grid.md) | `<BlgAdvancedFilterToggle>`, `<BlgBody>`, `<BlgGrid>`, `<BlgHeader>`, `<BlgRow>` | 73 | 45 |
 | [ImageEditor](components/ImageEditor.md) | `<DnetImageEditor>`, `<ImageEditorTooltipText>` | 18 | 4 |
-| [List](components/List.md) | `<DnetList>` | 16 | 17 |
+| [List](components/List.md) | `<DnetList>` | 16 | 22 |
 | [Overlay](components/Overlay.md) | `<DnetOverlay>` | 1 | — |
 | [Paginator](components/Paginator.md) | `<DnetPaginator>` | 22 | 8 |
 | [PickList](components/PickList.md) | `<PickList>` | 12 | 21 |

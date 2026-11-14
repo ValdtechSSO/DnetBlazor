@@ -33,10 +33,10 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
-| `--dnet-list-background-color` | `transparent` |
-| `--dnet-list-border-color` | `#ebebeb` <br><sub>via `--dnet-sys-border`</sub> |
+| `--dnet-list-background-color` | `var(--_base-background)` |
+| `--dnet-list-border-color` | `var(--_base-border-color)` |
 | `--dnet-list-border-radius` | `10px` <br><sub>via `--dnet-sys-radius-lg`</sub> |
-| `--dnet-list-box-shadow` | `none` |
+| `--dnet-list-box-shadow` | `var(--_base-shadow)` |
 | `--dnet-list-check-width` | `24px` |
 | `--dnet-list-header-footer-height` | `50px` |
 | `--dnet-list-headline-font-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
@@ -46,10 +46,15 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-list-item-height` | `50px` <br><sub>via `--dnet-sys-control-height`</sub> |
 | `--dnet-list-padding-horizontal` | `0px` |
 | `--dnet-list-padding-vertical` | `0px` |
+| `--dnet-list-panel-background` | `transparent` |
+| `--dnet-list-panel-border` | `#ebebeb` <br><sub>via `--dnet-sys-border`</sub> |
+| `--dnet-list-panel-gap` | `20px` |
+| `--dnet-list-panel-padding` | `20px` |
+| `--dnet-list-panel-shadow` | `none` |
 | `--dnet-list-prefix-suffix-min-width` | `40px` |
 | `--dnet-list-supporting-text-color` | `#666666` <br><sub>via `--dnet-sys-on-surface-muted`</sub> |
 | `--dnet-list-supporting-text-font-size` | `0.75rem` <br><sub>via `--dnet-sys-text-sm`</sub> |
-| `--dnet-list-wrapper-horizontal-padding` | `20px` |
+| `--dnet-list-wrapper-horizontal-padding` | `var(--_base-padding)` |
 
 ```css
 :root { --dnet-list-background-color: /* your value */; }

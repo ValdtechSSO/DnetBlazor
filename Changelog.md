@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- List: new `--dnet-list-panel-background`, `-border`, `-shadow`,
+  `-padding` and `-gap` style a standalone list's own box, apart from the
+  `--dnet-list-*` family the dropdowns share; the shared tokens still win
+  when set. Without visual change by default.
 - PickList: the selection counter keeps its line. When the actions do not
   fit beside it they move under it, instead of squeezing the counter into a
   column one word per line. Visible in every theme where the box is narrow.
