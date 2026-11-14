@@ -142,6 +142,11 @@
   --dnet-grid-radius: var(--dnet-sys-radius-lg);
   --dnet-grid-padding: 1px 23px 14px;
   --dnet-grid-row-gap: 8px;
+  /* The header's sort, filter and group actions are the round glass buttons
+     of the paginator: 28px, 6px apart, tinted under the pointer. */
+  --dnet-grid-header-button-padding: 7px;
+  --dnet-grid-header-actions-gap: 6px;
+  --dnet-grid-header-button-hover-background: color-mix(in srgb, var(--dnet-sys-primary-content) 10%, var(--dnet-sys-material-ghost));
   --dnet-grid-row-radius: var(--dnet-sys-radius-sm);
   /* The rows' outline is the glass rim of buttons and containers: a single
      1px line, as --dnet-sys-material-highlight draws it. The border stays

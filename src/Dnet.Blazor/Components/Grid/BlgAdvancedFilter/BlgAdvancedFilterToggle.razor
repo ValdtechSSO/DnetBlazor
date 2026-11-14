@@ -17,7 +17,7 @@
 @inject DnetOverlayInterop DnetOverlayInterop
 
 <DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
-<div @ref="_menuTrigger" @onclick="ToggleMenu" role="button" tabindex="0" aria-label="@(Localizer["Grid.OpenFilter"])" aria-expanded="@(_isOpen ? "true" : "false")" @onkeydown="HandleKeyDown">
+<div @ref="_menuTrigger" class="blg-adv-toggle-button" @onclick="ToggleMenu" role="button" tabindex="0" aria-label="@(Localizer["Grid.OpenFilter"])" aria-expanded="@(_isOpen ? "true" : "false")" @onkeydown="HandleKeyDown">
     <span class="@(IsFiltered ? "blg-adv-toggle-button-filtered-image" : "blg-adv-toggle-button-image")">
     </span>
 </div>

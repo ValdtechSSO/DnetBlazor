@@ -688,6 +688,34 @@
   padding: 0;
   text-align: inherit;
 }
+
+/* The header's actions (sort, filter, group) are bare icons by default. A
+   theme can make them round buttons in the material's ghost glass, with a
+   tint under the pointer, the focus halo and space between them. */
+.blg-header-cell-actions {
+  --_header-actions-gap: var(--dnet-grid-header-actions-gap, normal);
+
+  gap: var(--_header-actions-gap);
+}
+.blg-arcadia-theme .blg-header-icon-button,
+.blg-arcadia-theme .blg-adv-toggle-button {
+  --_header-button-padding: var(--dnet-grid-header-button-padding, 0);
+
+  padding: var(--_header-button-padding);
+  border-radius: var(--dnet-sys-radius-pill);
+  background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-ghost-elevation);
+}
+.blg-arcadia-theme .blg-header-icon-button:hover,
+.blg-arcadia-theme .blg-adv-toggle-button:hover {
+  --_header-button-hover: var(--dnet-grid-header-button-hover-background, var(--dnet-sys-material-ghost));
+
+  background-color: var(--_header-button-hover);
+}
+.blg-arcadia-theme .blg-header-icon-button:focus-visible,
+.blg-arcadia-theme .blg-adv-toggle-button:focus-visible {
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-focus);
+}
 .blg-arcadia-theme .blg-tree-toggle:focus-visible,
 .blg-arcadia-theme .blg-cell:focus-visible {
   outline: 2px solid var(--dnet-grid-focus-color, var(--blg-focus-color, currentColor));
