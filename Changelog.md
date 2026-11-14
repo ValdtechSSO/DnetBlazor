@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- FloatingDoubleList: its lists keep the list's own padding and gap, so the
+  standalone list's panel tokens do not reach them. Without visual change.
 - List: new `--dnet-list-panel-background`, `-border`, `-shadow`,
   `-padding` and `-gap` style a standalone list's own box, apart from the
   `--dnet-list-*` family the dropdowns share; the shared tokens still win
