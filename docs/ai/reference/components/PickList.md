@@ -31,10 +31,14 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
+| `--dnet-list-paginator-range-basis` | `100%` |
+| `--dnet-list-paginator-range-compact-display` | `flex` |
+| `--dnet-list-paginator-range-order` | `0` |
 | `--dnet-picklist-background` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
 | `--dnet-picklist-border` | `#ebebeb` <br><sub>via `--dnet-sys-border`</sub> |
 | `--dnet-picklist-check-width` | `24px` |
 | `--dnet-picklist-footer-height` | `50px` <br><sub>via `--dnet-sys-control-height`</sub> |
+| `--dnet-picklist-footer-overflow` | `hidden` |
 | `--dnet-picklist-foreground` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
 | `--dnet-picklist-gap` | `20px` |
 | `--dnet-picklist-header-height` | `50px` <br><sub>via `--dnet-sys-control-height`</sub> |

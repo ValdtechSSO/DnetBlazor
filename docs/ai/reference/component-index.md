@@ -23,10 +23,10 @@ Open only the one you need.
 | [Form](components/Form.md) | `<DnetFormField>`, `<DnetInputDate>`, `<DnetInputNumber>`, `<DnetInputText>`, `<DnetInputTextArea>` | 47 | 13 |
 | [Grid](components/Grid.md) | `<BlgAdvancedFilterToggle>`, `<BlgBody>`, `<BlgGrid>`, `<BlgHeader>`, `<BlgRow>` | 73 | 50 |
 | [ImageEditor](components/ImageEditor.md) | `<DnetImageEditor>`, `<ImageEditorTooltipText>` | 18 | 4 |
-| [List](components/List.md) | `<DnetList>` | 16 | 25 |
+| [List](components/List.md) | `<DnetList>` | 16 | 26 |
 | [Overlay](components/Overlay.md) | `<DnetOverlay>` | 1 | — |
 | [Paginator](components/Paginator.md) | `<DnetPaginator>` | 22 | 22 |
-| [PickList](components/PickList.md) | `<PickList>` | 12 | 21 |
+| [PickList](components/PickList.md) | `<PickList>` | 12 | 25 |
 | [PillTabs](components/PillTabs.md) | `<DnetPillTabs>` | 9 | 12 |
 | [RadioButton](components/RadioButton.md) | `<DnetInputRadioButton>`, `<DnetInputRadioGroup>` | 8 | 7 |
 | [Select](components/Select.md) | `<DnetSelect>` | 32 | 30 |
