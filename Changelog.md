@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- PickList: new `--dnet-picklist-padding` and `--dnet-picklist-gap` set the
+  space inside the box and between its sections (20px each by default), and
+  `--dnet-picklist-shadow` its shadow. Without visual change by default.
 - FloatingDoubleList: new `--dnet-floating-double-list-panel-background`,
   `-header-padding` (the row over the lists, which no longer sets its
   padding inline) and `-lists-padding` lay out the panel, and

@@ -4957,11 +4957,14 @@ nav ul li a.active .dnet-menu-tile {
   --_selected: var(--dnet-picklist-item-selected, var(--pick-list-item-selected, var(--dnet-sys-transparent)));
   --_primary: var(--dnet-picklist-primary, var(--pick-list-primary, var(--dnet-sys-primary)));
   --_scrollbar: var(--dnet-picklist-scrollbar, var(--pick-list-scrollbar, var(--dnet-sys-border-strong)));
-  --_content-padding: 20px;
-  --_section-gap: 20px;
+  /* The space inside the box and between its sections, and its shadow. */
+  --_content-padding: var(--dnet-picklist-padding, 20px);
+  --_section-gap: var(--dnet-picklist-gap, 20px);
+  --_shadow: var(--dnet-picklist-shadow, none);
   background: var(--_background);
   border: 1px solid var(--_border);
   border-radius: var(--_radius);
+  box-shadow: var(--_shadow);
   box-sizing: border-box;
   color: var(--_foreground);
   display: flex;
