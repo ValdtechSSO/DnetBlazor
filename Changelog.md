@@ -96,13 +96,12 @@
 - The Liquid Glass themes render chips as glass like the buttons, keeping
   their own corners: unselected chips are ghost glass, and a selected chip
   takes the accent fill with its sheen and glow.
-- The Liquid Glass themes paint Stepper and DynamicStepper as glass beads
-  on a thread (option C of the reference design): each bead sits over its
-  label in equal columns, on a recessed rail that fills with the accent up
-  to the current step, a larger accent drop with a glow. Completed beads
-  show an accent tick instead of their number; upcoming labels are muted
-  and the current one is bolder. The vertical stepper takes the beads and
-  keeps its line.
+- The Liquid Glass themes paint the steps of Stepper and DynamicStepper as
+  glass beads (from option C of the reference design), keeping their own
+  layout: the label beside the bead and thin lines between steps that stop
+  short of the beads. The current step is a larger accent drop with a glow;
+  completed steps show an accent tick instead of their number; upcoming
+  labels are muted and the current one is bolder.
 - The Liquid Glass themes paint the slide toggle as in their reference
   design. Standard (option A): a recessed glass well with a faint rim and a
   white glass bead inside it; checked, the track fills with the accent,

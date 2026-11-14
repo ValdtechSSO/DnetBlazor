@@ -218,28 +218,23 @@
     inset 0 0 0 1px rgb(255 255 255 / .55), 0 0 0 .5px rgb(16 24 48 / .2), 0 3px 10px rgb(16 24 48 / .22);
   --dnet-slide-toggle-lens-handle-backdrop: blur(1.5px) brightness(1.1) saturate(1.6);
 
-  /* Steppers (option C, "Cuentas sobre un hilo"): glass beads on a recessed
-     rail that fills with the accent up to the current step, a larger accent
-     drop. Each bead sits over its label, in equal columns. A completed bead
-     shows the accent tick instead of its number. The beads sit 4px lower than
-     in the design, so the current drop's halo clears the DynamicStepper's
-     clipping header row. */
+  /* Steppers: glass beads (option C of the reference design) on the
+     stepper's own layout, label beside the bead and the thin lines between
+     steps, as in the vertical stepper. The current step is a larger accent
+     drop; completed steps show the accent tick instead of their number. The
+     margin leaves room for the drop's halo inside the DynamicStepper's
+     clipping row and keeps it off the label. */
   --dnet-step-font-size: 13px;
-  --dnet-step-header-direction: column;
-  --dnet-step-header-flex: 1 1 0;
-  --dnet-step-header-overflow: visible;
-  --dnet-step-line-display: none;
-  --dnet-step-icon-margin: 8px 4px 12px;
-  --dnet-step-icon-size: 32px;
+  --dnet-step-icon-margin: 7px 12px 7px 7px;
   --dnet-step-icon-font-size: 13px;
   --dnet-step-icon-font-weight: 700;
   --dnet-step-icon-background: radial-gradient(circle at 35% 25%, #ffffff 0 32%, #f3f5fa 62%, #e2e7f0 100%);
   --dnet-step-icon-color: #4b5368;
-  --dnet-step-icon-shadow: 
+  --dnet-step-icon-shadow:
     inset 0 1px 0 #ffffff, inset 0 -1px 1px rgb(16 24 48 / .06),
     0 0 0 .5px rgb(16 24 48 / .12), 0 2px 6px rgb(16 24 48 / .18);
   --dnet-step-icon-background-done:
-    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M3.5 8.4l2.9 2.9 6-6.5' fill='none' stroke='%232563eb' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/></svg>") center / 15px 15px no-repeat,
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M3.5 8.4l2.9 2.9 6-6.5' fill='none' stroke='%232563eb' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/></svg>") center / 12px 12px no-repeat,
     radial-gradient(circle at 35% 25%, #ffffff 0 32%, #f3f5fa 62%, #e2e7f0 100%);
   --dnet-step-icon-background-current:
     radial-gradient(120% 80% at 30% 10%, rgb(255 255 255 / .5), transparent 52%),
@@ -249,17 +244,9 @@
     inset 0 1px 0 rgb(255 255 255 / .5), 0 4px 14px color-mix(in srgb, var(--dnet-sys-primary) 40%, transparent),
     0 0 0 4px color-mix(in srgb, var(--dnet-sys-primary) 16%, transparent);
   --dnet-step-icon-scale-current: 1.2;
-  --dnet-step-label-align: center;
   --dnet-step-label-weight: 500;
   --dnet-step-label-weight-current: 650;
   --dnet-step-label-color-upcoming: var(--dnet-sys-on-surface-muted);
-  --dnet-step-rail-top: 20px;
-  --dnet-step-rail-background: linear-gradient(180deg, rgb(13 18 32 / .12), rgb(13 18 32 / .05));
-  --dnet-step-rail-shadow: 
-    inset 0 1px 3px rgb(13 18 32 / .16), inset 0 0 0 1px rgb(13 18 32 / .10), 0 1px 0 rgb(255 255 255 / .8);
-  --dnet-step-rail-background-done:
-    linear-gradient(180deg, rgb(255 255 255 / .2), rgb(255 255 255 / 0) 55%), var(--dnet-sys-primary);
-  --dnet-step-rail-shadow-done: inset 0 1px 0 rgb(255 255 255 / .4), 0 1px 0 rgb(255 255 255 / .8);
 
   /* AdminLayout: the minified menu flyout floats over the content and defaults
      to the border colour, which is translucent here. Nested in the column it
