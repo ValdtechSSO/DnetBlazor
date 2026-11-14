@@ -4412,12 +4412,18 @@ nav ul li a.active .dnet-menu-tile {
 }
 
 .dnet-list-wrapper {
-  --_border-color: var(--dnet-list-border-color, var(--dnet-sys-border));
+  /* A standalone list's own box. The --dnet-list-* family is shared with the
+     dropdowns; the --dnet-list-panel-* tokens style only this box. */
+  --_base-border-color: var(--dnet-list-panel-border, var(--dnet-sys-border));
+  --_base-padding: var(--dnet-list-panel-padding, 20px);
+  --_base-background: var(--dnet-list-panel-background, transparent);
+  --_base-shadow: var(--dnet-list-panel-shadow, none);
+  --_border-color: var(--dnet-list-border-color, var(--_base-border-color));
   --_radius: var(--dnet-list-border-radius, var(--dnet-sys-radius-lg));
-  --_wrapper-padding: var(--dnet-list-wrapper-horizontal-padding, 20px);
-  --_section-gap: 20px;
-  --_background: var(--dnet-list-background-color, transparent);
-  --_shadow: var(--dnet-list-box-shadow, none);
+  --_wrapper-padding: var(--dnet-list-wrapper-horizontal-padding, var(--_base-padding));
+  --_section-gap: var(--dnet-list-panel-gap, 20px);
+  --_background: var(--dnet-list-background-color, var(--_base-background));
+  --_shadow: var(--dnet-list-box-shadow, var(--_base-shadow));
 
   display: flex;
   flex-direction: column;
@@ -4431,7 +4437,7 @@ nav ul li a.active .dnet-menu-tile {
   overflow: hidden;
   padding: var(--_wrapper-padding);
   transition: opacity 0.5s ease-in-out;
-  background-color: var(--_background);
+  background: var(--_background);
   box-shadow: var(--_shadow);
 }
 .dnet-list-wrapper .dnet-item-fadeout {
@@ -7584,15 +7590,20 @@ button[disabled].dnet-datepickerweekca-raw-next-button::after {
 }
 
 /* The surrounding panel owns the surface; explicit list customizations remain
-   available without adding another frame or elevation by default. */
+   available without adding another frame or elevation by default. The lists
+   keep the list's own spacing too, whatever a theme gives standalone lists
+   (--dnet-list-panel-*). */
 .dnet-connected-panel-container-dl .dnet-list-wrapper {
   --_list-border: var(--dnet-list-border-color, var(--dnet-sys-transparent));
   --_list-background: var(--dnet-list-background-color, transparent);
   --_list-elevation: var(--dnet-list-box-shadow, none);
+  --_list-padding: var(--dnet-list-wrapper-horizontal-padding, 20px);
 
   border-color: var(--_list-border);
   background: var(--_list-background);
   box-shadow: var(--_list-elevation);
+  padding: var(--_list-padding);
+  gap: 20px;
 }
 
 .dnet-floating-doublelist-value-wrapper {

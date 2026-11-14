@@ -65,6 +65,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-list-background-color` | `transparent` |
 | `--dnet-list-border-color` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
 | `--dnet-list-box-shadow` | `none` |
+| `--dnet-list-wrapper-horizontal-padding` | `20px` |
 
 ```css
 :root { --dnet-dialog-border-radius: /* your value */; }

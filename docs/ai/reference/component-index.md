@@ -18,12 +18,12 @@ Open only the one you need.
 | [Dialog](components/Dialog.md) | `<DnetDialog>` | 5 | 19 |
 | [DynamicStepper](components/DynamicStepper.md) | `<DnetDynamicStep>`, `<DnetDynamicStepper>` | 13 | 16 |
 | [ExpansionPanel](components/ExpansionPanel.md) | `<DnetExpansionPanelItem>` | 10 | 3 |
-| [FloatingDoubleList](components/FloatingDoubleList.md) | `<DnetFloatingDoubleList>` | 32 | 12 |
+| [FloatingDoubleList](components/FloatingDoubleList.md) | `<DnetFloatingDoubleList>` | 32 | 13 |
 | [FloatingPanel](components/FloatingPanel.md) | `<DnetFloatingPanel>` | 3 | — |
 | [Form](components/Form.md) | `<DnetFormField>`, `<DnetInputDate>`, `<DnetInputNumber>`, `<DnetInputText>`, `<DnetInputTextArea>` | 47 | 13 |
 | [Grid](components/Grid.md) | `<BlgAdvancedFilterToggle>`, `<BlgBody>`, `<BlgGrid>`, `<BlgHeader>`, `<BlgRow>` | 73 | 45 |
 | [ImageEditor](components/ImageEditor.md) | `<DnetImageEditor>`, `<ImageEditorTooltipText>` | 18 | 4 |
-| [List](components/List.md) | `<DnetList>` | 16 | 17 |
+| [List](components/List.md) | `<DnetList>` | 16 | 22 |
 | [Overlay](components/Overlay.md) | `<DnetOverlay>` | 1 | — |
 | [Paginator](components/Paginator.md) | `<DnetPaginator>` | 22 | 8 |
 | [PickList](components/PickList.md) | `<PickList>` | 12 | 21 |
