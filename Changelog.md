@@ -9,9 +9,11 @@
   `-icon-background-done` painted over completed steps,
   `-icon-background-current`, `-icon-shadow-current`, `-icon-scale-current`)
   and the labels (`-label-weight`, `-label-weight-current`,
-  `-label-color-upcoming`), and space the icons of a horizontal stepper
-  (`-icon-margin`). Completed steps are the ones before the current one.
-  Without visual change by default.
+  `-label-color-upcoming`), and space a horizontal stepper: the icons
+  (`-icon-margin`), the labels' minimum width (`-label-min-width`) and the
+  extra space between a label and the line after it (`-line-gap`).
+  Completed steps are the ones before the current one. Without visual
+  change by default.
 - New material mechanic `--dnet-sys-material-well-shadow`, the inner shadow
   and rim of recessed tracks (slide toggle). Without effect by default.
 - SlideToggle: new `Variant` parameter. `DnetSlideToggleVariant.Lens` is a

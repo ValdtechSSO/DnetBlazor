@@ -56,8 +56,10 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-step-icon-shadow` | `none` |
 | `--dnet-step-icon-shadow-current` | `none` |
 | `--dnet-step-label-color-upcoming` | `color-mix(in srgb, var(--dnet-ref-neutral-1000) 87%, transparent)` <br><sub>via `--dnet-sys-on-surface-emphasis`</sub> |
+| `--dnet-step-label-min-width` | `50px` |
 | `--dnet-step-label-weight` | `inherit` |
 | `--dnet-step-label-weight-current` | `var(--_label-weight)` |
+| `--dnet-step-line-gap` | `0px` |
 
 ```css
 :root { --dnet-step-icon-background: /* your value */; }

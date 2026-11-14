@@ -21,6 +21,9 @@
   --_label-weight: var(--dnet-step-label-weight, inherit);
   --_label-weight-current: var(--dnet-step-label-weight-current, var(--_label-weight));
   --_label-upcoming: var(--dnet-step-label-color-upcoming, var(--dnet-sys-on-surface-emphasis));
+  --_label-min-width: var(--dnet-step-label-min-width, 50px);
+  /* Extra space between a label and the line after it. */
+  --_line-gap: var(--dnet-step-line-gap, 0px);
 
   background-color: var(--dnet-sys-material-page);
 }
@@ -110,7 +113,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  min-width: 50px;
+  min-width: var(--_label-min-width);
   vertical-align: middle;
   font-size: var(--_font-size);
   font-weight: var(--_label-weight);
@@ -147,7 +150,8 @@
   border-top-style: solid;
   flex: auto;
   height: 0;
-  margin: 0 -16px;
+  margin-block: 0;
+  margin-inline: calc(var(--_line-gap) - 16px) -16px;
   min-width: 32px;
 }
 
