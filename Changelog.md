@@ -1,5 +1,14 @@
 # Changelog for Blazor Library
 
+## Version 6.1.1 (November 2026)
+
+- Publishes the 6.1.0 changes to NuGet. 6.1.0 was released on GitHub only:
+  its package was not published because the Linux visual baselines had not
+  been updated for that version's intended changes. No library changes.
+- The Linux visual goldens are updated for those changes. The *Build and
+  test* workflow can regenerate them on its Linux runner with the
+  `update_goldens` option, which uploads them for review without committing.
+
 ## Version 6.1.0 (November 2026)
 
 - Forms: messages and accessible names use the name the model gives a field
