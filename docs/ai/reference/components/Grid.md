@@ -164,6 +164,9 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-grid-checkbox-size` | `18px` |
 | `--dnet-grid-clicked-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 14%, transparent)` <br><sub>via `--dnet-sys-state-pressed`</sub> |
 | `--dnet-grid-disabled-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 38%, transparent)` <br><sub>via `--dnet-sys-state-disabled-fg`</sub> |
+| `--dnet-grid-filter-background` | `var(--dnet-sys-material-sheen), var(--dnet-sys-material-popup)` |
+| `--dnet-grid-filter-gap` | `calc(var(--dnet-sys-space-unit) * 3)` <br><sub>via `--dnet-sys-space-3`</sub> |
+| `--dnet-grid-filter-padding` | `calc(var(--dnet-sys-space-unit) * 4)` <br><sub>via `--dnet-sys-space-4`</sub> |
 | `--dnet-grid-focus-color` | `currentColor` |
 | `--dnet-grid-font-family` | `"Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif` <br><sub>via `--dnet-sys-font`</sub> |
 | `--dnet-grid-font-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |

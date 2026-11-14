@@ -3591,21 +3591,28 @@ nav ul li a.active .dnet-menu-tile {
 }
 
 .blg-advanced-filter-container {
+  --_filter-background: var(--dnet-grid-filter-background, var(--dnet-sys-material-sheen), var(--dnet-sys-material-popup));
+
   width: min(320px, calc(100vw - 32px));
   max-height: calc(100dvh - 32px);
   border-radius: var(--dnet-sys-radius-lg);
   overflow: auto;
   box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-elevation-3);
-  background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-popup);
+  background: var(--_filter-background);
   -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
           backdrop-filter: var(--dnet-sys-material-backdrop);
   color: var(--dnet-sys-on-surface-emphasis);
 }
 
+/* The space around the fields and between them. Each form field also keeps
+   its own bottom margin, which a theme can let stand alone with a 0px gap. */
 .blg-adv-filter-form {
+  --_filter-padding: var(--dnet-grid-filter-padding, var(--dnet-sys-space-4));
+  --_filter-gap: var(--dnet-grid-filter-gap, var(--dnet-sys-space-3));
+
   display: grid;
-  gap: var(--dnet-sys-space-3);
-  padding: var(--dnet-sys-space-4);
+  gap: var(--_filter-gap);
+  padding: var(--_filter-padding);
 }
 
 .blg-adv-filter-form > div {

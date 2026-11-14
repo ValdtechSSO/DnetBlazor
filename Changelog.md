@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Grid: new `--dnet-grid-filter-background`, `--dnet-grid-filter-padding`
+  and `--dnet-grid-filter-gap` lay out the column filter panel, and
+  `--dnet-grid-filter-button-height` and `--dnet-grid-filter-button-padding`
+  size its buttons; unset, they keep their small size and whatever
+  `--dnet-btn-*` values they inherit. Without visual change by default.
 - PillTabs: a tab under the pointer takes the material's rim, the selected
   tab the accent's ring and glow like a filled button, and a tab with
   keyboard focus the material's focus halo, since the global `:focus` reset
@@ -256,6 +261,9 @@
   picker's panel: the options' text 24px from the edges with 24px above
   and below the list, and in the touch panel the title 24px in with 16px
   under it and the button 24px from the corner at the normal size.
+- The Liquid Glass themes render the grid's column filter panel as glass
+  like the other panels, spaced like a dialog: 24px around its content and
+  16px between its fields, with its buttons at the theme's normal size.
 - The Liquid Glass themes render PillTabs with the selected tab glossy
   accent like the filled buttons, a tinted ghost glass lens under the
   pointer, the reference design's chips as counters and 40px tabs like the
