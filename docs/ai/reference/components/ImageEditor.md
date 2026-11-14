@@ -50,7 +50,9 @@ the element's own `style`. Nothing else is needed.
 |---|---|
 | `--dnet-image-editor-footer-border-width` | `1px` |
 | `--dnet-image-editor-footer-padding-top` | `calc(var(--dnet-sys-space-unit) * 3)` <br><sub>via `--dnet-sys-space-3`</sub> |
+| `--dnet-image-editor-zoom-padding` | `0 var(--dnet-sys-space-1)` |
+| `--dnet-image-editor-zoom-radius` | `5px` <br><sub>via `--dnet-sys-radius-md`</sub> |
 
 ```css
-:root { --dnet-image-editor-footer-border-width: /* your value */; }
+:root { --dnet-image-editor-zoom-radius: /* your value */; }
 ```

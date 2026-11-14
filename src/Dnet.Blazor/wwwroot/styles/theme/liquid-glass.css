@@ -324,6 +324,10 @@
      actions. */
   --dnet-image-editor-footer-border-width: 0px;
   --dnet-image-editor-footer-padding-top: 8px;
+  /* Its zoom group keeps the same 4px all around its round buttons, inside
+     pill corners that follow them. */
+  --dnet-image-editor-zoom-padding: 4px;
+  --dnet-image-editor-zoom-radius: var(--dnet-sys-radius-pill);
 
   /* AdminLayout menu (from the reference design): rows inset from the
      column, each led by a glass tile with the item's short text, or its icon.
