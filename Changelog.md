@@ -98,6 +98,13 @@
 - The Liquid Glass themes render chips as glass like the buttons, keeping
   their own corners: unselected chips are ghost glass, and a selected chip
   takes the accent fill with its sheen and glow.
+- The Liquid Glass themes draw the timeline as glass cards (option A of the
+  reference design): completed and current events are glass cards, the
+  current one tinted with the accent, a ring and a glow, and pending ones
+  a dashed outline. The markers are glass dots on a line that runs under
+  them and fills with the accent after completed events: a bead with the
+  accent tick when completed, an accent drop with a white core when
+  current.
 - The Liquid Glass themes paint the slide toggle as in their reference
   design. Standard (option A): a recessed glass well with a faint rim and a
   white glass bead inside it; checked, the track fills with the accent,
