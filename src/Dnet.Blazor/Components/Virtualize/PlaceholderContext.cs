@@ -6,6 +6,7 @@ namespace Dnet.Blazor.Components.Virtualize
     /// <summary>
     /// Contains context for a placeholder in a virtualized list.
     /// </summary>
+    [Obsolete("Use Microsoft.AspNetCore.Components.Web.Virtualization.PlaceholderContext instead. This copy of the framework component is not used by the library and will be removed in the next major version.")]
     public readonly struct PlaceholderContext
     {
         /// <summary>
