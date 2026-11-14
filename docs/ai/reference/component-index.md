@@ -6,13 +6,13 @@ Open only the one you need.
 | Component | Use in markup | Parameters | Styling tokens |
 |---|---|---:|---:|
 | [AdminLayout](components/AdminLayout.md) | `<DesktopFooter>`, `<DesktopHeader>`, `<DesktopLayout>`, `<DesktopLeftColumn>`, `<DesktopMinifyMenu>`, `<DesktopNavigation>`, `<DesktopNavigationMenu>`, `<DesktopRightColumn>`, `<MenuTree>`, `<MenuTreeLink>`, `<MenuTreeLinkHelper>` | 27 | 76 |
-| [Autocomplete](components/Autocomplete.md) | `<DnetAutocomplete>` | 34 | 17 |
+| [Autocomplete](components/Autocomplete.md) | `<DnetAutocomplete>` | 34 | 28 |
 | [Badge](components/Badge.md) | `<DnetBadge>` | 10 | 4 |
-| [Button](components/Button.md) | `<DnetButton>` | 8 | 11 |
+| [Button](components/Button.md) | `<DnetButton>` | 8 | 12 |
 | [Checkbox](components/Checkbox.md) | `<DnetInputCheckbox>` | 3 | 7 |
 | [Chips](components/Chips.md) | `<DnetChip>`, `<DnetChipList>` | 18 | 11 |
 | [ConnectedPanel](components/ConnectedPanel.md) | `<DnetConnectedFloatingPanel>` | 3 | 3 |
-| [DatePicker](components/DatePicker.md) | `<DnetCalendar>`, `<DnetDatePicker>`, `<DnetDateRangePicker>` | 111 | 9 |
+| [DatePicker](components/DatePicker.md) | `<DnetCalendar>`, `<DnetDatePicker>`, `<DnetDateRangePicker>` | 111 | 13 |
 | [DatePickerWeek](components/DatePickerWeek.md) | `<DnetDatePickerWeek>` | 13 | 7 |
 | [DatePickerWeekRaw](components/DatePickerWeekRaw.md) | `<DnetDatePickerWeekRaw>` | 3 | 5 |
 | [Dialog](components/Dialog.md) | `<DnetDialog>` | 5 | 19 |
@@ -38,7 +38,7 @@ Open only the one you need.
 | [Stepper](components/Stepper.md) | `<DnetStep>`, `<DnetStepper>` | 13 | 16 |
 | [Tabs](components/Tabs.md) | `<DnetTab>`, `<DnetTabBody>`, `<DnetTabGroup>` | 12 | 5 |
 | [Theme](components/Theme.md) | `<DnetThemeScope>` | 3 | — |
-| [TimePicker](components/TimePicker.md) | `<DnetTimePicker>` | 19 | 6 |
+| [TimePicker](components/TimePicker.md) | `<DnetTimePicker>` | 19 | 7 |
 | [Timeline](components/Timeline.md) | `<DnetTimeline>`, `<DnetTimelineItem>` | 13 | 28 |
 | [Toast](components/Toast.md) | `<DnetToast>`, `<DnetToastStack>` | 22 | 16 |
 | [Tooltip](components/Tooltip.md) | `<DnetTooltipPanel>` | 10 | 9 |

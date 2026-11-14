@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+- DatePicker: new `--dnet-datepicker-panel-padding`,
+  `--dnet-datepicker-panel-footer-padding` and
+  `--dnet-datepicker-panel-footer-gap` space the popup, and
+  `--dnet-datepicker-button-height`, `--dnet-datepicker-button-padding` and
+  `--dnet-datepicker-button-icon-gap` size its buttons (Reset, Cancel,
+  Apply); unset, the buttons keep their small size and whatever
+  `--dnet-btn-*` values they inherit. Without visual change by default.
+- Button: new `--dnet-btn-icon-gap` sets the space between an icon and the
+  label (4px small, 8px medium and large by default). Without visual change
+  by default.
+- TimePicker: new `--dnet-timepicker-panel-header-background` sets the fill
+  of the touch panel's header, the panel's own fill by default. Without
+  visual change by default.
+- DatePicker: new `--dnet-datepicker-panel-background` sets the popup's fill
+  apart from calendars shown in the page. Without visual change by default.
+- Autocomplete: new `--dnet-autocomplete-panel-*` tokens lay out the
+  dropdown like the Select's: `-background`, `-header-padding`,
+  `-header-height`, `-header-gap`, `-list-padding`, `-padding-bottom`, and
+  the close button's `-close-padding`, `-close-radius`, `-close-background`,
+  `-close-background-hover` and `-close-shadow`. Without visual change by
+  default.
 - Select: new `--dnet-select-panel-*` tokens lay out the dropdown apart
   from the `--dnet-list-*` family that inline lists share: `-background`,
   `-header-padding`, `-header-height`, `-header-gap` (space under the
@@ -162,6 +183,14 @@
   current step is a larger accent drop with a glow;
   completed steps show an accent tick instead of their number; upcoming
   labels are muted and the current one is bolder.
+- The Liquid Glass themes render the other dropdown panels as glass too:
+  the Autocomplete's like the Select's (spaced like a dialog, with the
+  round close button), and the popups of DatePicker, TimePicker and
+  ConnectedPanel. Calendars shown in the page keep their own fill, and the
+  time picker's touch header no longer adds a second layer. The date
+  picker's popup is spaced like a dialog (its controls and buttons 24px
+  from the edges, 24px between the days and the buttons, 8px between
+  buttons) and its buttons take the theme's normal size.
 - The Liquid Glass themes render the Select dropdown as glass like dialogs
   and space it like them: 24px around, the options' text in line with the
   title and 16px under it, and the theme's round close button 18px from the

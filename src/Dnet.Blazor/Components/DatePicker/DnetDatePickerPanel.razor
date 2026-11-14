@@ -49,14 +49,14 @@
     @if (ShowActions)
     {
         <div class="dnet-datepicker-actions">
-            <DnetButton Size="DnetButtonSize.Small" Variant="DnetButtonVariant.Outlined" class="dnet-datepicker-action dnet-datepicker-action-secondary" OnClick="Cancel">@EffectiveLabels.Cancel</DnetButton>
-            <DnetButton Size="DnetButtonSize.Small" Variant="DnetButtonVariant.Filled" class="dnet-datepicker-action dnet-datepicker-action-primary" OnClick="ApplySelectionAsync">@EffectiveLabels.Apply</DnetButton>
+            <DnetButton Size="DnetButtonSize.Small" Variant="DnetButtonVariant.Outlined" class="dnet-datepicker-action dnet-datepicker-action-secondary" style="@ButtonSizeStyle" OnClick="Cancel">@EffectiveLabels.Cancel</DnetButton>
+            <DnetButton Size="DnetButtonSize.Small" Variant="DnetButtonVariant.Filled" class="dnet-datepicker-action dnet-datepicker-action-primary" style="@ButtonSizeStyle" OnClick="ApplySelectionAsync">@EffectiveLabels.Apply</DnetButton>
         </div>
     }
     else if (ShowReset)
     {
         <div class="dnet-calendar-header-footer">
-            <DnetButton Size="DnetButtonSize.Small" Variant="DnetButtonVariant.Outlined" class="dnet-datepicker-reset-button-wrapper" OnClick="ResetAsync">
+            <DnetButton Size="DnetButtonSize.Small" Variant="DnetButtonVariant.Outlined" class="dnet-datepicker-reset-button-wrapper" style="@ButtonSizeStyle" OnClick="ResetAsync">
                 <span class="dnet-datepicker-icon dnet-datepicker-reset-button" aria-hidden="true"></span>
                 <span>@EffectiveLabels.Reset</span>
             </DnetButton>
@@ -65,6 +65,14 @@
 </div>
 
 @code {
+    // A theme can give the popup's buttons another size through these tokens;
+    // when unset each falls back to what the button inherits, so the small size
+    // and any app-wide --dnet-btn-* values stay as they were.
+    private const string ButtonSizeStyle =
+        "--dnet-btn-height:var(--dnet-datepicker-button-height, inherit);" +
+        "--dnet-btn-padding:var(--dnet-datepicker-button-padding, inherit);" +
+        "--dnet-btn-icon-gap:var(--dnet-datepicker-button-icon-gap, inherit);";
+
     private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
     private DnetDatePickerLabels? _labels;
     private DnetDatePickerLabels EffectiveLabels => Labels.Resolve(Localizer);

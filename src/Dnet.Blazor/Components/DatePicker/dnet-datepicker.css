@@ -15,7 +15,9 @@
 }
 
 .dnet-datepicker-content {
-  --_background: var(--dnet-calendar-background, var(--dnet-sys-material-popup));
+  /* The popup's own fill, apart from the calendar shown in the page. */
+  --_base-background: var(--dnet-datepicker-panel-background, var(--dnet-sys-material-popup));
+  --_background: var(--dnet-calendar-background, var(--_base-background));
 
   box-sizing: border-box;
   width: 100%;
@@ -41,10 +43,12 @@
 }
 
 /* The popup content owns the material: the nested calendar no longer repaints
-   the same fill on top of it. */
+   the same fill on top of it. Its padding is the popup's inner space. */
 .dnet-datepicker-content > .dnet-calendar {
   --_background: var(--dnet-sys-transparent);
+  --_panel-padding: var(--dnet-datepicker-panel-padding, 8px);
 
+  padding: var(--_panel-padding);
   border: 0;
   border-radius: 0;
 }
@@ -313,12 +317,15 @@
 
 .dnet-calendar-header-footer,
 .dnet-datepicker-actions {
+  --_footer-padding: var(--dnet-datepicker-panel-footer-padding, 4px 12px 10px);
+  --_footer-gap: var(--dnet-datepicker-panel-footer-gap, 6px);
+
   display: flex;
   align-items: center;
   justify-content: flex-end;
   min-height: 48px;
-  padding: 4px 12px 10px;
-  gap: 6px;
+  padding: var(--_footer-padding);
+  gap: var(--_footer-gap);
 }
 
 .dnet-datepicker-touch {
@@ -326,7 +333,9 @@
 }
 
 .dnet-datepicker-touch .dnet-calendar {
-  padding: 12px;
+  --_touch-padding: var(--dnet-datepicker-panel-padding, 12px);
+
+  padding: var(--_touch-padding);
 }
 
 .dnet-date-range-inputs {

@@ -33,6 +33,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-btn-font-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
 | `--dnet-btn-foreground` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
 | `--dnet-btn-height` | `40px` |
+| `--dnet-btn-icon-gap` | `8px` |
 | `--dnet-btn-margin` | `0` |
 | `--dnet-btn-min-width` | `64px` |
 | `--dnet-btn-padding` | `0 16px` |

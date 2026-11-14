@@ -345,6 +345,39 @@
   --dnet-select-panel-close-background-hover: var(--dnet-sys-material-sheen), color-mix(in srgb, var(--dnet-sys-primary-content) 10%, var(--dnet-sys-material-ghost));
   --dnet-select-panel-close-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-ghost-elevation);
 
+  /* Autocomplete: its dropdown is the Select's, glass and spaced like a
+     dialog, with the same 1px less inside its border. */
+  --dnet-autocomplete-panel-background: var(--dnet-sys-material-card);
+  --dnet-autocomplete-panel-header-padding: 23px 23px 0;
+  --dnet-autocomplete-panel-header-height: auto;
+  --dnet-autocomplete-panel-header-gap: 16px;
+  --dnet-autocomplete-panel-list-padding: 11px;
+  --dnet-autocomplete-panel-padding-bottom: 23px;
+  --dnet-autocomplete-panel-close-padding: 6px;
+  --dnet-autocomplete-panel-close-radius: var(--dnet-sys-radius-pill);
+  --dnet-autocomplete-panel-close-background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
+  --dnet-autocomplete-panel-close-background-hover: var(--dnet-sys-material-sheen), color-mix(in srgb, var(--dnet-sys-primary-content) 10%, var(--dnet-sys-material-ghost));
+  --dnet-autocomplete-panel-close-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-ghost-elevation);
+
+  /* Date picker, time picker and connected panel: their popups are glass like
+     dialogs. The time picker's touch header no longer adds a second layer of
+     fill. Calendars shown in the page keep their own fill. */
+  --dnet-datepicker-panel-background: var(--dnet-sys-material-card);
+  /* Its popup is spaced like a dialog: the header's controls and the buttons
+     24px from the edges (20px here plus the header's own 4px), 24px between
+     the days and the buttons (the calendar keeps 16px under its last row, so
+     4px here and 4px over the buttons), 8px between buttons, and the buttons
+     at the theme's normal size. */
+  --dnet-datepicker-panel-padding: 20px 20px 4px;
+  --dnet-datepicker-panel-footer-padding: 4px 24px 24px;
+  --dnet-datepicker-panel-footer-gap: 8px;
+  --dnet-datepicker-button-height: 40px;
+  --dnet-datepicker-button-padding: 0 16px;
+  --dnet-datepicker-button-icon-gap: 8px;
+  --dnet-timepicker-panel-background: var(--dnet-sys-material-card);
+  --dnet-timepicker-panel-header-background: var(--dnet-sys-transparent);
+  --dnet-connected-panel-background: var(--dnet-sys-material-card);
+
   /* AdminLayout menu (from the reference design): rows inset from the
      column, each led by a glass tile with the item's short text, or its icon.
      Hovering a row lights it; the current page is an accent-tinted glass row

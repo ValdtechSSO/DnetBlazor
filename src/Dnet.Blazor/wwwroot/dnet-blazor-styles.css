@@ -1342,7 +1342,11 @@ nav ul li a.active .dnet-menu-tile {
   --_border-color: var(--dnet-list-border-color, var(--dnet-autocomplete-list-border-color, var(--dnet-sys-transparent)));
   --_radius: var(--dnet-list-border-radius, var(--dnet-autocomplete-list-border-radius, var(--dnet-sys-radius-lg)));
   --_wrapper-padding: var(--dnet-list-wrapper-horizontal-padding, var(--dnet-autocomplete-list-wrapper-horizontal-padding, var(--dnet-sys-space-2)));
-  --_background: var(--dnet-list-background-color, var(--dnet-autocomplete-list-background-color, var(--dnet-sys-material-popup)));
+  /* The dropdown's own fill and bottom space, apart from the --dnet-list-*
+     family that inline lists share. */
+  --_base-background: var(--dnet-autocomplete-panel-background, var(--dnet-sys-material-popup));
+  --_background: var(--dnet-list-background-color, var(--dnet-autocomplete-list-background-color, var(--_base-background)));
+  --_padding-bottom: var(--dnet-autocomplete-panel-padding-bottom, var(--_wrapper-padding));
   --_shadow: var(--dnet-list-box-shadow, var(--dnet-autocomplete-list-box-shadow, var(--dnet-sys-elevation-3)));
 
   display: flex;
@@ -1353,7 +1357,7 @@ nav ul li a.active .dnet-menu-tile {
   border: 1px solid var(--_border-color);
   border-radius: var(--_radius);
   padding-top: var(--_wrapper-padding);
-  padding-bottom: var(--_wrapper-padding);
+  padding-bottom: var(--_padding-bottom);
   transition: opacity 0.5s ease-in-out;
   background: var(--dnet-sys-material-sheen), var(--_background);
   box-shadow: var(--dnet-sys-material-highlight), var(--_shadow);
@@ -1412,8 +1416,39 @@ nav ul li a.active .dnet-menu-tile {
   border-radius: var(--dnet-sys-radius-md);
 }
 
+/* The header's padding, height and the space under it, which a theme can set
+   like a dialog's title. */
 .dnet-autocomplete-list-header {
-  padding-inline: var(--dnet-sys-space-3);
+  --_header-padding: var(--dnet-autocomplete-panel-header-padding, var(--_padding-vertical) var(--dnet-sys-space-3));
+  --_header-height: var(--dnet-autocomplete-panel-header-height, var(--_header-footer-height));
+  --_header-gap: var(--dnet-autocomplete-panel-header-gap, 0px);
+
+  min-height: var(--_header-height);
+  height: var(--_header-height);
+  padding: var(--_header-padding);
+  -webkit-margin-after: var(--_header-gap);
+          margin-block-end: var(--_header-gap);
+}
+
+/* The close button: a bare icon by default, which a theme can paint as a
+   round button. The negative margin cancels the padding, so the header keeps
+   its height and the icon its place. */
+.dnet-autocomplete-list-header .dnet-dialog-icon-wrapper {
+  --_close-padding: var(--dnet-autocomplete-panel-close-padding, 0px);
+  --_close-radius: var(--dnet-autocomplete-panel-close-radius, 0px);
+  --_close-background: var(--dnet-autocomplete-panel-close-background, var(--dnet-sys-transparent));
+  --_close-background-hover: var(--dnet-autocomplete-panel-close-background-hover, var(--_close-background));
+  --_close-shadow: var(--dnet-autocomplete-panel-close-shadow, none);
+
+  margin: calc(-1 * var(--_close-padding));
+  padding: var(--_close-padding);
+  border-radius: var(--_close-radius);
+  background: var(--_close-background);
+  box-shadow: var(--_close-shadow);
+}
+
+.dnet-autocomplete-list-header .dnet-dialog-icon-wrapper:hover {
+  background: var(--_close-background-hover);
 }
 
 .dnet-autocomplete-list-header-content {
@@ -1436,11 +1471,12 @@ nav ul li a.active .dnet-menu-tile {
 
 .dnet-autocomplete-list-items {
   --_padding-horizontal: var(--dnet-list-padding-horizontal, var(--dnet-autocomplete-list-padding-horizontal, var(--dnet-sys-space-2)));
+  --_list-padding: var(--dnet-autocomplete-panel-list-padding, var(--_padding-horizontal));
 
   flex-grow: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 0 var(--_padding-horizontal);
+  padding: 0 var(--_list-padding);
   overscroll-behavior: contain;
   scrollbar-color: var(--dnet-sys-border-strong) transparent;
 }
@@ -2139,7 +2175,9 @@ nav ul li a.active .dnet-menu-tile {
 }
 
 .dnet-datepicker-content {
-  --_background: var(--dnet-calendar-background, var(--dnet-sys-material-popup));
+  /* The popup's own fill, apart from the calendar shown in the page. */
+  --_base-background: var(--dnet-datepicker-panel-background, var(--dnet-sys-material-popup));
+  --_background: var(--dnet-calendar-background, var(--_base-background));
 
   box-sizing: border-box;
   width: 100%;
@@ -2166,10 +2204,12 @@ nav ul li a.active .dnet-menu-tile {
 }
 
 /* The popup content owns the material: the nested calendar no longer repaints
-   the same fill on top of it. */
+   the same fill on top of it. Its padding is the popup's inner space. */
 .dnet-datepicker-content > .dnet-calendar {
   --_background: var(--dnet-sys-transparent);
+  --_panel-padding: var(--dnet-datepicker-panel-padding, 8px);
 
+  padding: var(--_panel-padding);
   border: 0;
   border-radius: 0;
 }
@@ -2442,12 +2482,15 @@ nav ul li a.active .dnet-menu-tile {
 
 .dnet-calendar-header-footer,
 .dnet-datepicker-actions {
+  --_footer-padding: var(--dnet-datepicker-panel-footer-padding, 4px 12px 10px);
+  --_footer-gap: var(--dnet-datepicker-panel-footer-gap, 6px);
+
   display: flex;
   align-items: center;
   justify-content: flex-end;
   min-height: 48px;
-  padding: 4px 12px 10px;
-  gap: 6px;
+  padding: var(--_footer-padding);
+  gap: var(--_footer-gap);
 }
 
 .dnet-datepicker-touch {
@@ -2455,7 +2498,9 @@ nav ul li a.active .dnet-menu-tile {
 }
 
 .dnet-datepicker-touch .dnet-calendar {
-  padding: 12px;
+  --_touch-padding: var(--dnet-datepicker-panel-padding, 12px);
+
+  padding: var(--_touch-padding);
 }
 
 .dnet-date-range-inputs {
@@ -9100,9 +9145,13 @@ select.mat-input-element::-ms-value {
   padding: 0 var(--dnet-sys-space-3) var(--dnet-sys-space-3);
 }
 
+/* The touch header repaints the panel's fill; a translucent theme can clear
+   it so the two layers do not add up. */
 .dnet-timepicker-panel-header {
+  --_header-background: var(--dnet-timepicker-panel-header-background, var(--_panel-background));
+
   align-items: center;
-  background: var(--_panel-background);
+  background: var(--_header-background);
   color: var(--_option-foreground);
   display: flex;
   font-size: var(--dnet-sys-text-md);
@@ -9461,7 +9510,7 @@ select.mat-input-element::-ms-value {
 /*! Button (recorte por offset; editado a mano en 6.0) — generado una vez; a partir de aquí se edita a mano. */
 .dnet-button, .dnet-icon-button {
   --_icon-size: 20px;
-  --_icon-gap: 8px;
+  --_icon-gap: var(--dnet-btn-icon-gap, 8px);
   --_background: var(--dnet-btn-background, var(--dnet-button-background-color, var(--dnet-sys-transparent)));
   --_hover: var(--dnet-btn-background-hover, var(--dnet-button-hover-color, var(--dnet-sys-state-hover)));
   --_foreground: var(--dnet-btn-foreground, var(--dnet-sys-on-surface));
@@ -9621,21 +9670,21 @@ select.mat-input-element::-ms-value {
   --_height: var(--dnet-btn-height, var(--dnet-button-line-height, 32px));
   --_padding: var(--dnet-btn-padding, var(--dnet-button-padding, 0 12px));
   --_icon-size: 20px;
-  --_icon-gap: 4px;
+  --_icon-gap: var(--dnet-btn-icon-gap, 4px);
 }
 
 .dnet-button-size-medium {
   --_height: var(--dnet-btn-height, var(--dnet-button-line-height, 40px));
   --_padding: var(--dnet-btn-padding, var(--dnet-button-padding, 0 16px));
   --_icon-size: 20px;
-  --_icon-gap: 8px;
+  --_icon-gap: var(--dnet-btn-icon-gap, 8px);
 }
 
 .dnet-button-size-large {
   --_height: var(--dnet-btn-height, var(--dnet-button-line-height, 56px));
   --_padding: var(--dnet-btn-padding, var(--dnet-button-padding, 0 24px));
   --_icon-size: 24px;
-  --_icon-gap: 8px;
+  --_icon-gap: var(--dnet-btn-icon-gap, 8px);
 }
 
 /*! DynamicStepper — migrado a tokens (6.0). Generado una vez; se edita a mano. */

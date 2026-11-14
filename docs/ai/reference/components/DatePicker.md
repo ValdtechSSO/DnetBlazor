@@ -168,6 +168,10 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-calendar-range-bg-color` | `color-mix(in srgb, var(--dnet-sys-primary) 18%, transparent)` |
 | `--dnet-calendar-selected-bg-color` | `#5b5ce0` <br><sub>via `--dnet-sys-primary`</sub> |
 | `--dnet-calendar-today-bg-color` | `color-mix(in srgb, var(--dnet-sys-primary) 12%, transparent)` <br><sub>via `--dnet-sys-state-selected`</sub> |
+| `--dnet-datepicker-panel-background` | `#ffffff` <br><sub>via `--dnet-sys-material-popup`</sub> |
+| `--dnet-datepicker-panel-footer-gap` | `6px` |
+| `--dnet-datepicker-panel-footer-padding` | `4px 12px 10px` |
+| `--dnet-datepicker-panel-padding` | `8px` |
 
 ```css
 :root { --dnet-calendar-background: /* your value */; }
