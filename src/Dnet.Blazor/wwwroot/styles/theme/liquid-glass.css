@@ -487,12 +487,15 @@
   /* Grid filter panel: glass like the other panels and spaced like a dialog,
      24px around its content and 16px between the fields, which each field's
      own bottom margin already gives. Its buttons take the theme's normal
-     size. */
+     size, and on desktop the page behind it is dimmed and blurred like on
+     narrower screens, so the panel reads as glass there too. */
   --dnet-grid-filter-background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-card);
   --dnet-grid-filter-padding: 24px;
   --dnet-grid-filter-gap: 0px;
   --dnet-grid-filter-button-height: 40px;
   --dnet-grid-filter-button-padding: 0 16px;
+  --dnet-grid-filter-scrim: var(--dnet-sys-scrim);
+  --dnet-grid-filter-scrim-backdrop: var(--dnet-sys-scrim-backdrop);
 
   /* AdminLayout menu (from the reference design): rows inset from the
      column, each led by a glass tile with the item's short text, or its icon.

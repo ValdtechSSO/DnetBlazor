@@ -269,6 +269,9 @@
   picker's panel: the options' text 24px from the edges with 24px above
   and below the list, and in the touch panel the title 24px in with 16px
   under it and the button 24px from the corner at the normal size.
+- The Liquid Glass themes dim and blur the page behind the grid's column
+  filter on desktop too, as on narrower screens, so the panel reads as
+  glass at every width.
 - The Liquid Glass themes render the grid's column filter panel as glass
   like the other panels, spaced like a dialog: 24px around its content and
   16px between its fields, with its buttons at the theme's normal size.
