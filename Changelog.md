@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+- ExpansionPanel: the header reports `aria-expanded="true"` or `"false"`;
+  it rendered an empty attribute when open and none when closed. The
+  toggle's rotation moved from an inline style to the stylesheet.
+- ExpansionPanel: new tokens shape the panels and their toggle.
+  `--dnet-accordion-gap` and `--dnet-accordion-joined-radius` set joined
+  panels apart and round their inner corners, and
+  `--dnet-accordion-box-shadow-expanded` lifts the open one.
+  `-header-padding`, `-header-height` and `-header-hover-background` size
+  the row, and `-title-font-weight` and `-description-font-size` its text.
+  `-indicator-padding`, `-indicator-radius`, `-indicator-background`,
+  `-indicator-shadow` and `-indicator-color`, with `-expanded` variants of
+  the last three, set the chevron in a button.
+  `-indicator-rotate-expanded` and `-chevron-rotate-expanded` choose whether
+  the button or only the chevron turns over, `-indicator-transition`
+  animates it and `-chevron-offset` centres the chevron.
+  `-indicator-focus-outline` rings the button while the header has keyboard
+  focus, `-indicator-disabled-opacity` fades it on a disabled panel, and
+  `-body-padding` spaces the content. Without visual change by default.
 - FloatingDoubleList: its lists keep the list's own padding and gap, so the
   standalone list's panel tokens do not reach them. Without visual change.
 - List: new `--dnet-list-panel-background`, `-border`, `-shadow`,
@@ -222,6 +240,13 @@
   picker's panel: the options' text 24px from the edges with 24px above
   and below the list, and in the touch panel the title 24px in with 16px
   under it and the button 24px from the corner at the normal size.
+- The Liquid Glass themes render the ExpansionPanel as separate glass
+  cards 8px apart and rounded on every corner, with 64px rows, a bolder
+  title over a 12px description and a sheen under the pointer. The chevron
+  sits in a round glass button that stays still while the chevron turns; on
+  an open panel the button is the accent drop with a white chevron, and the
+  card lifts with 24px under its content. With keyboard focus the button
+  takes the focus ring, and on a disabled panel it fades.
 - The Liquid Glass themes render a standalone List as a glass panel like
   the PickList: the rim instead of a border, 24px around its content and
   16px between its sections.

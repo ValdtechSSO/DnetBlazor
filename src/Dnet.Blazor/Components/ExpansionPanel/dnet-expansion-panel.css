@@ -1,7 +1,17 @@
 /*! ExpansionPanel — migrado a tokens (6.0). Generado una vez; se edita a mano. */
 
+/* Joined panels have square inner corners by default; a theme can round
+   them and set the panels apart. */
 .dnet-accordion .dnet-expansion-panel:not(.dnet-expanded), .dnet-accordion .dnet-expansion-panel:not(.dnet-expansion-panel-spacing) {
-  border-radius: 0;
+  --_joined-radius: var(--dnet-accordion-joined-radius, 0px);
+
+  border-radius: var(--_joined-radius);
+}
+
+.dnet-accordion .dnet-expansion-panel:not(:first-child):not(.dnet-expansion-panel-spacing) {
+  --_panel-gap: var(--dnet-accordion-gap, 0px);
+
+  margin-top: var(--_panel-gap);
 }
 .dnet-accordion .dnet-expansion-panel:first-of-type {
   border-top-right-radius: var(--dnet-accordion-border-radius, var(--dnet-sys-radius-sm));
@@ -13,10 +23,17 @@
 }
 
 .dnet-expansion-panel:not([class*=dnet-elevation-z]) {
-  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-accordion-box-shadow, var(--dnet-sys-elevation-1));
+  box-shadow: var(--dnet-sys-material-highlight), var(--_shadow);
+}
+
+.dnet-expansion-panel.dnet-expanded:not([class*=dnet-elevation-z]) {
+  box-shadow: var(--dnet-sys-material-highlight), var(--_shadow-expanded);
 }
 
 .dnet-expansion-panel {
+  --_shadow: var(--dnet-accordion-box-shadow, var(--dnet-sys-elevation-1));
+  --_shadow-expanded: var(--dnet-accordion-box-shadow-expanded, var(--_shadow));
+
   box-sizing: content-box;
   display: block;
   margin: 0;
@@ -62,12 +79,16 @@
 }
 
 .dnet-expansion-panel-header {
+  --_header-padding: var(--dnet-accordion-header-padding, 0 24px);
+  --_header-height: var(--dnet-accordion-header-height, 48px);
+  --_header-hover: var(--dnet-accordion-header-hover-background, var(--dnet-sys-transparent));
+
   display: flex;
   flex-direction: row;
   align-items: center;
   box-sizing: border-box;
   width: 100%;
-  padding: 0 24px;
+  padding: var(--_header-padding);
   border: 0;
   background: transparent;
   color: inherit;
@@ -84,12 +105,16 @@
 }
 
 .dnet-expansion-panel-header {
-  height: 48px;
+  height: var(--_header-height);
+}
+
+.dnet-expansion-panel-header:not(:disabled):hover {
+  background: var(--_header-hover);
 }
 
 .dnet-expansion-panel-header {
   font-size: var(--dnet-accordion-title-font-size, var(--dnet-sys-text-md));
-  font-weight: 400;
+  font-weight: var(--dnet-accordion-title-font-weight, 400);
 }
 
 .dnet-content {
@@ -114,27 +139,83 @@
   justify-content: space-between;
   align-items: center;
   flex-basis: 0;
-  font-size: 0.625rem;
+  font-size: var(--dnet-accordion-description-font-size, 0.625rem);
 }
 
 .dnet-expansion-panel-header-description {
   flex-grow: 2;
 }
 
-.dnet-expansion-indicator:after, .dnet-expansion-panel-header-description {
+.dnet-expansion-panel-header-description {
   color: var(--dnet-sys-on-surface-subtle);
+}
+
+/* The toggle: a chevron, which turns over when the panel opens. A theme can
+   set it in a round button that stays still while only the chevron turns,
+   and paint that button differently once the panel is open. */
+.dnet-expansion-indicator {
+  --_indicator-padding: var(--dnet-accordion-indicator-padding, 0px);
+  --_indicator-radius: var(--dnet-accordion-indicator-radius, 0px);
+  --_indicator-background: var(--dnet-accordion-indicator-background, var(--dnet-sys-transparent));
+  --_indicator-shadow: var(--dnet-accordion-indicator-shadow, none);
+  --_indicator-color: var(--dnet-accordion-indicator-color, var(--dnet-sys-on-surface-subtle));
+  --_chevron-color: var(--_indicator-color);
+  --_indicator-transition: var(--dnet-accordion-indicator-transition, none);
+  --_indicator-rotate-expanded: var(--dnet-accordion-indicator-rotate-expanded, rotate(180deg));
+  --_chevron-rotate-expanded: var(--dnet-accordion-chevron-rotate-expanded, none);
+  --_chevron-offset: var(--dnet-accordion-chevron-offset, 0px);
+
+  padding: var(--_indicator-padding);
+  border-radius: var(--_indicator-radius);
+  background: var(--_indicator-background);
+  box-shadow: var(--_indicator-shadow);
+  transform: rotate(0deg);
+  transition: var(--_indicator-transition);
+}
+
+.dnet-expanded > .dnet-expansion-panel-header > .dnet-expansion-indicator {
+  --_indicator-background-expanded: var(--dnet-accordion-indicator-background-expanded, var(--_indicator-background));
+  --_indicator-shadow-expanded: var(--dnet-accordion-indicator-shadow-expanded, var(--_indicator-shadow));
+  --_chevron-color: var(--dnet-accordion-indicator-color-expanded, var(--_indicator-color));
+
+  background: var(--_indicator-background-expanded);
+  box-shadow: var(--_indicator-shadow-expanded);
+  transform: var(--_indicator-rotate-expanded);
+}
+
+.dnet-expansion-panel-header:disabled > .dnet-expansion-indicator {
+  --_indicator-disabled-opacity: var(--dnet-accordion-indicator-disabled-opacity, 1);
+
+  opacity: var(--_indicator-disabled-opacity);
+}
+
+/* The header's own focus outline loses to the global :focus reset, so a
+   theme can ring the toggle instead while the header has keyboard focus. */
+.dnet-expansion-panel-header:focus-visible > .dnet-expansion-indicator {
+  --_indicator-focus-outline: var(--dnet-accordion-indicator-focus-outline, none);
+
+  outline: var(--_indicator-focus-outline);
+  outline-offset: 2px;
 }
 
 .dnet-expansion-indicator::after {
   border-style: solid;
   border-width: 0 2px 2px 0;
+  color: var(--_chevron-color);
   content: "";
   display: flex;
   padding: 3px;
-  transform: rotate(45deg);
+  /* The offset moves the chevron along its own diagonal, so a negative one
+     centres the "v" in its box, and it stays centred once it turns over. */
+  transform: rotate(45deg) translate(var(--_chevron-offset), var(--_chevron-offset));
+  transition: inherit;
   vertical-align: middle;
   align-items: center;
   justify-content: center;
+}
+
+.dnet-expanded > .dnet-expansion-panel-header > .dnet-expansion-indicator::after {
+  rotate: var(--_chevron-rotate-expanded);
 }
 
 .dnet-expansion-panel-content {
@@ -144,5 +225,7 @@
 }
 
 .dnet-expansion-panel-body {
-  padding: 0 24px 16px;
+  --_body-padding: var(--dnet-accordion-body-padding, 0 24px 16px);
+
+  padding: var(--_body-padding);
 }

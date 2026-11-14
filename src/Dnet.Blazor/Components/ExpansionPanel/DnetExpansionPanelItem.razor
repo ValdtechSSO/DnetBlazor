@@ -4,7 +4,7 @@
 @implements IDisposable
 
 <div class="@_expansionPanelClass">
-	<button type="button" class="dnet-expansion-panel-header" @onclick="Toggle" disabled="@Disabled" aria-expanded="@_expanded" aria-controls="@_contentId">
+	<button type="button" class="dnet-expansion-panel-header" @onclick="Toggle" disabled="@Disabled" aria-expanded="@(_expanded ? "true" : "false")" aria-controls="@_contentId">
 		@if (ItemHeaderTemplate != null)
 		{
 			@ItemHeaderTemplate
@@ -33,8 +33,7 @@
 			</div>
 			if (!HideToggle)
 			{
-				<span class="dnet-expansion-indicator" style="transform:@(_expanded ? "rotate(180deg)" : "rotate(0deg)")">
-				</span>
+				<span class="dnet-expansion-indicator"></span>
 			}
 		}
 	</button>

@@ -413,6 +413,44 @@
   --dnet-list-panel-padding: 23px;
   --dnet-list-panel-gap: 16px;
 
+  /* Expansion panel: separate glass cards, 8px apart and rounded on every
+     corner, with taller rows, a bolder title over a 12px description and a
+     sheen under the pointer that fades out before the row ends. The chevron sits in a round glass button,
+     16px from the card's edge like from its top and bottom, that stays still
+     while only the chevron turns; once the panel is open the button is the
+     accent drop with a white chevron, and the card lifts. Its content ends
+     24px from the bottom. With keyboard focus the button takes the focus
+     ring, and on a disabled panel it fades. */
+  --dnet-accordion-gap: 8px;
+  --dnet-accordion-border-radius: var(--dnet-sys-radius-lg);
+  --dnet-accordion-joined-radius: var(--dnet-sys-radius-lg);
+  --dnet-accordion-box-shadow-expanded: var(--dnet-sys-elevation-2);
+  --dnet-accordion-header-padding: 0 16px 0 24px;
+  --dnet-accordion-header-height: 64px;
+  --dnet-accordion-header-hover-background: linear-gradient(180deg, rgb(255 255 255 / .08), rgb(255 255 255 / 0));
+  --dnet-accordion-title-font-weight: 600;
+  --dnet-accordion-description-font-size: 12px;
+  --dnet-accordion-indicator-padding: 12px;
+  --dnet-accordion-indicator-radius: var(--dnet-sys-radius-pill);
+  --dnet-accordion-indicator-background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
+  --dnet-accordion-indicator-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-ghost-elevation);
+  --dnet-accordion-indicator-background-expanded:
+    radial-gradient(120% 80% at 30% 10%, rgb(255 255 255 / .5), transparent 52%),
+    linear-gradient(180deg, color-mix(in oklab, var(--dnet-sys-primary) 74%, #ffffff), var(--dnet-sys-primary) 55%,
+      color-mix(in oklab, var(--dnet-sys-primary) 84%, #000000));
+  --dnet-accordion-indicator-shadow-expanded:
+    inset 0 1px 0 rgb(255 255 255 / .5), 0 4px 14px color-mix(in srgb, var(--dnet-sys-primary) 40%, transparent);
+  --dnet-accordion-indicator-color-expanded: #ffffff;
+  --dnet-accordion-indicator-rotate-expanded: none;
+  --dnet-accordion-chevron-rotate-expanded: 180deg;
+  --dnet-accordion-chevron-offset: -1.5px;
+  --dnet-accordion-indicator-focus-outline: 2px solid var(--dnet-sys-focus-ring);
+  --dnet-accordion-indicator-disabled-opacity: .45;
+  --dnet-accordion-indicator-transition:
+    rotate var(--dnet-sys-motion-normal) var(--dnet-sys-motion-ease),
+    color var(--dnet-sys-motion-fast) ease, box-shadow var(--dnet-sys-motion-fast) ease;
+  --dnet-accordion-body-padding: 0 24px 24px;
+
   /* AdminLayout menu (from the reference design): rows inset from the
      column, each led by a glass tile with the item's short text, or its icon.
      Hovering a row lights it; the current page is an accent-tinted glass row
