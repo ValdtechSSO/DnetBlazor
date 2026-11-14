@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Overlay: the TimePicker's list is centred on tablet and phone widths, as
+  the DatePicker's calendar is, instead of sitting in the top-left corner.
+  Visible in every theme from 601px to 1024px; at 600px and below the
+  TimePicker opens its touch dialog, which was already centred.
 - Grid: the column filter panel is centred on tablet and phone widths
   instead of sitting in the top-left corner, visible in every theme there.
   New `--dnet-grid-filter-scrim` and `--dnet-grid-filter-scrim-backdrop`
