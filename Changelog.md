@@ -134,6 +134,13 @@
   current step is a larger accent drop with a glow;
   completed steps show an accent tick instead of their number; upcoming
   labels are muted and the current one is bolder.
+- The Liquid Glass themes draw the inside of the AdminLayout menu as in
+  their reference design: rows inset from the column, 44px tall, each led
+  by a glass tile with the item's short text or its icon. Hovering a row
+  lights it; the current page is an accent-tinted glass row with a filled
+  accent tile and a bolder label. An open group hangs its rows on a hairline
+  rail, its chevron points down and turns up while open, and keyboard focus
+  draws an accent ring around the row.
 - The Liquid Glass themes draw the timeline as glass cards (option A of the
   reference design): completed and current events are glass cards, the
   current one tinted with the accent, a ring and a glow, and pending ones
