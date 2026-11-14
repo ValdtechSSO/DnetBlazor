@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Grid: new `--dnet-grid-filter-background`, `--dnet-grid-filter-padding`
+  and `--dnet-grid-filter-gap` lay out the column filter panel, and
+  `--dnet-grid-filter-button-height` and `--dnet-grid-filter-button-padding`
+  size its buttons; unset, they keep their small size and whatever
+  `--dnet-btn-*` values they inherit. Without visual change by default.
 - PillTabs: a tab under the pointer takes the material's rim, the selected
   tab the accent's ring and glow like a filled button, and a tab with
   keyboard focus the material's focus halo, since the global `:focus` reset

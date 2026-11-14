@@ -122,9 +122,9 @@
         }
 
         <div class="blg-adv-filter-actions">
-            <DnetButton class="blg-adv-filter-buttom-reset" Size="DnetButtonSize.Small"
+            <DnetButton class="blg-adv-filter-buttom-reset" Size="DnetButtonSize.Small" style="@ButtonSizeStyle"
                         Variant="DnetButtonVariant.Outlined" ButtonType="button" OnClick="OnReset">@Localizer["Common.Reset"]</DnetButton>
-            <DnetButton class="blg-adv-filter-buttom-ok" Size="DnetButtonSize.Small"
+            <DnetButton class="blg-adv-filter-buttom-ok" Size="DnetButtonSize.Small" style="@ButtonSizeStyle"
                         ButtonType="submit" disabled="@_formInvalid">@Localizer["Grid.Filter"]</DnetButton>
         </div>
     </EditForm>
@@ -132,6 +132,12 @@
 
 @code {
     private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+
+    // A theme can give the buttons another size; unset, they keep the small
+    // size and whatever --dnet-btn-* values they inherit.
+    private const string ButtonSizeStyle =
+        "--dnet-btn-height:var(--dnet-grid-filter-button-height, inherit);" +
+        "--dnet-btn-padding:var(--dnet-grid-filter-button-padding, inherit);";
     private Task HandleLocalizationChanged() => InvokeAsync(StateHasChanged);
 
     [CascadingParameter] private int OverlayReferenceId { get; set; }
