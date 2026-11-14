@@ -19,6 +19,10 @@
                 @if (_desktopLayout is not null && !_desktopLayout.GetIsMinified())
                 {
                     <div class="dnet-tree-cmp-link-indicator"></div>
+                    @if (!string.IsNullOrEmpty(Menu.MinifiedText))
+                    {
+                        <span class="dnet-menu-tile" aria-hidden="true">@Menu.MinifiedText</span>
+                    }
                     <span class="dnet-menu-text">@Menu.Text</span>
                 }
                 else
@@ -101,6 +105,10 @@
                     <div class="dnet-menu-img">
                         @Menu.CustomContent
                     </div>
+                }
+                else if (!_desktopLayout.GetIsMinified() && !string.IsNullOrEmpty(Menu.MinifiedText))
+                {
+                    <span class="dnet-menu-tile" aria-hidden="true">@Menu.MinifiedText</span>
                 }
                 <span class="dnet-menu-text">@Menu.Text</span>
             }

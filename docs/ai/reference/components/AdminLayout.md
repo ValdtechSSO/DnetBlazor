@@ -167,11 +167,38 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-dash-indicator-width` | `3px` |
 | `--dnet-dash-left-column-width` | `270px` |
 | `--dnet-dash-link-color` | `color-mix(in srgb, var(--dnet-ref-neutral-1000) 87%, transparent)` <br><sub>via `--dnet-sys-on-surface-emphasis`</sub> |
+| `--dnet-dash-menu-chevron-offset` | `0.3em` |
+| `--dnet-dash-menu-chevron-rotate` | `none` |
+| `--dnet-dash-menu-chevron-rotate-open` | `none` |
+| `--dnet-dash-menu-chevron-size` | `1em` |
+| `--dnet-dash-menu-focus-offset` | `0px` |
+| `--dnet-dash-menu-focus-ring` | `none` |
+| `--dnet-dash-menu-img-offset` | `10px` |
+| `--dnet-dash-menu-inset` | `0px` |
+| `--dnet-dash-menu-item-background-active` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
+| `--dnet-dash-menu-item-background-hover` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
+| `--dnet-dash-menu-item-gap` | `0px` |
+| `--dnet-dash-menu-item-padding-end` | `0.925em` |
 | `--dnet-dash-menu-item-parent-color` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
+| `--dnet-dash-menu-item-radius` | `0px` |
+| `--dnet-dash-menu-item-shadow-active` | `none` |
+| `--dnet-dash-menu-item-weight` | `300` |
+| `--dnet-dash-menu-item-weight-active` | `700` |
 | `--dnet-dash-menu-left-padding-firts-level` | `1em` |
 | `--dnet-dash-menu-left-padding-second-level` | `2em` |
 | `--dnet-dash-menu-left-padding-third-level` | `4em` |
+| `--dnet-dash-menu-text-color-active` | `var(--_base-text-color)` |
+| `--dnet-dash-menu-text-color-hover` | `var(--_base-text-hover)` |
+| `--dnet-dash-menu-text-gap` | `10px` |
 | `--dnet-dash-menu-text-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
+| `--dnet-dash-menu-tile-background` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
+| `--dnet-dash-menu-tile-background-active` | `var(--_tile-background)` |
+| `--dnet-dash-menu-tile-color-active` | `inherit` |
+| `--dnet-dash-menu-tile-display` | `none` |
+| `--dnet-dash-menu-tile-radius` | `0px` |
+| `--dnet-dash-menu-tile-shadow` | `none` |
+| `--dnet-dash-menu-tile-shadow-active` | `var(--_tile-shadow)` |
+| `--dnet-dash-menu-tile-size` | `auto` |
 | `--dnet-dash-minifyme-bg-color` | `#ffffff` <br><sub>via `--dnet-sys-material-chrome`</sub> |
 | `--dnet-dash-minifyme-foreground` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
 | `--dnet-dash-navbar-height` | `38px` |
@@ -183,6 +210,13 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-dash-scrollbar-background-color` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
 | `--dnet-dash-scrollbar-foreground-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 40%, var(--dnet-sys-surface))` |
 | `--dnet-dash-scrollbar-size` | `.4rem` |
+| `--dnet-dash-submenu-background` | `var(--_base-submenu-background)` |
+| `--dnet-dash-submenu-indent` | `0px` |
+| `--dnet-dash-submenu-padding` | `0px` |
+| `--dnet-dash-submenu-rail` | `none` |
+| `--dnet-dash-submenu-shadow` | `inset 0 0 0 0 var(--dnet-sys-transparent)` <br><sub>via `--dnet-sys-material-highlight`</sub> |
+| `--dnet-dash-submenu-text-size` | `var(--_base-text-size)` |
+| `--dnet-dash-submenu-width` | `var(--_base-submenu-width)` |
 | `--dnet-footer-border-color` | `#e1e3e1` <br><sub>via `--dnet-sys-border-strong`</sub> |
 | `--dnet-header-border-color` | `#e1e3e1` <br><sub>via `--dnet-sys-border-strong`</sub> |
 | `--dnet-layout-divider-style` | `solid` |
