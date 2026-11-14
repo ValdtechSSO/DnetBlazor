@@ -1,4 +1,5 @@
 @page "/Dialog"
+@using Dnet.Blazor.Components.Checkbox
 @using Dnet.App.Shared.Pages.ShowcaseContent
 @using Dnet.Blazor.Components.Button
 @using Dnet.Blazor.Components.Dialog.Infrastructure.Interfaces
@@ -20,7 +21,11 @@
                         <span class="dialog-avatar" aria-hidden="true">@S["Dialog.TM"]</span>
                         <div><strong>@S["Dialog.TaylorMorgan"]</strong><span>@S["Dialog.ProductDesigner"]</span><small>taylor.morgan@example.com</small></div>
                     </div>
-                    <label class="demo-option-row dialog-option"><input id="dialog-require-action" type="checkbox" @bind="_requireAction" /><span><strong>@S["Dialog.RequireAnExplicitAction"]</strong><small>@S["Dialog.KeepTheDialogOpenWhenTheBackdropIs"]</small></span></label>
+                    <div class="demo-option-row dialog-option">
+                        <DnetInputCheckbox id="dialog-require-action" @bind-Value="_requireAction">
+                            <span class="dialog-option-text"><strong>@S["Dialog.RequireAnExplicitAction"]</strong><small>@S["Dialog.KeepTheDialogOpenWhenTheBackdropIs"]</small></span>
+                        </DnetInputCheckbox>
+                    </div>
                     <div class="demo-actions"><DnetButton id="dialog-open" OnClick="ShowDialog">@S["Dialog.ShowDialog"]</DnetButton></div>
                 </div>
             </ChildContent>
