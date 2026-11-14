@@ -406,6 +406,14 @@
   --dnet-picklist-shadow: var(--dnet-sys-material-highlight);
   --dnet-picklist-padding: 23px;
   --dnet-picklist-gap: 16px;
+  /* Its toolbar and footer are only as tall as their content, so the
+     buttons sit 16px from the search and the rows, and the paginator 24px
+     above the bottom of the panel. Its paginator is laid out as the
+     list's, below, and its glass buttons keep their shadow and focus halo
+     at the footer's edges. */
+  --dnet-picklist-header-height: 0px;
+  --dnet-picklist-footer-height: 0px;
+  --dnet-picklist-footer-overflow: visible;
 
   /* List: a standalone list is a glass panel like the PickList, with the rim
      instead of a border, 24px around its content (23px inside its transparent
@@ -416,9 +424,12 @@
   --dnet-list-panel-shadow: var(--dnet-sys-material-highlight);
   --dnet-list-panel-padding: 23px;
   --dnet-list-panel-gap: 16px;
-  /* Its paginator lies on one line like the grid's, with nothing under it
-     but the panel's padding; on a phone only the controls stay. */
-  --dnet-list-paginator-display: grid;
+  /* Its paginator lies on one line like the grid's, the range at the
+     start, with nothing under it but the panel's padding; where the panel
+     is too narrow it wraps instead, and on a phone only the controls stay.
+     The pick list's paginator follows these too. */
+  --dnet-list-paginator-range-basis: auto;
+  --dnet-list-paginator-range-order: -1;
   --dnet-list-paginator-range-compact-display: none;
   --dnet-list-footer-height: 0px;
 
