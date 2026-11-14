@@ -11,6 +11,11 @@ on:
         description: "Optional visual scenario for diagnostics (for example, tooltip); leave empty for all"
         required: false
         type: string
+      update_goldens:
+        description: "Regenerate the Linux visual goldens and upload them as an artifact for review; nothing is committed"
+        required: false
+        type: boolean
+        default: false
   pull_request:
   push:
     branches:
@@ -58,6 +63,16 @@ jobs:
         env:
           DNET_TEST_FILTER: ${{ inputs.test_filter || '' }}
           DNET_VISUAL_SCENARIO: ${{ inputs.visual_scenario || '' }}
+          # The official goldens are captured on this runner; update mode rewrites them all.
+          DNET_BLAZOR_UPDATE_GOLDENS: ${{ inputs.update_goldens && 'true' || '' }}
+      - name: Upload regenerated goldens
+        if: ${{ always() && inputs.update_goldens }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-goldens-${{ github.run_id }}
+          path: tests/Dnet.Blazor.BrowserTests/VisualBaseline/goldens/linux/*.png
+          retention-days: 7
+          if-no-files-found: error
       - name: Preserve test diagnostics
         if: failure()
         uses: actions/upload-artifact@v4
