@@ -177,6 +177,9 @@
   <data name="Grid.LoadError" xml:space="preserve">
     <value>No se han podido cargar las filas.</value>
   </data>
+  <data name="Grid.Maximize" xml:space="preserve">
+    <value>Maximizar tabla</value>
+  </data>
   <data name="Grid.NoResults" xml:space="preserve">
     <value>No hay resultados para los filtros actuales.</value>
   </data>
@@ -215,6 +218,9 @@
   </data>
   <data name="Grid.ResizeColumn" xml:space="preserve">
     <value>Cambiar anchura de {0}</value>
+  </data>
+  <data name="Grid.Restore" xml:space="preserve">
+    <value>Restaurar tabla</value>
   </data>
   <data name="Grid.Retry" xml:space="preserve">
     <value>Reintentar</value>
