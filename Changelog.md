@@ -162,6 +162,10 @@
   current step is a larger accent drop with a glow;
   completed steps show an accent tick instead of their number; upcoming
   labels are muted and the current one is bolder.
+- The Liquid Glass themes render the Select dropdown as glass like dialogs
+  and space it like them: 24px around, the options' text in line with the
+  title and 16px under it, and the theme's round close button 18px from the
+  corner.
 - The Liquid Glass themes render dialogs as liquid glass like the cards,
   spaced as Material 3's basic dialog: 24px padding on every side and 16px
   between title and body, with the bottom 24px inside the scrolling content
