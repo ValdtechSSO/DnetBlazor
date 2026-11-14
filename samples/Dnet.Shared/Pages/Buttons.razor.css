@@ -93,13 +93,6 @@
     cursor: pointer;
 }
 
-.button-disable-control input {
-    width: 18px;
-    height: 18px;
-    margin: 0;
-    accent-color: var(--dnet-sys-primary-strong);
-}
-
 .button-size-card {
     display: grid;
     grid-template-columns: 156px minmax(0, 1fr);
