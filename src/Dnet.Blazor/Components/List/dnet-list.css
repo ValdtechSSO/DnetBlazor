@@ -221,13 +221,8 @@
   min-width: 0;
 }
 
-/* By default the paginator wraps, the range on its own line under the
-   controls. A theme can keep the paginator's own grid instead, laid out on
-   one line by its tokens. */
 .dnet-list-footer .dnet-paginator-container {
-  --_paginator-display: var(--dnet-list-paginator-display, flex);
-
-  display: var(--_paginator-display);
+  display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
   row-gap: 8px;
@@ -237,8 +232,16 @@
   white-space: nowrap;
 }
 
+/* By default the range takes its own line under the controls. A theme can
+   bring it to the start of their line instead, taking the space they leave:
+   the paginator stays on one line while it fits, and wraps where the footer
+   is too narrow rather than overflowing. */
 .dnet-list-footer .dnet-paginator-range-label.zone4 {
-  flex-basis: 100%;
+  --_range-basis: var(--dnet-list-paginator-range-basis, 100%);
+  --_range-order: var(--dnet-list-paginator-range-order, 0);
+
+  flex: 1 1 var(--_range-basis);
+  order: var(--_range-order);
   padding-inline: 0;
 }
 

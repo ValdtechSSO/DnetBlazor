@@ -47,8 +47,9 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-list-item-height` | `50px` <br><sub>via `--dnet-sys-control-height`</sub> |
 | `--dnet-list-padding-horizontal` | `0px` |
 | `--dnet-list-padding-vertical` | `0px` |
-| `--dnet-list-paginator-display` | `flex` |
+| `--dnet-list-paginator-range-basis` | `100%` |
 | `--dnet-list-paginator-range-compact-display` | `flex` |
+| `--dnet-list-paginator-range-order` | `0` |
 | `--dnet-list-panel-background` | `transparent` |
 | `--dnet-list-panel-border` | `#ebebeb` <br><sub>via `--dnet-sys-border`</sub> |
 | `--dnet-list-panel-gap` | `20px` |

@@ -3,11 +3,13 @@
 ## Unreleased
 
 - List: new `--dnet-list-footer-height` sets the footer's height apart from
-  the header's. `--dnet-list-paginator-display` lets a theme keep the
-  paginator's own grid in the footer instead of wrapping the range onto a
-  line under the controls, and `--dnet-list-paginator-range-compact-display`
-  hides the range on phones. The paginator now takes the footer's whole
-  width, with nothing visible changing. Without visual change by default.
+  the header's. `--dnet-list-paginator-range-basis` and
+  `--dnet-list-paginator-range-order` let a theme bring the range from its
+  own line under the controls to the start of their line, where it stays
+  while there is room and wraps where the footer is too narrow, and
+  `--dnet-list-paginator-range-compact-display` hides the range on phones.
+  The paginator now takes the footer's whole width, with nothing visible
+  changing. Without visual change by default.
 - Paginator: new `--dnet-paginator-padding` sets the space around it and
   `--dnet-paginator-input-margin` the page field's margin. Without visual
   change by default.
