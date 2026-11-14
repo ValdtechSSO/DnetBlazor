@@ -111,6 +111,46 @@
             return window.matchMedia(query).matches;
         },
 
+        // Calls back once the element can scroll. An overlay renders its content
+        // before it gets its size, so scrolling the list to an item has to wait.
+        // Gives up after a few seconds, or when the element leaves the page.
+        whenScrollable: function (element, dotNetRef, methodName) {
+            if (!element || !dotNetRef) {
+                return;
+            }
+
+            let done = false;
+            let observer = null;
+            let timeout = null;
+            const finish = function (notify) {
+                if (done) {
+                    return;
+                }
+                done = true;
+                if (observer) {
+                    observer.disconnect();
+                }
+                window.clearTimeout(timeout);
+                if (notify && element.isConnected) {
+                    dotNetRef.invokeMethodAsync(methodName).catch(function () { });
+                }
+            };
+            const check = function () {
+                if (!element.isConnected) {
+                    finish(false);
+                } else if (element.scrollHeight > element.clientHeight + 1) {
+                    finish(true);
+                }
+            };
+
+            timeout = window.setTimeout(function () { finish(false); }, 3000);
+            if (typeof ResizeObserver !== "undefined") {
+                observer = new ResizeObserver(check);
+                observer.observe(element);
+            }
+            check();
+        },
+
         copyText: async function (text) {
             await navigator.clipboard.writeText(text);
         }
