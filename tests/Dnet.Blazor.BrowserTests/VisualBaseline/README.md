@@ -79,8 +79,14 @@ Los goldens de la máquina de un desarrollador no son autoridad (antialiasing y
 fuentes difieren). El procedimiento para congelar los oficiales:
 
 1. Ejecutar la suite en el runner Linux/Chromium del CI con
-   `DNET_BLAZOR_UPDATE_GOLDENS=true` y commitear los `goldens/linux/*`.
-2. A partir de ahí, el CI compara contra esos ficheros.
+   `DNET_BLAZOR_UPDATE_GOLDENS=true`: el workflow *Build and test* lo hace con
+   la opción `update_goldens`
+   (`gh workflow run build-test.yml --ref main -f update_goldens=true`) y
+   sube todos los `goldens/linux/*.png` como el artefacto
+   `linux-goldens-<run>`, sin commitear nada.
+2. Descargar el artefacto, revisar uno por uno los goldens cuyos píxeles
+   cambian y commitear solo esos (el resto se reescribe idéntico).
+3. A partir de ahí, el CI compara contra esos ficheros.
 
 Los `goldens/linux/*` son un requisito del CI: no se aceptan sustitutos de
 Darwin ni se permiten capturas faltantes.
