@@ -4728,8 +4728,11 @@ nav ul li a.active .dnet-menu-tile {
   white-space: nowrap;
 }
 
+/* The range takes its own line under the controls here, so it stays at
+   the end even where a theme sets the paginator on one line. */
 .dnet-list-footer .dnet-paginator-range-label.zone4 {
   flex-basis: 100%;
+  justify-content: flex-end;
   padding-inline: 0;
 }
 
@@ -4894,16 +4897,22 @@ nav ul li a.active .dnet-menu-tile {
   padding: 3px 0 3px 0;
 }
 
+/* A theme can lay the paginator out on one line across the whole footer:
+   the rows come inline (one or two, as configured) behind
+   --dnet-paginator-rows, and the columns and width here. */
 .dnet-paginator-container {
   --_text-color: var(--dnet-sys-on-surface-subtle);
+  --_columns: var(--dnet-paginator-columns, repeat(3, auto));
+  --_width: var(--dnet-paginator-width, auto);
 
   color: var(--_text-color);
   font-size: 0.75rem;
   display: grid;
-  grid-template-columns: repeat(3, auto);
+  grid-template-columns: var(--_columns);
   grid-template-rows: repeat(2, 1fr);
   grid-column-gap: 5px;
   grid-row-gap: 0px;
+  width: var(--_width);
 }
 
 .zone1 {
@@ -4960,9 +4969,31 @@ nav ul li a.active .dnet-menu-tile {
   display: flex;
   align-items: center;
 }
+/* Under the controls by default; a theme can move it into another cell,
+   such as the first one of a single row. */
 .dnet-paginator-range-label.zone4 {
+  --_range-area: var(--dnet-paginator-range-area, 2 / 3 / 3 / 4);
+  --_range-justify: var(--dnet-paginator-range-justify, flex-end);
+  --_range-font-size: var(--dnet-paginator-range-font-size, 0.625rem);
+
+  grid-area: var(--_range-area);
+  justify-content: var(--_range-justify);
   padding-right: 8px;
-  font-size: 0.625rem;
+  font-size: var(--_range-font-size);
+}
+
+/* On a phone a single line leaves the range no room, so it goes back under
+   the controls whatever layout the theme asks for; the grid adds the row. */
+@media (max-width: 599px) {
+  .dnet-paginator-container {
+    --_columns: repeat(3, auto);
+    --_width: auto;
+  }
+
+  .dnet-paginator-range-label.zone4 {
+    --_range-area: 2 / 3 / 3 / 4;
+    --_range-justify: flex-end;
+  }
 }
 
 .dnet-paginator-range-actions {
@@ -4984,9 +5015,10 @@ nav ul li a.active .dnet-menu-tile {
   flex-shrink: 0;
   line-height: var(--_icon-button-size);
   border-radius: var(--_icon-button-radius);
-  background-color: transparent;
+  /* The material's ghost glass: transparent unless the theme sets it. */
+  background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-ghost-elevation);
   color: var(--_icon-color);
-  background: 0 0;
   box-sizing: border-box;
   position: relative;
   cursor: pointer;
@@ -5000,7 +5032,7 @@ nav ul li a.active .dnet-menu-tile {
   margin: 0;
 }
 .dnet-paginator-icon-button:hover {
-  --_hover-background: var(--dnet-sys-state-hover);
+  --_hover-background: var(--dnet-paginator-button-hover-background, var(--dnet-sys-state-hover));
 
   background-color: var(--_hover-background);
 }
@@ -5019,27 +5051,30 @@ nav ul li a.active .dnet-menu-tile {
   align-items: center;
 }
 
+/* An underlined field by default; a theme can make it a rounded well. */
 .dnet-paginator-page-input {
-  --_input-border-bottom: color-mix(in srgb, var(--dnet-sys-on-surface) 15%, transparent);
+  --_input-border-bottom: var(--dnet-paginator-input-border-color, color-mix(in srgb, var(--dnet-sys-on-surface) 15%, transparent));
+  --_input-background: var(--dnet-paginator-input-background, var(--dnet-sys-transparent));
+  --_input-radius: var(--dnet-paginator-input-radius, 0px);
+  --_input-width: var(--dnet-paginator-input-width, 40px);
+  --_input-height: var(--dnet-paginator-input-height, 20px);
 
-  width: 40px;
-  border-radius: 0;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  background-color: transparent;
+  width: var(--_input-width);
+  border-radius: var(--_input-radius);
+  background-color: var(--_input-background);
   transition: none;
-  box-shadow: none;
+  box-shadow: var(--dnet-sys-material-well-shadow);
   color: var(--dnet-sys-on-surface);
   border: none;
   border-bottom: 1px solid var(--_input-border-bottom) !important;
-  height: 20px;
+  height: var(--_input-height);
   outline: none;
   margin: 0 5px 2px 5px;
   text-align: center;
   font-size: 0.75rem;
 }
 .dnet-paginator-page-input:focus {
-  box-shadow: none;
+  box-shadow: var(--dnet-sys-material-well-shadow);
 }
 .dnet-paginator-page-input:focus-visible {
   border-bottom-color: var(--dnet-sys-focus-ring) !important;
@@ -5266,8 +5301,11 @@ nav ul li a.active .dnet-menu-tile {
   white-space: nowrap;
 }
 
+/* The range takes its own line under the controls here, so it stays at
+   the end even where a theme sets the paginator on one line. */
 .dnet-pick-list-footer .dnet-paginator-range-label.zone4 {
   flex-basis: 100%;
+  justify-content: flex-end;
   padding-inline: 0;
 }
 

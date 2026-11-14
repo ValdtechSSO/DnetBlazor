@@ -6,7 +6,7 @@
 
 <DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
 <nav class="dnet-paginator" aria-label="@PaginationLabel">
-    <div class="dnet-paginator-container" style="grid-template-rows: repeat(@(OneRow ? 1 : 2), 1fr); grid-column-gap: @($"{GridGap}px");">
+    <div class="dnet-paginator-container" style="grid-template-rows: var(--dnet-paginator-rows, repeat(@(OneRow ? 1 : 2), 1fr)); grid-column-gap: @($"{GridGap}px");">
         <div class="dnet-paginator-page-container @($"zone{PageNumberZone}")">
             <span>@PageText</span>
             <input class="dnet-paginator-page-input"

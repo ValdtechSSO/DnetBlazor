@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Paginator: new tokens let a theme restyle it and lay it out on one line.
+  `--dnet-paginator-button-hover-background` tints the arrows under the
+  pointer, which also take the material's ghost glass; the page field gets
+  `--dnet-paginator-input-background`, `-input-border-color`,
+  `-input-radius`, `-input-width` and `-input-height` and the material's well
+  shadow. `--dnet-paginator-rows`, `-columns` and `-width` set the layout,
+  and `--dnet-paginator-range-area`, `-range-justify` and
+  `-range-font-size` place the range; on a phone it goes back under the
+  controls. Without visual change by default.
 - TimePicker: new `Mode` parameter. `DnetTimePickerMode.Dial` chooses the
   time on a clock face in a centred modal dialog, with Cancel and OK: first
   the hour, then the minutes. It is 24-hour by default, with 1 to 12 on the
@@ -286,6 +295,10 @@
   picker's panel: the options' text 24px from the edges with 24px above
   and below the list, and in the touch panel the title 24px in with 16px
   under it and the button 24px from the corner at the normal size.
+- The Liquid Glass themes render the paginator with the theme's round glass
+  buttons for the arrows, the page in a rounded glass well, and the range on
+  the same line at the far left of the footer; in narrow footers and on
+  phones the range stays under the controls.
 - The Liquid Glass themes dim and blur the page behind the grid's column
   filter on desktop too, as on narrower screens, so the panel reads as
   glass at every width.

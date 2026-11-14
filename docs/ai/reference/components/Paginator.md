@@ -45,12 +45,23 @@ the element's own `style`. Nothing else is needed.
 |---|---|
 | `--dnet-icon-button-border-radius` | `50%` |
 | `--dnet-icon-button-size` | `25px` |
+| `--dnet-paginator-button-hover-background` | `color-mix(in srgb, var(--dnet-sys-on-surface) 8%, transparent)` <br><sub>via `--dnet-sys-state-hover`</sub> |
+| `--dnet-paginator-columns` | `repeat(3, auto)` |
+| `--dnet-paginator-input-background` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
+| `--dnet-paginator-input-border-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 15%, transparent)` |
+| `--dnet-paginator-input-height` | `20px` |
+| `--dnet-paginator-input-radius` | `0px` |
+| `--dnet-paginator-input-width` | `40px` |
 | `--dnet-paginator-items-per-page-label-margin` | `0 0px` |
 | `--dnet-paginator-page-size-margin-right` | `0px` |
+| `--dnet-paginator-range-area` | `2 / 3 / 3 / 4` |
+| `--dnet-paginator-range-font-size` | `0.625rem` |
+| `--dnet-paginator-range-justify` | `flex-end` |
 | `--dnet-paginator-selector-margin` | `6px 4px 0 4px` |
 | `--dnet-paginator-selector-trigger-fill-width` | `64px` |
 | `--dnet-paginator-selector-trigger-outline-width` | `64px` |
 | `--dnet-paginator-selector-trigger-width` | `56px` |
+| `--dnet-paginator-width` | `auto` |
 
 ```css
 :root { --dnet-icon-button-border-radius: /* your value */; }

@@ -212,8 +212,11 @@
   white-space: nowrap;
 }
 
+/* The range takes its own line under the controls here, so it stays at
+   the end even where a theme sets the paginator on one line. */
 .dnet-pick-list-footer .dnet-paginator-range-label.zone4 {
   flex-basis: 100%;
+  justify-content: flex-end;
   padding-inline: 0;
 }
 
