@@ -204,6 +204,20 @@
                 setHoveredRow(null);
             };
 
+            // Escape brings a maximized grid back to its place, wherever the focus
+            // is: a click on the grid's background leaves it on the body. Not while
+            // a popup (the advanced filter) is open: that Escape belongs to it.
+            const escapeHandler = function (event) {
+                if (event.key !== 'Escape' || event.defaultPrevented
+                    || !elementRef.classList.contains('blg-grid-maximized')
+                    || document.querySelector('.cdk-overlay-container .cdk-overlay-pane')) {
+                    return;
+                }
+
+                event.preventDefault();
+                dotnetClass.invokeMethodAsync('RestoreFromMaximized');
+            };
+
             const keyDownHandler = function (event) {
                 const cell = event.target.closest('[role="gridcell"]');
                 const center = elementRef.querySelector('.blg-center-cols-container');
@@ -251,11 +265,13 @@
             elementRef.addEventListener("mouseover", mouseOverHandler);
             elementRef.addEventListener("mouseleave", clearHoveredRow);
             elementRef.addEventListener("keydown", keyDownHandler);
+            document.addEventListener("keydown", escapeHandler);
             const state = listenerStateByElement.get(elementRef) || {};
             state.mouseLeaveHandler = mouseLeaveHandler;
             state.mouseOverHandler = mouseOverHandler;
             state.clearHoveredRow = clearHoveredRow;
             state.keyDownHandler = keyDownHandler;
+            state.escapeHandler = escapeHandler;
             listenerStateByElement.set(elementRef, state);
 
             return true;
@@ -276,6 +292,9 @@
             }
             if (state.keyDownHandler) {
                 elementRef.removeEventListener("keydown", state.keyDownHandler);
+            }
+            if (state.escapeHandler) {
+                document.removeEventListener("keydown", state.escapeHandler);
             }
             if (state.touch) {
                 elementRef.removeEventListener('touchstart', state.touch.touchStartHandler);

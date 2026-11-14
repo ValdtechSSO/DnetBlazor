@@ -133,5 +133,17 @@ namespace Dnet.Blazor.Components.Grid.Infrastructure.Entities
         public Func<TItem, bool>? DisableRow { get; set; }
 
         public bool ShowExpandCollapseButtons { get; set; } = true;
+
+        /// <summary>
+        /// Shows a button in the grid's top-right corner that makes the grid fill
+        /// the window, on desktop and on phones, and brings it back on a second
+        /// press or with Escape. Off by default.
+        /// </summary>
+        /// <remarks>
+        /// The maximized grid is <c>position: fixed</c>. An ancestor with a
+        /// <c>transform</c>, <c>filter</c>, <c>backdrop-filter</c> or <c>contain</c>
+        /// confines it to that ancestor instead of the window.
+        /// </remarks>
+        public bool EnableMaximize { get; set; }
     }
 }

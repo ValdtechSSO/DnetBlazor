@@ -24,9 +24,19 @@
 
 <DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
 <div @ref="_eGridContainer"
-     class="@_gridClasses"
+     class="@GridContainerClasses"
      style="height: calc(100% - 0px);"
      @onmouseup="() => MouseUp()">
+    @if (GridOptions.EnableMaximize)
+    {
+        <button type="button"
+                class="blg-maximize-button"
+                aria-label="@Localizer[_isMaximized ? "Grid.Restore" : "Grid.Maximize"]"
+                title="@Localizer[_isMaximized ? "Grid.Restore" : "Grid.Maximize"]"
+                @onclick="ToggleMaximized">
+            <span class="blg-icon @(_isMaximized ? "blg-icon-restore" : "blg-icon-maximize")" aria-hidden="true"></span>
+        </button>
+    }
     @{
         var layout = _layoutSnapshot ??= GridLayoutSnapshot<TItem>.Create(_gridColumns, GridOptions);
         var notPinnedColumns = layout.CenterColumns;

@@ -152,6 +152,9 @@
   --dnet-grid-header-button-padding: 7px;
   --dnet-grid-header-actions-gap: 6px;
   --dnet-grid-header-button-hover-background: color-mix(in srgb, var(--dnet-sys-primary-content) 10%, var(--dnet-sys-material-ghost));
+  /* The maximize button's quarter disc fits in the corner the header row
+     already leaves free: no band above the header, only the 1px top padding. */
+  --dnet-grid-maximize-clearance: 1px;
   --dnet-grid-row-radius: var(--dnet-sys-radius-sm);
   /* The rows' outline is the glass rim of buttons and containers: a single
      1px line, as --dnet-sys-material-highlight draws it. The border stays

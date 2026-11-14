@@ -185,6 +185,11 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-grid-header-foreground-color` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
 | `--dnet-grid-headercell-default-background-color` | `#ffffff` <br><sub>via `--dnet-sys-surface`</sub> |
 | `--dnet-grid-hover-color` | `color-mix(in srgb, var(--dnet-sys-primary) 8%, var(--dnet-sys-surface))` |
+| `--dnet-grid-maximize-background` | `color-mix(in srgb, var(--dnet-sys-primary-content) 10%, transparent)` |
+| `--dnet-grid-maximize-clearance` | `40px` |
+| `--dnet-grid-maximize-color` | `color-mix(in srgb, var(--dnet-sys-primary-strong) 50%, var(--dnet-sys-on-surface))` <br><sub>via `--dnet-sys-primary-content`</sub> |
+| `--dnet-grid-maximize-hover-background` | `color-mix(in srgb, var(--dnet-sys-primary-content) 18%, transparent)` |
+| `--dnet-grid-maximized-z-index` | `900` |
 | `--dnet-grid-odd-row-background-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 2%, var(--dnet-sys-surface))` |
 | `--dnet-grid-padding` | `0px` |
 | `--dnet-grid-radius` | `0px` |
@@ -205,7 +210,7 @@ the element's own `style`. Nothing else is needed.
 Kept as intermediate links in the fallback chains so 5.x overrides keep
 working. Prefer the names above for new code; these go away in 7.0.
 
-`--blg-background-color`, `--blg-border-color`, `--blg-cell-border-bottom`, `--blg-cell-default-background-color`, `--blg-cell-horizontal-padding`, `--blg-cell-pinnedleft-border-bottom`, `--blg-cell-pinnedright-border-bottom`, `--blg-clicked-color`, `--blg-disabled-color`, `--blg-focus-color`, `--blg-font-family`, `--blg-font-size`, `--blg-font-weight`, `--blg-foreground-color`, `--blg-grid-background-color`, `--blg-grid-foreground-color`, `--blg-grid-scroll-width`, `--blg-header-background-color`, `--blg-header-foreground-color`, `--blg-headercell-default-background-color`, `--blg-hover-color`, `--blg-odd-row-background-color`, `--blg-range-selection-background-color`, `--blg-root-wrapper-border`, `--blg-row-height`, `--blg-secondary-font-family`, `--blg-secondary-font-size`, `--blg-secondary-font-weight`, `--blg-selected-color`
+`--blg-background-color`, `--blg-border-color`, `--blg-cell-border-bottom`, `--blg-cell-default-background-color`, `--blg-cell-horizontal-padding`, `--blg-cell-pinnedleft-border-bottom`, `--blg-cell-pinnedright-border-bottom`, `--blg-clicked-color`, `--blg-disabled-color`, `--blg-focus-color`, `--blg-font-family`, `--blg-font-size`, `--blg-font-weight`, `--blg-foreground-color`, `--blg-grid-background-color`, `--blg-grid-foreground-color`, `--blg-grid-scroll-width`, `--blg-header-background-color`, `--blg-header-foreground-color`, `--blg-headercell-default-background-color`, `--blg-hover-color`, `--blg-odd-row-background-color`, `--blg-range-selection-background-color`, `--blg-root-wrapper-border`, `--blg-row-height`, `--blg-secondary-font-family`, `--blg-secondary-font-size`, `--blg-secondary-font-weight`, `--blg-selected-color`, `--dnet-grid-maximize-size`
 
 </details>
 

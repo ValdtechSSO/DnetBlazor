@@ -11,6 +11,23 @@
 - The Liquid Glass themes render the grid header's sort, filter and group
   actions as the paginator's round glass buttons: 28px, 6px apart, tinted
   in the accent under the pointer, with the focus halo.
+- Grid: `GridOptions.EnableMaximize` puts a button in the grid's top-right
+  corner, a quarter of a disc drawn from its top edge to its side in a soft
+  tint of the accent, that makes the grid fill the window, on desktop and
+  on phones, and brings it back. Escape also brings it back, unless a popup
+  such as the advanced filter is open, and the popups still open above the
+  maximized grid. The grid keeps a band as tall as the button above its
+  header, so the button covers none of the header's actions.
+  `BlgGrid.IsMaximized` says whether it is maximized. Tokens:
+  `--dnet-grid-maximize-size`, `--dnet-grid-maximize-clearance`,
+  `--dnet-grid-maximize-background`, `--dnet-grid-maximize-hover-background`,
+  `--dnet-grid-maximize-color` and `--dnet-grid-maximized-z-index` (900,
+  under the overlays). New strings: `Grid.Maximize` and `Grid.Restore`. Off
+  by default. The maximized grid is `position: fixed`, so an ancestor with a
+  `transform`, `filter`, `backdrop-filter` or `contain` confines it to that
+  ancestor.
+- The Liquid Glass themes fit the grid's maximize button in the corner
+  their header row already leaves free, with no band above the header.
 
 ## Version 6.1.1 (November 2026)
 
