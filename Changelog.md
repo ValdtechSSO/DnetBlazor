@@ -22,7 +22,9 @@
   is not marked as wrong. Both messages are announced (`role="status"`) and
   follow the language. The inputs report the state through `DnetInputBase`
   and `IFormEventService.RaiseValidationState` with the new
-  `FieldValidationState`; `--dnet-form-field-pending-color` and
+  `FieldValidationState`; the new interface members have defaults that do
+  nothing, so existing implementations keep compiling.
+  `--dnet-form-field-pending-color` and
   `--dnet-form-field-faulted-color` set the colours. New strings:
   `Form.ValidationChecking` and `Form.ValidationFaulted`. Fields without an
   asynchronous validator do not change.
