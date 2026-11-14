@@ -1,6 +1,6 @@
 @page "/Buttons"
 @using Dnet.Blazor.Components.Button
-@using Dnet.Blazor.Components.Checkbox
+@using Dnet.Blazor.Components.SlideToggle
 
 <DnetLocalizationObserver OnChanged="@(() => InvokeAsync(StateHasChanged))" />
 
@@ -31,7 +31,7 @@
                 <p>@S["Buttons.EachExampleUsesTheSameLabelWithAnd"]</p>
             </div>
             <div class="button-disable-control">
-                <DnetInputCheckbox id="button-disable-toggle" @bind-Value="_disabled">@S["Buttons.DisableExamples"]</DnetInputCheckbox>
+                <DnetSlideToggle id="button-disable-toggle" @bind-Value="_disabled">@S["Buttons.DisableExamples"]</DnetSlideToggle>
             </div>
         </div>
 
