@@ -294,6 +294,23 @@
   --dnet-toast-action-border-color: var(--dnet-sys-transparent);
   --dnet-toast-progress-inset: calc(var(--dnet-sys-radius-lg) - var(--dnet-sys-border-width) + 5px);
 
+  /* Dialog: liquid glass like the cards, so the page shows through blurred.
+     Its close button is the theme's round icon button: a ghost glass pill
+     with the rim and a soft lift, 36px across like the editor's tools. */
+  --dnet-dialog-background: var(--dnet-sys-material-card);
+  /* A little more room above the title, so the round close button keeps
+     clear of the dialog's top edge. */
+  --dnet-dialog-padding-top-bottom: 16px;
+  --dnet-dialog-close-padding: 6px;
+  --dnet-dialog-close-radius: var(--dnet-sys-radius-pill);
+  --dnet-dialog-close-background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
+  --dnet-dialog-close-background-hover: var(--dnet-sys-material-sheen), color-mix(in srgb, var(--dnet-sys-primary-content) 10%, var(--dnet-sys-material-ghost));
+  --dnet-dialog-close-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-ghost-elevation);
+
+  /* Image editor: room under the footer, so the buttons' rim and glow are
+     not cut where the dialog's content ends. */
+  --dnet-image-editor-footer-padding-bottom: 24px;
+
   /* AdminLayout menu (from the reference design): rows inset from the
      column, each led by a glass tile with the item's short text, or its icon.
      Hovering a row lights it; the current page is an accent-tinted glass row

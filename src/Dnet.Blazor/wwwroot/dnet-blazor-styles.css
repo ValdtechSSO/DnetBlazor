@@ -2616,6 +2616,27 @@ nav ul li a.active .dnet-menu-tile {
   cursor: pointer;
 }
 
+/* The dialog's close button: a bare icon by default, which a theme can paint
+   as a round button. The negative margin cancels the padding, so the header
+   keeps its height and the icon its place. */
+.dnet-dialog-header > .dnet-dialog-icon-wrapper {
+  --_close-padding: var(--dnet-dialog-close-padding, 0px);
+  --_close-radius: var(--dnet-dialog-close-radius, 0px);
+  --_close-background: var(--dnet-dialog-close-background, var(--dnet-sys-transparent));
+  --_close-background-hover: var(--dnet-dialog-close-background-hover, var(--_close-background));
+  --_close-shadow: var(--dnet-dialog-close-shadow, none);
+
+  margin: calc(-1 * var(--_close-padding));
+  padding: var(--_close-padding);
+  border-radius: var(--_close-radius);
+  background: var(--_close-background);
+  box-shadow: var(--_close-shadow);
+}
+
+.dnet-dialog-header > .dnet-dialog-icon-wrapper:hover {
+  background: var(--_close-background-hover);
+}
+
 /* Functional monochrome icon (R9): mask-image + background-color, so the
    icon color follows the token instead of a hard-coded fill. */
 .dnet-dialog-icon {
@@ -3952,12 +3973,17 @@ nav ul li a.active .dnet-menu-tile {
   margin-right: var(--dnet-sys-space-1);
 }
 
+/* Space under the buttons. The dialog's content scrolls and so clips whatever
+   reaches past its bottom edge, such as a button's glow. */
 .dnet-image-editor-footer {
+  --_footer-padding-bottom: var(--dnet-image-editor-footer-padding-bottom, 0px);
+
   display: flex;
   justify-content: flex-end;
   gap: var(--dnet-sys-space-2);
   border-top: 1px solid var(--dnet-sys-border);
   padding-top: var(--dnet-sys-space-3);
+  padding-bottom: var(--_footer-padding-bottom);
 }
 
 /* Crop geometry. The four --_crop-* properties are the single source of truth:
