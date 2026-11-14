@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Paginator: new `--dnet-paginator-padding` sets the space around it and
+  `--dnet-paginator-input-margin` the page field's margin. Without visual
+  change by default.
 - Paginator: new `--dnet-paginator-controls-gap` sets the space between the
   arrows. Without visual change by default.
 - Paginator: new tokens let a theme restyle it and lay it out on one line.

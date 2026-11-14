@@ -25,7 +25,7 @@ Open only the one you need.
 | [ImageEditor](components/ImageEditor.md) | `<DnetImageEditor>`, `<ImageEditorTooltipText>` | 18 | 4 |
 | [List](components/List.md) | `<DnetList>` | 16 | 22 |
 | [Overlay](components/Overlay.md) | `<DnetOverlay>` | 1 | — |
-| [Paginator](components/Paginator.md) | `<DnetPaginator>` | 22 | 20 |
+| [Paginator](components/Paginator.md) | `<DnetPaginator>` | 22 | 22 |
 | [PickList](components/PickList.md) | `<PickList>` | 12 | 21 |
 | [PillTabs](components/PillTabs.md) | `<DnetPillTabs>` | 9 | 12 |
 | [RadioButton](components/RadioButton.md) | `<DnetInputRadioButton>`, `<DnetInputRadioGroup>` | 8 | 7 |

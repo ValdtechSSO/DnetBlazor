@@ -51,9 +51,11 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-paginator-input-background` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
 | `--dnet-paginator-input-border-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 15%, transparent)` |
 | `--dnet-paginator-input-height` | `20px` |
+| `--dnet-paginator-input-margin` | `0 5px 2px 5px` |
 | `--dnet-paginator-input-radius` | `0px` |
 | `--dnet-paginator-input-width` | `40px` |
 | `--dnet-paginator-items-per-page-label-margin` | `0 0px` |
+| `--dnet-paginator-padding` | `3px 0` |
 | `--dnet-paginator-page-size-margin-right` | `0px` |
 | `--dnet-paginator-range-area` | `2 / 3 / 3 / 4` |
 | `--dnet-paginator-range-font-size` | `0.625rem` |
