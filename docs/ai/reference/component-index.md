@@ -39,7 +39,7 @@ Open only the one you need.
 | [Tabs](components/Tabs.md) | `<DnetTab>`, `<DnetTabBody>`, `<DnetTabGroup>` | 12 | 5 |
 | [Theme](components/Theme.md) | `<DnetThemeScope>` | 3 | — |
 | [TimePicker](components/TimePicker.md) | `<DnetTimePicker>` | 19 | 6 |
-| [Timeline](components/Timeline.md) | `<DnetTimeline>`, `<DnetTimelineItem>` | 13 | 12 |
+| [Timeline](components/Timeline.md) | `<DnetTimeline>`, `<DnetTimelineItem>` | 13 | 28 |
 | [Toast](components/Toast.md) | `<DnetToast>`, `<DnetToastStack>` | 22 | 15 |
 | [Tooltip](components/Tooltip.md) | `<DnetTooltipPanel>` | 10 | 9 |
 | [Tree](components/Tree.md) | `<DnetTree>`, `<DnetTreeNode>` | 20 | 2 |

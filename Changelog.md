@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Timeline: new tokens turn each event into a card and the markers into
+  glass. Cards: `--dnet-timeline-content-padding`, `-content-radius`,
+  `-content-border-width`, `-content-background`,
+  `-content-background-current` and `-content-shadow-current`, over the
+  material sheen, highlight and lift; pending events are an outline in the
+  line colour. Markers: `--dnet-timeline-bullet-offset` (lines them up with
+  the card's title), `-bullet-border-width`, `-bullet-shadow`,
+  `-bullet-background-completed`, `-bullet-shadow-completed`,
+  `-bullet-background-current`, `-bullet-shadow-current` and
+  `-current-foreground`. Line: `--dnet-timeline-line-inset` (its gap to the
+  markers; negative values run it under them) and `-line-completed`.
+  Without visual change by default.
 - New material mechanic `--dnet-sys-material-well-shadow`, the inner shadow
   and rim of recessed tracks (slide toggle). Without effect by default.
 - SlideToggle: new `Variant` parameter. `DnetSlideToggleVariant.Lens` is a
