@@ -3980,17 +3980,16 @@ nav ul li a.active .dnet-menu-tile {
   margin-right: var(--dnet-sys-space-1);
 }
 
-/* Space under the buttons. The dialog's content scrolls and so clips whatever
-   reaches past its bottom edge, such as a button's glow. */
+/* The line over the buttons and the space under it. */
 .dnet-image-editor-footer {
-  --_footer-padding-bottom: var(--dnet-image-editor-footer-padding-bottom, 0px);
+  --_footer-border-width: var(--dnet-image-editor-footer-border-width, 1px);
+  --_footer-padding-top: var(--dnet-image-editor-footer-padding-top, var(--dnet-sys-space-3));
 
   display: flex;
   justify-content: flex-end;
   gap: var(--dnet-sys-space-2);
-  border-top: 1px solid var(--dnet-sys-border);
-  padding-top: var(--dnet-sys-space-3);
-  padding-bottom: var(--_footer-padding-bottom);
+  border-top: var(--_footer-border-width) solid var(--dnet-sys-border);
+  padding-top: var(--_footer-padding-top);
 }
 
 /* Crop geometry. The four --_crop-* properties are the single source of truth:

@@ -2,9 +2,9 @@
 
 ## Unreleased
 
-- ImageEditor: new `--dnet-image-editor-footer-padding-bottom` leaves room
-  under the footer's buttons, which the dialog's scrolling content would
-  otherwise cut at its bottom edge. Without visual change by default.
+- ImageEditor: new `--dnet-image-editor-footer-border-width` and
+  `--dnet-image-editor-footer-padding-top` set the line over the footer's
+  buttons and the space under it. Without visual change by default.
 - Dialog: new `--dnet-dialog-close-padding`, `-close-radius`,
   `-close-background`, `-close-background-hover` and `-close-shadow` paint
   the close button as a round button. A negative margin cancels the

@@ -48,8 +48,9 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
-| `--dnet-image-editor-footer-padding-bottom` | `0px` |
+| `--dnet-image-editor-footer-border-width` | `1px` |
+| `--dnet-image-editor-footer-padding-top` | `calc(var(--dnet-sys-space-unit) * 3)` <br><sub>via `--dnet-sys-space-3`</sub> |
 
 ```css
-:root { --dnet-image-editor-footer-padding-bottom: /* your value */; }
+:root { --dnet-image-editor-footer-border-width: /* your value */; }
 ```
