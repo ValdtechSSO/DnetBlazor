@@ -38,9 +38,17 @@ public sealed class AsyncFieldValidationTests : BunitContext
         Assert.True(context.IsValidationPending(context.Field(nameof(Account.Email))));
         Assert.Empty(cut.FindAll(".dnet-error"));
 
+        // While the server checks, the field shows a spinner and says so; the input is busy.
+        cut.WaitForAssertion(() => Assert.Single(cut.FindAll(".dnet-form-field-pending-indicator")));
+        Assert.Equal("Comprobando…", cut.Find(".dnet-form-field-validation-status").TextContent.Trim());
+        Assert.Equal("status", cut.Find(".dnet-form-field-validation-status").GetAttribute("role"));
+        Assert.Equal("true", cut.Find("input").GetAttribute("aria-busy"));
+
         answer.SetResult(true);
 
         cut.WaitForAssertion(() => Assert.Contains(RejectedMessage, cut.Find(".dnet-error").TextContent));
+        Assert.Empty(cut.FindAll(".dnet-form-field-pending-indicator"));
+        Assert.Null(cut.Find("input").GetAttribute("aria-busy"));
     }
 
     [Theory]
@@ -86,6 +94,47 @@ public sealed class AsyncFieldValidationTests : BunitContext
 
         cut.WaitForAssertion(() => Assert.False(context.IsValidationPending(context.Field(nameof(Account.Email)))));
         Assert.Empty(cut.FindAll(".dnet-error"));
+    }
+
+    [Fact]
+    public async Task A_check_that_fails_says_so_without_marking_the_field_as_wrong()
+    {
+        var model = new Account();
+        var context = new EditContext(model);
+        var gate = new TaskCompletionSource();
+        context.OnFieldChanged += (_, args) => context.RegisterAsyncFieldValidator(args.FieldIdentifier, async cancellationToken =>
+        {
+            await gate.Task.WaitAsync(cancellationToken);
+            throw new InvalidOperationException("The server is down.");
+        });
+        var cut = RenderField(context, () => model.Email, (builder, field) => TextInput(builder, model, field));
+
+        cut.Find("input").Input("ana@example.com");
+        cut.WaitForAssertion(() => Assert.Single(cut.FindAll(".dnet-form-field-pending-indicator")));
+
+        await cut.InvokeAsync(() => gate.SetResult());
+
+        cut.WaitForAssertion(() => Assert.Equal("No se pudo comprobar. Inténtalo de nuevo.",
+            cut.Find(".dnet-form-field-validation-faulted").TextContent.Trim()));
+        Assert.Equal("status", cut.Find(".dnet-form-field-validation-faulted").GetAttribute("role"));
+        Assert.Single(cut.FindAll(".dnet-form-field-faulted-icon"));
+        Assert.Empty(cut.FindAll(".dnet-error"));
+        Assert.Empty(cut.FindAll(".dnet-form-field-pending-indicator"));
+        Assert.Null(cut.Find("input").GetAttribute("aria-busy"));
+    }
+
+    [Fact]
+    public void A_field_without_an_async_validator_renders_as_before()
+    {
+        var model = new Account { Email = "ana@example.com" };
+        var context = new EditContext(model);
+        var cut = RenderField(context, () => model.Email, (builder, field) => TextInput(builder, model, field));
+
+        cut.Find("input").Input("ana.lopez@example.com");
+
+        Assert.Empty(cut.FindAll(".dnet-form-field-pending-indicator"));
+        Assert.Empty(cut.FindAll(".dnet-form-field-validation-status"));
+        Assert.Null(cut.Find("input").GetAttribute("aria-busy"));
     }
 
     // Each change starts a check whose answer the test releases later; a rejected value adds a

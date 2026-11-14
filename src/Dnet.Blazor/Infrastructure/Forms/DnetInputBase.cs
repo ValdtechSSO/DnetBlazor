@@ -1,6 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using Dnet.Blazor.Components.Form;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using System.Diagnostics.CodeAnalysis;
@@ -27,6 +28,12 @@ namespace Dnet.Blazor.Infrastructure.Forms
         private CancellationTokenSource? _inputDebounce;
 
         [CascadingParameter] private EditContext? CascadedEditContext { get; set; }
+
+        // The form field around the input, if any: it shows the field's validation state.
+        [CascadingParameter] private FormFieldCascadingValues? CascadedFormField { get; set; }
+
+        private FieldValidationState _reportedValidationState;
+        private bool _ariaBusyAdded;
 
         /// <summary>
         /// Gets or sets a collection of additional attributes that will be applied to the created element.
@@ -235,6 +242,7 @@ namespace Dnet.Blazor.Infrastructure.Forms
             }
 
             UpdateAdditionalValidationAttributes();
+            UpdateBusyAttribute();
 
             // For derived components, retain the usual lifecycle with OnInit/OnParametersSet/etc.
             return base.SetParametersAsync(ParameterView.Empty);
@@ -243,8 +251,80 @@ namespace Dnet.Blazor.Infrastructure.Forms
         private void OnValidateStateChanged(object? sender, ValidationStateChangedEventArgs eventArgs)
         {
             UpdateAdditionalValidationAttributes();
+            UpdateBusyAttribute();
             OnFieldValidationStateChanged();
+            ReportValidationState();
             StateHasChanged();
+        }
+
+        // Tells the form field whether an asynchronous validator is checking this field, or could
+        // not check it. Only changes are reported, as every field hears every validation change.
+        private void ReportValidationState()
+        {
+            if (EditContext is null || CascadedFormField?.FormEventService is not { } formEvents)
+            {
+                return;
+            }
+
+            var state = EditContext.IsValidationPending(FieldIdentifier)
+                ? FieldValidationState.Pending
+                : EditContext.IsValidationFaulted(FieldIdentifier)
+                    ? FieldValidationState.Faulted
+                    : FieldValidationState.None;
+
+            if (state == _reportedValidationState)
+            {
+                return;
+            }
+
+            _reportedValidationState = state;
+            formEvents.RaiseValidationState(state);
+        }
+
+        // While an asynchronous validator checks the field, the input is busy for assistive
+        // technology. An aria-busy the consumer set is left alone.
+        private void UpdateBusyAttribute()
+        {
+            if (EditContext is null)
+            {
+                return;
+            }
+
+            var pending = EditContext.IsValidationPending(FieldIdentifier);
+            var present = AdditionalAttributes?.ContainsKey("aria-busy") == true;
+
+            if (pending && !present)
+            {
+                if (ConvertToDictionary(AdditionalAttributes, out var attributes))
+                {
+                    AdditionalAttributes = attributes;
+                }
+
+                attributes["aria-busy"] = "true";
+                _ariaBusyAdded = true;
+            }
+            else if (!pending && present && _ariaBusyAdded)
+            {
+                if (AdditionalAttributes!.Count == 1)
+                {
+                    AdditionalAttributes = null;
+                }
+                else
+                {
+                    if (ConvertToDictionary(AdditionalAttributes, out var attributes))
+                    {
+                        AdditionalAttributes = attributes;
+                    }
+
+                    attributes.Remove("aria-busy");
+                }
+
+                _ariaBusyAdded = false;
+            }
+            else if (!present)
+            {
+                _ariaBusyAdded = false;
+            }
         }
 
         /// <summary>

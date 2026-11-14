@@ -529,6 +529,10 @@
   --dnet-paginator-range-justify: flex-start;
   --dnet-paginator-range-font-size: 0.75rem;
 
+  /* Form field: the spinner of a field that is being checked takes the light
+     accent, which reads on dark glass. */
+  --dnet-form-field-pending-color: var(--dnet-sys-primary-content);
+
   /* Tooltip: the menus' popup glass, frosted, with the sheen, the rim of
      light and the panels' soft shadow, and the text in the page's ink. The
      arrow takes the same fill. */

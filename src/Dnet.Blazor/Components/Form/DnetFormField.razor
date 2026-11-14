@@ -3,10 +3,12 @@
 @using Microsoft.AspNetCore.Components
 @using System.Linq.Expressions
 @using Dnet.Blazor.Infrastructure.Forms
+@using Dnet.Blazor.Localization
 
 @implements IDisposable
 
 @inject IFormEventService FormEventService
+@inject IServiceProvider LocalizationServices
 
 <div @attributes="AdditionalAttributes" class="@CssClass">
     @if (!string.IsNullOrEmpty(Label))
@@ -35,6 +37,10 @@
                 @ChildContent
             </CascadingValue>
         </div>
+        @if (_validationState == FieldValidationState.Pending)
+        {
+            <span class="dnet-form-field-pending-indicator" aria-hidden="true"></span>
+        }
         @if (_useClearButton == true)
         {
             @if (!string.IsNullOrEmpty(_currentValue))
@@ -60,13 +66,32 @@
             </div>
         }
     </div>
-    @if (HintContent != null || ErrorContent != null || _maxCharacters > 0)
+    @if (HintContent != null || ErrorContent != null || _maxCharacters > 0 || _validationState != FieldValidationState.None)
     {
         <div class="dnet-form-field-plain-info">
-            @if (_hasErrors)
+            @if (_validationState == FieldValidationState.Pending)
+            {
+                <DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
+                <div class="dnet-form-field-hint-wrapper">
+                    <div class="dnet-hint dnet-form-field-validation-status" role="status">
+                        @Localizer["Form.ValidationChecking"]
+                    </div>
+                </div>
+            }
+            else if (_hasErrors)
             {
                 <div class="dnet-error">
                     @ErrorContent
+                </div>
+            }
+            else if (_validationState == FieldValidationState.Faulted)
+            {
+                <DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
+                <div class="dnet-form-field-hint-wrapper">
+                    <div class="dnet-hint dnet-form-field-validation-status dnet-form-field-validation-faulted" role="status">
+                        <span class="dnet-form-field-faulted-icon" aria-hidden="true"></span>
+                        @Localizer["Form.ValidationFaulted"]
+                    </div>
                 </div>
             }
             else
@@ -144,6 +169,13 @@
 
     private bool _hasErrors { get; set; }
 
+    // Whether an asynchronous validator is checking the field, or could not check it.
+    private FieldValidationState _validationState;
+
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+
+    private Task HandleLocalizationChanged() => InvokeAsync(StateHasChanged);
+
     private bool _hasFocus { get; set; }
 
     private bool _useClearButton { get; set; }
@@ -187,6 +219,8 @@
 
         FormEventService.OnCharCount += CharCount;
 
+        FormEventService.OnValidationState += HandleValidationState;
+
         _useClearButton = UseClearButton;
     }
 
@@ -200,6 +234,13 @@
     private void HandleError(bool hasError)
     {
         _hasErrors = hasError;
+
+        StateHasChanged();
+    }
+
+    private void HandleValidationState(FieldValidationState state)
+    {
+        _validationState = state;
 
         StateHasChanged();
     }
@@ -262,5 +303,7 @@
         FormEventService.OnDisabled -= HandleDisabled;
 
         FormEventService.OnCharCount -= CharCount;
+
+        FormEventService.OnValidationState -= HandleValidationState;
     }
 }
