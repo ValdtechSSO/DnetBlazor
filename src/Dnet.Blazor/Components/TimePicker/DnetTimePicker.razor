@@ -34,8 +34,8 @@
        readonly="@ReadOnly"
        required="@Required"
        role="combobox"
-       aria-autocomplete="list"
-       aria-haspopup="listbox"
+       aria-autocomplete="@(IsDial ? null : "list")"
+       aria-haspopup="@(IsDial ? "dialog" : "listbox")"
        aria-expanded="@(_isOpen ? "true" : "false")"
        aria-controls="@ListboxId"
        aria-activedescendant="@ActiveOptionId"
@@ -131,6 +131,14 @@
     [Parameter]
     public IReadOnlyList<TimeOnly>? TimeOptions { get; set; }
 
+    /// <summary>
+    /// Gets or sets how the time is chosen: from a list (the default) or on a clock face in a centred dialog.
+    /// The dial is 12-hour when <see cref="Format"/> uses <c>h</c>, and 24-hour otherwise; it ignores
+    /// <see cref="Interval"/> and <see cref="TimeOptions"/>, and keeps to <see cref="Min"/> and <see cref="Max"/>.
+    /// </summary>
+    [Parameter]
+    public DnetTimePickerMode Mode { get; set; } = DnetTimePickerMode.List;
+
     /// <summary>Gets or sets the accessible label announced for the options list.</summary>
     [Parameter]
     public string OptionsAriaLabel { get => _optionsAriaLabel ?? "Choose a time"; set => _optionsAriaLabel = value; }
@@ -168,6 +176,11 @@
 
     private CultureInfo EffectiveCulture => Culture ?? Localizer.Culture;
 
+    private bool IsDial => Mode == DnetTimePickerMode.Dial;
+
+    // A format with "h" reads the hour on a 12-hour clock; anything else is 24-hour.
+    private bool UsesTwentyFourHourClock => !Format.Contains('h', StringComparison.Ordinal);
+
     private string? InstanceStyle => AdditionalAttributes?.TryGetValue("style", out var style) == true
         ? Convert.ToString(style, CultureInfo.InvariantCulture)
         : null;
@@ -195,7 +208,7 @@
         }
     }
 
-    private string? ListboxId => _menuReference is null
+    private string? ListboxId => _menuReference is null || IsDial
         ? null
         : $"cdk-overlay-pane-{_menuReference.GetOverlayReferenceId()}";
 
@@ -255,7 +268,7 @@
 
         _resolvedOptions = ResolveOptions();
 
-        if (_isOpen && _resolvedOptions.Count == 0)
+        if (_isOpen && !IsDial && _resolvedOptions.Count == 0)
         {
             DetachMenu();
         }
@@ -349,6 +362,16 @@
             return;
         }
 
+        if (IsDial)
+        {
+            if (!_isOpen && args.Key is "ArrowDown" or "ArrowUp" or "Enter")
+            {
+                await OpenAsync();
+            }
+
+            return;
+        }
+
         switch (args.Key)
         {
             case "ArrowDown":
@@ -388,8 +411,14 @@
 
     private async Task OpenAsync(bool preferLast = false)
     {
-        if (_isOpen || Disabled || ReadOnly || _resolvedOptions.Count == 0)
+        if (_isOpen || Disabled || ReadOnly || (!IsDial && _resolvedOptions.Count == 0))
         {
+            return;
+        }
+
+        if (IsDial)
+        {
+            OpenDial();
             return;
         }
 
@@ -431,6 +460,63 @@
         _isOpen = true;
         StateHasChanged();
     }
+
+    private void OpenDial()
+    {
+        RenderFragment content = builder =>
+        {
+            builder.OpenComponent<DnetTimePickerDial>(0);
+            builder.AddAttribute(1, nameof(DnetTimePickerDial.Value), CurrentValue);
+            builder.AddAttribute(2, nameof(DnetTimePickerDial.Use24Hour), UsesTwentyFourHourClock);
+            builder.AddAttribute(3, nameof(DnetTimePickerDial.Min), Min);
+            builder.AddAttribute(4, nameof(DnetTimePickerDial.Max), Max);
+            builder.AddAttribute(5, nameof(DnetTimePickerDial.Culture), EffectiveCulture);
+            builder.AddAttribute(6, nameof(DnetTimePickerDial.Title), _optionsAriaLabel);
+            builder.AddAttribute(7, nameof(DnetTimePickerDial.CancelLabel), _cancelLabel);
+            builder.AddAttribute(
+                8,
+                nameof(DnetTimePickerDial.Cancel),
+                EventCallback.Factory.Create(this, () => DetachMenu()));
+            builder.AddAttribute(
+                9,
+                nameof(DnetTimePickerDial.Confirm),
+                EventCallback.Factory.Create<TimeOnly>(this, SelectTimeAsync));
+            builder.CloseComponent();
+        };
+
+        _menuReference = OverlayService.Attach(content, CreateDialOverlayConfig());
+        _menuReference.Close += HandleOverlayClosed;
+        _isOpen = true;
+        StateHasChanged();
+    }
+
+    // The dial is a modal dialog, centred at every width, with the backdrop
+    // dimming the page behind it.
+    private OverlayConfig CreateDialOverlayConfig() => new()
+    {
+        HasBackdrop = true,
+        CloseOnEscape = true,
+        ScrollStrategy = OverlayScrollStrategy.Block,
+        Role = "dialog",
+        AriaModal = true,
+        AriaLabel = EffectiveOptionsAriaLabel,
+        Direction = EffectiveCulture.TextInfo.IsRightToLeft ? "rtl" : "ltr",
+        TrapFocus = true,
+        RestoreFocus = RestoreFocus,
+        InitialFocusSelector = ".dnet-timepicker-dial-face",
+        PositionStrategy = PositionStrategy.Global,
+        GlobalPositionStrategy = new GlobalPositionStrategyBuilder()
+            .CenterHorizontally("0")
+            .CenterVertically("0"),
+        Width = "min(100% - 24px, 328px)",
+        MaxHeight = "calc(100dvh - 24px)",
+        PanelClass = string.Join(
+            " ",
+            new[] { "dnet-timepicker-overlay", "dnet-timepicker-overlay-dial", PanelClass }
+                .Where(value => !string.IsNullOrWhiteSpace(value))),
+        PanelStyle = ResolvedPanelStyle,
+        ThemeScope = ThemeScope
+    };
 
     private OverlayConfig CreateOverlayConfig(bool touch)
     {

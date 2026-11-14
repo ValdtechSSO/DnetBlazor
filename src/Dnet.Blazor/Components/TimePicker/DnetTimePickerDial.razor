@@ -1,0 +1,551 @@
+@using Dnet.Blazor.Localization
+@inject IServiceProvider LocalizationServices
+
+@using System.Globalization
+@using Dnet.Blazor.Components.Button
+@using Microsoft.AspNetCore.Components.Web
+
+<DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
+
+<div class="dnet-timepicker-panel dnet-timepicker-panel-dial">
+    <div class="dnet-timepicker-panel-header">@EffectiveTitle</div>
+
+    <div class="dnet-timepicker-dial-display">
+        <button type="button"
+                class="@FieldClass(_view == DialView.Hours)"
+                aria-pressed="@(_view == DialView.Hours ? "true" : "false")"
+                aria-label="@($"{HoursLabel} {HourText}")"
+                @onclick="() => ShowView(DialView.Hours)">@HourText</button>
+        <span class="dnet-timepicker-dial-separator" aria-hidden="true">:</span>
+        <button type="button"
+                class="@FieldClass(_view == DialView.Minutes)"
+                aria-pressed="@(_view == DialView.Minutes ? "true" : "false")"
+                aria-label="@($"{MinutesLabel} {MinuteText}")"
+                @onclick="() => ShowView(DialView.Minutes)">@MinuteText</button>
+
+        @if (!Use24Hour)
+        {
+            <div class="dnet-timepicker-dial-period" role="group">
+                <button type="button"
+                        class="@PeriodClass(!IsPm)"
+                        aria-pressed="@(IsPm ? "false" : "true")"
+                        @onclick="() => SetPeriod(false)">@AmText</button>
+                <button type="button"
+                        class="@PeriodClass(IsPm)"
+                        aria-pressed="@(IsPm ? "true" : "false")"
+                        @onclick="() => SetPeriod(true)">@PmText</button>
+            </div>
+        }
+    </div>
+
+    <div class="dnet-timepicker-dial-stage">
+        <div class="dnet-timepicker-dial-face"
+             role="slider"
+             tabindex="0"
+             aria-label="@(_view == DialView.Hours ? HoursLabel : MinutesLabel)"
+             aria-valuemin="@ValueMin"
+             aria-valuemax="@ValueMax"
+             aria-valuenow="@ValueNow"
+             aria-valuetext="@(_view == DialView.Hours ? HourText : MinuteText)"
+             @onkeydown="HandleDialKeyDown"></div>
+
+        <div class="dnet-timepicker-dial-hand" style="@HandStyle" aria-hidden="true">
+            <span class="dnet-timepicker-dial-hand-line" style="@HandLineStyle"></span>
+            <span class="@SelectorClass" style="@SelectorStyle"></span>
+        </div>
+        <span class="dnet-timepicker-dial-center" aria-hidden="true"></span>
+
+        @if (_view == DialView.Minutes)
+        {
+            @for (var minute = 1; minute < 60; minute++)
+            {
+                if (minute % 5 == 0)
+                {
+                    continue;
+                }
+
+                var range = minute / 5;
+                var dotEnabled = IsRangeEnabled(range);
+                <span class="@DotClass(range, dotEnabled)"
+                      style="@PointStyle(DotRadius, minute * 6)"
+                      aria-hidden="true"
+                      @onclick="() => OpenArc(range)"></span>
+            }
+        }
+
+        @foreach (var mark in Marks)
+        {
+            var current = mark;
+            var enabled = IsMarkEnabled(current);
+            <span class="@MarkClass(current, enabled)"
+                  style="@PointStyle(current.Radius, current.Angle)"
+                  aria-hidden="true"
+                  @onclick="() => SelectMark(current)">@current.Label</span>
+        }
+
+        @if (_view == DialView.Minutes && _arcRange is int arcRange)
+        {
+            <div class="dnet-timepicker-dial-arc" @key="arcRange" aria-hidden="true">
+                <div class="dnet-timepicker-dial-arc-shadow">
+                    <div class="dnet-timepicker-dial-arc-shape" style="@ArcClipStyle(arcRange)"></div>
+                </div>
+                @for (var index = 0; index < 4; index++)
+                {
+                    var minute = arcRange * 5 + index + 1;
+                    var enabled = IsMinuteEnabled(minute);
+                    <span class="@ArcNumberClass(minute, enabled)"
+                          style="@PointStyle(ArcMiddleRadius, ArcAngle(arcRange, index))"
+                          @onclick="() => SelectMinute(minute, keepArc: true)">@minute.ToString("00", CultureInfo.InvariantCulture)</span>
+                }
+            </div>
+        }
+    </div>
+
+    <div class="dnet-timepicker-actions">
+        <DnetButton Size="DnetButtonSize.Small" Variant="DnetButtonVariant.Outlined"
+                    class="dnet-timepicker-action dnet-timepicker-dial-cancel"
+                    style="@ButtonSizeStyle"
+                    OnClick="Cancel">@EffectiveCancelLabel</DnetButton>
+        <DnetButton Size="DnetButtonSize.Small" Variant="DnetButtonVariant.Filled"
+                    class="dnet-timepicker-action dnet-timepicker-dial-ok"
+                    style="@ButtonSizeStyle"
+                    disabled="@(!IsWithinRange)"
+                    OnClick="ConfirmAsync">@EffectiveOkLabel</DnetButton>
+    </div>
+</div>
+
+@code {
+    // The geometry of the clock, in pixels on the 320px stage: the dial is
+    // 240px across with room for the arc around it.
+    private const double Center = 160;
+    private const double OuterRadius = 96;
+    private const double InnerRadius = 60;
+    private const double DotRadius = 112;
+    private const double ArcInnerRadius = 124;
+    private const double ArcOuterRadius = 156;
+    private const double ArcMiddleRadius = (ArcInnerRadius + ArcOuterRadius) / 2;
+    private const double ArcStep = 13;
+
+    private const string ButtonSizeStyle =
+        "--dnet-btn-height:var(--dnet-timepicker-button-height, inherit);" +
+        "--dnet-btn-padding:var(--dnet-timepicker-button-padding, inherit);" +
+        "--dnet-btn-icon-gap:var(--dnet-timepicker-button-icon-gap, inherit);";
+
+    private enum DialView { Hours, Minutes }
+
+    private enum Ring { Outer, Inner }
+
+    private sealed record Mark(string Label, int Value, double Angle, double Radius, Ring Ring);
+
+    private IDnetLocalizer Localizer => DnetLocalization.Get(LocalizationServices);
+    private Task HandleLocalizationChanged() => InvokeAsync(StateHasChanged);
+
+    private CultureInfo? _culture;
+    private string? _title;
+    private string? _cancelLabel;
+    private string? _okLabel;
+    private DialView _view = DialView.Hours;
+    private int _hour;
+    private int _minute;
+    private int? _arcRange;
+    private double _handAngle;
+    private bool _initialized;
+
+    /// <summary>Gets or sets the time the dial starts from.</summary>
+    [Parameter]
+    public TimeOnly? Value { get; set; }
+
+    /// <summary>Gets or sets whether the dial shows 24 hours on two rings instead of 12 with AM and PM.</summary>
+    [Parameter]
+    public bool Use24Hour { get; set; } = true;
+
+    /// <summary>Gets or sets the earliest time that can be chosen.</summary>
+    [Parameter]
+    public TimeOnly? Min { get; set; }
+
+    /// <summary>Gets or sets the latest time that can be chosen.</summary>
+    [Parameter]
+    public TimeOnly? Max { get; set; }
+
+    /// <summary>Gets or sets the culture used for the AM and PM designators.</summary>
+    [Parameter]
+    public CultureInfo Culture { get => _culture ?? Localizer.Culture; set => _culture = value; }
+
+    /// <summary>Gets or sets the dialog title.</summary>
+    [Parameter]
+    public string? Title { get => _title; set => _title = value; }
+
+    /// <summary>Gets or sets the label of the cancel action.</summary>
+    [Parameter]
+    public string? CancelLabel { get => _cancelLabel; set => _cancelLabel = value; }
+
+    /// <summary>Gets or sets the label of the confirm action.</summary>
+    [Parameter]
+    public string? OkLabel { get => _okLabel; set => _okLabel = value; }
+
+    /// <summary>Raised when the user cancels the dialog.</summary>
+    [Parameter]
+    public EventCallback Cancel { get; set; }
+
+    /// <summary>Raised with the chosen time when the user confirms it.</summary>
+    [Parameter]
+    public EventCallback<TimeOnly> Confirm { get; set; }
+
+    private string EffectiveTitle => _title ?? Localizer["TimePicker.ChooseTime"];
+    private string EffectiveCancelLabel => _cancelLabel ?? Localizer["Common.Cancel"];
+    private string EffectiveOkLabel => _okLabel ?? Localizer["Common.Ok"];
+    private string HoursLabel => Localizer["TimePicker.Hours"];
+    private string MinutesLabel => Localizer["TimePicker.Minutes"];
+    private string AmText => Designator(Culture.DateTimeFormat.AMDesignator, "AM");
+    private string PmText => Designator(Culture.DateTimeFormat.PMDesignator, "PM");
+
+    private bool IsPm => _hour >= 12;
+    private int DisplayHour => Use24Hour ? _hour : (_hour % 12 == 0 ? 12 : _hour % 12);
+    private string HourText => DisplayHour.ToString("00", CultureInfo.InvariantCulture);
+    private string MinuteText => _minute.ToString("00", CultureInfo.InvariantCulture);
+    private int MinMinutes => Min is { } min ? min.Hour * 60 + min.Minute : 0;
+    private int MaxMinutes => Max is { } max ? max.Hour * 60 + max.Minute : 24 * 60 - 1;
+    private bool IsWithinRange => IsTimeEnabled(_hour * 60 + _minute);
+
+    private int ValueMin => _view == DialView.Minutes ? 0 : Use24Hour ? 0 : 1;
+    private int ValueMax => _view == DialView.Minutes ? 59 : Use24Hour ? 23 : 12;
+    private int ValueNow => _view == DialView.Minutes ? _minute : DisplayHour;
+
+    protected override void OnParametersSet()
+    {
+        if (_initialized)
+        {
+            return;
+        }
+
+        _initialized = true;
+        var start = Value ?? Min ?? new TimeOnly(0, 0);
+        _hour = start.Hour;
+        _minute = start.Minute;
+        _handAngle = TargetAngle();
+    }
+
+    private IEnumerable<Mark> Marks
+    {
+        get
+        {
+            if (_view == DialView.Minutes)
+            {
+                for (var minute = 0; minute < 60; minute += 5)
+                {
+                    yield return new Mark(minute.ToString("00", CultureInfo.InvariantCulture), minute, minute * 6, OuterRadius, Ring.Outer);
+                }
+
+                yield break;
+            }
+
+            for (var label = 1; label <= 12; label++)
+            {
+                var hour = Use24Hour ? label : label % 12 + (IsPm ? 12 : 0);
+                yield return new Mark(label.ToString(CultureInfo.InvariantCulture), hour, label % 12 * 30, OuterRadius, Ring.Outer);
+            }
+
+            if (Use24Hour)
+            {
+                for (var offset = 0; offset < 12; offset++)
+                {
+                    var hour = offset == 0 ? 0 : offset + 12;
+                    var label = offset == 0 ? "00" : hour.ToString(CultureInfo.InvariantCulture);
+                    yield return new Mark(label, hour, offset * 30, InnerRadius, Ring.Inner);
+                }
+            }
+        }
+    }
+
+    private bool IsTimeEnabled(int minutesOfDay) => minutesOfDay >= MinMinutes && minutesOfDay <= MaxMinutes;
+
+    private bool IsHourEnabled(int hour) => hour * 60 + 59 >= MinMinutes && hour * 60 <= MaxMinutes;
+
+    private bool IsMinuteEnabled(int minute) => IsTimeEnabled(_hour * 60 + minute);
+
+    private bool IsRangeEnabled(int range) =>
+        Enumerable.Range(range * 5 + 1, 4).Any(IsMinuteEnabled);
+
+    private bool IsMarkEnabled(Mark mark) =>
+        _view == DialView.Hours ? IsHourEnabled(mark.Value) : IsMinuteEnabled(mark.Value);
+
+    private bool IsMarkSelected(Mark mark) =>
+        _view == DialView.Hours ? mark.Value == _hour : mark.Value == _minute;
+
+    private void ShowView(DialView view)
+    {
+        _view = view;
+        _arcRange = view == DialView.Minutes && _minute % 5 != 0 ? _minute / 5 : null;
+        MoveHand();
+    }
+
+    private void SelectMark(Mark mark)
+    {
+        if (!IsMarkEnabled(mark))
+        {
+            return;
+        }
+
+        if (_view == DialView.Hours)
+        {
+            _hour = mark.Value;
+            ShowView(DialView.Minutes);
+            return;
+        }
+
+        SelectMinute(mark.Value, keepArc: false);
+    }
+
+    private void SelectMinute(int minute, bool keepArc)
+    {
+        if (!IsMinuteEnabled(minute))
+        {
+            return;
+        }
+
+        _minute = minute;
+        if (!keepArc)
+        {
+            _arcRange = null;
+        }
+
+        MoveHand();
+    }
+
+    private void OpenArc(int range)
+    {
+        if (IsRangeEnabled(range))
+        {
+            _arcRange = range;
+        }
+    }
+
+    private void SetPeriod(bool pm)
+    {
+        if (pm == IsPm)
+        {
+            return;
+        }
+
+        _hour = pm ? _hour + 12 : _hour - 12;
+        MoveHand();
+    }
+
+    private void HandleDialKeyDown(KeyboardEventArgs args)
+    {
+        if (_view == DialView.Hours)
+        {
+            switch (args.Key)
+            {
+                case "ArrowUp" or "ArrowRight":
+                    StepHour(1);
+                    break;
+                case "ArrowDown" or "ArrowLeft":
+                    StepHour(-1);
+                    break;
+                case "Home":
+                    StepHourTo(Use24Hour ? 0 : (IsPm ? 12 : 0) + 1, 1);
+                    break;
+                case "End":
+                    StepHourTo(Use24Hour ? 23 : (IsPm ? 12 : 0), -1);
+                    break;
+                case "Enter" or " ":
+                    ShowView(DialView.Minutes);
+                    break;
+            }
+
+            return;
+        }
+
+        switch (args.Key)
+        {
+            case "ArrowUp" or "ArrowRight":
+                StepMinute(1);
+                break;
+            case "ArrowDown" or "ArrowLeft":
+                StepMinute(-1);
+                break;
+            case "PageUp":
+                StepMinute(5);
+                break;
+            case "PageDown":
+                StepMinute(-5);
+                break;
+            case "Home":
+                StepMinuteTo(0, 1);
+                break;
+            case "End":
+                StepMinuteTo(59, -1);
+                break;
+        }
+    }
+
+    // In 12-hour mode the arrows go round the twelve hours of the period shown.
+    private void StepHour(int delta)
+    {
+        var count = Use24Hour ? 24 : 12;
+        var baseHour = Use24Hour ? 0 : (IsPm ? 12 : 0);
+        var position = _hour - baseHour;
+        for (var step = 1; step <= count; step++)
+        {
+            var candidate = baseHour + ((position + delta * step) % count + count) % count;
+            if (IsHourEnabled(candidate))
+            {
+                _hour = candidate;
+                MoveHand();
+                return;
+            }
+        }
+    }
+
+    private void StepHourTo(int hour, int direction)
+    {
+        var count = Use24Hour ? 24 : 12;
+        var baseHour = Use24Hour ? 0 : (IsPm ? 12 : 0);
+        for (var step = 0; step < count; step++)
+        {
+            var candidate = baseHour + ((hour - baseHour + direction * step) % count + count) % count;
+            if (IsHourEnabled(candidate))
+            {
+                _hour = candidate;
+                MoveHand();
+                return;
+            }
+        }
+    }
+
+    private void StepMinute(int delta)
+    {
+        for (var step = 1; step <= 60; step++)
+        {
+            var candidate = ((_minute + delta * step) % 60 + 60) % 60;
+            if (IsMinuteEnabled(candidate))
+            {
+                FollowMinute(candidate);
+                return;
+            }
+        }
+    }
+
+    private void StepMinuteTo(int minute, int direction)
+    {
+        for (var step = 0; step < 60; step++)
+        {
+            var candidate = ((minute + direction * step) % 60 + 60) % 60;
+            if (IsMinuteEnabled(candidate))
+            {
+                FollowMinute(candidate);
+                return;
+            }
+        }
+    }
+
+    // From the keyboard the arc follows the minute, so the value is always in view.
+    private void FollowMinute(int minute)
+    {
+        _minute = minute;
+        _arcRange = minute % 5 != 0 ? minute / 5 : null;
+        MoveHand();
+    }
+
+    private Task ConfirmAsync() =>
+        IsWithinRange ? Confirm.InvokeAsync(new TimeOnly(_hour, _minute)) : Task.CompletedTask;
+
+    // The hand turns the short way round, so it never spins back across the dial.
+    private void MoveHand()
+    {
+        var target = TargetAngle();
+        var current = (_handAngle % 360 + 360) % 360;
+        var delta = ((target - current) % 360 + 540) % 360 - 180;
+        _handAngle += delta;
+    }
+
+    private double TargetAngle() => _view == DialView.Hours ? _hour % 12 * 30 : _minute * 6;
+
+    private double HandLength => _view == DialView.Hours
+        ? (Use24Hour && (_hour == 0 || _hour > 12) ? InnerRadius : OuterRadius)
+        : _minute % 5 == 0 ? OuterRadius : DotRadius;
+
+    private string HandStyle => $"transform:rotate({Number(_handAngle)}deg)";
+
+    private string HandLineStyle => $"height:{Number(HandLength)}px";
+
+    private string SelectorStyle => $"top:{Number(-HandLength)}px";
+
+    private string SelectorClass
+    {
+        get
+        {
+            var size = _view == DialView.Minutes && _minute % 5 != 0
+                ? "dnet-timepicker-dial-selector-dot"
+                : HandLength == InnerRadius ? "dnet-timepicker-dial-selector-inner" : null;
+            return size is null ? "dnet-timepicker-dial-selector" : $"dnet-timepicker-dial-selector {size}";
+        }
+    }
+
+    private static string PointStyle(double radius, double angle)
+    {
+        var radians = angle * Math.PI / 180;
+        var x = Center + radius * Math.Sin(radians);
+        var y = Center - radius * Math.Cos(radians);
+        return $"left:{Number(x)}px;top:{Number(y)}px";
+    }
+
+    private static double ArcAngle(int range, int index) => (range * 5 + 2.5) * 6 + (index - 1.5) * ArcStep;
+
+    // The arc is a band with round ends that follows the dial 4px outside it,
+    // only as long as its four minutes need.
+    private static string ArcClipStyle(int range)
+    {
+        var start = ArcAngle(range, 0);
+        var end = ArcAngle(range, 3);
+        var cap = (ArcOuterRadius - ArcInnerRadius) / 2;
+        return "clip-path:path('" +
+               $"M {Point(ArcOuterRadius, start)} " +
+               $"A {Number(ArcOuterRadius)} {Number(ArcOuterRadius)} 0 0 1 {Point(ArcOuterRadius, end)} " +
+               $"A {Number(cap)} {Number(cap)} 0 0 1 {Point(ArcInnerRadius, end)} " +
+               $"A {Number(ArcInnerRadius)} {Number(ArcInnerRadius)} 0 0 0 {Point(ArcInnerRadius, start)} " +
+               $"A {Number(cap)} {Number(cap)} 0 0 1 {Point(ArcOuterRadius, start)} Z')";
+    }
+
+    private static string Point(double radius, double angle)
+    {
+        var radians = angle * Math.PI / 180;
+        return $"{Number(Center + radius * Math.Sin(radians))} {Number(Center - radius * Math.Cos(radians))}";
+    }
+
+    private static string Number(double value) => value.ToString("0.##", CultureInfo.InvariantCulture);
+
+    private static string Designator(string value, string fallback) =>
+        string.IsNullOrWhiteSpace(value) ? fallback : value;
+
+    private static string FieldClass(bool selected) => selected
+        ? "dnet-timepicker-dial-field dnet-timepicker-dial-field-selected"
+        : "dnet-timepicker-dial-field";
+
+    private static string PeriodClass(bool selected) => selected
+        ? "dnet-timepicker-dial-period-option dnet-timepicker-dial-period-option-selected"
+        : "dnet-timepicker-dial-period-option";
+
+    private string MarkClass(Mark mark, bool enabled) => string.Join(" ", new[]
+    {
+        "dnet-timepicker-dial-number",
+        mark.Ring == Ring.Inner ? "dnet-timepicker-dial-number-inner" : null,
+        IsMarkSelected(mark) ? "dnet-timepicker-dial-number-selected" : null,
+        enabled ? null : "dnet-timepicker-dial-number-disabled"
+    }.Where(value => value is not null));
+
+    private string DotClass(int range, bool enabled) => string.Join(" ", new[]
+    {
+        "dnet-timepicker-dial-dot",
+        _arcRange == range ? "dnet-timepicker-dial-dot-active" : null,
+        enabled ? null : "dnet-timepicker-dial-dot-disabled"
+    }.Where(value => value is not null));
+
+    private string ArcNumberClass(int minute, bool enabled) => string.Join(" ", new[]
+    {
+        "dnet-timepicker-dial-arc-number",
+        minute == _minute ? "dnet-timepicker-dial-arc-number-selected" : null,
+        enabled ? null : "dnet-timepicker-dial-arc-number-disabled"
+    }.Where(value => value is not null));
+}

@@ -166,3 +166,322 @@
 .dnet-timepicker-panel-touch .dnet-timepicker-option {
   min-height: 48px;
 }
+
+/* Dial mode: a clock face in a centred dialog. Every surface reads the
+   theme's materials, so a glass theme turns the face into a well, the
+   selected number into a glossy accent drop and the arc into glass, while
+   other themes keep flat fills. */
+.dnet-timepicker-panel-dial {
+  /* The selected number carries the on-primary text, so the dial's accent is
+     the primary fill it pairs with, as on a filled button. */
+  --_dial-accent: var(--dnet-timepicker-accent-color, var(--dnet-sys-primary));
+
+  /* The dialog sizes to the panel at every width; the panel is a size
+     container, so it cannot take its width from its content. */
+  container-type: inline-size;
+  max-height: none;
+  width: min(328px, 100vw - 24px);
+}
+
+/* The stage already leaves 40px under the dial, as much as above it. */
+.dnet-timepicker-panel-dial .dnet-timepicker-actions {
+  gap: var(--dnet-sys-space-2);
+  padding-top: 0;
+}
+
+.dnet-timepicker-dial-display {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: center;
+  padding: 0 var(--dnet-sys-space-3);
+}
+
+.dnet-timepicker-dial-field {
+  background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-control);
+  border: 0;
+  border-radius: var(--dnet-sys-radius-md);
+  box-shadow: var(--dnet-sys-material-highlight);
+  color: var(--_option-foreground);
+  cursor: pointer;
+  font: inherit;
+  font-size: 56px;
+  font-variant-numeric: tabular-nums;
+  height: 80px;
+  line-height: 1;
+  padding: 0;
+  width: 96px;
+}
+
+.dnet-timepicker-dial-field-selected {
+  background: var(--dnet-sys-material-accent-sheen), var(--_selected);
+  color: var(--_accent-content);
+}
+
+.dnet-timepicker-dial-separator {
+  color: var(--_option-foreground);
+  font-size: 56px;
+  line-height: 1;
+  text-align: center;
+  width: 24px;
+}
+
+.dnet-timepicker-dial-period {
+  border: 1px solid var(--dnet-sys-border);
+  border-radius: var(--dnet-sys-radius-md);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 80px;
+  margin-inline-start: var(--dnet-sys-space-3);
+  overflow: hidden;
+  width: 52px;
+}
+
+.dnet-timepicker-dial-period-option {
+  background: transparent;
+  border: 0;
+  color: var(--_option-foreground);
+  cursor: pointer;
+  flex: 1 1 0;
+  font: inherit;
+  font-size: var(--dnet-sys-text-sm);
+  font-weight: 600;
+  padding: 0;
+}
+
+.dnet-timepicker-dial-period-option + .dnet-timepicker-dial-period-option {
+  border-top: 1px solid var(--dnet-sys-border);
+}
+
+.dnet-timepicker-dial-period-option-selected {
+  background: var(--dnet-sys-material-accent-sheen), var(--_selected);
+  color: var(--_accent-content);
+}
+
+/* The global :focus reset hides outlines, so focus is a ring of shadow. */
+.dnet-timepicker-dial-field:focus-visible,
+.dnet-timepicker-dial-period-option:focus-visible {
+  box-shadow: var(--dnet-sys-material-highlight), inset 0 0 0 2px var(--dnet-sys-focus-ring);
+}
+
+/* The stage holds the 240px dial with 40px around it for the arc. */
+.dnet-timepicker-dial-stage {
+  flex: 0 0 auto;
+  height: 320px;
+  margin: 0 auto;
+  position: relative;
+  width: 320px;
+}
+
+.dnet-timepicker-dial-face {
+  background: var(--dnet-sys-material-control);
+  border-radius: 50%;
+  box-shadow: var(--dnet-sys-material-well-shadow);
+  inset: 40px;
+  position: absolute;
+}
+
+.dnet-timepicker-dial-face:focus-visible {
+  box-shadow: var(--dnet-sys-material-well-shadow), 0 0 0 3px var(--dnet-sys-focus-ring);
+}
+
+/* The hand turns around the centre; its length follows the ring. */
+.dnet-timepicker-dial-hand {
+  height: 0;
+  left: 50%;
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  transition: transform var(--dnet-sys-motion-normal) var(--dnet-sys-motion-ease);
+  width: 0;
+}
+
+.dnet-timepicker-dial-hand-line {
+  background: var(--_dial-accent);
+  bottom: 0;
+  left: -1px;
+  position: absolute;
+  transition: height var(--dnet-sys-motion-normal) var(--dnet-sys-motion-ease);
+  width: 2px;
+}
+
+.dnet-timepicker-dial-selector {
+  --_selector-size: 48px;
+
+  background: var(--dnet-sys-material-accent-sheen), var(--_dial-accent);
+  border-radius: 50%;
+  box-shadow: var(--dnet-sys-material-accent-highlight);
+  height: var(--_selector-size);
+  left: 0;
+  margin: calc(var(--_selector-size) / -2);
+  position: absolute;
+  transition: top var(--dnet-sys-motion-normal) var(--dnet-sys-motion-ease);
+  width: var(--_selector-size);
+}
+
+.dnet-timepicker-dial-selector-inner {
+  --_selector-size: 40px;
+}
+
+.dnet-timepicker-dial-selector-dot {
+  --_selector-size: 14px;
+}
+
+.dnet-timepicker-dial-center {
+  background: var(--_dial-accent);
+  border-radius: 50%;
+  height: 8px;
+  left: 50%;
+  margin: -4px;
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  width: 8px;
+}
+
+.dnet-timepicker-dial-number {
+  align-items: center;
+  border-radius: 50%;
+  color: var(--_option-foreground);
+  cursor: pointer;
+  display: flex;
+  font-size: var(--dnet-sys-text-md);
+  font-variant-numeric: tabular-nums;
+  height: 40px;
+  justify-content: center;
+  margin: -20px;
+  position: absolute;
+  user-select: none;
+  width: 40px;
+}
+
+.dnet-timepicker-dial-number-inner {
+  color: var(--dnet-sys-on-surface-muted);
+  font-size: var(--dnet-sys-text-sm);
+  height: 32px;
+  margin: -16px;
+  width: 32px;
+}
+
+.dnet-timepicker-dial-number:hover {
+  background: var(--_active);
+}
+
+.dnet-timepicker-dial-number-selected,
+.dnet-timepicker-dial-number-selected:hover {
+  background: transparent;
+  color: var(--dnet-sys-on-primary);
+  font-weight: 600;
+}
+
+.dnet-timepicker-dial-number-disabled,
+.dnet-timepicker-dial-dot-disabled,
+.dnet-timepicker-dial-arc-number-disabled {
+  cursor: default;
+  opacity: .38;
+  pointer-events: none;
+}
+
+/* The minutes between the marks: a dot each, near the rim. A dot opens the
+   arc with the four minutes of its gap. */
+.dnet-timepicker-dial-dot {
+  border-radius: 50%;
+  cursor: pointer;
+  height: 14px;
+  margin: -7px;
+  position: absolute;
+  width: 14px;
+}
+
+.dnet-timepicker-dial-dot::after {
+  background: color-mix(in srgb, var(--_option-foreground) 45%, transparent);
+  border-radius: 50%;
+  content: "";
+  height: 4px;
+  inset: 5px;
+  position: absolute;
+  width: 4px;
+}
+
+.dnet-timepicker-dial-dot:hover::after,
+.dnet-timepicker-dial-dot-active::after {
+  background: var(--_dial-accent);
+}
+
+/* The arc: a band with round ends 4px outside the dial, in the gap that was
+   tapped and only as long as its four minutes need. */
+.dnet-timepicker-dial-arc {
+  animation: dnet-timepicker-arc-in var(--dnet-sys-motion-normal) var(--dnet-sys-motion-ease);
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.dnet-timepicker-dial-arc-shadow {
+  filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--dnet-sys-on-surface) 22%, transparent));
+  inset: 0;
+  position: absolute;
+}
+
+.dnet-timepicker-dial-arc-shape {
+  background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-control);
+  inset: 0;
+  position: absolute;
+}
+
+.dnet-timepicker-dial-arc-number {
+  align-items: center;
+  border-radius: 50%;
+  color: var(--_option-foreground);
+  cursor: pointer;
+  display: flex;
+  font-size: var(--dnet-sys-text-sm);
+  font-variant-numeric: tabular-nums;
+  height: 28px;
+  justify-content: center;
+  margin: -14px;
+  pointer-events: auto;
+  position: absolute;
+  user-select: none;
+  width: 28px;
+}
+
+.dnet-timepicker-dial-arc-number:hover {
+  background: var(--_active);
+}
+
+.dnet-timepicker-dial-arc-number-selected,
+.dnet-timepicker-dial-arc-number-selected:hover {
+  background: var(--dnet-sys-material-accent-sheen), var(--_dial-accent);
+  box-shadow: var(--dnet-sys-material-accent-highlight);
+  color: var(--dnet-sys-on-primary);
+  font-weight: 600;
+}
+
+@keyframes dnet-timepicker-arc-in {
+  from {
+    opacity: 0;
+    transform: scale(.94);
+  }
+}
+
+/* A narrow dialog scales the clock down so the arc still fits. */
+@container (max-width: 327px) {
+  .dnet-timepicker-dial-display,
+  .dnet-timepicker-dial-stage {
+    zoom: .9;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dnet-timepicker-dial-hand,
+  .dnet-timepicker-dial-hand-line,
+  .dnet-timepicker-dial-selector {
+    transition: none;
+  }
+
+  .dnet-timepicker-dial-arc {
+    animation: none;
+  }
+}
