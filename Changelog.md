@@ -4,6 +4,11 @@
 
 - Autocomplete: the options show the pointer cursor, like other clickable
   items.
+- Toast: new `--dnet-toast-action-foreground` and
+  `--dnet-toast-action-border-color` colour the actions' label and outline
+  (the toast's text colour by default), and `--dnet-toast-progress-inset`
+  moves the progress bar in from both sides. Without visual change by
+  default.
 - DynamicStepper reads the same `--dnet-step-*` tokens as Stepper. Without
   visual change by default.
 - Stepper: new `--dnet-step-*` tokens paint the icons (`-icon-background`,
@@ -119,6 +124,10 @@
   current step is a larger accent drop with a glow;
   completed steps show an accent tick instead of their number; upcoming
   labels are muted and the current one is bolder.
+- The Liquid Glass themes render the toast as liquid glass like the cards,
+  so the page shows through it blurred. Its actions are the theme's
+  outlined buttons (ghost glass pills with the accent label), and the
+  progress bar stops 5px short of where the corners start to curve.
 - The Liquid Glass themes draw the timeline as glass cards (option A of the
   reference design): completed and current events are glass cards, the
   current one tinted with the accent, a ring and a glow, and pending ones
