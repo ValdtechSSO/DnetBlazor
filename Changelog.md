@@ -240,6 +240,13 @@
   picker's panel: the options' text 24px from the edges with 24px above
   and below the list, and in the touch panel the title 24px in with 16px
   under it and the button 24px from the corner at the normal size.
+- The Liquid Glass themes render the ExpansionPanel as separate glass
+  cards 8px apart and rounded on every corner, with 64px rows, a bolder
+  title over a 12px description and a sheen under the pointer. The chevron
+  sits in a round glass button that stays still while the chevron turns; on
+  an open panel the button is the accent drop with a white chevron, and the
+  card lifts with 24px under its content. With keyboard focus the button
+  takes the focus ring, and on a disabled panel it fades.
 - The Liquid Glass themes render a standalone List as a glass panel like
   the PickList: the rim instead of a border, 24px around its content and
   16px between its sections.
