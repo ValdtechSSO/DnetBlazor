@@ -173,6 +173,11 @@
   current step is a larger accent drop with a glow;
   completed steps show an accent tick instead of their number; upcoming
   labels are muted and the current one is bolder.
+- The Liquid Glass themes render the other dropdown panels as glass too:
+  the Autocomplete's like the Select's (spaced like a dialog, with the
+  round close button), and the popups of DatePicker, TimePicker and
+  ConnectedPanel. Calendars shown in the page keep their own fill, and the
+  time picker's touch header no longer adds a second layer.
 - The Liquid Glass themes render the Select dropdown as glass like dialogs
   and space it like them: 24px around, the options' text in line with the
   title and 16px under it, and the theme's round close button 18px from the
