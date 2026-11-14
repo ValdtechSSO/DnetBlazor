@@ -6,18 +6,14 @@
   `-header-flex` and `-header-overflow`: its steps already sit in equal
   columns. Its rail spans the gap between columns. Without visual change by
   default.
-- Stepper: new `--dnet-step-*` tokens let a theme stack each icon over its
-  label in equal columns (`-header-direction`, `-header-flex`,
-  `-header-overflow`, `-icon-margin`, `-line-display`); paint the icons
-  (`-icon-size`, `-icon-background`, `-icon-color`, `-icon-shadow`,
-  `-icon-font-size`, `-icon-font-weight`, `-icon-background-done` painted
-  over completed steps, `-icon-background-current`, `-icon-shadow-current`,
-  `-icon-scale-current`) and the labels (`-label-align`, `-label-weight`,
-  `-label-weight-current`, `-label-color-upcoming`); and draw a rail from
-  each icon to the next that fills up to the current step (`-rail-top`,
-  `-rail-background`, `-rail-shadow`, `-rail-background-done`,
-  `-rail-shadow-done`). Completed steps are the ones before the current
-  one. Without visual change by default.
+- Stepper: new `--dnet-step-*` tokens paint the icons (`-icon-background`,
+  `-icon-color`, `-icon-shadow`, `-icon-font-size`, `-icon-font-weight`,
+  `-icon-background-done` painted over completed steps,
+  `-icon-background-current`, `-icon-shadow-current`, `-icon-scale-current`)
+  and the labels (`-label-weight`, `-label-weight-current`,
+  `-label-color-upcoming`), and space the icons of a horizontal stepper
+  (`-icon-margin`). Completed steps are the ones before the current one.
+  Without visual change by default.
 - New material mechanic `--dnet-sys-material-well-shadow`, the inner shadow
   and rim of recessed tracks (slide toggle). Without effect by default.
 - SlideToggle: new `Variant` parameter. `DnetSlideToggleVariant.Lens` is a

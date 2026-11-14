@@ -5514,14 +5514,8 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 
 .dnet-stepper-horizontal, .dnet-stepper-vertical {
   --_font-size: var(--dnet-step-font-size, var(--dnet-sys-text-md));
-  /* Horizontal layout. A theme can stack each icon over its label in equal
-     columns, with a rail in place of the lines between steps. */
-  --_header-direction: var(--dnet-step-header-direction, row);
-  --_header-flex: var(--dnet-step-header-flex, 0 1 auto);
-  --_header-overflow: var(--dnet-step-header-overflow, hidden);
+  /* Space around the icons of a horizontal stepper. */
   --_icon-margin: var(--dnet-step-icon-margin, 0 8px 0 0);
-  --_icon-size: var(--dnet-step-icon-size, 24px);
-  --_line-display: var(--dnet-step-line-display, block);
   /* Icon faces: upcoming, completed (painted over the number) and current. */
   --_icon-background: var(--dnet-step-icon-background, var(--dnet-sys-on-surface-subtle));
   --_icon-color: var(--dnet-step-icon-color, var(--dnet-sys-on-primary));
@@ -5532,17 +5526,9 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   --_icon-current: var(--dnet-step-icon-background-current, var(--dnet-sys-primary-emphasis));
   --_icon-shadow-current: var(--dnet-step-icon-shadow-current, none);
   --_icon-scale-current: var(--dnet-step-icon-scale-current, none);
-  --_label-align: var(--dnet-step-label-align, inherit);
   --_label-weight: var(--dnet-step-label-weight, inherit);
   --_label-weight-current: var(--dnet-step-label-weight-current, var(--_label-weight));
   --_label-upcoming: var(--dnet-step-label-color-upcoming, var(--dnet-sys-on-surface-emphasis));
-  /* The rail runs from each icon's centre to the next one's; the part before
-     the current step is filled. Without paint by default. */
-  --_rail-top: var(--dnet-step-rail-top, 0px);
-  --_rail: var(--dnet-step-rail-background, none);
-  --_rail-shadow: var(--dnet-step-rail-shadow, none);
-  --_rail-done: var(--dnet-step-rail-background-done, none);
-  --_rail-shadow-done: var(--dnet-step-rail-shadow-done, none);
 
   background-color: var(--dnet-sys-material-page);
 }
@@ -5554,7 +5540,7 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-step-header {
-  overflow: var(--_header-overflow);
+  overflow: hidden;
   outline: none;
   cursor: pointer;
   position: relative;
@@ -5564,30 +5550,10 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 
 .dnet-horizontal-stepper-header {
   display: flex;
-  flex: var(--_header-flex);
-  flex-direction: var(--_header-direction);
   height: 72px;
-  overflow: var(--_header-overflow);
+  overflow: hidden;
   align-items: center;
   padding: 0 24px;
-}
-
-/* Rail segment from this step's icon to the next step's. */
-.dnet-horizontal-stepper-header:has(+ .dnet-stepper-horizontal-line)::before {
-  background: var(--_rail);
-  border-radius: var(--dnet-sys-radius-pill);
-  box-shadow: var(--_rail-shadow);
-  content: "";
-  height: 8px;
-  inset-inline-start: 50%;
-  position: absolute;
-  top: var(--_rail-top);
-  width: 100%;
-}
-
-.dnet-horizontal-stepper-header:has(~ .dnet-step-selected)::before {
-  background: var(--_rail-done);
-  box-shadow: var(--_rail-shadow-done);
 }
 
 .dnet-step-header .dnet-step-icon {
@@ -5599,10 +5565,8 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 }
 
 .dnet-horizontal-stepper-header .dnet-step-icon {
-  height: var(--_icon-size);
   margin: var(--_icon-margin);
   flex: none;
-  width: var(--_icon-size);
 }
 
 .dnet-step-header .dnet-step-icon-selected, .dnet-step-header .dnet-step-icon-state-done, .dnet-step-header .dnet-step-icon-state-edit {
@@ -5658,7 +5622,6 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
   vertical-align: middle;
   font-size: var(--_font-size);
   font-weight: var(--_label-weight);
-  text-align: var(--_label-align);
 }
 
 .dnet-step-label-selected {
@@ -5690,7 +5653,6 @@ nav ul li li li a .dnet-tree-cmp-link-indicator {
 
   border-top-width: 1px;
   border-top-style: solid;
-  display: var(--_line-display);
   flex: auto;
   height: 0;
   margin: 0 -16px;
