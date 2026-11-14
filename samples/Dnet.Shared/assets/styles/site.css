@@ -1492,3 +1492,17 @@ body {
 html[data-dnet-theme|="liquid-glass"] {
   background-blend-mode: overlay, normal, normal, normal, normal, normal, normal, normal, normal, normal, normal, normal, normal;
 }
+
+/* Liquid Glass (both variants): the menu draws a glass tile around the Home
+   icon. As in the reference design, the icon inside is a 16px house in the
+   row's own colour (the accent tile's colour on the current page). */
+[data-dnet-theme|="liquid-glass"] .dnet-menu-img > .blg-icon-dashboard {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  color: inherit;
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linejoin='round'><path d='M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z'/></svg>");
+  -webkit-mask-size: 16px 16px;
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linejoin='round'><path d='M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z'/></svg>");
+  mask-size: 16px 16px;
+}
