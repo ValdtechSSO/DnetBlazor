@@ -533,6 +533,17 @@
   min-width: 0;
 }
 
+/* On desktop the filter's backdrop is transparent. A theme can dim and blur
+   the page behind the panel there too, like the scrim narrower screens show. */
+.cdk-overlay-backdrop.cdk-overlay-backdrop-showing.cdk-overlay-transparent-backdrop.blg-adv-filter-backdrop {
+  --_filter-scrim: var(--dnet-grid-filter-scrim, var(--dnet-sys-transparent));
+  --_filter-scrim-backdrop: var(--dnet-grid-filter-scrim-backdrop, none);
+
+  opacity: 1;
+  background: var(--_filter-scrim);
+  backdrop-filter: var(--_filter-scrim-backdrop);
+}
+
 .blg-adv-filter-actions {
   display: flex;
   justify-content: flex-end;

@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Grid: the column filter panel is centred on tablet and phone widths
+  instead of sitting in the top-left corner, visible in every theme there.
+  New `--dnet-grid-filter-scrim` and `--dnet-grid-filter-scrim-backdrop`
+  let a theme dim and blur the page behind the panel on desktop, where its
+  backdrop is transparent. Without visual change on desktop by default.
+- Overlay: on tablet and phone widths, an overlay without a component type
+  of its own that brings a global position strategy is placed by it.
+  Before, it fell to the top-left corner of the screen.
 - Grid: new `--dnet-grid-filter-background`, `--dnet-grid-filter-padding`
   and `--dnet-grid-filter-gap` lay out the column filter panel, and
   `--dnet-grid-filter-button-height` and `--dnet-grid-filter-button-padding`
@@ -261,6 +269,9 @@
   picker's panel: the options' text 24px from the edges with 24px above
   and below the list, and in the touch panel the title 24px in with 16px
   under it and the button 24px from the corner at the normal size.
+- The Liquid Glass themes dim and blur the page behind the grid's column
+  filter on desktop too, as on narrower screens, so the panel reads as
+  glass at every width.
 - The Liquid Glass themes render the grid's column filter panel as glass
   like the other panels, spaced like a dialog: 24px around its content and
   16px between its fields, with its buttons at the theme's normal size.
