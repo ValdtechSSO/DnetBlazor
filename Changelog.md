@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- TimePicker: new `--dnet-timepicker-panel-options-padding`,
+  `--dnet-timepicker-panel-touch-options-padding`,
+  `--dnet-timepicker-panel-header-padding` and
+  `--dnet-timepicker-panel-actions-padding` space the panel, and
+  `--dnet-timepicker-button-height`, `--dnet-timepicker-button-padding` and
+  `--dnet-timepicker-button-icon-gap` size the touch panel's button; unset,
+  it keeps its small size and whatever `--dnet-btn-*` values it inherits.
+  The touch header no longer shrinks when the list is long. Without visual
+  change by default.
 - DatePicker: new `--dnet-datepicker-panel-padding`,
   `--dnet-datepicker-panel-footer-padding` and
   `--dnet-datepicker-panel-footer-gap` space the popup, and
