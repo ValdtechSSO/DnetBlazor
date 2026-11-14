@@ -243,8 +243,17 @@ namespace Dnet.Blazor.Infrastructure.Forms
         private void OnValidateStateChanged(object? sender, ValidationStateChangedEventArgs eventArgs)
         {
             UpdateAdditionalValidationAttributes();
-
+            OnFieldValidationStateChanged();
             StateHasChanged();
+        }
+
+        /// <summary>
+        /// Called when the validation state of the form changes, including when an asynchronous
+        /// validator reports after the field changed. Fields that show their errors, for example in a
+        /// form field, update them here.
+        /// </summary>
+        protected virtual void OnFieldValidationStateChanged()
+        {
         }
 
         private void UpdateAdditionalValidationAttributes()
