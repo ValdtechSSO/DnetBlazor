@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- DatePicker: new `--dnet-datepicker-panel-background` sets the popup's fill
+  apart from calendars shown in the page. Without visual change by default.
 - Autocomplete: new `--dnet-autocomplete-panel-*` tokens lay out the
   dropdown like the Select's: `-background`, `-header-padding`,
   `-header-height`, `-header-gap`, `-list-padding`, `-padding-bottom`, and

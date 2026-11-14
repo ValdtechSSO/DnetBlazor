@@ -15,7 +15,9 @@
 }
 
 .dnet-datepicker-content {
-  --_background: var(--dnet-calendar-background, var(--dnet-sys-material-popup));
+  /* The popup's own fill, apart from the calendar shown in the page. */
+  --_base-background: var(--dnet-datepicker-panel-background, var(--dnet-sys-material-popup));
+  --_background: var(--dnet-calendar-background, var(--_base-background));
 
   box-sizing: border-box;
   width: 100%;
