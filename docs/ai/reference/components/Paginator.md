@@ -47,6 +47,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-icon-button-size` | `25px` |
 | `--dnet-paginator-button-hover-background` | `color-mix(in srgb, var(--dnet-sys-on-surface) 8%, transparent)` <br><sub>via `--dnet-sys-state-hover`</sub> |
 | `--dnet-paginator-columns` | `repeat(3, auto)` |
+| `--dnet-paginator-controls-gap` | `normal` |
 | `--dnet-paginator-input-background` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
 | `--dnet-paginator-input-border-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 15%, transparent)` |
 | `--dnet-paginator-input-height` | `20px` |

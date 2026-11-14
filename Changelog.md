@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Paginator: new `--dnet-paginator-controls-gap` sets the space between the
+  arrows. Without visual change by default.
 - Paginator: new tokens let a theme restyle it and lay it out on one line.
   `--dnet-paginator-button-hover-background` tints the arrows under the
   pointer, which also take the material's ghost glass; the page field gets
