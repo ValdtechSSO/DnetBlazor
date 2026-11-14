@@ -160,7 +160,8 @@
   so buttons at the end keep their rim and glow. Their close button is the
   theme's round icon button (ghost glass with the rim and a soft lift, 36px
   like the image editor's tools). The image editor drops the line over its
-  buttons and leaves 24px between its content and them.
+  buttons and leaves 24px between its content and them, and its zoom group
+  keeps 4px all around its round buttons inside pill corners.
 - The Liquid Glass themes render the toast as liquid glass like the cards,
   so the page shows through it blurred. Its actions are the theme's
   outlined buttons (ghost glass pills with the accent label), and the
