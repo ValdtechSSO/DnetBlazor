@@ -15,7 +15,7 @@
 <DnetLocalizationObserver OnChanged="HandleLocalizationChanged" />
 <div class="dnet-connected-panel-container-dl">
     <div class="dnet-split-content-dl" style="height:calc(100% - 0px);">
-        <div style="display: flex; justify-content: space-between; padding: 10px 5px 10px 10px;">
+        <div class="dnet-split-content-header-dl">
             <div class="dnet-split-content-btn-wrapper-dl">
                 <button type="button" class="dnet-split-content-btn-dl" @onclick="ToggleListView">
                     @(isActive ? $"{_rightListOptions.HeaderText} >>" : $"{_leftListOptions.HeaderText} >>")

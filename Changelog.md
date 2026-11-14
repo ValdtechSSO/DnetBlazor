@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- FloatingDoubleList: new `--dnet-floating-double-list-panel-background`,
+  `-header-padding` (the row over the lists, which no longer sets its
+  padding inline) and `-lists-padding` lay out the panel, and
+  `-close-padding`, `-close-radius`, `-close-background`,
+  `-close-background-hover` and `-close-shadow` paint its close button as a
+  round button with the row's height unchanged. Without visual change by
+  default.
 - TimePicker: new `--dnet-timepicker-panel-options-padding`,
   `--dnet-timepicker-panel-touch-options-padding`,
   `--dnet-timepicker-panel-header-padding` and
