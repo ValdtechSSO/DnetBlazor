@@ -70,7 +70,7 @@ public sealed class TimelineShowcaseTests
         await Assertions.Expect(link).ToHaveAttributeAsync("href", "/PillTabs");
         await link.FocusAsync();
         await link.PressAsync("Enter");
-        await page.WaitForURLAsync("**/PillTabs");
+        await page.WaitForURLAsync(new System.Text.RegularExpressions.Regex("/PillTabs(\\?[^#]*)?$"));
         await page.GoBackAsync();
         await Assertions.Expect(page.Locator("#demo-timeline")).ToBeVisibleAsync();
         await ExpectOrderAsync(page, 1, "Preparando tu paquete", "timeline-preparing");

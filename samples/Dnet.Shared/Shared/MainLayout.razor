@@ -24,7 +24,9 @@
 @using System.Reflection
 @implements IAsyncDisposable
 
+@using Microsoft.AspNetCore.Components.Routing
 @inject IThemeMessageService<ThemeConfigData> ThemeMessageService
+@inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
 @inject IDnetLocalizer Localizer
 @inject IConnectedPanelService ConnectedPanelService
@@ -196,7 +198,24 @@
         catch (JSDisconnectedException) { }
         _themeReference = DotNetObjectReference.Create(this);
         _themeWatcherId = await _themeModule.InvokeAsync<int>("watchTheme", _themeReference);
+        NavigationManager.LocationChanged += OnLocationChanged;
+        await SyncUrlAsync();
         StateHasChanged();
+    }
+
+    // The address carries the theme and the language so a link opens the
+    // demo as it was shared; links inside the app drop them, so they are
+    // written back after every navigation.
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e) => _ = InvokeAsync(SyncUrlAsync);
+
+    private async Task SyncUrlAsync()
+    {
+        if (_disposed || _themeModule is null) return;
+        try
+        {
+            await _themeModule.InvokeVoidAsync("syncPreferencesUrl", ThemeSelection, Localizer.Culture.TwoLetterISOLanguageName);
+        }
+        catch (JSDisconnectedException) { }
     }
 
     private async Task ChangeTheme(string selection)
@@ -210,6 +229,7 @@
         _theme = theme;
         await JSRuntime.InvokeVoidAsync("dnetinterop.setTheme", _theme);
         await JSRuntime.InvokeVoidAsync("dnetinterop.set", ThemeStorageKey, _theme);
+        await SyncUrlAsync();
     }
 
     private string Text(string spanish, string english) =>
@@ -284,6 +304,7 @@
             try { await _themeModule.InvokeVoidAsync("setLanguage", Localizer.Culture.Name); }
             catch (JSDisconnectedException) { }
         }
+        await SyncUrlAsync();
         StateHasChanged();
     });
 
@@ -298,12 +319,17 @@
         }
 
         _theme = theme;
-        return InvokeAsync(StateHasChanged);
+        return InvokeAsync(async () =>
+        {
+            StateHasChanged();
+            await SyncUrlAsync();
+        });
     }
 
     public async ValueTask DisposeAsync()
     {
         _disposed = true;
+        NavigationManager.LocationChanged -= OnLocationChanged;
         if (_preferencePanel is not null)
         {
             _preferencePanel.Close -= PreferenceClosed;
