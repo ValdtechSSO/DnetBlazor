@@ -1,6 +1,7 @@
 @page "/theming"
 @using Dnet.Blazor.Components.Button
 @using Dnet.Blazor.Components.Form
+@using Dnet.Blazor.Components.Select
 @using Dnet.Blazor.Components.Theme
 @implements IAsyncDisposable
 @inject IJSRuntime JSRuntime
@@ -31,20 +32,17 @@
                     <h2 id="theme-controls-title" class="theme-card-title">@S["Theming.Appearance"]</h2>
                     <p class="theme-card-description">@S["Theming.StartWithAThemeThenMakeItYours"]</p>
                 </div>
-                <div class="theme-control-group">
-                    <label class="theme-control-label" for="theme-select">@S["Theming.Theme"]</label>
-                    <div class="theme-select-wrapper">
-                    <select id="theme-select" class="theme-select" value="@_theme" @onchange="ChangeTheme">
-                        <option value="">@S["Theming.Light"]</option>
-                        <option value="dark">@S["Theming.Dark"]</option>
-                        <option value="compact">@S["Theming.Compact"]</option>
-                        <option value="high-contrast">@S["Theming.HighContrast"]</option>
-                        <option value="modern">@S["Theming.Modern"]</option>
-                        <option value="liquid-glass">@S["Theming.LiquidGlass"]</option>
-                        <option value="liquid-glass-dark">@S["Theming.LiquidGlassDark"]</option>
-                    </select>
-                    <svg class="theme-select-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="m3 6 5 5 5-5" /></svg>
-                    </div>
+                <div id="theme-select" class="theme-control-group" data-theme-value="@_theme">
+                    <DnetFormField Label="@S["Theming.Theme"]">
+                        @* Keyed on the theme: the select only reads its value when it is built, and the
+                           theme can also change from the header or once the page reads the document. *@
+                        <DnetSelect @key="_theme" TItem="ThemeOption" TValue="string"
+                                    Value="@SelectedThemeOption" ValueChanged="@((string option) => ChangeTheme(option == LightOption ? string.Empty : option))"
+                                    ValueExpression="@(() => SelectedThemeOption)"
+                                    Items="ThemeOptions" ValueConverter="option => option.Value" DisplayValueConverter="option => S[option.LabelKey]"
+                                    DisabledClearButton="true" Width="@((string?)null)" ResponsiveLabel="@S["Theming.Theme"]"
+                                    aria-label="@S["Theming.Theme"]" />
+                    </DnetFormField>
                 </div>
                 <div class="theme-control-group">
                     <label class="theme-control-label" for="theme-primary-color">@S["Theming.PrimaryColor"]</label>
@@ -207,9 +205,9 @@
         await InvokeAsync(async () => { await ReadSettings(); _copyStatus = string.Empty; StateHasChanged(); });
     }
 
-    private async Task ChangeTheme(ChangeEventArgs args)
+    private async Task ChangeTheme(string? selected)
     {
-        var theme = args.Value?.ToString() ?? string.Empty;
+        var theme = selected ?? string.Empty;
         if (!IsSupportedTheme(theme)) return;
         _theme = theme;
         await JSRuntime.InvokeVoidAsync("dnetinterop.setTheme", theme);
@@ -217,6 +215,23 @@
         await ReadSettings();
         _copyStatus = string.Empty;
     }
+
+    private sealed record ThemeOption(string Value, string LabelKey);
+
+    // The light theme is the document without a theme; the select needs a value it can show.
+    private const string LightOption = "light";
+    private string SelectedThemeOption => string.IsNullOrEmpty(_theme) ? LightOption : _theme;
+
+    private static readonly List<ThemeOption> ThemeOptions =
+    [
+        new(LightOption, "Theming.Light"),
+        new("dark", "Theming.Dark"),
+        new("compact", "Theming.Compact"),
+        new("high-contrast", "Theming.HighContrast"),
+        new("modern", "Theming.Modern"),
+        new("liquid-glass", "Theming.LiquidGlass"),
+        new("liquid-glass-dark", "Theming.LiquidGlassDark")
+    ];
 
     private Task ChangePrimaryColor(ChangeEventArgs args) => SetPrimaryColor(args.Value?.ToString() ?? _primaryColor);
     private async Task SetPrimaryColor(string color)

@@ -128,22 +128,6 @@
     line-height: 1.4;
 }
 
-.theme-select {
-    box-sizing: border-box;
-    width: 100%;
-    height: 48px;
-    min-width: 0;
-    padding: 0 16px;
-    border: 1px solid var(--dnet-sys-border);
-    border-radius: var(--dnet-sys-radius-md);
-    background-color: var(--dnet-sys-surface);
-    color: var(--dnet-sys-on-surface);
-    font: inherit;
-    font-size: var(--dnet-sys-text-md);
-    cursor: pointer;
-}
-
-.theme-select:focus-visible,
 .theme-color-input:focus-visible,
 .theme-color-preset:focus-visible,
 .theme-shape-option:focus-visible,
@@ -674,17 +658,6 @@
 }
 
 
-.theme-select-wrapper { position: relative; }
-.theme-select { appearance: none; padding-inline-end: 44px; }
-.theme-select-arrow {
-    position: absolute;
-    inset-inline-end: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-    color: var(--dnet-sys-on-surface-muted);
-}
-
 .theme-range {
     appearance: none;
     height: 6px;
@@ -746,10 +719,6 @@
 
 [data-dnet-theme|="liquid-glass"] .theme-preview-toolbar {
     background: var(--dnet-sys-transparent);
-}
-
-[data-dnet-theme|="liquid-glass"] .theme-select {
-    background-color: var(--dnet-sys-material-control);
 }
 
 [data-dnet-theme|="liquid-glass"] .theme-color-input {

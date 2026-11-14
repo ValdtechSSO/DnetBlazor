@@ -80,7 +80,7 @@ public sealed class ThemingPlaygroundTests
             await ExpectInlinePropertyAsync(page, property, string.Empty);
         await ExpectInlinePropertyAsync(page, "--dnet-btn-height", "44px");
         await Assertions.Expect(page.Locator("html")).ToHaveAttributeAsync("data-dnet-theme", "modern");
-        await Assertions.Expect(page.Locator("#theme-select")).ToHaveValueAsync("modern");
+        await Assertions.Expect(page.Locator("#theme-select")).ToHaveAttributeAsync("data-theme-value", "modern");
         Assert.Equal("modern", await StoredThemeAsync(page));
         await Assertions.Expect(page.Locator("#theme-primary-color")).ToHaveValueAsync("#5b5ce0");
         await Assertions.Expect(page.Locator("#theme-density")).ToHaveValueAsync("5");
@@ -91,16 +91,16 @@ public sealed class ThemingPlaygroundTests
         // Theme changes made through either visible selector update the other one.
         var headerTheme = BrowserHeaderPreferences.Control(page, "theme");
         await BrowserHeaderPreferences.SelectAsync(page, "theme", "compact");
-        await Assertions.Expect(page.Locator("#theme-select")).ToHaveValueAsync("compact");
+        await Assertions.Expect(page.Locator("#theme-select")).ToHaveAttributeAsync("data-theme-value", "compact");
         await Assertions.Expect(page.Locator("#theme-density")).ToHaveValueAsync("3");
-        await page.Locator("#theme-select").SelectOptionAsync("");
+        await ChooseThemeAsync(page, "Light");
         await Assertions.Expect(headerTheme).ToHaveAttributeAsync("title", "Theme: Light");
         await Assertions.Expect(page.Locator("html")).ToHaveAttributeAsync("data-dnet-theme", "");
         Assert.Equal("", await StoredThemeAsync(page));
 
         await BrowserReady.ReloadAsync(page);
         await Assertions.Expect(page.Locator("#theme-studio[data-settings-ready=true]")).ToBeVisibleAsync();
-        await Assertions.Expect(page.Locator("#theme-select")).ToHaveValueAsync("");
+        await Assertions.Expect(page.Locator("#theme-select")).ToHaveAttributeAsync("data-theme-value", "");
         await Assertions.Expect(page.Locator("html")).ToHaveAttributeAsync("data-dnet-theme", "");
         await Assertions.Expect(page.Locator("#theme-css-output")).ToContainTextAsync(":root {");
     }
@@ -173,8 +173,23 @@ public sealed class ThemingPlaygroundTests
         await BrowserLanguage.UseEnglishAsync(page);
         await BrowserReady.OpenAsync(page, $"{BaseUrl}/theming");
         await Assertions.Expect(page.Locator("#theme-studio[data-settings-ready=true]")).ToBeVisibleAsync();
-        await Assertions.Expect(page.Locator("#theme-select")).ToHaveValueAsync(initialTheme);
+        await Assertions.Expect(page.Locator("#theme-select")).ToHaveAttributeAsync("data-theme-value", initialTheme);
         await Assertions.Expect(page.Locator("#theme-css-output")).ToContainTextAsync("--dnet-sys-primary:");
+    }
+
+    // The theme is a library select: open its list and pick the option by its label.
+    private static async Task ChooseThemeAsync(IPage page, string label)
+    {
+        var trigger = page.Locator("#theme-select .dnet-plain-select");
+        await trigger.ClickAsync();
+        var list = page.Locator(".dnet-select-list-wrapper");
+        await Assertions.Expect(list).ToBeVisibleAsync();
+        await list.Locator(".dnet-select-list-item").Filter(new()
+        {
+            Has = page.GetByText(label, new() { Exact = true })
+        }).ClickAsync();
+        await Assertions.Expect(list).ToBeHiddenAsync();
+        await Assertions.Expect(trigger).ToContainTextAsync(label);
     }
 
     private static async Task SetDensityAsync(IPage page, int value)
