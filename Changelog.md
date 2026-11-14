@@ -149,6 +149,11 @@
   current step is a larger accent drop with a glow;
   completed steps show an accent tick instead of their number; upcoming
   labels are muted and the current one is bolder.
+- The Liquid Glass themes render dialogs as liquid glass like the cards,
+  with a little more room above the title, and their close button is the
+  theme's round icon button (ghost glass with the rim and a soft lift, 36px
+  like the image editor's tools). The image editor leaves 24px under its
+  footer so the buttons' rim and glow are no longer cut.
 - The Liquid Glass themes render the toast as liquid glass like the cards,
   so the page shows through it blurred. Its actions are the theme's
   outlined buttons (ghost glass pills with the accent label), and the
