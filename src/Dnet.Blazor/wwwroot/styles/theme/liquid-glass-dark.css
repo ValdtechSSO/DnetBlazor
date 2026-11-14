@@ -489,10 +489,11 @@
   --dnet-grid-filter-scrim-backdrop: var(--dnet-sys-scrim-backdrop);
 
   /* Paginator: the arrows are the theme's round glass buttons, 32px like
-     the dialogs' close button, with the accent tint under the pointer; the
-     page sits in a rounded glass well; and the range comes onto the same
-     line, at the far left of the footer. */
+     the dialogs' close button and 6px apart, with the accent tint under the
+     pointer; the page sits in a rounded glass well; and the range comes onto
+     the same line, at the far left of the footer. */
   --dnet-icon-button-size: 32px;
+  --dnet-paginator-controls-gap: 6px;
   --dnet-paginator-button-hover-background: color-mix(in srgb, var(--dnet-sys-primary-content) 10%, var(--dnet-sys-material-ghost));
   --dnet-paginator-input-background: var(--dnet-sys-material-control);
   --dnet-paginator-input-border-color: var(--dnet-sys-transparent);
