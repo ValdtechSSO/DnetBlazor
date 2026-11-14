@@ -389,6 +389,20 @@
   --dnet-timepicker-button-icon-gap: 8px;
   --dnet-connected-panel-background: var(--dnet-sys-material-card);
 
+  /* Floating double list: its panel is glass and spaced like a dialog. The
+     round close button sits 18px from the corner, the lists' content 24px
+     from the sides (the panel's 2px, 1px here and each list's own 21px), and
+     the header row takes 49px of the 50px left above the lists, so their
+     content also ends 24px from the bottom. */
+  --dnet-floating-double-list-panel-background: var(--dnet-sys-material-card);
+  --dnet-floating-double-list-header-padding: 22px 22px 3px;
+  --dnet-floating-double-list-lists-padding: 1px;
+  --dnet-floating-double-list-close-padding: 6px;
+  --dnet-floating-double-list-close-radius: var(--dnet-sys-radius-pill);
+  --dnet-floating-double-list-close-background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
+  --dnet-floating-double-list-close-background-hover: var(--dnet-sys-material-sheen), color-mix(in srgb, var(--dnet-sys-primary-content) 10%, var(--dnet-sys-material-ghost));
+  --dnet-floating-double-list-close-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-ghost-elevation);
+
   /* AdminLayout menu (from the reference design): rows inset from the
      column, each led by a glass tile with the item's short text, or its icon.
      Hovering a row lights it; the current page is an accent-tinted glass row
