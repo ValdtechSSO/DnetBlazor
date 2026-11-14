@@ -6809,6 +6809,10 @@ nav ul li a.active .dnet-menu-tile {
   box-sizing: border-box;
   color: var(--_foreground);
   background: var(--_background);
+  /* The material's blur: none unless the theme sets it. The arrow takes the
+     same fill but cannot blur, as it lies outside the box. */
+  -webkit-backdrop-filter: var(--dnet-sys-material-backdrop);
+          backdrop-filter: var(--dnet-sys-material-backdrop);
   border-radius: var(--_radius);
   box-shadow: var(--_shadow);
   margin: 0;

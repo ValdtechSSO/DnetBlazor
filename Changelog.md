@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Tooltip: takes the material's blur, `--dnet-sys-material-backdrop`, so a
+  glass theme frosts what lies behind it. Without visual change by default.
 - PickList: the paginator's arrows take the paginator's own style, as in
   List and Grid. A PickList rule left over from its earlier plain buttons
   made them transparent, with muted icons, 25×32 and rounded like the rows.
@@ -326,6 +328,10 @@
 - The Liquid Glass themes space the grid like a dialog: its header text,
   rows and paginator buttons sit 24px from the card's edges, 16px from the
   sides on phones so the paginator keeps its line.
+- The Liquid Glass themes render the tooltip in the menus' popup glass:
+  frosted white with the sheen, the rim of light and the panels' soft
+  shadow, and dark text, its arrow in the same fill. In glass dark it is
+  the menus' dark glass with light text.
 - The Liquid Glass themes space the pick list like a dialog throughout:
   its buttons 16px from the search and from the rows, and its paginator
   laid out as the list's, 24px above the bottom of the card, with the
