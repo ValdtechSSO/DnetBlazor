@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Tabs: the labels sit in the middle of their row, level with the scroll
+  arrows. An inline `display:block` on each tab overrode the stylesheet's
+  centring and kept them at the top of the row. Visible in every theme: the
+  `tabs-default` goldens change, and the Linux ones need regenerating on CI.
 - Tabs: new `--dnet-tabs-radius`, `--dnet-tabs-shadow` and
   `--dnet-tabs-gap` shape the group and space the tab row from the view, and
   `--dnet-tabs-background` now takes layered backgrounds.

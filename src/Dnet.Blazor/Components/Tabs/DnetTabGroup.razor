@@ -27,7 +27,7 @@
                              tabindex="@(_selectedId == tab.Id && !tab.Disabled ? 0 : -1)"
                              @onclick="(() => TabClicked(tab))"
                              @onkeydown="(args => HandleTabKeyDown(tab, args))"
-                             style="display:@(tab.IsHidden ? "none" : "block")">
+                             style="@(tab.IsHidden ? "display:none" : null)">
                             <div class="mat-tab-label-content">
 
                                 @if (tab.HeaderTemplate != null && typeof(ComponentBase).IsAssignableFrom(tab.HeaderTemplate))
