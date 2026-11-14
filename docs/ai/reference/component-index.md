@@ -40,7 +40,7 @@ Open only the one you need.
 | [Theme](components/Theme.md) | `<DnetThemeScope>` | 3 | — |
 | [TimePicker](components/TimePicker.md) | `<DnetTimePicker>` | 19 | 6 |
 | [Timeline](components/Timeline.md) | `<DnetTimeline>`, `<DnetTimelineItem>` | 13 | 28 |
-| [Toast](components/Toast.md) | `<DnetToast>`, `<DnetToastStack>` | 22 | 15 |
+| [Toast](components/Toast.md) | `<DnetToast>`, `<DnetToastStack>` | 22 | 16 |
 | [Tooltip](components/Tooltip.md) | `<DnetTooltipPanel>` | 10 | 9 |
 | [Tree](components/Tree.md) | `<DnetTree>`, `<DnetTreeNode>` | 20 | 2 |
 | [Virtualize](components/Virtualize.md) | `<Virtualize>` | 7 | — |

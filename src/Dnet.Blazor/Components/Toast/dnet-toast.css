@@ -38,6 +38,9 @@
   --_pad: var(--dnet-toast-padding, var(--dnet-sys-space-4));
   --_width: var(--dnet-toast-width, 392px);
   --_bar-h: var(--dnet-toast-progress-height, 2px);
+  /* Space between the progress bar and each side; it can keep the bar clear
+     of the rounded corners. */
+  --_bar-inset: var(--dnet-toast-progress-inset, 0px);
   --_margin: var(--dnet-toast-margin, 0);
   --_duration: 5000ms;
 
@@ -128,6 +131,9 @@
   margin-top: var(--dnet-sys-space-2);
 }
 
+/* The actions' label and outline take the toast's text colour by default.
+   The markup sets them on each button from --dnet-toast-action-foreground
+   and --dnet-toast-action-border-color. */
 .dnet-toast__action {
   font-weight: 600;
 }
@@ -189,9 +195,8 @@
   background: color-mix(in srgb, var(--_accent) 16%, var(--dnet-sys-transparent));
   bottom: 0;
   height: var(--_bar-h);
-  left: 0;
+  inset-inline: var(--_bar-inset);
   position: absolute;
-  right: 0;
 }
 
 .dnet-toast__progress-bar {

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Toast: new `--dnet-toast-action-foreground` and
+  `--dnet-toast-action-border-color` colour the actions' label and outline
+  (the toast's text colour by default), and `--dnet-toast-progress-inset`
+  moves the progress bar in from both sides. Without visual change by
+  default.
 - DynamicStepper reads the same `--dnet-step-*` tokens as Stepper. Without
   visual change by default.
 - Stepper: new `--dnet-step-*` tokens paint the icons (`-icon-background`,

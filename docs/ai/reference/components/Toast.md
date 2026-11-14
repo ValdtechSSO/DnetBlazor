@@ -60,6 +60,7 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-toast-margin` | `0` |
 | `--dnet-toast-padding` | `calc(var(--dnet-sys-space-unit) * 4)` <br><sub>via `--dnet-sys-space-4`</sub> |
 | `--dnet-toast-progress-height` | `2px` |
+| `--dnet-toast-progress-inset` | `0px` |
 | `--dnet-toast-radius` | `10px` <br><sub>via `--dnet-sys-radius-lg`</sub> |
 | `--dnet-toast-shadow` | `0 3px 5px -1px var(--dnet-sys-shadow-color), 0 6px 10px 0 var(--dnet-sys-shadow-color), 0 1px 18px 0 var(--dnet-sys-shadow-color)` <br><sub>via `--dnet-sys-elevation-3`</sub> |
 | `--dnet-toast-stack-gap` | `calc(var(--dnet-sys-space-unit) * 3)` <br><sub>via `--dnet-sys-space-3`</sub> |

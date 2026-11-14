@@ -63,7 +63,7 @@
                 {
                     <DnetButton ButtonType="button" Size="DnetButtonSize.Small" Variant="DnetButtonVariant.Outlined"
                                 class="dnet-toast__action"
-                                style="--dnet-btn-foreground:currentColor;--dnet-btn-border-color:currentColor"
+                                style="--dnet-btn-foreground:var(--dnet-toast-action-foreground, currentColor);--dnet-btn-border-color:var(--dnet-toast-action-border-color, currentColor)"
                                 data-quiet="@(action.Quiet ? "true" : null)"
                                 OnClick="() => HandleActionAsync(action)">
                         @LocalizeText(action.Label)
