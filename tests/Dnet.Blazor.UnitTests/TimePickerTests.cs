@@ -274,6 +274,190 @@ public sealed class TimePickerTests : BunitContext
         Assert.Contains("Interval", error.ToString());
     }
 
+    [Fact]
+    public async Task Dial_mode_opens_a_centred_modal_dialog_and_confirms_hour_then_minute()
+    {
+        var overlay = RegisterOverlayService();
+        RenderFragment? attachedContent = null;
+        OverlayConfig? attachedConfig = null;
+        overlay.OnAttach += (content, config) =>
+        {
+            attachedContent = content;
+            attachedConfig = config;
+        };
+
+        TimeOnly? value = new(9, 15);
+        var cut = Render<DnetTimePicker>(parameters => parameters
+            .Add(component => component.Value, value)
+            .Add(component => component.ValueChanged, EventCallback.Factory.Create<TimeOnly?>(this, next => value = next))
+            .Add(component => component.ValueExpression, () => value)
+            .Add(component => component.Mode, DnetTimePickerMode.Dial));
+
+        Assert.Equal("dialog", cut.Find("input").GetAttribute("aria-haspopup"));
+        await cut.Find("input").KeyDownAsync(new KeyboardEventArgs { Key = "ArrowDown" });
+
+        Assert.NotNull(attachedConfig);
+        Assert.Equal(PositionStrategy.Global, attachedConfig.PositionStrategy);
+        Assert.Equal(OverlayScrollStrategy.Block, attachedConfig.ScrollStrategy);
+        Assert.Equal("dialog", attachedConfig.Role);
+        Assert.True(attachedConfig.AriaModal);
+        Assert.True(attachedConfig.TrapFocus);
+        Assert.True(attachedConfig.CloseOnEscape);
+        Assert.False(attachedConfig.HasTransparentBackdrop);
+        Assert.Contains("dnet-timepicker-overlay-dial", attachedConfig.PanelClass);
+        Assert.Equal(".dnet-timepicker-dial-face", attachedConfig.InitialFocusSelector);
+
+        var dial = Render(attachedContent!);
+        Assert.Equal("Elegir hora", dial.Find(".dnet-timepicker-panel-header").TextContent.Trim());
+        Assert.Equal(new[] { "09", "15" }, dial.FindAll(".dnet-timepicker-dial-field").Select(field => field.TextContent.Trim()));
+        Assert.Equal("Horas", dial.Find(".dnet-timepicker-dial-face").GetAttribute("aria-label"));
+
+        await Mark(dial, "4").ClickAsync(new());
+        Assert.Equal("04", dial.FindAll(".dnet-timepicker-dial-field")[0].TextContent.Trim());
+        Assert.Equal("Minutos", dial.Find(".dnet-timepicker-dial-face").GetAttribute("aria-label"));
+
+        await Mark(dial, "30").ClickAsync(new());
+        Assert.Equal("30", dial.FindAll(".dnet-timepicker-dial-field")[1].TextContent.Trim());
+
+        await dial.Find(".dnet-timepicker-dial-ok").ClickAsync(new());
+
+        Assert.Equal(new TimeOnly(4, 30), value);
+        Assert.Equal("false", cut.Find("input").GetAttribute("aria-expanded"));
+    }
+
+    [Fact]
+    public async Task Dial_dots_open_an_arc_with_the_four_minutes_of_their_gap()
+    {
+        var overlay = RegisterOverlayService();
+        RenderFragment? attachedContent = null;
+        overlay.OnAttach += (content, _) => attachedContent = content;
+
+        TimeOnly? value = new(10, 0);
+        var cut = Render<DnetTimePicker>(parameters => parameters
+            .Add(component => component.Value, value)
+            .Add(component => component.ValueChanged, EventCallback.Factory.Create<TimeOnly?>(this, next => value = next))
+            .Add(component => component.ValueExpression, () => value)
+            .Add(component => component.Mode, DnetTimePickerMode.Dial));
+
+        await cut.Find("input").KeyDownAsync(new KeyboardEventArgs { Key = "ArrowDown" });
+        var dial = Render(attachedContent!);
+        await dial.FindAll(".dnet-timepicker-dial-field")[1].ClickAsync(new());
+
+        Assert.Equal(new[] { "00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55" },
+            dial.FindAll(".dnet-timepicker-dial-number").Select(mark => mark.TextContent.Trim()));
+        Assert.Equal(48, dial.FindAll(".dnet-timepicker-dial-dot").Count);
+        Assert.Empty(dial.FindAll(".dnet-timepicker-dial-arc"));
+
+        // The sixth dot is minute 7, in the gap between 05 and 10.
+        await dial.FindAll(".dnet-timepicker-dial-dot")[5].ClickAsync(new());
+
+        Assert.Equal(new[] { "06", "07", "08", "09" },
+            dial.FindAll(".dnet-timepicker-dial-arc-number").Select(number => number.TextContent.Trim()));
+        Assert.Equal("00", dial.FindAll(".dnet-timepicker-dial-field")[1].TextContent.Trim());
+
+        await dial.FindAll(".dnet-timepicker-dial-arc-number")[2].ClickAsync(new());
+
+        Assert.Equal("08", dial.FindAll(".dnet-timepicker-dial-field")[1].TextContent.Trim());
+        Assert.Contains("dnet-timepicker-dial-arc-number-selected",
+            dial.FindAll(".dnet-timepicker-dial-arc-number")[2].ClassList);
+
+        await dial.Find(".dnet-timepicker-dial-ok").ClickAsync(new());
+        Assert.Equal(new TimeOnly(10, 8), value);
+    }
+
+    [Fact]
+    public async Task Dial_shows_two_rings_for_24_hours_and_a_period_switch_for_12()
+    {
+        var overlay = RegisterOverlayService();
+        RenderFragment? attachedContent = null;
+        overlay.OnAttach += (content, _) => attachedContent = content;
+
+        TimeOnly? value = new(19, 0);
+        var twentyFour = Render<DnetTimePicker>(parameters => parameters
+            .Add(component => component.Value, value)
+            .Add(component => component.ValueExpression, () => value)
+            .Add(component => component.Mode, DnetTimePickerMode.Dial));
+        await twentyFour.Find("input").KeyDownAsync(new KeyboardEventArgs { Key = "ArrowDown" });
+        var dial = Render(attachedContent!);
+
+        Assert.Equal(12, dial.FindAll(".dnet-timepicker-dial-number:not(.dnet-timepicker-dial-number-inner)").Count);
+        Assert.Equal(new[] { "00", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" },
+            dial.FindAll(".dnet-timepicker-dial-number-inner").Select(mark => mark.TextContent.Trim()));
+        Assert.Contains("dnet-timepicker-dial-number-selected", Mark(dial, "19").ClassList);
+        Assert.Empty(dial.FindAll(".dnet-timepicker-dial-period"));
+
+        TimeOnly? twelveValue = new(7, 0);
+        var twelve = Render<DnetTimePicker>(parameters => parameters
+            .Add(component => component.Value, twelveValue)
+            .Add(component => component.ValueChanged, EventCallback.Factory.Create<TimeOnly?>(this, next => twelveValue = next))
+            .Add(component => component.ValueExpression, () => twelveValue)
+            .Add(component => component.Mode, DnetTimePickerMode.Dial)
+            .Add(component => component.Format, "hh:mm tt")
+            .Add(component => component.Culture, System.Globalization.CultureInfo.GetCultureInfo("en-US")));
+        await twelve.Find("input").KeyDownAsync(new KeyboardEventArgs { Key = "ArrowDown" });
+        dial = Render(attachedContent!);
+
+        Assert.Empty(dial.FindAll(".dnet-timepicker-dial-number-inner"));
+        Assert.Equal(12, dial.FindAll(".dnet-timepicker-dial-number").Count);
+        var period = dial.FindAll(".dnet-timepicker-dial-period-option");
+        Assert.Equal(new[] { "AM", "PM" }, period.Select(option => option.TextContent.Trim()));
+        Assert.Equal("true", period[0].GetAttribute("aria-pressed"));
+
+        await period[1].ClickAsync(new());
+        Assert.Equal("true", dial.FindAll(".dnet-timepicker-dial-period-option")[1].GetAttribute("aria-pressed"));
+        Assert.Equal("07", dial.FindAll(".dnet-timepicker-dial-field")[0].TextContent.Trim());
+
+        await dial.Find(".dnet-timepicker-dial-ok").ClickAsync(new());
+        Assert.Equal(new TimeOnly(19, 0), twelveValue);
+    }
+
+    [Fact]
+    public async Task Dial_keeps_to_min_and_max_and_moves_with_the_keyboard()
+    {
+        var overlay = RegisterOverlayService();
+        RenderFragment? attachedContent = null;
+        overlay.OnAttach += (content, _) => attachedContent = content;
+
+        TimeOnly? value = new(17, 0);
+        var cut = Render<DnetTimePicker>(parameters => parameters
+            .Add(component => component.Value, value)
+            .Add(component => component.ValueChanged, EventCallback.Factory.Create<TimeOnly?>(this, next => value = next))
+            .Add(component => component.ValueExpression, () => value)
+            .Add(component => component.Mode, DnetTimePickerMode.Dial)
+            .Add(component => component.Min, new TimeOnly(8, 0))
+            .Add(component => component.Max, new TimeOnly(18, 0)));
+        await cut.Find("input").KeyDownAsync(new KeyboardEventArgs { Key = "ArrowDown" });
+        var dial = Render(attachedContent!);
+
+        Assert.Contains("dnet-timepicker-dial-number-disabled", Mark(dial, "7").ClassList);
+        Assert.DoesNotContain("dnet-timepicker-dial-number-disabled", Mark(dial, "8").ClassList);
+        Assert.Contains("dnet-timepicker-dial-number-disabled", Mark(dial, "19").ClassList);
+
+        var face = dial.Find(".dnet-timepicker-dial-face");
+        await face.KeyDownAsync(new KeyboardEventArgs { Key = "ArrowRight" });
+        await dial.Find(".dnet-timepicker-dial-face").KeyDownAsync(new KeyboardEventArgs { Key = "ArrowRight" });
+        // 19 is past the maximum, so the hour wraps round to the first allowed one.
+        Assert.Equal("08", dial.FindAll(".dnet-timepicker-dial-field")[0].TextContent.Trim());
+
+        await dial.Find(".dnet-timepicker-dial-face").KeyDownAsync(new KeyboardEventArgs { Key = "Enter" });
+        Assert.Equal("Minutos", dial.Find(".dnet-timepicker-dial-face").GetAttribute("aria-label"));
+
+        await dial.Find(".dnet-timepicker-dial-face").KeyDownAsync(new KeyboardEventArgs { Key = "PageUp" });
+        await dial.Find(".dnet-timepicker-dial-face").KeyDownAsync(new KeyboardEventArgs { Key = "ArrowRight" });
+        await dial.Find(".dnet-timepicker-dial-face").KeyDownAsync(new KeyboardEventArgs { Key = "ArrowRight" });
+
+        Assert.Equal("07", dial.FindAll(".dnet-timepicker-dial-field")[1].TextContent.Trim());
+        Assert.Equal("7", dial.Find(".dnet-timepicker-dial-face").GetAttribute("aria-valuenow"));
+        Assert.Equal(new[] { "06", "07", "08", "09" },
+            dial.FindAll(".dnet-timepicker-dial-arc-number").Select(number => number.TextContent.Trim()));
+
+        await dial.Find(".dnet-timepicker-dial-ok").ClickAsync(new());
+        Assert.Equal(new TimeOnly(8, 7), value);
+    }
+
+    private static AngleSharp.Dom.IElement Mark(IRenderedComponent<Microsoft.AspNetCore.Components.IComponent> dial, string label) =>
+        dial.FindAll(".dnet-timepicker-dial-number").Single(mark => mark.TextContent.Trim() == label);
+
     private OverlayService RegisterOverlayService()
     {
         var service = new OverlayService();

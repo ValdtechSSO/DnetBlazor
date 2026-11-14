@@ -24,6 +24,9 @@
   <data name="Common.Cancel" xml:space="preserve">
     <value>Cancelar</value>
   </data>
+  <data name="Common.Ok" xml:space="preserve">
+    <value>Aceptar</value>
+  </data>
   <data name="Common.Clear" xml:space="preserve">
     <value>Limpiar</value>
   </data>
@@ -372,6 +375,9 @@
   <data name="TimePicker.ChooseTime" xml:space="preserve">
     <value>Elegir hora</value>
   </data>
+  <data name="TimePicker.Hours" xml:space="preserve">
+    <value>Horas</value>
+  </data>
   <data name="TimePicker.InvalidTime" xml:space="preserve">
     <value>Introduce una hora válida con el formato {0}.</value>
   </data>
@@ -380,6 +386,9 @@
   </data>
   <data name="TimePicker.MinimumTime" xml:space="preserve">
     <value>La hora debe ser igual o posterior a {0}.</value>
+  </data>
+  <data name="TimePicker.Minutes" xml:space="preserve">
+    <value>Minutos</value>
   </data>
   <data name="TimePicker.OpenPicker" xml:space="preserve">
     <value>Abrir selector de hora</value>

@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- TimePicker: new `Mode` parameter. `DnetTimePickerMode.Dial` chooses the
+  time on a clock face in a centred modal dialog, with Cancel and OK: first
+  the hour, then the minutes. It is 24-hour by default, with 1 to 12 on the
+  outer ring and 13 to 23 and 00 on the inner one; with a 12-hour `Format`
+  (`h`) it shows one ring and an AM/PM switch. The minutes show 00 to 55;
+  dots between the marks open an arc 4px outside the dial with the four
+  minutes of their gap. `Min` and `Max` disable what falls outside them;
+  `Interval` and `TimeOptions` do not apply. The dial is a slider for the
+  keyboard: arrows move by one, PageUp and PageDown by five, Enter goes from
+  the hours to the minutes. It takes its look from the theme's materials, so
+  a glass theme makes it glass with no tokens of its own. `List` stays the
+  default, unchanged. New strings: `Common.Ok`, `TimePicker.Hours` and
+  `TimePicker.Minutes`.
 - Overlay: the TimePicker's list is centred on tablet and phone widths, as
   the DatePicker's calendar is, instead of sitting in the top-left corner.
   Visible in every theme from 601px to 1024px; at 600px and below the

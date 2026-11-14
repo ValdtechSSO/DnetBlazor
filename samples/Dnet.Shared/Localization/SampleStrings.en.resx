@@ -4122,6 +4122,27 @@
   <data name="TimePicker.12HourFormat" xml:space="preserve">
     <value>12-hour format</value>
   </data>
+  <data name="TimePicker.AClockWithAmAndPm" xml:space="preserve">
+    <value>A clock with AM and PM</value>
+  </data>
+  <data name="TimePicker.ChooseTheHourThenTheMinutes" xml:space="preserve">
+    <value>Choose the hour, then the minutes. Tap the dots between two marks to see their minutes.</value>
+  </data>
+  <data name="TimePicker.Chosen0" xml:space="preserve">
+    <value>Chosen time: {0}</value>
+  </data>
+  <data name="TimePicker.ClockTime" xml:space="preserve">
+    <value>Time on the clock</value>
+  </data>
+  <data name="TimePicker.ClockTime12Hour" xml:space="preserve">
+    <value>Time (12-hour)</value>
+  </data>
+  <data name="TimePicker.PickOnAClock" xml:space="preserve">
+    <value>Pick on a clock</value>
+  </data>
+  <data name="TimePicker.WithA12HourFormatTheClock" xml:space="preserve">
+    <value>With a 12-hour format the clock shows twelve hours and an AM/PM switch.</value>
+  </data>
   <data name="TimePicker.ADisabledFieldCanShowAnExistingTime" xml:space="preserve">
     <value>A disabled field can show an existing time that is currently unavailable for editing.</value>
   </data>
