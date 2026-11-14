@@ -54,11 +54,18 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
+| `--dnet-tabs-active-foreground` | `var(--_foreground)` |
+| `--dnet-tabs-active-opacity` | `0.6` |
 | `--dnet-tabs-background` | `#ffffff` <br><sub>via `--dnet-sys-material-page`</sub> |
 | `--dnet-tabs-disabled-foreground` | `#666666` <br><sub>via `--dnet-sys-on-surface-muted`</sub> |
 | `--dnet-tabs-foreground` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
+| `--dnet-tabs-gap` | `normal` |
 | `--dnet-tabs-indicator-color` | `color-mix(in srgb, var(--dnet-sys-primary) 80%, var(--dnet-ref-neutral-1000))` <br><sub>via `--dnet-sys-primary-emphasis`</sub> |
+| `--dnet-tabs-label-hover-background` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
 | `--dnet-tabs-padding` | `24px` |
+| `--dnet-tabs-pagination-size` | `0px` |
+| `--dnet-tabs-radius` | `0px` |
+| `--dnet-tabs-shadow` | `none` |
 
 ```css
 :root { --dnet-tabs-background: /* your value */; }

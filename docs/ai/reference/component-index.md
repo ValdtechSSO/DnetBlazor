@@ -36,7 +36,7 @@ Open only the one you need.
 | [Spinner](components/Spinner.md) | `<DnetSpinner>` | 4 | 2 |
 | [Spoiler](components/Spoiler.md) | `<DnetSpoiler>` | 11 | 5 |
 | [Stepper](components/Stepper.md) | `<DnetStep>`, `<DnetStepper>` | 13 | 16 |
-| [Tabs](components/Tabs.md) | `<DnetTab>`, `<DnetTabBody>`, `<DnetTabGroup>` | 12 | 5 |
+| [Tabs](components/Tabs.md) | `<DnetTab>`, `<DnetTabBody>`, `<DnetTabGroup>` | 12 | 12 |
 | [Theme](components/Theme.md) | `<DnetThemeScope>` | 3 | — |
 | [TimePicker](components/TimePicker.md) | `<DnetTimePicker>` | 19 | 11 |
 | [Timeline](components/Timeline.md) | `<DnetTimeline>`, `<DnetTimelineItem>` | 13 | 28 |

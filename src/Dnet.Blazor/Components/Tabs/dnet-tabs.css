@@ -14,14 +14,20 @@
   --_disabled-foreground: var(--dnet-tabs-disabled-foreground, var(--dnet-sys-on-surface-muted));
   --_indicator: var(--dnet-tabs-indicator-color, var(--dnet-sys-primary-emphasis));
   --_padding: var(--dnet-tabs-padding, 24px);
+  --_radius: var(--dnet-tabs-radius, 0px);
+  --_shadow: var(--dnet-tabs-shadow, none);
+  --_gap: var(--dnet-tabs-gap, normal);
 
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  gap: var(--_gap);
   height: 100%;
   min-width: 0;
   padding: var(--_padding);
-  background-color: var(--_background);
+  border-radius: var(--_radius);
+  background: var(--_background);
+  box-shadow: var(--_shadow);
   color: var(--_foreground);
 }
 .mat-tab-group.mat-tab-group-inverted-header {
@@ -181,6 +187,35 @@
   cursor: default;
 }
 
+/* A theme can set each arrow in a round button of the given size, painted
+   with the material's ghost glass. It sits 1px above the middle, where the
+   arrow's 2px bottom padding puts the chevron. */
+.mat-tab-header-pagination::before {
+  --_pagination-size: var(--dnet-tabs-pagination-size, 0px);
+
+  content: "";
+  position: absolute;
+  top: calc(50% - 1px);
+  left: 50%;
+  z-index: -1;
+  width: var(--_pagination-size);
+  height: var(--_pagination-size);
+  translate: -50% -50%;
+  border-radius: var(--dnet-sys-radius-pill);
+  background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-ghost-elevation);
+  pointer-events: none;
+}
+.mat-tab-header-pagination:not(.mat-tab-header-pagination-disabled):hover::before {
+  background: var(--dnet-sys-material-sheen), color-mix(in srgb, var(--dnet-sys-primary-content) 10%, var(--dnet-sys-material-ghost));
+}
+.mat-tab-header-pagination:focus-visible::before {
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-focus);
+}
+.mat-tab-header-pagination-disabled::before {
+  opacity: 0.45;
+}
+
 .mat-tab-list {
   flex-grow: 1;
   position: relative;
@@ -276,5 +311,31 @@
   }
 }
 .mat-tab-label-active {
+  --_active-foreground: var(--dnet-tabs-active-foreground, var(--_foreground));
+  --_active-opacity: var(--dnet-tabs-active-opacity, 0.6);
+
   border-bottom: 2px solid var(--_indicator);
+  color: var(--_active-foreground);
+  opacity: var(--_active-opacity);
+}
+
+/* A lens behind each label: under the pointer it takes the theme's wash
+   and rises like the material's ghost buttons, and with keyboard focus it
+   carries the material's focus halo. */
+.mat-tab-label::before {
+  --_label-hover: var(--dnet-tabs-label-hover-background, var(--dnet-sys-transparent));
+
+  content: "";
+  position: absolute;
+  inset: 6px 4px;
+  z-index: -1;
+  border-radius: var(--dnet-sys-radius-pill);
+  pointer-events: none;
+}
+.mat-tab-label:not(.mat-tab-disabled):hover::before {
+  background: var(--_label-hover);
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-ghost-elevation);
+}
+.mat-tab-label:focus-visible::before {
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-focus);
 }
