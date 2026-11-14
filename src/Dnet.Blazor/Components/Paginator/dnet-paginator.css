@@ -194,7 +194,11 @@
   outline-offset: 2px;
 }
 
+/* The arrows sit edge to edge by default; round buttons need air. */
 .control-container {
+  --_controls-gap: var(--dnet-paginator-controls-gap, normal);
+
   display: flex;
   align-items: center;
+  gap: var(--_controls-gap);
 }
