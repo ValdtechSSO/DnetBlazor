@@ -17,6 +17,12 @@
     padding-block-start: 8px;
 }
 
+/* The glass pill tabs keep 16px between the bar and its view, like a
+   dialog's title and body. */
+[data-dnet-theme|="liquid-glass"] .pill-inbox-content {
+    padding-block-start: 4px;
+}
+
 .pill-inbox-content:focus-visible {
     outline: 2px solid var(--dnet-sys-focus-ring);
     outline-offset: 4px;
@@ -230,6 +236,10 @@
     margin-block-start: 8px;
     border: 1px solid var(--dnet-sys-border);
     border-radius: var(--dnet-sys-radius-lg);
+}
+
+[data-dnet-theme|="liquid-glass"] .pill-settings-content {
+    margin-block-start: 4px;
 }
 
 .pill-settings-content p {

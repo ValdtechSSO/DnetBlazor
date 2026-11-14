@@ -466,6 +466,15 @@
   --dnet-tabs-label-hover-background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
   --dnet-tabs-pagination-size: 32px;
 
+  /* PillTabs: the track stays glass. The selected tab is glossy accent
+     like the filled buttons, the others raise a ghost glass lens under the
+     pointer, tinted like the round buttons' hover, and the counters are the reference design's chips. The tabs
+     are 40px tall like the theme's buttons. */
+  --dnet-pill-tabs-selected-background: var(--dnet-sys-material-accent-sheen), var(--dnet-sys-primary);
+  --dnet-pill-tabs-hover-background: var(--dnet-sys-material-sheen), color-mix(in srgb, var(--dnet-sys-primary-content) 10%, var(--dnet-sys-material-ghost));
+  --dnet-pill-tabs-badge-background: rgb(255 255 255 / .14);
+  --dnet-pill-tabs-tab-height: 40px;
+
   /* AdminLayout menu (from the reference design): rows inset from the
      column, each led by a glass tile with the item's short text, or its icon.
      Hovering a row lights it; the current page is an accent-tinted glass row

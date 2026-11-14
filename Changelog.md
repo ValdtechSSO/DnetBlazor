@@ -256,6 +256,11 @@
   picker's panel: the options' text 24px from the edges with 24px above
   and below the list, and in the touch panel the title 24px in with 16px
   under it and the button 24px from the corner at the normal size.
+- The Liquid Glass themes render PillTabs with the selected tab glossy
+  accent like the filled buttons, a tinted ghost glass lens under the
+  pointer, the reference design's chips as counters and 40px tabs like the
+  theme's buttons; with keyboard focus a tab takes the focus halo. The
+  sample keeps 16px between the bar and its view.
 - The Liquid Glass themes render Tabs as a glass panel like the cards,
   with the rim, 24px around its content and 16px between the tab row and
   the view. The active label reads in the accent at full strength over its
