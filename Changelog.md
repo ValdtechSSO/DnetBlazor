@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Tabs: new `--dnet-tabs-radius`, `--dnet-tabs-shadow` and
+  `--dnet-tabs-gap` shape the group and space the tab row from the view, and
+  `--dnet-tabs-background` now takes layered backgrounds.
+  `--dnet-tabs-active-foreground` and `--dnet-tabs-active-opacity` set the
+  active label. `--dnet-tabs-label-hover-background` washes a lens behind
+  the label under the pointer, which rises and carries the focus halo with
+  the material's tokens, and `--dnet-tabs-pagination-size` sets each arrow
+  in a round ghost glass button. Without visual change by default.
 - ExpansionPanel: the header reports `aria-expanded="true"` or `"false"`;
   it rendered an empty attribute when open and none when closed. The
   toggle's rotation moved from an inline style to the stylesheet.
