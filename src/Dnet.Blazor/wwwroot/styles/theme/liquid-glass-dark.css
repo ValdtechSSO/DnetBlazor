@@ -354,6 +354,17 @@
      dialogs. The time picker's touch header no longer adds a second layer of
      fill. Calendars shown in the page keep their own fill. */
   --dnet-datepicker-panel-background: var(--dnet-sys-material-card);
+  /* Its popup is spaced like a dialog: the header's controls and the buttons
+     24px from the edges (20px here plus the header's own 4px), 24px between
+     the days and the buttons (the calendar keeps 16px under its last row, so
+     4px here and 4px over the buttons), 8px between buttons, and the buttons
+     at the theme's normal size. */
+  --dnet-datepicker-panel-padding: 20px 20px 4px;
+  --dnet-datepicker-panel-footer-padding: 4px 24px 24px;
+  --dnet-datepicker-panel-footer-gap: 8px;
+  --dnet-datepicker-button-height: 40px;
+  --dnet-datepicker-button-padding: 0 16px;
+  --dnet-datepicker-button-icon-gap: 8px;
   --dnet-timepicker-panel-background: var(--dnet-sys-material-card);
   --dnet-timepicker-panel-header-background: var(--dnet-sys-transparent);
   --dnet-connected-panel-background: var(--dnet-sys-material-card);

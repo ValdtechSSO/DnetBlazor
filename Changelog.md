@@ -187,7 +187,10 @@
   the Autocomplete's like the Select's (spaced like a dialog, with the
   round close button), and the popups of DatePicker, TimePicker and
   ConnectedPanel. Calendars shown in the page keep their own fill, and the
-  time picker's touch header no longer adds a second layer.
+  time picker's touch header no longer adds a second layer. The date
+  picker's popup is spaced like a dialog (its controls and buttons 24px
+  from the edges, 24px between the days and the buttons, 8px between
+  buttons) and its buttons take the theme's normal size.
 - The Liquid Glass themes render the Select dropdown as glass like dialogs
   and space it like them: 24px around, the options' text in line with the
   title and 16px under it, and the theme's round close button 18px from the
