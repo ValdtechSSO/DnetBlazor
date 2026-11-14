@@ -45,7 +45,7 @@
                 const persistedTheme = JSON.parse(localStorage.getItem("dnet.theme") ?? "null");
                 const theme = ["", "dark", "compact", "high-contrast", "modern", "liquid-glass", "liquid-glass-dark"].includes(persistedTheme)
                     ? persistedTheme
-                    : "dark";
+                    : "liquid-glass";
                 document.documentElement.dataset.dnetTheme = theme;
             } catch {
                 // An invalid preference must not prevent the application from loading.
