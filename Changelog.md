@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Tooltip: takes the material's blur, `--dnet-sys-material-backdrop`, so a
+  glass theme frosts what lies behind it. Without visual change by default.
 - PickList: the paginator's arrows take the paginator's own style, as in
   List and Grid. A PickList rule left over from its earlier plain buttons
   made them transparent, with muted icons, 25×32 and rounded like the rows.
