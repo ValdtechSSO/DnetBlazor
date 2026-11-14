@@ -8,7 +8,7 @@ Open only the one you need.
 | [AdminLayout](components/AdminLayout.md) | `<DesktopFooter>`, `<DesktopHeader>`, `<DesktopLayout>`, `<DesktopLeftColumn>`, `<DesktopMinifyMenu>`, `<DesktopNavigation>`, `<DesktopNavigationMenu>`, `<DesktopRightColumn>`, `<MenuTree>`, `<MenuTreeLink>`, `<MenuTreeLinkHelper>` | 27 | 76 |
 | [Autocomplete](components/Autocomplete.md) | `<DnetAutocomplete>` | 34 | 28 |
 | [Badge](components/Badge.md) | `<DnetBadge>` | 10 | 4 |
-| [Button](components/Button.md) | `<DnetButton>` | 8 | 11 |
+| [Button](components/Button.md) | `<DnetButton>` | 8 | 12 |
 | [Checkbox](components/Checkbox.md) | `<DnetInputCheckbox>` | 3 | 7 |
 | [Chips](components/Chips.md) | `<DnetChip>`, `<DnetChipList>` | 18 | 11 |
 | [ConnectedPanel](components/ConnectedPanel.md) | `<DnetConnectedFloatingPanel>` | 3 | 3 |

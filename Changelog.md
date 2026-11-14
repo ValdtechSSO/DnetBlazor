@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Button: new `--dnet-btn-icon-gap` sets the space between an icon and the
+  label (4px small, 8px medium and large by default). Without visual change
+  by default.
 - TimePicker: new `--dnet-timepicker-panel-header-background` sets the fill
   of the touch panel's header, the panel's own fill by default. Without
   visual change by default.

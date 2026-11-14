@@ -9503,7 +9503,7 @@ select.mat-input-element::-ms-value {
 /*! Button (recorte por offset; editado a mano en 6.0) — generado una vez; a partir de aquí se edita a mano. */
 .dnet-button, .dnet-icon-button {
   --_icon-size: 20px;
-  --_icon-gap: 8px;
+  --_icon-gap: var(--dnet-btn-icon-gap, 8px);
   --_background: var(--dnet-btn-background, var(--dnet-button-background-color, var(--dnet-sys-transparent)));
   --_hover: var(--dnet-btn-background-hover, var(--dnet-button-hover-color, var(--dnet-sys-state-hover)));
   --_foreground: var(--dnet-btn-foreground, var(--dnet-sys-on-surface));
@@ -9663,21 +9663,21 @@ select.mat-input-element::-ms-value {
   --_height: var(--dnet-btn-height, var(--dnet-button-line-height, 32px));
   --_padding: var(--dnet-btn-padding, var(--dnet-button-padding, 0 12px));
   --_icon-size: 20px;
-  --_icon-gap: 4px;
+  --_icon-gap: var(--dnet-btn-icon-gap, 4px);
 }
 
 .dnet-button-size-medium {
   --_height: var(--dnet-btn-height, var(--dnet-button-line-height, 40px));
   --_padding: var(--dnet-btn-padding, var(--dnet-button-padding, 0 16px));
   --_icon-size: 20px;
-  --_icon-gap: 8px;
+  --_icon-gap: var(--dnet-btn-icon-gap, 8px);
 }
 
 .dnet-button-size-large {
   --_height: var(--dnet-btn-height, var(--dnet-button-line-height, 56px));
   --_padding: var(--dnet-btn-padding, var(--dnet-button-padding, 0 24px));
   --_icon-size: 24px;
-  --_icon-gap: 8px;
+  --_icon-gap: var(--dnet-btn-icon-gap, 8px);
 }
 
 /*! DynamicStepper — migrado a tokens (6.0). Generado una vez; se edita a mano. */
