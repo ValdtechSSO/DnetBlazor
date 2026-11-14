@@ -38,7 +38,7 @@
      role="combobox"
      tabindex="@(Disabled ? -1 : 0)"
      aria-haspopup="dialog"
-     aria-label="@(DisplayName ?? Localizer["FloatingDoubleList.Label"])"
+     aria-label="@(DisplayName ?? GetModelDisplayName(Localizer.Culture) ?? Localizer["FloatingDoubleList.Label"])"
      aria-expanded="@(_isOpen ? "true" : "false")"
      aria-controls="@(_isOpen && _menuReference is not null ? $"cdk-overlay-pane-{_menuReference.GetOverlayReferenceId()}" : null)"
      aria-disabled="@(Disabled ? "true" : "false")"
@@ -70,7 +70,7 @@
     private void RefreshOverlayLabel()
     {
         if (_menuReference?.Config is not { } config) return;
-        var label = DisplayName ?? Localizer["FloatingDoubleList.Label"];
+        var label = DisplayName ?? GetModelDisplayName(Localizer.Culture) ?? Localizer["FloatingDoubleList.Label"];
         if (config.AriaLabel == label) return;
         config.AriaLabel = label;
         _menuReference.RequestConfigurationUpdate();
@@ -447,7 +447,7 @@
                 HasTransparentBackdrop = true,
                 CloseOnEscape = true,
                 Role = "dialog",
-                AriaLabel = DisplayName ?? Localizer["FloatingDoubleList.Label"],
+                AriaLabel = DisplayName ?? GetModelDisplayName(Localizer.Culture) ?? Localizer["FloatingDoubleList.Label"],
                 PositionStrategy = PositionStrategy.FlexibleConnectedTo,
                 FlexibleConnectedPositionStrategyBuilder = flexibleConnectedPositionStrategyBuilder,
                 MinWidth = MinWidth,

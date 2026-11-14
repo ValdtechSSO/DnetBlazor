@@ -280,7 +280,7 @@ else
         }
         else
         {
-            validationErrorMessage = string.Format(Localizer.Culture, EffectiveParsingErrorMessage, DisplayName ?? FieldIdentifier.FieldName);
+            validationErrorMessage = string.Format(Localizer.Culture, EffectiveParsingErrorMessage, GetFieldDisplayName(Localizer.Culture));
             return false;
         }
     }

@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Forms: messages and accessible names use the name the model gives a field
+  with `[Display(Name = ...)]` or `[DisplayName(...)]`, as the framework's
+  inputs do since .NET 11, instead of the property name. The parsing errors
+  of InputNumber, InputDate and Select and the radio group's invalid-value
+  message say "El campo Edad…" rather than "El campo Age…", and Select,
+  Autocomplete and FloatingDoubleList take that name as their `aria-label`
+  when they have none, before falling back to their generic one. The
+  `DisplayName` parameter, and `ResponsiveLabel` on Select, still win. A
+  name from resources (`ResourceType`) is read in the library's language,
+  without changing the thread's culture, and cached per member and
+  language. `DnetInputBase` gains `GetModelDisplayName` and
+  `GetFieldDisplayName` for derived inputs.
 - Forms: a field shows when an asynchronous validator is checking it. While
   the check runs, a small spinner in the accent colour sits beside the
   field's actions, the hint says "Comprobando…" ("Checking…") and the input

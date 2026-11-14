@@ -530,7 +530,7 @@
     }
 
     private string AccessibleLabel => AdditionalAttributes?.TryGetValue("aria-label", out var label) == true
-        ? label?.ToString() ?? string.Empty : DisplayName ?? ResponsiveLabel ?? Localizer["Select.Label"];
+        ? label?.ToString() ?? string.Empty : DisplayName ?? ResponsiveLabel ?? GetModelDisplayName(Localizer.Culture) ?? Localizer["Select.Label"];
 
     private RenderFragment CreateClearButtonContent()
     {
@@ -559,7 +559,7 @@
         }
         else
         {
-            validationErrorMessage = Localizer.Format("Select.InvalidValue", DisplayName ?? FieldIdentifier.FieldName);
+            validationErrorMessage = Localizer.Format("Select.InvalidValue", GetFieldDisplayName(Localizer.Culture));
             return false;
         }
     }

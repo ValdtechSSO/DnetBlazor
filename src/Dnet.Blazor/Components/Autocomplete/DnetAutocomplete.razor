@@ -568,7 +568,7 @@
     }
 
     private string AccessibleLabel => AdditionalAttributes?.TryGetValue("aria-label", out var label) == true
-        ? label?.ToString() ?? string.Empty : DisplayName ?? Localizer["Autocomplete.Label"];
+        ? label?.ToString() ?? string.Empty : DisplayName ?? GetModelDisplayName(Localizer.Culture) ?? Localizer["Autocomplete.Label"];
 
     private async Task ClearInputAsync()
     {
