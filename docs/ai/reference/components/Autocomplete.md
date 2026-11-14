@@ -55,7 +55,18 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
-| `--dnet-list-background-color` | `#ffffff` <br><sub>via `--dnet-sys-material-popup`</sub> |
+| `--dnet-autocomplete-panel-background` | `#ffffff` <br><sub>via `--dnet-sys-material-popup`</sub> |
+| `--dnet-autocomplete-panel-close-background` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
+| `--dnet-autocomplete-panel-close-background-hover` | `var(--_close-background)` |
+| `--dnet-autocomplete-panel-close-padding` | `0px` |
+| `--dnet-autocomplete-panel-close-radius` | `0px` |
+| `--dnet-autocomplete-panel-close-shadow` | `none` |
+| `--dnet-autocomplete-panel-header-gap` | `0px` |
+| `--dnet-autocomplete-panel-header-height` | `var(--_header-footer-height)` |
+| `--dnet-autocomplete-panel-header-padding` | `var(--_padding-vertical) var(--dnet-sys-space-3)` |
+| `--dnet-autocomplete-panel-list-padding` | `var(--_padding-horizontal)` |
+| `--dnet-autocomplete-panel-padding-bottom` | `var(--_wrapper-padding)` |
+| `--dnet-list-background-color` | `var(--_base-background)` |
 | `--dnet-list-border-color` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
 | `--dnet-list-border-radius` | `10px` <br><sub>via `--dnet-sys-radius-lg`</sub> |
 | `--dnet-list-box-shadow` | `0 3px 5px -1px var(--dnet-sys-shadow-color), 0 6px 10px 0 var(--dnet-sys-shadow-color), 0 1px 18px 0 var(--dnet-sys-shadow-color)` <br><sub>via `--dnet-sys-elevation-3`</sub> |
@@ -83,5 +94,5 @@ working. Prefer the names above for new code; these go away in 7.0.
 </details>
 
 ```css
-:root { --dnet-list-background-color: /* your value */; }
+:root { --dnet-autocomplete-panel-background: /* your value */; }
 ```

@@ -6,7 +6,7 @@ Open only the one you need.
 | Component | Use in markup | Parameters | Styling tokens |
 |---|---|---:|---:|
 | [AdminLayout](components/AdminLayout.md) | `<DesktopFooter>`, `<DesktopHeader>`, `<DesktopLayout>`, `<DesktopLeftColumn>`, `<DesktopMinifyMenu>`, `<DesktopNavigation>`, `<DesktopNavigationMenu>`, `<DesktopRightColumn>`, `<MenuTree>`, `<MenuTreeLink>`, `<MenuTreeLinkHelper>` | 27 | 76 |
-| [Autocomplete](components/Autocomplete.md) | `<DnetAutocomplete>` | 34 | 17 |
+| [Autocomplete](components/Autocomplete.md) | `<DnetAutocomplete>` | 34 | 28 |
 | [Badge](components/Badge.md) | `<DnetBadge>` | 10 | 4 |
 | [Button](components/Button.md) | `<DnetButton>` | 8 | 11 |
 | [Checkbox](components/Checkbox.md) | `<DnetInputCheckbox>` | 3 | 7 |

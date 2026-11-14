@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Autocomplete: new `--dnet-autocomplete-panel-*` tokens lay out the
+  dropdown like the Select's: `-background`, `-header-padding`,
+  `-header-height`, `-header-gap`, `-list-padding`, `-padding-bottom`, and
+  the close button's `-close-padding`, `-close-radius`, `-close-background`,
+  `-close-background-hover` and `-close-shadow`. Without visual change by
+  default.
 - Select: new `--dnet-select-panel-*` tokens lay out the dropdown apart
   from the `--dnet-list-*` family that inline lists share: `-background`,
   `-header-padding`, `-header-height`, `-header-gap` (space under the
