@@ -488,6 +488,24 @@
   --dnet-grid-filter-scrim: var(--dnet-sys-scrim);
   --dnet-grid-filter-scrim-backdrop: var(--dnet-sys-scrim-backdrop);
 
+  /* Paginator: the arrows are the theme's round glass buttons, 32px like
+     the dialogs' close button, with the accent tint under the pointer; the
+     page sits in a rounded glass well; and the range comes onto the same
+     line, at the far left of the footer. */
+  --dnet-icon-button-size: 32px;
+  --dnet-paginator-button-hover-background: color-mix(in srgb, var(--dnet-sys-primary-content) 10%, var(--dnet-sys-material-ghost));
+  --dnet-paginator-input-background: var(--dnet-sys-material-control);
+  --dnet-paginator-input-border-color: var(--dnet-sys-transparent);
+  --dnet-paginator-input-radius: var(--dnet-sys-radius-pill);
+  --dnet-paginator-input-width: 44px;
+  --dnet-paginator-input-height: 32px;
+  --dnet-paginator-rows: auto;
+  --dnet-paginator-columns: 1fr auto auto;
+  --dnet-paginator-width: 100%;
+  --dnet-paginator-range-area: 1 / 1 / 2 / 2;
+  --dnet-paginator-range-justify: flex-start;
+  --dnet-paginator-range-font-size: 0.75rem;
+
   /* AdminLayout menu (from the reference design): rows inset from the
      column, each led by a glass tile with the item's short text, or its icon.
      Hovering a row lights it; the current page is an accent-tinted glass row
