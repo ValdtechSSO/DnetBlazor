@@ -45,7 +45,6 @@ the element's own `style`. Nothing else is needed.
 | Token | Effective default |
 |---|---|
 | `--dnet-step-font-size` | `0.875rem` <br><sub>via `--dnet-sys-text-md`</sub> |
-| `--dnet-step-header-direction` | `row` |
 | `--dnet-step-icon-background` | `#757575` <br><sub>via `--dnet-sys-on-surface-subtle`</sub> |
 | `--dnet-step-icon-background-current` | `color-mix(in srgb, var(--dnet-sys-primary) 80%, var(--dnet-ref-neutral-1000))` <br><sub>via `--dnet-sys-primary-emphasis`</sub> |
 | `--dnet-step-icon-background-done` | `none` |
@@ -56,17 +55,9 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-step-icon-scale-current` | `none` |
 | `--dnet-step-icon-shadow` | `none` |
 | `--dnet-step-icon-shadow-current` | `none` |
-| `--dnet-step-icon-size` | `24px` |
-| `--dnet-step-label-align` | `inherit` |
 | `--dnet-step-label-color-upcoming` | `inherit` |
 | `--dnet-step-label-weight` | `inherit` |
 | `--dnet-step-label-weight-current` | `var(--_label-weight)` |
-| `--dnet-step-line-display` | `block` |
-| `--dnet-step-rail-background` | `none` |
-| `--dnet-step-rail-background-done` | `none` |
-| `--dnet-step-rail-shadow` | `none` |
-| `--dnet-step-rail-shadow-done` | `none` |
-| `--dnet-step-rail-top` | `0px` |
 
 ```css
 :root { --dnet-step-icon-background: /* your value */; }

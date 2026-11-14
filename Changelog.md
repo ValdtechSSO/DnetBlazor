@@ -2,10 +2,8 @@
 
 ## Unreleased
 
-- DynamicStepper reads the same `--dnet-step-*` tokens as Stepper, except
-  `-header-flex` and `-header-overflow`: its steps already sit in equal
-  columns. Its rail spans the gap between columns. Without visual change by
-  default.
+- DynamicStepper reads the same `--dnet-step-*` tokens as Stepper. Without
+  visual change by default.
 - Stepper: new `--dnet-step-*` tokens paint the icons (`-icon-background`,
   `-icon-color`, `-icon-shadow`, `-icon-font-size`, `-icon-font-weight`,
   `-icon-background-done` painted over completed steps,
