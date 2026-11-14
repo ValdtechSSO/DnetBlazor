@@ -294,6 +294,15 @@
     inset 0 0 0 1.5px color-mix(in srgb, var(--dnet-sys-primary) 45%, transparent),
     0 6px 20px color-mix(in srgb, var(--dnet-sys-primary) 18%, transparent);
 
+  /* Toast: liquid glass like the cards, so the page shows through blurred.
+     Its actions are the theme's outlined buttons, ghost glass pills with the
+     accent label and no outline. The progress bar stops 5px short of where
+     the corners start to curve. */
+  --dnet-toast-bg: var(--dnet-sys-material-card);
+  --dnet-toast-action-foreground: var(--dnet-sys-primary-content);
+  --dnet-toast-action-border-color: var(--dnet-sys-transparent);
+  --dnet-toast-progress-inset: calc(var(--dnet-sys-radius-lg) - var(--dnet-sys-border-width) + 5px);
+
   /* AdminLayout: the minified menu flyout floats over the content and defaults
      to the border colour, which is translucent here. Nested in the column it
      cannot blur (backdrop root), so it takes the popup fill instead. */
