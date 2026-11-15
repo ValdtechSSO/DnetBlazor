@@ -164,10 +164,15 @@ the element's own `style`. Nothing else is needed.
 | `--dnet-calendar-day-disabled-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 38%, transparent)` <br><sub>via `--dnet-sys-state-disabled-fg`</sub> |
 | `--dnet-calendar-day-height` | `40px` |
 | `--dnet-calendar-icon-color` | `#5f6368` <br><sub>via `--dnet-sys-on-surface`</sub> |
+| `--dnet-calendar-inline-background` | `#ffffff` <br><sub>via `--dnet-sys-surface-raised`</sub> |
+| `--dnet-calendar-nav-gap` | `2px` |
+| `--dnet-calendar-nav-size` | `36px` |
 | `--dnet-calendar-preview-bg-color` | `color-mix(in srgb, var(--dnet-sys-primary) 10%, transparent)` |
 | `--dnet-calendar-range-bg-color` | `color-mix(in srgb, var(--dnet-sys-primary) 18%, transparent)` |
 | `--dnet-calendar-selected-bg-color` | `#5b5ce0` <br><sub>via `--dnet-sys-primary`</sub> |
 | `--dnet-calendar-today-bg-color` | `color-mix(in srgb, var(--dnet-sys-primary) 12%, transparent)` <br><sub>via `--dnet-sys-state-selected`</sub> |
+| `--dnet-calendar-today-color` | `var(--_foreground)` |
+| `--dnet-calendar-today-ring` | `inset 0 0 0 1px var(--dnet-sys-primary)` |
 | `--dnet-datepicker-panel-background` | `#ffffff` <br><sub>via `--dnet-sys-material-popup`</sub> |
 | `--dnet-datepicker-panel-footer-gap` | `6px` |
 | `--dnet-datepicker-panel-footer-padding` | `4px 12px 10px` |

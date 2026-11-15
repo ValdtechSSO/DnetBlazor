@@ -53,6 +53,14 @@
   except its Reset: it is now the date picker's, a small outlined button
   that the keyboard reaches, in the date picker popup's footer, instead of
   a text link that only took clicks.
+- DatePicker: the calendar shown in the page takes the material's sheen,
+  rim and blur, with `--dnet-calendar-inline-background` for its own fill;
+  in the popup it draws neither. Its month buttons are round buttons in
+  the ghost material, sized and spaced by `--dnet-calendar-nav-size` and
+  `--dnet-calendar-nav-gap`, and the chosen day takes the accent
+  material's sheen and glow. Today's ring and colour follow
+  `--dnet-calendar-today-ring` and `--dnet-calendar-today-color`. Without
+  visual change by default.
 - The Liquid Glass themes give the week calendars glass: the popup is the
   date picker's glass and the calendar in the page a pane of the controls'
   glass, with round ghost glass month buttons. The chosen week is one

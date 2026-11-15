@@ -31,19 +31,28 @@
 }
 
 .dnet-calendar {
+  /* A calendar shown in the page: its own fill, in the material. */
+  --_inline-background: var(--dnet-calendar-inline-background, var(--dnet-sys-surface-raised));
+  --_background: var(--dnet-calendar-background, var(--_inline-background));
+
   box-sizing: border-box;
   width: 100%;
   min-width: 280px;
   padding: 8px;
-  border: var(--dnet-sys-border-width) solid var(--_background);
+  /* The fill shows under the border; painted again on it, a translucent
+     fill would draw a ring. */
+  border: var(--dnet-sys-border-width) solid var(--dnet-sys-transparent);
   border-radius: var(--_radius);
-  background: var(--_background);
+  box-shadow: var(--dnet-sys-material-highlight);
+  background: var(--dnet-sys-material-sheen), var(--_background);
+  backdrop-filter: var(--dnet-sys-material-backdrop);
   color: var(--_foreground);
   font-size: var(--dnet-sys-text-sm);
 }
 
-/* The popup content owns the material: the nested calendar no longer repaints
-   the same fill on top of it. Its padding is the popup's inner space. */
+/* The popup content owns the material: the nested calendar neither repaints
+   the same fill on top of it nor draws the material again. Its padding is
+   the popup's inner space. */
 .dnet-datepicker-content > .dnet-calendar {
   --_background: var(--dnet-sys-transparent);
   --_panel-padding: var(--dnet-datepicker-panel-padding, 8px);
@@ -51,6 +60,9 @@
   padding: var(--_panel-padding);
   border: 0;
   border-radius: 0;
+  box-shadow: none;
+  background: var(--dnet-sys-transparent);
+  backdrop-filter: none;
 }
 
 .dnet-calendar-disabled {
@@ -66,6 +78,11 @@
   align-items: center;
   min-height: 44px;
   gap: 2px;
+}
+
+/* The space between the month buttons, apart from the row's own. */
+.dnet-calendar-previous-button + .dnet-calendar-next-button {
+  margin-inline-start: calc(var(--dnet-calendar-nav-gap, 2px) - 2px);
 }
 
 .dnet-calendar-spacer {
@@ -97,10 +114,13 @@
   cursor: pointer;
 }
 
-.dnet-calendar-period-button:hover,
+.dnet-calendar-period-button:hover {
+  background: var(--dnet-sys-state-hover);
+}
+
 .dnet-calendar-previous-button:hover:not(:disabled),
 .dnet-calendar-next-button:hover:not(:disabled) {
-  background: var(--dnet-sys-state-hover);
+  background: var(--dnet-sys-material-sheen), var(--dnet-sys-state-hover);
 }
 
 .dnet-calendar-period-button:focus-visible,
@@ -130,17 +150,22 @@
 
 .dnet-calendar-previous-button,
 .dnet-calendar-next-button {
+  --_nav-size: var(--dnet-calendar-nav-size, 36px);
+
   box-sizing: border-box;
   appearance: none;
   position: relative;
-  min-width: 36px;
-  width: 36px;
-  height: 36px;
-  flex: 0 0 36px;
+  min-width: var(--_nav-size);
+  width: var(--_nav-size);
+  height: var(--_nav-size);
+  flex: 0 0 var(--_nav-size);
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: transparent;
+  /* Round buttons in the ghost material: transparent, as before, unless the
+     theme has one. */
+  background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-ghost-elevation);
   color: var(--_subtle);
   cursor: pointer;
 }
@@ -154,7 +179,8 @@
 .dnet-calendar-previous-button::after,
 .dnet-calendar-next-button::after {
   position: absolute;
-  inset: 12px;
+  /* The chevron's box: a third of the button on each side. */
+  inset: calc(var(--_nav-size) / 3);
   content: "";
   border-top: 2px solid currentColor;
 }
@@ -265,13 +291,21 @@
 }
 
 .dnet-calendar-day-selected {
-  background: var(--_selected-bg);
+  /* The accent material's sheen and glow, when the theme has them. */
+  box-shadow: var(--dnet-sys-material-accent-highlight);
+  background: var(--dnet-sys-material-accent-sheen), var(--_selected-bg);
   color: var(--_selected-fg);
 }
 
 .dnet-calendar-day-today:not(.dnet-calendar-day-selected) {
-  box-shadow: inset 0 0 0 1px var(--dnet-sys-primary);
+  box-shadow: var(--dnet-calendar-today-ring, inset 0 0 0 1px var(--dnet-sys-primary));
   background: var(--_today-bg);
+}
+
+/* Today's number, unless it is chosen, disabled or in another month. As
+   specific as a single class, so a DateClass colour still wins. */
+:where(.dnet-calendar-day:not(.dnet-calendar-day-outside)) > .dnet-calendar-day-today:where(:not(.dnet-calendar-day-selected):not(:disabled)) {
+  color: var(--dnet-calendar-today-color, var(--_foreground));
 }
 
 .dnet-calendar-content-body-year,
