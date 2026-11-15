@@ -1,7 +1,7 @@
 /*! FloatingPanel — migrado a tokens (6.0). Generado una vez; se edita a mano. */
 
 .dnet-floating-panel-container {
-  --_background: var(--dnet-sys-material-popup);
+  --_background: var(--dnet-floating-panel-background, var(--dnet-sys-material-popup));
   --_radius: var(--dnet-sys-radius-lg);
   --_elevation: var(--dnet-sys-elevation-3);
 

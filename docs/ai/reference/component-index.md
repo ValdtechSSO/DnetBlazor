@@ -19,7 +19,7 @@ Open only the one you need.
 | [DynamicStepper](components/DynamicStepper.md) | `<DnetDynamicStep>`, `<DnetDynamicStepper>` | 13 | 16 |
 | [ExpansionPanel](components/ExpansionPanel.md) | `<DnetExpansionPanelItem>` | 10 | 26 |
 | [FloatingDoubleList](components/FloatingDoubleList.md) | `<DnetFloatingDoubleList>` | 32 | 13 |
-| [FloatingPanel](components/FloatingPanel.md) | `<DnetFloatingPanel>` | 3 | — |
+| [FloatingPanel](components/FloatingPanel.md) | `<DnetFloatingPanel>` | 3 | 1 |
 | [Form](components/Form.md) | `<DnetFormField>`, `<DnetInputDate>`, `<DnetInputNumber>`, `<DnetInputText>`, `<DnetInputTextArea>` | 47 | 15 |
 | [Grid](components/Grid.md) | `<BlgAdvancedFilterToggle>`, `<BlgBody>`, `<BlgGrid>`, `<BlgHeader>`, `<BlgRow>` | 73 | 58 |
 | [ImageEditor](components/ImageEditor.md) | `<DnetImageEditor>`, `<ImageEditorTooltipText>` | 18 | 4 |
