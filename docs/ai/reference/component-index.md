@@ -13,7 +13,7 @@ Open only the one you need.
 | [Chips](components/Chips.md) | `<DnetChip>`, `<DnetChipList>` | 18 | 11 |
 | [ConnectedPanel](components/ConnectedPanel.md) | `<DnetConnectedFloatingPanel>` | 3 | 3 |
 | [DatePicker](components/DatePicker.md) | `<DnetCalendar>`, `<DnetDatePicker>`, `<DnetDateRangePicker>` | 111 | 13 |
-| [DatePickerWeek](components/DatePickerWeek.md) | `<DnetDatePickerWeek>` | 13 | 7 |
+| [DatePickerWeek](components/DatePickerWeek.md) | `<DnetDatePickerWeek>` | 13 | 15 |
 | [DatePickerWeekRaw](components/DatePickerWeekRaw.md) | `<DnetDatePickerWeekRaw>` | 3 | 13 |
 | [Dialog](components/Dialog.md) | `<DnetDialog>` | 5 | 19 |
 | [DynamicStepper](components/DynamicStepper.md) | `<DnetDynamicStep>`, `<DnetDynamicStepper>` | 13 | 16 |

@@ -7115,7 +7115,9 @@ ul[role=tree] li ul {
 /*! Sass DatePickerWeek (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 .dnet-datepickerweek-content {
   --_week-day-size: var(--dnet-datepickerweekca-day-height, var(--dnet-calendar-day-height, 40px));
-  --_week-background: var(--dnet-calendar-background, var(--dnet-sys-material-popup));
+  /* The popup's own fill, apart from the calendar shown in the page. */
+  --_week-panel-fill: var(--dnet-datepickerweek-panel-background, var(--dnet-sys-material-popup));
+  --_week-background: var(--dnet-calendar-background, var(--_week-panel-fill));
 
   box-sizing: border-box;
   width: 100%;
@@ -7202,7 +7204,7 @@ ul[role=tree] li ul {
   display: flex;
   align-items: center;
   min-height: 44px;
-  gap: 2px;
+  gap: var(--dnet-calendar-controls-gap, 2px);
 }
 
 .dnet-datepickerweekca-period-button {
@@ -7216,6 +7218,14 @@ ul[role=tree] li ul {
 }
 .dnet-datepickerweekca-period-button:focus {
   outline: none;
+}
+/* The keyboard focus shows the material's halo, which is transparent unless
+   the theme has one. */
+.dnet-datepickerweekca-period-button:focus-visible {
+  box-shadow: var(--dnet-sys-material-focus);
+}
+.dnet-datepickerweekca-previous-button:focus-visible, .dnet-datepickerweekca-next-button:focus-visible {
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-focus);
 }
 .dnet-datepickerweekca-period-button:hover {
   background-color: var(--dnet-sys-state-hover);
@@ -7255,7 +7265,10 @@ ul[role=tree] li ul {
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: transparent;
+  /* Round buttons in the ghost material: transparent, as before, unless the
+     theme has one. */
+  background: var(--dnet-sys-material-sheen), var(--dnet-sys-material-ghost);
+  box-shadow: var(--dnet-sys-material-highlight), var(--dnet-sys-material-ghost-elevation);
   color: var(--dnet-sys-on-surface-subtle);
   cursor: pointer;
 }
@@ -7337,11 +7350,42 @@ button[disabled].dnet-datepickerweekca-next-button::after {
 }
 
 .dnet-datepickerweekca-day {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   min-width: 0;
   height: var(--_week-day-size);
+}
+
+/* The week's band: one pill behind the whole row, drawn from its first day,
+   so it has no seams between days. It is empty unless a theme gives it a
+   colour; the days then leave their own fill transparent
+   (--dnet-calendar-week-day-background). It covers
+   the same 4px-inset strip as a day's content. */
+.dnet-datepickerweekca-day:nth-child(7n+1)::before {
+  position: absolute;
+  inset-block: 4px;
+  inset-inline-start: 0;
+  width: 700%;
+  content: "";
+  border-radius: var(--dnet-sys-radius-pill);
+  pointer-events: none;
+}
+/* Any day of the row under the pointer: a click on it selects this row. */
+.dnet-datepickerweekca-day:nth-child(7n+1):is(
+    :has(> .hovered),
+    :has(+ * > .hovered),
+    :has(+ * + * > .hovered),
+    :has(+ * + * + * > .hovered),
+    :has(+ * + * + * + * > .hovered),
+    :has(+ * + * + * + * + * > .hovered),
+    :has(+ * + * + * + * + * + * > .hovered))::before {
+  background: var(--dnet-calendar-week-hover-band-color, var(--dnet-sys-transparent));
+}
+.dnet-datepickerweekca-day:nth-child(7n+1):has(> .dnet-datepickerweekca-day-selected)::before {
+  background: var(--dnet-sys-material-accent-sheen), var(--dnet-calendar-week-band-color, var(--dnet-sys-transparent));
+  box-shadow: var(--dnet-sys-material-accent-highlight);
 }
 
 .dnet-datepickerweekca-day-content {
@@ -7375,21 +7419,33 @@ button[disabled].dnet-datepickerweekca-next-button::after {
 }
 
 .dnet-datepickerweekca-day-content.hovered:not(.dnet-datepickerweekca-day-selected) {
-  background-color: color-mix(in srgb, var(--dnet-sys-on-surface) 6.4%, transparent);
+  background-color: var(--dnet-calendar-week-day-background, color-mix(in srgb, var(--dnet-sys-on-surface) 6.4%, transparent));
 }
 
+/* The days of the chosen week and of the week under the pointer paint their
+   own fill, unless the theme draws the week's band behind them. */
 .dnet-datepickerweekca-day-selected {
+  --_day-selected-fill: var(--dnet-datepickerweekca-selected-bg-color, var(--dnet-sys-primary-strong));
+
   color: var(--dnet-sys-on-primary);
-  background-color: var(--dnet-datepickerweekca-selected-bg-color, var(--dnet-sys-primary-strong));
+  background-color: var(--dnet-calendar-week-day-background, var(--_day-selected-fill));
+}
+
+/* Today: a ring and a fill, and a mark a theme can draw over the number in
+   its colour, such as a circle. */
+.dnet-datepickerweekca-day-today {
+  background-image: var(--dnet-calendar-today-mark, none);
+  background-origin: border-box;
 }
 
 .dnet-datepickerweekca-day-today:not(.dnet-datepickerweekca-day-selected) {
-  box-shadow: inset 0 0 0 1px var(--dnet-sys-surface);
+  box-shadow: var(--dnet-calendar-today-ring, inset 0 0 0 1px var(--dnet-sys-surface));
   background-color: var(--dnet-datepickerweekca-today-bg-color, color-mix(in srgb, var(--dnet-sys-on-surface) 15.9%, transparent));
+  color: var(--dnet-calendar-today-color, var(--dnet-sys-on-surface-emphasis));
 }
 
 .dnet-datepickerweekca-day-selected.dnet-datepickerweekca-day-today {
-  box-shadow: inset 0 0 0 1px var(--dnet-sys-surface);
+  box-shadow: var(--dnet-calendar-today-ring, inset 0 0 0 1px var(--dnet-sys-surface));
 }
 
 .dnet-datepickerweekca-content-body-year {

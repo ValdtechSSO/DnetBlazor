@@ -43,6 +43,10 @@
   spaces the month buttons and `--dnet-datepickerweekca-raw-background`
   fills the calendar. The calendar and its month buttons take the
   material's sheen, rim and focus halo. Without visual change by default.
+- DatePickerWeek: the same week band, today and month button tokens as
+  DatePickerWeekRaw, and `--dnet-datepickerweek-panel-background` for the
+  popup's fill. Its month buttons take the material's sheen, rim and focus
+  halo. Without visual change by default.
 
 ## Version 6.1.1 (November 2026)
 
