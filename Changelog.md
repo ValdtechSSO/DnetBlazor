@@ -32,6 +32,17 @@
   Without visual change by default.
 - The Liquid Glass themes give the floating panel the dialog's glass: the
   translucent card material instead of the nearly opaque popup one.
+- DatePickerWeekRaw: a theme can draw the chosen week as one band across
+  its row, with round ends and no seams between days
+  (`--dnet-calendar-week-band-color`), the week under the pointer the same
+  way from any of its days (`--dnet-calendar-week-hover-band-color`), and
+  then clear the days' own fill (`--dnet-calendar-week-day-background`).
+  Today takes a mark drawn in its number's colour
+  (`--dnet-calendar-today-mark`), a ring (`--dnet-calendar-today-ring`) and
+  a colour (`--dnet-calendar-today-color`). `--dnet-calendar-controls-gap`
+  spaces the month buttons and `--dnet-datepickerweekca-raw-background`
+  fills the calendar. The calendar and its month buttons take the
+  material's sheen, rim and focus halo. Without visual change by default.
 
 ## Version 6.1.1 (November 2026)
 
