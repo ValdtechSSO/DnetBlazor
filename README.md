@@ -3,7 +3,7 @@
 Blazor component library for .NET 11, compatible with Blazor WebAssembly and
 interactive server-side applications.
 
-**Current version:** 6.1.1. See the [changelog](Changelog.md) for release
+**Current version:** 6.2.0. See the [changelog](Changelog.md) for release
 details.
 
 ## Building from source
@@ -78,7 +78,7 @@ shape. Compare the variants in `/Buttons`.
 Install the package:
 
 ```bash
-dotnet add package Dnet.Blazor --version 6.1.1
+dotnet add package Dnet.Blazor --version 6.2.0
 ```
 
 Register the services in `Program.cs`:
@@ -120,11 +120,11 @@ Each release ships a machine-readable reference: every component's parameters,
 every styling token, plus setup and theming guides. Plain markdown, so it works
 with Claude, Codex, Cursor, Gemini CLI or anything else that reads project docs.
 
-**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/download/v6.1.1/dnet-blazor-agent-reference-6.1.1.zip)**
+**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/download/v6.2.0/dnet-blazor-agent-reference-6.2.0.zip)**
 — attached to every release.
 
 ```bash
-unzip dnet-blazor-agent-reference-6.1.1.zip -d docs/
+unzip dnet-blazor-agent-reference-6.2.0.zip -d docs/
 ```
 
 Then point your agent at it. The archive's `AGENTS-snippet.md` has text you can
@@ -138,6 +138,22 @@ npx degit ValdtechSSO/DnetBlazor/docs/ai/reference docs/dnet-blazor
 
 The reference is a snapshot of the version it ships with — grab the matching one
 when you upgrade the package.
+
+## What's new in 6.2.0
+
+- Grid: `GridOptions.EnableMaximize` adds a button in the grid's top-right
+  corner that makes it fill the window, on desktop and on phones; the
+  button or Escape brings it back.
+- Liquid Glass: the grid header's sort, filter and group actions are round
+  glass buttons, the floating panel has the dialog's glass, and the
+  calendars, of days and of weeks, in the page and in their popups, have
+  round glass month buttons, the chosen day or week in the accent with its
+  glow, and today as a soft circle.
+- New tokens let any theme do the same, such as
+  `--dnet-floating-panel-background` and the `--dnet-calendar-*` week band,
+  today and month button tokens. Existing themes do not change.
+- Visible in every theme: the week picker's Reset is now the date picker's
+  button, reachable with the keyboard.
 
 ## What's new in 6.1.1
 

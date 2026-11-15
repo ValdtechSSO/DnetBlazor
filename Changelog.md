@@ -1,6 +1,6 @@
 # Changelog for Blazor Library
 
-## Unreleased
+## Version 6.2.0 (November 2026)
 
 - Grid: the header's sort, filter and group actions take a pill radius and
   the material's ghost glass, with its sheen, rim of light and focus halo.
@@ -69,6 +69,9 @@
   across its row, both with the accent's sheen and glow; the week under
   the pointer is a faint tint of the accent, and today a soft circle
   without a ring, in the accent outside the chosen week and white inside.
+
+## Version 6.1.1 (November 2026)
+
 - Publishes the 6.1.0 changes to NuGet. 6.1.0 was released on GitHub only:
   its package was not published because the Linux visual baselines had not
   been updated for that version's intended changes. No library changes.
