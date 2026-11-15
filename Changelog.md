@@ -28,6 +28,10 @@
   ancestor.
 - The Liquid Glass themes fit the grid's maximize button in the corner
   their header row already leaves free, with no band above the header.
+- FloatingPanel: `--dnet-floating-panel-background` sets the panel's fill.
+  Without visual change by default.
+- The Liquid Glass themes give the floating panel the dialog's glass: the
+  translucent card material instead of the nearly opaque popup one.
 
 ## Version 6.1.1 (November 2026)
 

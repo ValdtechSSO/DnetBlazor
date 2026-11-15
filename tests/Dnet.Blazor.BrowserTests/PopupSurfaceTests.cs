@@ -52,7 +52,7 @@ public sealed class PopupSurfaceTests
             new("DatePicker", "/DatePicker", ".dnet-form-field-plain-suffix .dnet-datepicker-icon-wrapper", ".dnet-datepicker-content", "--dnet-calendar-background"),
             new("Dialog", "/Dialog", "button:has-text('Show Dialog')", ".dnet-dialog-container", "--dnet-dialog-background"),
             new("ConnectedPanel", "/ConnectedPanel", "svg.bi-filter", ".dnet-connected-panel-container"),
-            new("FloatingPanel", "/FloatingPanel", "button:has-text('Show Panel')", ".dnet-floating-panel-container"),
+            new("FloatingPanel", "/FloatingPanel", "button:has-text('Show Panel')", ".dnet-floating-panel-container", "--dnet-floating-panel-background"),
             // These legacy panels leave OverlayConfig.CloseOnEscape disabled and expose their own close actions.
             new("FloatingDoubleList", "/FloatingDoubleList", "#floating-doublelist-field .dnet-plain-select", ".dnet-connected-panel-container-dl", CloseTrigger: ".dnet-dialog-icon-wrapper"),
             new("Grid advanced filter", "/BlGrid", ".blg-adv-toggle-button-image", ".blg-advanced-filter-container", Grid: true, CloseTrigger: ".blg-adv-filter-buttom-reset")
