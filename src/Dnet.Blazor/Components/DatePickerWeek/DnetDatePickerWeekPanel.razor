@@ -2,6 +2,7 @@
 @inject IServiceProvider LocalizationServices
 
 @using System.Globalization
+@using Dnet.Blazor.Components.Button
 @using Dnet.Blazor.Components.DatePickerWeek.Infrastructure.Enums
 @using Dnet.Blazor.Components.DatePickerWeek.Infrastructure.Models
 @using Dnet.Blazor.Components.DatePickerWeek.Infrastructure.Services
@@ -95,14 +96,13 @@
                 </div>
                 break;
         }
-        <div class="dnet-datepickerweekca-header-footer">
-            <div class="dnet-datepickerweek-reset-button-wrapper" @onclick="ResetCalendar">
-                <div class="dnet-datepickerweek-reset-image-wrapper">
-                    <span class="dnet-datepickerweek-icon dnet-datepickerweek-reset-button" unselectable="on"></span>
-                </div>
-                <span class="dnet-datepickerweek-reset-test">@Localizer["Common.Reset"]</span>
-            </div>
-        </div>
+    </div>
+    @* The date picker popup's footer and Reset button. *@
+    <div class="dnet-calendar-header-footer">
+        <DnetButton Size="DnetButtonSize.Small" Variant="DnetButtonVariant.Outlined" class="dnet-datepicker-reset-button-wrapper" style="@ButtonSizeStyle" OnClick="ResetCalendar">
+            <span class="dnet-datepicker-icon dnet-datepicker-reset-button" aria-hidden="true"></span>
+            <span>@Localizer["Common.Reset"]</span>
+        </DnetButton>
     </div>
 </div>
 
@@ -567,6 +567,13 @@
                 break;
         }
     }
+
+    // The date picker popup's button sizes: a theme sets them through these
+    // tokens; unset, each falls back to what the button inherits.
+    private const string ButtonSizeStyle =
+        "--dnet-btn-height:var(--dnet-datepicker-button-height, inherit);" +
+        "--dnet-btn-padding:var(--dnet-datepicker-button-padding, inherit);" +
+        "--dnet-btn-icon-gap:var(--dnet-datepicker-button-icon-gap, inherit);";
 
     private void ResetCalendar()
     {

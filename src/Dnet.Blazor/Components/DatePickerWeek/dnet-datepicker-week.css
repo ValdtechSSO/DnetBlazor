@@ -15,12 +15,17 @@
   color: var(--dnet-sys-on-surface-emphasis);
 }
 
-/* The popup content owns the material: the nested calendar does not repaint it. */
+/* The popup content owns the material: the nested calendar neither repaints
+   it nor draws the material a calendar shown on its own has. Its padding is
+   the date picker popup's inner space. */
 .dnet-datepickerweek-content > .dnet-datepickerweek-calendar {
   height: auto;
+  padding: var(--dnet-datepicker-panel-padding, 8px);
   border: 0;
   border-radius: 0;
   background: var(--dnet-sys-transparent);
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
 .dnet-datepickerweek-input-container {
@@ -90,7 +95,12 @@
   display: flex;
   align-items: center;
   min-height: 44px;
-  gap: var(--dnet-calendar-controls-gap, 2px);
+  gap: 2px;
+}
+
+/* The space between the month buttons, apart from the row's own. */
+.dnet-datepickerweekca-previous-button + .dnet-datepickerweekca-next-button {
+  margin-inline-start: calc(var(--dnet-calendar-nav-gap, 2px) - 2px);
 }
 
 .dnet-datepickerweekca-period-button {
@@ -139,13 +149,15 @@
 }
 
 .dnet-datepickerweekca-previous-button, .dnet-datepickerweekca-next-button {
+  --_nav-size: var(--dnet-calendar-nav-size, 36px);
+
   box-sizing: border-box;
   appearance: none;
   position: relative;
-  min-width: 36px;
-  width: 36px;
-  height: 36px;
-  flex: 0 0 36px;
+  min-width: var(--_nav-size);
+  width: var(--_nav-size);
+  height: var(--_nav-size);
+  flex: 0 0 var(--_nav-size);
   padding: 0;
   border: 0;
   border-radius: 50%;
@@ -161,7 +173,8 @@
 }
 
 .dnet-datepickerweekca-previous-button::after, .dnet-datepickerweekca-next-button::after {
-  inset: 12px;
+  /* The chevron's box: a third of the button on each side. */
+  inset: calc(var(--_nav-size) / 3);
   position: absolute;
   content: "";
   margin: 0;
@@ -453,48 +466,4 @@ button[disabled].dnet-datepickerweekca-next-button::after {
 
 .dnet-datepickerweekca-month-selected.dnet-datepickerweekca-month-today {
   box-shadow: inset 0 0 0 1px var(--dnet-sys-surface);
-}
-
-.dnet-datepickerweekca-header-footer {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  min-height: 48px;
-  padding: 4px 12px 10px;
-}
-
-.dnet-datepickerweek-reset-button-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.dnet-datepickerweek-reset-image-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 1.2em;
-  width: 1.2em;
-  padding-top: 2px;
-}
-
-.dnet-datepickerweek-icon {
-  display: block;
-  background-repeat: no-repeat;
-  background-size: 1em 1em;
-  height: 1em;
-  width: 1em;
-  cursor: pointer;
-  color: var(--dnet-sys-on-surface);
-}
-
-.dnet-datepickerweek-reset-button {
-  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z'/></svg>");
-  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' clip-rule='evenodd' d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z'/></svg>");
-  background-color: var(--dnet-sys-on-surface);
-}
-
-.dnet-datepickerweek-reset-test {
-  font-size: 0.75rem;
 }

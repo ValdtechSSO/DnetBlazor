@@ -31,13 +31,15 @@ the element's own `style`. Nothing else is needed.
 | Token | Effective default |
 |---|---|
 | `--dnet-calendar-background` | `var(--_week-panel-fill)` |
-| `--dnet-calendar-controls-gap` | `2px` |
+| `--dnet-calendar-nav-gap` | `2px` |
+| `--dnet-calendar-nav-size` | `36px` |
 | `--dnet-calendar-today-color` | `color-mix(in srgb, var(--dnet-ref-neutral-1000) 87%, transparent)` <br><sub>via `--dnet-sys-on-surface-emphasis`</sub> |
 | `--dnet-calendar-today-mark` | `none` |
 | `--dnet-calendar-today-ring` | `inset 0 0 0 1px var(--dnet-sys-surface)` |
 | `--dnet-calendar-week-band-color` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
 | `--dnet-calendar-week-day-background` | `color-mix(in srgb, var(--dnet-sys-on-surface) 6.4%, transparent)` |
 | `--dnet-calendar-week-hover-band-color` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
+| `--dnet-datepicker-panel-padding` | `8px` |
 | `--dnet-datepickerweek-input-container-border` | `1px solid var(--dnet-sys-border)` |
 | `--dnet-datepickerweek-input-height` | `28px` |
 | `--dnet-datepickerweek-panel-background` | `#ffffff` <br><sub>via `--dnet-sys-material-popup`</sub> |
