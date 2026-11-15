@@ -61,15 +61,14 @@
   material's sheen and glow. Today's ring and colour follow
   `--dnet-calendar-today-ring` and `--dnet-calendar-today-color`. Without
   visual change by default.
-- The Liquid Glass themes give the week calendars glass: the popup is the
-  date picker's glass and the calendar in the page a pane of the controls'
-  glass, with round ghost glass month buttons. The chosen week is one
-  accent pill across its row with the accent's sheen and glow, the week
-  under the pointer a faint tint of it, and today a soft circle, in the
-  accent outside the chosen week and white inside it.
-
-## Version 6.1.1 (November 2026)
-
+- The Liquid Glass themes give the calendars glass: those shown in the
+  page, of days and of weeks, are a pane of the controls' glass, and the
+  week picker's popup is the date picker's glass and spacing. Their month
+  buttons are round ghost glass buttons, 32px across and 8px apart. The
+  chosen day is an accent circle and the chosen week one accent pill
+  across its row, both with the accent's sheen and glow; the week under
+  the pointer is a faint tint of the accent, and today a soft circle
+  without a ring, in the accent outside the chosen week and white inside.
 - Publishes the 6.1.0 changes to NuGet. 6.1.0 was released on GitHub only:
   its package was not published because the Linux visual baselines had not
   been updated for that version's intended changes. No library changes.

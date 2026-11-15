@@ -66,7 +66,7 @@ public sealed class WeekCalendarGlassTests
 
         // The month buttons are round glass buttons, 8px apart.
         var buttons = await calendar.EvaluateAsync<string[]>(
-            "calendar => { const next = calendar.querySelector('[class*=next-button]'); const style = getComputedStyle(next); return [style.backgroundColor, style.boxShadow, getComputedStyle(next.parentElement).columnGap]; }");
+            "calendar => { const next = calendar.querySelector('[class*=next-button]'); const style = getComputedStyle(next); return [style.backgroundColor, style.boxShadow, String(Math.round(next.getBoundingClientRect().left - next.previousElementSibling.getBoundingClientRect().right)) + 'px']; }");
         Assert.NotEqual("rgba(0, 0, 0, 0)", buttons[0]);
         Assert.Contains("inset", buttons[1]);
         Assert.Equal("8px", buttons[2]);
@@ -104,7 +104,7 @@ public sealed class WeekCalendarGlassTests
                 const band = getComputedStyle(selected.parentElement, '::before');
                 const next = getComputedStyle(calendar.querySelector('[class*=next-button]'));
                 return [getComputedStyle(selected).backgroundColor, band.backgroundColor, band.backgroundImage,
-                    next.backgroundColor, getComputedStyle(calendar.querySelector('[class*=-controls]')).columnGap];
+                    next.backgroundColor, String(Math.round(calendar.querySelector('[class*=next-button]').getBoundingClientRect().left - calendar.querySelector('[class*=previous-button]').getBoundingClientRect().right)) + 'px'];
             }
             """, day);
         Assert.NotEqual("rgba(0, 0, 0, 0)", fills[0]);
@@ -112,6 +112,82 @@ public sealed class WeekCalendarGlassTests
         Assert.Equal("none, none", fills[2]);
         Assert.Equal("rgba(0, 0, 0, 0)", fills[3]);
         Assert.Equal("2px", fills[4]);
+        Assert.Empty(session.Errors);
+    }
+
+    // The week picker's Reset is the date picker's: a real button, in every theme.
+    [Theory]
+    [InlineData("")]
+    [InlineData("liquid-glass")]
+    public async Task The_week_popup_resets_with_the_date_pickers_button(string theme)
+    {
+        if (!Enabled) return;
+        await using var session = await OpenAsync(theme);
+        var panel = await ShowCalendarAsync(session.Page, popup: true);
+
+        var reset = panel.Locator("button.dnet-datepicker-reset-button-wrapper");
+        await Assertions.Expect(reset).ToHaveTextAsync("Reset");
+        await reset.FocusAsync();
+        await session.Page.Keyboard.PressAsync("Enter");
+        await Assertions.Expect(panel).ToBeHiddenAsync();
+        Assert.Empty(session.Errors);
+    }
+
+    // The day calendar shown in the page: a pane of glass with round glass month
+    // buttons, the chosen day in the accent with its glow and today without a ring
+    // in Liquid Glass; its own fill, transparent buttons and the ring elsewhere.
+    [Theory]
+    [InlineData("liquid-glass", true)]
+    [InlineData("liquid-glass-dark", true)]
+    [InlineData("", false)]
+    [InlineData("dark", false)]
+    public async Task The_day_calendar_in_the_page_is_glass_only_in_Liquid_Glass(string theme, bool glass)
+    {
+        if (!Enabled) return;
+        await using var session = await OpenAsync(theme);
+        var calendar = session.Page.Locator(".date-calendar-preview .dnet-calendar").First;
+        await calendar.ScrollIntoViewIfNeededAsync();
+        await Assertions.Expect(calendar).ToBeVisibleAsync();
+
+        var look = await calendar.EvaluateAsync<string[]>("""
+            calendar => {
+                const style = getComputedStyle(calendar);
+                const previous = calendar.querySelector('.dnet-calendar-previous-button');
+                const next = calendar.querySelector('.dnet-calendar-next-button');
+                const selected = calendar.querySelector('.dnet-calendar-day-selected');
+                return [style.backgroundColor, style.backgroundImage, getComputedStyle(next).backgroundColor,
+                    String(next.getBoundingClientRect().width), String(Math.round(next.getBoundingClientRect().left - previous.getBoundingClientRect().right)),
+                    getComputedStyle(selected).boxShadow];
+            }
+            """);
+
+        // Today: the sample's calendar opens on August 2026, so it moves to today's month.
+        var months = (DateTime.Today.Year - 2026) * 12 + DateTime.Today.Month - 8;
+        var button = calendar.Locator(months > 0 ? ".dnet-calendar-next-button" : ".dnet-calendar-previous-button");
+        for (var move = 0; move < Math.Abs(months); move++) await button.ClickAsync();
+        var today = calendar.Locator(".dnet-calendar-day:not(.dnet-calendar-day-outside) > .dnet-calendar-day-today");
+        await Assertions.Expect(today).ToHaveCountAsync(1);
+        var ring = await today.EvaluateAsync<string>("element => getComputedStyle(element).boxShadow");
+
+        if (glass)
+        {
+            Assert.NotEqual("none, none", look[1]);
+            Assert.Matches(@"rgba\(.*, 0\.\d+\)", look[0]);
+            Assert.NotEqual("rgba(0, 0, 0, 0)", look[2]);
+            Assert.Equal("32", look[3]);
+            Assert.Equal("8", look[4]);
+            Assert.Contains("28px", look[5]);
+            Assert.Equal("none", ring);
+        }
+        else
+        {
+            Assert.Equal("none, none", look[1]);
+            Assert.Equal("rgba(0, 0, 0, 0)", look[2]);
+            Assert.Equal("36", look[3]);
+            Assert.Equal("2", look[4]);
+            Assert.DoesNotContain("28px", look[5]);
+            Assert.Contains("1px inset", ring);
+        }
         Assert.Empty(session.Errors);
     }
 
