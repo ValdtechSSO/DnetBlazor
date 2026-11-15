@@ -47,6 +47,12 @@
   DatePickerWeekRaw, and `--dnet-datepickerweek-panel-background` for the
   popup's fill. Its month buttons take the material's sheen, rim and focus
   halo. Without visual change by default.
+- The Liquid Glass themes give the week calendars glass: the popup is the
+  date picker's glass and the calendar in the page a pane of the controls'
+  glass, with round ghost glass month buttons. The chosen week is one
+  accent pill across its row with the accent's sheen and glow, the week
+  under the pointer a faint tint of it, and today a soft circle, in the
+  accent outside the chosen week and white inside it.
 
 ## Version 6.1.1 (November 2026)
 

@@ -379,6 +379,24 @@
   --dnet-datepicker-button-height: 40px;
   --dnet-datepicker-button-padding: 0 16px;
   --dnet-datepicker-button-icon-gap: 8px;
+  /* Week calendars: the popup is the date picker's glass and the calendar
+     shown in the page a pane of the controls' glass. Their month buttons
+     are the theme's round ghost buttons, 8px apart. The chosen week is one
+     accent pill across its row, with the accent's sheen and glow, and the
+     week under the pointer a faint tint of the accent. Today is a soft
+     circle in its number's colour: the accent outside the chosen week,
+     white inside it. */
+  --dnet-datepickerweek-panel-background: var(--dnet-sys-material-card);
+  --dnet-datepickerweekca-raw-background: var(--dnet-sys-material-control);
+  --dnet-calendar-controls-gap: 8px;
+  --dnet-calendar-week-band-color: var(--dnet-sys-primary);
+  --dnet-calendar-week-hover-band-color: color-mix(in srgb, var(--dnet-sys-primary-content) 9%, transparent);
+  --dnet-calendar-week-day-background: var(--dnet-sys-transparent);
+  --dnet-datepickerweekca-today-bg-color: var(--dnet-sys-transparent);
+  --dnet-datepickerweekca-raw-today-bg-color: var(--dnet-sys-transparent);
+  --dnet-calendar-today-ring: none;
+  --dnet-calendar-today-color: var(--dnet-sys-primary-content);
+  --dnet-calendar-today-mark: radial-gradient(circle 13px, color-mix(in srgb, currentColor 16%, transparent) 12.5px, transparent 13px);
   --dnet-timepicker-panel-background: var(--dnet-sys-material-card);
   --dnet-timepicker-panel-header-background: var(--dnet-sys-transparent);
   /* Its panel is spaced like a dialog: the options' text 24px from the edges
