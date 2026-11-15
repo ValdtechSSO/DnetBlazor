@@ -7618,7 +7618,7 @@ button[disabled].dnet-datepickerweekca-next-button::after {
 /*! Sass DatePickerWeekRaw (casó byte a byte) — generado una vez; a partir de aquí se edita a mano. */
 .dnet-datepickerweek-raw-content {
   --_week-raw-day-size: var(--dnet-datepickerweekca-raw-day-height, var(--dnet-calendar-day-height, 40px));
-  --_week-raw-fill: var(--dnet-datepickerweekca-raw-background, var(--dnet-sys-surface-raised));
+  --_week-raw-fill: var(--dnet-calendar-inline-background, var(--dnet-sys-surface-raised));
   --_week-raw-background: var(--dnet-calendar-background, var(--_week-raw-fill));
 
   width: 100%;
@@ -7634,9 +7634,15 @@ button[disabled].dnet-datepickerweekca-next-button::after {
   height: auto;
 }
 
-/* The content owns the material: the nested calendar does not repaint it. */
+/* The content owns the material: the nested calendar neither repaints it nor
+   draws the material a calendar shown on its own has. */
 .dnet-datepickerweek-raw-content > .dnet-datepickerweek-raw-calendar {
   --_background: var(--dnet-sys-transparent);
+
+  background: var(--dnet-sys-transparent);
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+          backdrop-filter: none;
 }
 
 .dnet-datepickerweekca-raw-header {
@@ -7647,7 +7653,13 @@ button[disabled].dnet-datepickerweekca-next-button::after {
   display: flex;
   align-items: center;
   min-height: 44px;
-  gap: var(--dnet-calendar-controls-gap, 2px);
+  gap: 2px;
+}
+
+/* The space between the month buttons, apart from the row's own. */
+.dnet-datepickerweekca-raw-previous-button + .dnet-datepickerweekca-raw-next-button {
+  -webkit-margin-start: calc(var(--dnet-calendar-nav-gap, 2px) - 2px);
+          margin-inline-start: calc(var(--dnet-calendar-nav-gap, 2px) - 2px);
 }
 
 .dnet-datepickerweekca-raw-period-button {
@@ -7696,15 +7708,17 @@ button[disabled].dnet-datepickerweekca-next-button::after {
 }
 
 .dnet-datepickerweekca-raw-previous-button, .dnet-datepickerweekca-raw-next-button {
+  --_nav-size: var(--dnet-calendar-nav-size, 36px);
+
   box-sizing: border-box;
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
   position: relative;
-  min-width: 36px;
-  width: 36px;
-  height: 36px;
-  flex: 0 0 36px;
+  min-width: var(--_nav-size);
+  width: var(--_nav-size);
+  height: var(--_nav-size);
+  flex: 0 0 var(--_nav-size);
   padding: 0;
   border: 0;
   border-radius: 50%;
@@ -7720,7 +7734,8 @@ button[disabled].dnet-datepickerweekca-next-button::after {
 }
 
 .dnet-datepickerweekca-raw-previous-button::after, .dnet-datepickerweekca-raw-next-button::after {
-  inset: 12px;
+  /* The chevron's box: a third of the button on each side. */
+  inset: calc(var(--_nav-size) / 3);
   position: absolute;
   content: "";
   margin: 0;

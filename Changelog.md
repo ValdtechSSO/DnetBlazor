@@ -39,10 +39,12 @@
   then clear the days' own fill (`--dnet-calendar-week-day-background`).
   Today takes a mark drawn in its number's colour
   (`--dnet-calendar-today-mark`), a ring (`--dnet-calendar-today-ring`) and
-  a colour (`--dnet-calendar-today-color`). `--dnet-calendar-controls-gap`
-  spaces the month buttons and `--dnet-datepickerweekca-raw-background`
-  fills the calendar. The calendar and its month buttons take the
-  material's sheen, rim and focus halo. Without visual change by default.
+  a colour (`--dnet-calendar-today-color`). `--dnet-calendar-nav-size` and
+  `--dnet-calendar-nav-gap` size and space the month buttons, and
+  `--dnet-calendar-inline-background` fills the calendar, as it does the
+  date picker's calendar shown in the page. The calendar and its month
+  buttons take the material's sheen, rim and focus halo. Without visual
+  change by default.
 - DatePickerWeek: the same week band, today and month button tokens as
   DatePickerWeekRaw, and `--dnet-datepickerweek-panel-background` for the
   popup's fill. Its month buttons take the material's sheen, rim and focus
