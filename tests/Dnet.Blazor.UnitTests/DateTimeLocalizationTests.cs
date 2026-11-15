@@ -262,13 +262,13 @@ public sealed class DateTimeLocalizationTests : BunitContext
             .Add(component => component.SelectedDay, new WeekDay { Date = today, Year = today.Year, Month = today.Month, DayNumber = today.Day }));
         var selected = cut.Instance._days.Where(day => day.IsSelected).Select(day => day.FormattedDate).ToArray();
         Assert.Equal("lun", cut.Find(".dnet-datepickerweekca-content-header-item").TextContent.Trim());
-        Assert.Equal("Restablecer", cut.Find(".dnet-datepickerweek-reset-test").TextContent.Trim());
+        Assert.Equal("Restablecer", cut.Find(".dnet-datepicker-reset-button-wrapper").TextContent.Trim());
         Assert.All(cut.Instance._days, day => Assert.Equal(day.Date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture), day.FormattedDate));
 
         await cut.InvokeAsync(() => Localizer.SetCulture("en-US"));
 
         cut.WaitForAssertion(() => Assert.Equal("Mon", cut.Find(".dnet-datepickerweekca-content-header-item").TextContent.Trim()));
-        Assert.Equal("Reset", cut.Find(".dnet-datepickerweek-reset-test").TextContent.Trim());
+        Assert.Equal("Reset", cut.Find(".dnet-datepicker-reset-button-wrapper").TextContent.Trim());
         Assert.Equal(selected, cut.Instance._days.Where(day => day.IsSelected).Select(day => day.FormattedDate));
     }
 

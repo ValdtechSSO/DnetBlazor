@@ -20,7 +20,16 @@ the element's own `style`. Nothing else is needed.
 
 | Token | Effective default |
 |---|---|
-| `--dnet-calendar-background` | `#ffffff` <br><sub>via `--dnet-sys-surface-raised`</sub> |
+| `--dnet-calendar-background` | `var(--_week-raw-fill)` |
+| `--dnet-calendar-inline-background` | `#ffffff` <br><sub>via `--dnet-sys-surface-raised`</sub> |
+| `--dnet-calendar-nav-gap` | `2px` |
+| `--dnet-calendar-nav-size` | `36px` |
+| `--dnet-calendar-today-color` | `color-mix(in srgb, var(--dnet-ref-neutral-1000) 87%, transparent)` <br><sub>via `--dnet-sys-on-surface-emphasis`</sub> |
+| `--dnet-calendar-today-mark` | `none` |
+| `--dnet-calendar-today-ring` | `inset 0 0 0 1px var(--dnet-sys-surface)` |
+| `--dnet-calendar-week-band-color` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
+| `--dnet-calendar-week-day-background` | `color-mix(in srgb, var(--dnet-sys-on-surface) 6.4%, transparent)` |
+| `--dnet-calendar-week-hover-band-color` | `transparent` <br><sub>via `--dnet-sys-transparent`</sub> |
 | `--dnet-datepickerweekca-raw-day-disabled-color` | `color-mix(in srgb, var(--dnet-sys-on-surface) 60.5%, transparent)` |
 | `--dnet-datepickerweekca-raw-day-height` | `40px` |
 | `--dnet-datepickerweekca-raw-selected-bg-color` | `#5b5ce0` <br><sub>via `--dnet-sys-primary-strong`</sub> |

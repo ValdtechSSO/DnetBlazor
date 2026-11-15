@@ -32,9 +32,43 @@
   Without visual change by default.
 - The Liquid Glass themes give the floating panel the dialog's glass: the
   translucent card material instead of the nearly opaque popup one.
-
-## Version 6.1.1 (November 2026)
-
+- DatePickerWeekRaw: a theme can draw the chosen week as one band across
+  its row, with round ends and no seams between days
+  (`--dnet-calendar-week-band-color`), the week under the pointer the same
+  way from any of its days (`--dnet-calendar-week-hover-band-color`), and
+  then clear the days' own fill (`--dnet-calendar-week-day-background`).
+  Today takes a mark drawn in its number's colour
+  (`--dnet-calendar-today-mark`), a ring (`--dnet-calendar-today-ring`) and
+  a colour (`--dnet-calendar-today-color`). `--dnet-calendar-nav-size` and
+  `--dnet-calendar-nav-gap` size and space the month buttons, and
+  `--dnet-calendar-inline-background` fills the calendar, as it does the
+  date picker's calendar shown in the page. The calendar and its month
+  buttons take the material's sheen, rim and focus halo. Without visual
+  change by default.
+- DatePickerWeek: the same week band, today and month button tokens as
+  DatePickerWeekRaw, and `--dnet-datepickerweek-panel-background` for the
+  popup's fill. Its month buttons take the material's sheen, rim and focus
+  halo, and its calendar the date picker popup's inner padding
+  (`--dnet-datepicker-panel-padding`). Without visual change by default,
+  except its Reset: it is now the date picker's, a small outlined button
+  that the keyboard reaches, in the date picker popup's footer, instead of
+  a text link that only took clicks.
+- DatePicker: the calendar shown in the page takes the material's sheen,
+  rim and blur, with `--dnet-calendar-inline-background` for its own fill;
+  in the popup it draws neither. Its month buttons are round buttons in
+  the ghost material, sized and spaced by `--dnet-calendar-nav-size` and
+  `--dnet-calendar-nav-gap`, and the chosen day takes the accent
+  material's sheen and glow. Today's ring and colour follow
+  `--dnet-calendar-today-ring` and `--dnet-calendar-today-color`. Without
+  visual change by default.
+- The Liquid Glass themes give the calendars glass: those shown in the
+  page, of days and of weeks, are a pane of the controls' glass, and the
+  week picker's popup is the date picker's glass and spacing. Their month
+  buttons are round ghost glass buttons, 32px across and 8px apart. The
+  chosen day is an accent circle and the chosen week one accent pill
+  across its row, both with the accent's sheen and glow; the week under
+  the pointer is a faint tint of the accent, and today a soft circle
+  without a ring, in the accent outside the chosen week and white inside.
 - Publishes the 6.1.0 changes to NuGet. 6.1.0 was released on GitHub only:
   its package was not published because the Linux visual baselines had not
   been updated for that version's intended changes. No library changes.

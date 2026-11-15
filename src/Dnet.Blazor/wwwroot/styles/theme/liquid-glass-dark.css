@@ -366,7 +366,7 @@
 
   /* Date picker, time picker and connected panel: their popups are glass like
      dialogs. The time picker's touch header no longer adds a second layer of
-     fill. Calendars shown in the page keep their own fill. */
+     fill. */
   --dnet-datepicker-panel-background: var(--dnet-sys-material-card);
   /* Its popup is spaced like a dialog: the header's controls and the buttons
      24px from the edges (20px here plus the header's own 4px), 24px between
@@ -379,6 +379,26 @@
   --dnet-datepicker-button-height: 40px;
   --dnet-datepicker-button-padding: 0 16px;
   --dnet-datepicker-button-icon-gap: 8px;
+  /* Calendars, of days and of weeks: those shown in the page are a pane of
+     the controls' glass, and the week picker's popup is the date picker's
+     glass. Their month buttons are the theme's round ghost buttons, 32px
+     across and 8px apart. The chosen day is an accent circle and the chosen week one
+     accent pill across its row, both with the accent's sheen and glow; the
+     week under the pointer is a faint tint of the accent. Today is a soft
+     circle without a ring, its number in the accent outside the chosen
+     week and white inside it. */
+  --dnet-calendar-inline-background: var(--dnet-sys-material-control);
+  --dnet-datepickerweek-panel-background: var(--dnet-sys-material-card);
+  --dnet-calendar-nav-size: 32px;
+  --dnet-calendar-nav-gap: 8px;
+  --dnet-calendar-week-band-color: var(--dnet-sys-primary);
+  --dnet-calendar-week-hover-band-color: color-mix(in srgb, var(--dnet-sys-primary-content) 9%, transparent);
+  --dnet-calendar-week-day-background: var(--dnet-sys-transparent);
+  --dnet-datepickerweekca-today-bg-color: var(--dnet-sys-transparent);
+  --dnet-datepickerweekca-raw-today-bg-color: var(--dnet-sys-transparent);
+  --dnet-calendar-today-ring: none;
+  --dnet-calendar-today-color: var(--dnet-sys-primary-content);
+  --dnet-calendar-today-mark: radial-gradient(circle 13px, color-mix(in srgb, currentColor 16%, transparent) 12.5px, transparent 13px);
   --dnet-timepicker-panel-background: var(--dnet-sys-material-card);
   --dnet-timepicker-panel-header-background: var(--dnet-sys-transparent);
   /* Its panel is spaced like a dialog: the options' text 24px from the edges
