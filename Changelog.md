@@ -1,5 +1,18 @@
 # Changelog for Blazor Library
 
+## Version 6.2.1 (November 2026)
+
+- Form fields: `DnetInputText`, `DnetInputTextArea`, `DnetInputNumber`
+  and `DnetInputDate` tell their `DnetFormField` about a value the parent
+  sets from code, so the label rises above it and the clear button shows,
+  as for a typed value. Before, such a value sat under the resting label
+  until the field was typed in or created again. A focused field emptied
+  from code keeps its label raised until it loses the focus. Typed text is
+  still announced after the debounce, as before.
+- `DnetFormField` cascades its context as fixed, so its own renders no
+  longer hand an input its previous parameters, with its previous value,
+  before the current ones.
+
 ## Version 6.2.0 (November 2026)
 
 - Grid: the header's sort, filter and group actions take a pill radius and

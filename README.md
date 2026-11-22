@@ -3,7 +3,7 @@
 Blazor component library for .NET 11, compatible with Blazor WebAssembly and
 interactive server-side applications.
 
-**Current version:** 6.2.0. See the [changelog](Changelog.md) for release
+**Current version:** 6.2.1. See the [changelog](Changelog.md) for release
 details.
 
 ## Building from source
@@ -78,7 +78,7 @@ shape. Compare the variants in `/Buttons`.
 Install the package:
 
 ```bash
-dotnet add package Dnet.Blazor --version 6.2.0
+dotnet add package Dnet.Blazor --version 6.2.1
 ```
 
 Register the services in `Program.cs`:
@@ -120,11 +120,11 @@ Each release ships a machine-readable reference: every component's parameters,
 every styling token, plus setup and theming guides. Plain markdown, so it works
 with Claude, Codex, Cursor, Gemini CLI or anything else that reads project docs.
 
-**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/download/v6.2.0/dnet-blazor-agent-reference-6.2.0.zip)**
+**[Download the agent reference](https://github.com/ValdtechSSO/DnetBlazor/releases/download/v6.2.1/dnet-blazor-agent-reference-6.2.1.zip)**
 — attached to every release.
 
 ```bash
-unzip dnet-blazor-agent-reference-6.2.0.zip -d docs/
+unzip dnet-blazor-agent-reference-6.2.1.zip -d docs/
 ```
 
 Then point your agent at it. The archive's `AGENTS-snippet.md` has text you can
@@ -138,6 +138,12 @@ npx degit ValdtechSSO/DnetBlazor/docs/ai/reference docs/dnet-blazor
 
 The reference is a snapshot of the version it ships with — grab the matching one
 when you upgrade the package.
+
+## What's new in 6.2.1
+
+- Form fields: the text, text area, number and date inputs raise their
+  label above a value set from code, such as a form filled by an
+  assistant or reset, as they already did for typed values.
 
 ## What's new in 6.2.0
 
