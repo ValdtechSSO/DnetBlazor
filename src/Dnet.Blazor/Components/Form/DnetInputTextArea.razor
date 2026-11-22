@@ -108,6 +108,21 @@ else
     private int _characterCount => CurrentValue?.Length ?? 0;
 
 
+    // What the input held before the parent's last render, and whether it really has the focus
+    // (_hasFocus also stays on while the field holds a value, to keep the label raised).
+    private string? _valueBeforeParameters;
+
+    private bool _isFocused;
+
+    private bool _initialized;
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _valueBeforeParameters = CurrentValueAsString;
+
+        return base.SetParametersAsync(parameters);
+    }
+
     protected override void OnInitialized()
     {
         _formEventService = _formFieldCascadingValues.FormEventService;
@@ -137,6 +152,8 @@ else
     {
         base.OnParametersSet();
 
+        SyncExternalValue();
+
         if (!ImmediateResponse) CancelInputDebounce();
 
         if (_previousDisabled != Disabled)
@@ -145,6 +162,22 @@ else
 
             OnDisabledChanged();
         }
+    }
+
+    // A value set from outside (code filling the form, another input bound to the same model)
+    // arrives without an input event: the field's label and clear button follow it too. Typed
+    // text is already the input's value when the parent hands it back, so it keeps its usual
+    // announcement after the pause.
+    private void SyncExternalValue()
+    {
+        var value = CurrentValueAsString;
+        var external = _initialized && !string.Equals(_valueBeforeParameters, value, StringComparison.Ordinal);
+        _initialized = true;
+        if (!external) return;
+
+        _hasFocus = _isFocused || !string.IsNullOrEmpty(value);
+        _formEventService?.RaiseCurrentValue(value);
+        _formEventService?.RaiseFocus(_hasFocus);
     }
 
     public async void HandleChangeDebouncedDiscard(Object source, ElapsedEventArgs e) =>
@@ -191,6 +224,8 @@ else
 
     private void Focus()
     {
+        _isFocused = true;
+
         _hasFocus = true;
 
         if (_formEventService is not null) _formEventService.RaiseFocus(_hasFocus);
@@ -200,6 +235,8 @@ else
 
     private void Blur()
     {
+        _isFocused = false;
+
         if (string.IsNullOrEmpty(CurrentValue))
         {
             _hasFocus = false;
